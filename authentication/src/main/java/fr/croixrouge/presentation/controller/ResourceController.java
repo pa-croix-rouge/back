@@ -1,5 +1,6 @@
 package fr.croixrouge.presentation.controller;
 
+import fr.croixrouge.domain.model.Route;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.ResourceService;
 import fr.croixrouge.service.RoleService;
@@ -33,7 +34,7 @@ public class ResourceController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (!roleService.isUserIdAuthorizedToAccessRoute(userId, "/resources")) {
+        if (!roleService.isUserIdAuthorizedToAccessRoute(userId, Route.RESOURCE.getPath())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
