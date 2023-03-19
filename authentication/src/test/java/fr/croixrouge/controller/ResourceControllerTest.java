@@ -26,10 +26,8 @@ public class ResourceControllerTest {
 
     private String jwtToken;
 
-    @BeforeEach
-    public void setUp() throws Exception {
-        // Authenticate and obtain JWT token
-        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+    private String loginUserToGetJWTToken(String username, String password) throws Exception {
+        LoginRequest loginRequest = new LoginRequest(username, password);
 
         String result = mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -37,7 +35,12 @@ public class ResourceControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+        return objectMapper.readTree(result).get("jwtToken").asText();
+    }
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        jwtToken = this.loginUserToGetJWTToken("LUManager", "LUPassword");
     }
 
     @Test
@@ -51,9 +54,19 @@ public class ResourceControllerTest {
 
     @Test
     @DisplayName("Test that the resources endpoint returns a 403 when the JWT token is invalid.")
-    public void resourcesAccessDeniedTest() throws Exception {
+    public void resourcesAccessDeniedWrongJWTTest() throws Exception {
         mockMvc.perform(get("/resources")
                         .header("Authorization", "Bearer wrongToken"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Test that the resources endpoint returns a 403 when the user is not allowed to access the resource.")
+    public void resourcesAccessDeniedForUserTest() throws Exception {
+        jwtToken = this.loginUserToGetJWTToken("defaultUser", "defaultPassword");
+
+        mockMvc.perform(get("/resources")
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isForbidden());
     }
 }

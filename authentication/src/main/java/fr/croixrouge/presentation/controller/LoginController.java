@@ -2,6 +2,7 @@ package fr.croixrouge.presentation.controller;
 
 
 import fr.croixrouge.config.JwtTokenConfig;
+import fr.croixrouge.domain.model.User;
 import fr.croixrouge.presentation.dto.LoginRequest;
 import fr.croixrouge.presentation.dto.LoginResponse;
 import io.jsonwebtoken.Jwts;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +44,8 @@ public class LoginController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String jwtToken = generateJwtToken(userDetails);
+            User user = (User) authentication.getPrincipal();
+            String jwtToken = generateJwtToken(user);
 
             return ResponseEntity.ok(new LoginResponse(jwtToken));
         } catch (Exception e) {
@@ -53,16 +53,17 @@ public class LoginController {
         }
     }
 
-    private String generateJwtToken(UserDetails userDetails) {
+    private String generateJwtToken(User user) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + jwtTokenConfig.getTokenExpiration());
 
-        List<Map<String, String>> authorities = userDetails.getAuthorities().stream()
+        List<Map<String, String>> authorities = user.getAuthorities().stream()
                 .map(authority -> Collections.singletonMap("authority", authority.getAuthority()))
                 .collect(Collectors.toList());
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(user.getUsername())
+                .claim("userId", user.getUserId())
                 .claim("authorities", authorities)
                 .setIssuedAt(now)
                 .setExpiration(expiration)

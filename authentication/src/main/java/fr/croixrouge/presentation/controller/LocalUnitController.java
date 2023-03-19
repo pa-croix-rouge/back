@@ -27,9 +27,9 @@ public class LocalUnitController {
     }
 
     @GetMapping
-    public ResponseEntity<LocalUnitResponse> getLocalUnitFromPostalCode(@RequestBody LocalUnitRequest localUnitRequest) {
+    public ResponseEntity<LocalUnitResponse> getLocalUnitFromId(@RequestBody LocalUnitRequest localUnitRequest) {
         try {
-            LocalUnit localUnit = localUnitService.getLocalUnitByPostalCode(localUnitRequest.getPostalCode());
+            LocalUnit localUnit = localUnitService.getLocalUnitByPostalCode(localUnitRequest.getLocalUnitId());
             User manager = authenticationService.getUserById(localUnit.getManagerId());
             LocalUnitResponse localUnitResponse = LocalUnitResponse.fromLocalUnit(localUnit, manager);
             return ResponseEntity.ok(localUnitResponse);

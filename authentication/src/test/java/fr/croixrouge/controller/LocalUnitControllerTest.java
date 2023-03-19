@@ -3,6 +3,8 @@ package fr.croixrouge.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.presentation.dto.LocalUnitRequest;
 import fr.croixrouge.presentation.dto.LocalUnitResponse;
+import fr.croixrouge.presentation.dto.LoginRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,21 @@ public class LocalUnitControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private String jwtToken;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+    }
+
     @Test
     @DisplayName("Test that the localunit endpoint returns a local unit when given a correct postal code")
     public void localUnitPostalCodeSuccessTest() throws Exception {
@@ -39,8 +56,9 @@ public class LocalUnitControllerTest {
         );
 
         mockMvc.perform(get("/localunit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(localUnitRequest)))
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(localUnitRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value(localUnitResponse.getName()))
                 .andExpect(jsonPath("department").value(localUnitResponse.getDepartment()))
@@ -52,10 +70,11 @@ public class LocalUnitControllerTest {
 
     @Test
     @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong postal code")
-    public void localUnitPostalCodeFailedPostalCodeTest() throws Exception {
+    public void localUnitPostalCodeFailedTest() throws Exception {
         LocalUnitRequest localUnitRequest = new LocalUnitRequest("00100");
 
         mockMvc.perform(get("/localunit")
+                        .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(localUnitRequest)))
                 .andExpect(status().isNotFound());

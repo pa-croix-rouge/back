@@ -1,13 +1,12 @@
 package fr.croixrouge.presentation.dto;
 
-public class LocalUnitRequest {
-
+public class RoleRequest {
     private String localUnitId;
 
-    public LocalUnitRequest() {
+    public RoleRequest() {
     }
 
-    public LocalUnitRequest(String localUnitId) {
+    public RoleRequest(String localUnitId) {
         this.localUnitId = localUnitId;
     }
 
