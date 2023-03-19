@@ -20,6 +20,7 @@ public class InMemoryLocalUnitRepository implements LocalUnitRepository {
     }
 
     private void initializeValDOrgeLocalUnit() {
+        String localUnitId = "1";
         Department department = Department.getDepartmentFromPostalCode("91");
         String postalCode = "91240";
         String city = "St Michel sur Orge";
@@ -27,17 +28,22 @@ public class InMemoryLocalUnitRepository implements LocalUnitRepository {
         Address address = new Address(department, postalCode, city, streetNumberAndName);
         String name = "Unite Local du Val d'Orge";
         String managerId = "2";
-        LocalUnit localUnit = new LocalUnit(name, address, managerId);
-        localUnits.put(postalCode, localUnit);
+        LocalUnit localUnit = new LocalUnit(localUnitId, name, address, managerId);
+        localUnits.put(localUnitId, localUnit);
+    }
+
+    @Override
+    public Optional<LocalUnit> findById(String localUnitId) {
+        return Optional.ofNullable(localUnits.get(localUnitId));
     }
 
     @Override
     public Optional<LocalUnit> findByPostalCode(String postalCode) {
-        return Optional.ofNullable(localUnits.get(postalCode));
+        return localUnits.values().stream().filter(localUnit -> localUnit.getAddress().getPostalCode().equals(postalCode)).findFirst();
     }
 
     @Override
     public void save(LocalUnit localUnit) {
-        localUnits.put(localUnit.getAddress().getPostalCode(), localUnit);
+        localUnits.put(localUnit.getLocalUnitId(), localUnit);
     }
 }
