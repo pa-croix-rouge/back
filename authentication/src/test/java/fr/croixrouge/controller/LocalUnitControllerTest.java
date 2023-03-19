@@ -52,7 +52,7 @@ public class LocalUnitControllerTest {
 
     @Test
     @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong postal code")
-    public void localUnitPostalCodeFailedTest() throws Exception {
+    public void localUnitPostalCodeFailedPostalCodeTest() throws Exception {
         LocalUnitRequest localUnitRequest = new LocalUnitRequest("00100");
 
         mockMvc.perform(get("/localunit")

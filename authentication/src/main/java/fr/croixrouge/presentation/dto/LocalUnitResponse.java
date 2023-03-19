@@ -1,6 +1,7 @@
 package fr.croixrouge.presentation.dto;
 
 import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.User;
 
 public class LocalUnitResponse {
 
@@ -20,14 +21,14 @@ public class LocalUnitResponse {
         this.managerName = managerName;
     }
 
-    public static LocalUnitResponse fromLocalUnit(LocalUnit localUnit) {
+    public static LocalUnitResponse fromLocalUnit(LocalUnit localUnit, User manager) {
         return new LocalUnitResponse(
                 localUnit.getName(),
                 localUnit.getAddress().getDepartment().getName(),
                 localUnit.getAddress().getPostalCode(),
                 localUnit.getAddress().getCity(),
                 localUnit.getAddress().getStreetNumberAndName(),
-                localUnit.getManagerName()
+                manager.getUsername()
         );
     }
 

@@ -26,8 +26,8 @@ public class InMemoryLocalUnitRepository implements LocalUnitRepository {
         String streetNumberAndName = "76 rue des Liers";
         Address address = new Address(department, postalCode, city, streetNumberAndName);
         String name = "Unite Local du Val d'Orge";
-        String managerName = "LUManager";
-        LocalUnit localUnit = new LocalUnit(name, address, managerName);
+        String managerId = "2";
+        LocalUnit localUnit = new LocalUnit(name, address, managerId);
         localUnits.put(postalCode, localUnit);
     }
 
