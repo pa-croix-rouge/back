@@ -3,6 +3,7 @@ package fr.croixrouge.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,21 +41,26 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String token = authorizationHeader.substring("Bearer ".length());
 
-        Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token);
+        try {
+            Jws<Claims> claimsJws = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
 
-        String username = claimsJws.getBody().getSubject();
-        List<SimpleGrantedAuthority> authorities = ((List<Map<String, String>>) claimsJws.getBody()
-                .get("authorities")).stream()
-                .map(m -> new SimpleGrantedAuthority(m.get("authority")))
-                .collect(Collectors.toList());
+            String username = claimsJws.getBody().getSubject();
+            List<SimpleGrantedAuthority> authorities = ((List<Map<String, String>>) claimsJws.getBody()
+                    .get("authorities")).stream()
+                    .map(m -> new SimpleGrantedAuthority(m.get("authority")))
+                    .collect(Collectors.toList());
 
-        if (username != null) {
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null,
-                    authorities);
-            SecurityContextHolder.getContext().setAuthentication(authentication); // Add this line
+            if (username != null) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null,
+                        authorities);
+                SecurityContextHolder.getContext().setAuthentication(authentication); // Add this line
+            }
+        } catch (MalformedJwtException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
         }
 
         filterChain.doFilter(request, response);
