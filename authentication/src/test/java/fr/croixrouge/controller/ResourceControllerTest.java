@@ -3,6 +3,7 @@ package fr.croixrouge.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.presentation.dto.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,6 +41,7 @@ public class ResourceControllerTest {
     }
 
     @Test
+    @DisplayName("Test that the resources endpoint returns the list of resources when the JWT token is valid.")
     public void resourcesAccessTest() throws Exception {
         mockMvc.perform(get("/resources")
                         .header("Authorization", "Bearer " + jwtToken))
@@ -48,6 +50,7 @@ public class ResourceControllerTest {
     }
 
     @Test
+    @DisplayName("Test that the resources endpoint returns a 403 when the JWT token is invalid.")
     public void resourcesAccessDeniedTest() throws Exception {
         mockMvc.perform(get("/resources")
                         .header("Authorization", "Bearer wrongToken"))

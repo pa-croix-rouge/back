@@ -2,6 +2,7 @@ package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.presentation.dto.LoginRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +24,7 @@ public class LoginControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("Test that the login endpoint returns a JWT token when the credentials are correct.")
     public void loginSuccessTest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
 
@@ -34,6 +36,7 @@ public class LoginControllerTest {
     }
 
     @Test
+    @DisplayName("Test that the login endpoint returns a 401 when the credentials are incorrect.")
     public void loginFailedTest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("defaultUser", "wrongPassword");
 
