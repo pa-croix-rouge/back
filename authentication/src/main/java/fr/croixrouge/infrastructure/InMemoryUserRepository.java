@@ -27,9 +27,17 @@ public class InMemoryUserRepository implements UserRepository {
     private void initializeDefaultUser() {
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode("defaultPassword");
-        Collection<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        Collection<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
         User defaultUser = new User(defaultUsername, defaultPassword, authorities);
         users.put(defaultUsername, defaultUser);
+    }
+
+    private void initializeLocalUnitManager() {
+        String localUnitManagerUsername = "LUManager";
+        String localUnitManagerPassword = passwordEncoder.encode("LUPassword");
+        Collection<GrantedAuthority> authorities = Collections.EMPTY_SET;
+        User localUnitManager = new User(localUnitManagerUsername, localUnitManagerPassword, authorities);
+        users.put(localUnitManagerUsername, localUnitManager);
     }
 
     @Override

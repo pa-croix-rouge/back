@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/login")
 public class LoginController {
-
     private final AuthenticationManager authenticationManager;
     private final JwtTokenConfig jwtTokenConfig;
     private final SecretKey secretKey;
