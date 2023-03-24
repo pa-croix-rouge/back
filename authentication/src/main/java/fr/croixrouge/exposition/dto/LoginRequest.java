@@ -1,4 +1,4 @@
-package fr.croixrouge.presentation.dto;
+package fr.croixrouge.exposition.dto;
 
 public class LoginRequest {
 

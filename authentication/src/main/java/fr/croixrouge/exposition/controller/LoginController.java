@@ -1,10 +1,10 @@
-package fr.croixrouge.presentation.controller;
+package fr.croixrouge.exposition.controller;
 
 
 import fr.croixrouge.config.JwtTokenConfig;
 import fr.croixrouge.domain.model.User;
-import fr.croixrouge.presentation.dto.LoginRequest;
-import fr.croixrouge.presentation.dto.LoginResponse;
+import fr.croixrouge.exposition.dto.LoginRequest;
+import fr.croixrouge.exposition.dto.LoginResponse;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;

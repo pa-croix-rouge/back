@@ -1,7 +1,7 @@
-package fr.croixrouge.presentation.controller;
+package fr.croixrouge.exposition.controller;
 
-import fr.croixrouge.presentation.dto.RoleRequest;
-import fr.croixrouge.presentation.dto.RoleResponse;
+import fr.croixrouge.exposition.dto.RoleRequest;
+import fr.croixrouge.exposition.dto.RoleResponse;
 import fr.croixrouge.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

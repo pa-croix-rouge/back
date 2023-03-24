@@ -1,4 +1,4 @@
-package fr.croixrouge.presentation.dto;
+package fr.croixrouge.exposition.dto;
 
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.model.User;

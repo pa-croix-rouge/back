@@ -2,9 +2,9 @@ package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.domain.model.Route;
-import fr.croixrouge.presentation.dto.LoginRequest;
-import fr.croixrouge.presentation.dto.RoleRequest;
-import fr.croixrouge.presentation.dto.RoleResponse;
+import fr.croixrouge.exposition.dto.LoginRequest;
+import fr.croixrouge.exposition.dto.RoleRequest;
+import fr.croixrouge.exposition.dto.RoleResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

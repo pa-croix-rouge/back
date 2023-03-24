@@ -1,4 +1,4 @@
-package fr.croixrouge.presentation.controller;
+package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.Route;
 import fr.croixrouge.service.AuthenticationService;

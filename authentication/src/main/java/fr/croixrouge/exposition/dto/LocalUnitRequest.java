@@ -1,12 +1,13 @@
-package fr.croixrouge.presentation.dto;
+package fr.croixrouge.exposition.dto;
 
-public class RoleRequest {
+public class LocalUnitRequest {
+
     private String localUnitId;
 
-    public RoleRequest() {
+    public LocalUnitRequest() {
     }
 
-    public RoleRequest(String localUnitId) {
+    public LocalUnitRequest(String localUnitId) {
         this.localUnitId = localUnitId;
     }
 

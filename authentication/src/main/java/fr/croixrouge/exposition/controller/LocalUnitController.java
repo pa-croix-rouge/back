@@ -1,11 +1,11 @@
-package fr.croixrouge.presentation.controller;
+package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exception.LocalUnitNotFoundException;
 import fr.croixrouge.exception.UserNotFoundException;
-import fr.croixrouge.presentation.dto.LocalUnitRequest;
-import fr.croixrouge.presentation.dto.LocalUnitResponse;
+import fr.croixrouge.exposition.dto.LocalUnitRequest;
+import fr.croixrouge.exposition.dto.LocalUnitResponse;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.LocalUnitService;
 import org.springframework.http.ResponseEntity;
