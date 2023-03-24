@@ -1,5 +1,7 @@
 package fr.croixrouge.service;
 
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.repository.RoleRepository;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,10 @@ public class RoleService {
         return roleRepository.findAllByLocalUnitId(localUnitId);
     }
 
-    public boolean isUserIdAuthorizedToAccessRoute(String userId, String route) {
+    public boolean isUserIdAuthorizedToAccessRoute(String userId, Resources route, Operations operation) {
         List<Role> roles = roleRepository.findAllByUserId(userId);
         for (Role role : roles) {
-            if (role.getRoute().getPath().equalsIgnoreCase(route)) {
+            if (role.canAccessResource(route, operation)) {
                 return true;
             }
         }

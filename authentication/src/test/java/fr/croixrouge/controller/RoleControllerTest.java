@@ -1,7 +1,8 @@
 package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.croixrouge.domain.model.Route;
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.exposition.dto.LoginRequest;
 import fr.croixrouge.exposition.dto.RoleRequest;
 import fr.croixrouge.exposition.dto.RoleResponse;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -55,7 +58,7 @@ public class RoleControllerTest {
         RoleResponse roleResponse = new RoleResponse(
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
-                Route.RESOURCE.getPath(),
+                Map.of( Resources.RESOURCE, List.of(Operations.READ)),
                 new ArrayList<>(Collections.singletonList("2"))
         );
 
@@ -66,7 +69,7 @@ public class RoleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(roleResponse.getName()))
                 .andExpect(jsonPath("$[0].description").value(roleResponse.getDescription()))
-                .andExpect(jsonPath("$[0].routeName").value(roleResponse.getRouteName()))
+                .andExpect(jsonPath("$[0].authorizations").value(roleResponse.getAuthorizations()))
                 .andExpect(jsonPath("$[0].userIds").value(roleResponse.getUserIds()));
     }
 

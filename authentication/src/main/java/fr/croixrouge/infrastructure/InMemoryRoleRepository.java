@@ -1,14 +1,12 @@
 package fr.croixrouge.infrastructure;
 
+import fr.croixrouge.domain.model.Operations;
 import fr.croixrouge.domain.model.Role;
-import fr.croixrouge.domain.model.Route;
+import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.domain.repository.RoleRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
@@ -25,10 +23,11 @@ public class InMemoryRoleRepository implements RoleRepository {
         String roleId = "1";
         String roleName = "Val d'Orge default role";
         String roleDescription = "Default role for Val d'Orge";
-        Route route = Route.RESOURCE;
+        Map<Resources, List<Operations>> resources = Map.of(Resources.RESOURCE, List.of(Operations.READ));
+
         String localUnitId = "1";
         List<String> userIds = Collections.singletonList("2");
-        Role role = new Role(roleId, roleName, roleDescription, route, localUnitId, userIds);
+        Role role = new Role(roleId, roleName, roleDescription, resources, localUnitId, userIds);
         roles.put(roleId, role);
     }
 

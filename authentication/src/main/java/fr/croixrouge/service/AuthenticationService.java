@@ -55,8 +55,9 @@ public class AuthenticationService implements UserDetailsService {
         return claimsJws.getBody().get("userId", String.class);
     }
 
-    @Override
+   @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
