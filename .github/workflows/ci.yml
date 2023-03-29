@@ -35,4 +35,9 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build and run tests
+        env:
+          jwt.secret: ${{ secrets.JWT_SECRET }}
+          jwt.token.expiration: ${{ secrets.JWT_EXPIRATION }}
+          jwt.token.header: ${{ secrets.JWT_HEADER }}
+          jwt.token.prefix: ${{ secrets.JWT_PREFIX }}
         run: mvn clean verify --batch-mode --no-transfer-progress
