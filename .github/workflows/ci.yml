@@ -25,73 +25,88 @@ jobs:
           name: source-code
           path: .
 
-  build:
-    needs: checkout_code
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download code
-        uses: actions/download-artifact@v2
-        with:
-          name: source-code
+    download_artifact:
+      needs: checkout_code
+      runs-on: ubuntu-latest
+      steps:
+        - name: Download code
+          uses: actions/download-artifact@v2
+          with:
+            name: source-code
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+        - name: Archive code
+          uses: actions/upload-artifact@v2
+          with:
+            name: downloaded-source-code
+            path: .
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+    build:
+      needs: download_artifact
+      runs-on: ubuntu-latest
+      steps:
+        - name: Download code
+          uses: actions/download-artifact@v2
+          with:
+            name: downloaded-source-code
+
+        - name: Set up JDK 17
+          uses: actions/setup-java@v2
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+
+        - name: Cache Maven dependencies
+          uses: actions/cache@v2
+          with:
+            path: ~/.m2
+            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          JWT_HEADER: ${{ secrets.JWT_HEADER }}
-          JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
-        run: |
-          mvn clean compile --batch-mode --no-transfer-progress \
+        - name: Build
+          env:
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+            JWT_HEADER: ${{ secrets.JWT_HEADER }}
+            JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          run: |
+            mvn clean compile --batch-mode --no-transfer-progress \
             -Djwt.secret="${JWT_SECRET}" \
             -Djwt.token.expiration="${JWT_EXPIRATION}" \
             -Djwt.token.header="${JWT_HEADER}" \
             -Djwt.token.prefix="${JWT_PREFIX}"
 
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download code
-        uses: actions/download-artifact@v2
-        with:
-          name: source-code
+    test:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Download code
+          uses: actions/download-artifact@v2
+          with:
+            name: downloaded-source-code
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+        - name: Set up JDK 17
+          uses: actions/setup-java@v2
+          with:
+            java-version: '17'
+            distribution: 'temurin'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        - name: Cache Maven dependencies
+          uses: actions/cache@v2
+          with:
+            path: ~/.m2
+            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Run tests
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          JWT_HEADER: ${{ secrets.JWT_HEADER }}
-          JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
-        run: |
-          mvn test --batch-mode --no-transfer-progress \
+        - name: Run tests
+          env:
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+            JWT_HEADER: ${{ secrets.JWT_HEADER }}
+            JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          run: |
+            mvn test --batch-mode --no-transfer-progress \
             -Djwt.secret="${JWT_SECRET}" \
             -Djwt.token.expiration="${JWT_EXPIRATION}" \
             -Djwt.token.header="${JWT_HEADER}" \
