@@ -1,0 +1,4 @@
+jwt.secret=
+jwt.token.expiration=
+jwt.token.header=Authorization
+jwt.token.prefix=Bearer
