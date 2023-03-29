@@ -36,8 +36,13 @@ jobs:
 
       - name: Build and run tests
         env:
-          jwt.secret: ${{ secrets.JWT_SECRET }}
-          jwt.token.expiration: ${{ secrets.JWT_EXPIRATION }}
-          jwt.token.header: ${{ secrets.JWT_HEADER }}
-          jwt.token.prefix: ${{ secrets.JWT_PREFIX }}
-        run: mvn clean verify --batch-mode --no-transfer-progress
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+          JWT_HEADER: ${{ secrets.JWT_HEADER }}
+          JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+        run: |
+          mvn clean verify --batch-mode --no-transfer-progress \
+            -Djwt.secret="${JWT_SECRET}" \
+            -Djwt.token.expiration="${JWT_EXPIRATION}" \
+            -Djwt.token.header="${JWT_HEADER}" \
+            -Djwt.token.prefix="${JWT_PREFIX}"
