@@ -13,12 +13,26 @@ on:
       - 'fix/**'
 
 jobs:
-  build:
+  checkout_code:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Archive code
+        uses: actions/upload-artifact@v2
+        with:
+          name: source-code
+          path: .
+
+  build:
+    needs: checkout_code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download code
+        uses: actions/download-artifact@v2
+        with:
+          name: source-code
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -46,6 +60,29 @@ jobs:
             -Djwt.token.expiration="${JWT_EXPIRATION}" \
             -Djwt.token.header="${JWT_HEADER}" \
             -Djwt.token.prefix="${JWT_PREFIX}"
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download code
+        uses: actions/download-artifact@v2
+        with:
+          name: source-code
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Run tests
         env:
