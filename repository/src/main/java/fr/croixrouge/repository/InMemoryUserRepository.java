@@ -1,4 +1,4 @@
-package fr.croixrouge.infrastructure;
+package fr.croixrouge.repository;
 
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
