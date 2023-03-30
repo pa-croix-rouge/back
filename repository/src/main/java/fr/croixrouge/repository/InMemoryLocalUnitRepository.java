@@ -4,12 +4,11 @@ import fr.croixrouge.domain.model.Address;
 import fr.croixrouge.domain.model.Department;
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
+
 public class InMemoryLocalUnitRepository implements LocalUnitRepository {
 
     private final ConcurrentHashMap<String, LocalUnit> localUnits;

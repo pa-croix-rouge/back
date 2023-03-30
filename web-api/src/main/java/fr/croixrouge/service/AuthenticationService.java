@@ -4,6 +4,7 @@ import fr.croixrouge.config.JwtTokenConfig;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.exception.UserNotFoundException;
+import fr.croixrouge.model.UserSecurity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -18,14 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class AuthenticationService implements UserDetailsService {
-
+    //TODO inscription and crypt password
     private final UserRepository userRepository;
 
-    @Autowired
-    private JwtTokenConfig jwtTokenConfig;
+    private final JwtTokenConfig jwtTokenConfig;
 
-    @Autowired
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
 
     public AuthenticationService(UserRepository userRepository, JwtTokenConfig jwtTokenConfig, SecretKey secretKey) {
         this.userRepository = userRepository;
@@ -58,7 +57,7 @@ public class AuthenticationService implements UserDetailsService {
    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsername(username).map(UserSecurity::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 }
