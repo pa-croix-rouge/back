@@ -1,31 +1,39 @@
 package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.croixrouge.Application;
 import fr.croixrouge.exposition.dto.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+
+@SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 public class ResourceControllerTest {
 
-    private final MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private String jwtToken;
 
-    public ResourceControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+    @BeforeEach
+    public void setUp() throws Exception {
+        jwtToken = this.loginUserToGetJWTToken("LUManager", "LUPassword");
     }
 
     private String loginUserToGetJWTToken(String username, String password) throws Exception {
@@ -40,10 +48,7 @@ public class ResourceControllerTest {
         return objectMapper.readTree(result).get("jwtToken").asText();
     }
 
-    @BeforeEach
-    public void setUp() throws Exception {
-        jwtToken = this.loginUserToGetJWTToken("LUManager", "LUPassword");
-    }
+
 
     @Test
     @DisplayName("Test that the resources endpoint returns the list of resources when the JWT token is valid.")
