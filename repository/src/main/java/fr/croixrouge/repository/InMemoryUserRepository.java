@@ -16,7 +16,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     public InMemoryUserRepository() {
-        this.users = new ConcurrentHashMap<>();
+        this(new ConcurrentHashMap<>());
     }
 
     @Override

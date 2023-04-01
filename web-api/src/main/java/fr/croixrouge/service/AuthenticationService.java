@@ -8,18 +8,20 @@ import fr.croixrouge.model.UserSecurity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
+
+
 
 @Service
 public class AuthenticationService implements UserDetailsService {
-    //TODO inscription and crypt password
+
     private final UserRepository userRepository;
 
     private final JwtTokenConfig jwtTokenConfig;

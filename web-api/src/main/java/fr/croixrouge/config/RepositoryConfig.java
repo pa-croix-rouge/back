@@ -18,8 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RepositoryConfig {
 
     @Bean
-    public UserRepository userRepository(PasswordEncoder passwordEncoder){
-        ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
+    public UserRepository userRepository(){
+        /*ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
         String defaultUserId = "1";
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode( "defaultPassword");
@@ -30,9 +30,9 @@ public class RepositoryConfig {
         String localUnitManagerUsername = "LUManager";
         String localUnitManagerPassword = passwordEncoder.encode("LUPassword");
         User localUnitManager = new User(localUnitManagerUserId, localUnitManagerUsername, localUnitManagerPassword, List.of());
-        users.put(localUnitManagerUserId, localUnitManager);
+        users.put(localUnitManagerUserId, localUnitManager);*/
 
-        return new InMemoryUserRepository(users);
+        return new InMemoryUserRepository();
     }
 
     @Bean
