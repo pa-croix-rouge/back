@@ -5,6 +5,7 @@ import fr.croixrouge.config.JwtTokenConfig;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exposition.dto.LoginRequest;
 import fr.croixrouge.exposition.dto.LoginResponse;
+import fr.croixrouge.model.UserSecurity;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class LoginController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
 
-            User user = (User) authentication.getPrincipal();
+            UserSecurity user = (UserSecurity) authentication.getPrincipal();
             String jwtToken = generateJwtToken(user);
 
             return ResponseEntity.ok(new LoginResponse(jwtToken));
@@ -53,7 +54,7 @@ public class LoginController {
         }
     }
 
-    private String generateJwtToken(User user) {
+    private String generateJwtToken(UserSecurity user) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + jwtTokenConfig.getTokenExpiration());
 

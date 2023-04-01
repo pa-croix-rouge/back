@@ -1,15 +1,14 @@
 package fr.croixrouge.repository;
 
 import fr.croixrouge.domain.model.Operations;
-import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.model.Resources;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.repository.RoleRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
+
 public class InMemoryRoleRepository implements RoleRepository {
 
     private final ConcurrentHashMap<String, Role> roles;

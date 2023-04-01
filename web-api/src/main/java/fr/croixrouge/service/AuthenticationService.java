@@ -4,28 +4,29 @@ import fr.croixrouge.config.JwtTokenConfig;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.exception.UserNotFoundException;
+import fr.croixrouge.model.UserSecurity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
+
+
 
 @Service
 public class AuthenticationService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    private JwtTokenConfig jwtTokenConfig;
+    private final JwtTokenConfig jwtTokenConfig;
 
-    @Autowired
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
 
     public AuthenticationService(UserRepository userRepository, JwtTokenConfig jwtTokenConfig, SecretKey secretKey) {
         this.userRepository = userRepository;
@@ -58,7 +59,7 @@ public class AuthenticationService implements UserDetailsService {
    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsername(username).map(UserSecurity::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 }
