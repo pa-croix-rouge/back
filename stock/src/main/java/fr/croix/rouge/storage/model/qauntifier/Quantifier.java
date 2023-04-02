@@ -1,4 +1,4 @@
-package fr.croix.rouge.storage.model;
+package fr.croix.rouge.storage.model.qauntifier;
 
 public class Quantifier {
 

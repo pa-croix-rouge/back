@@ -1,5 +1,8 @@
 package fr.croix.rouge.storage.model;
 
+import fr.croix.rouge.storage.model.qauntifier.LiquidQuantifier;
+import fr.croix.rouge.storage.model.qauntifier.LiquidUnit;
+import fr.croix.rouge.storage.model.qauntifier.Quantifier;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

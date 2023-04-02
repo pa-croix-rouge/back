@@ -1,5 +1,6 @@
-package fr.croix.rouge.storage.model;
+package fr.croix.rouge.storage.model.product;
 
+import fr.croix.rouge.storage.model.qauntifier.Quantifier;
 import fr.croixrouge.domain.model.ID;
 
 public class Product {
@@ -15,5 +16,9 @@ public class Product {
         this.name = name;
         Quantity = quantity;
         this.limit = limit;
+    }
+
+    public ProductLimit getLimit() {
+        return limit;
     }
 }

@@ -1,5 +1,6 @@
 package fr.croix.rouge.storage.model;
 
+import fr.croix.rouge.storage.model.product.FoodProduct;
 import fr.croixrouge.domain.model.Address;
 import fr.croixrouge.domain.model.LocalUnit;
 

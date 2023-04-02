@@ -1,5 +1,6 @@
 package fr.croix.rouge.storage.model;
 
+import fr.croix.rouge.storage.model.product.FoodProduct;
 import fr.croixrouge.domain.model.User;
 
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class StorageUser extends User {
     }
 
     public boolean canAddProduct(FoodProduct product, int quantity) {
-        return !product.limit.isLimitReached(products.stream().filter(p -> p.product().equals(product)).toList());
+        return !product.getLimit().isLimitReached(products.stream().filter(p -> p.product().equals(product)).toList());
     }
 
 }

@@ -1,5 +1,6 @@
-package fr.croix.rouge.storage.model;
+package fr.croix.rouge.storage.model.product;
 
+import fr.croix.rouge.storage.model.qauntifier.Quantifier;
 import fr.croixrouge.domain.model.ID;
 
 public class FoodProduct extends Product {

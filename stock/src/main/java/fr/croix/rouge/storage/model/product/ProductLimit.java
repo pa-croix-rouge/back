@@ -1,4 +1,7 @@
-package fr.croix.rouge.storage.model;
+package fr.croix.rouge.storage.model.product;
+
+import fr.croix.rouge.storage.model.StorageUserProduct;
+import fr.croix.rouge.storage.model.qauntifier.Quantifier;
 
 import java.time.Duration;
 import java.time.LocalDate;
