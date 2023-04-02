@@ -1,6 +1,6 @@
 package fr.croixrouge.service;
 
-import fr.croixrouge.config.JwtService;
+import fr.croixrouge.config.JwtTokenConfig;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.exposition.dto.LoginResponse;
 import fr.croixrouge.model.UserSecurity;
@@ -15,13 +15,13 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     //    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtTokenConfig jwtTokenConfig;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenConfig jwtTokenConfig, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
+        this.jwtTokenConfig = jwtTokenConfig;
         this.authenticationManager = authenticationManager;
     }
 
@@ -52,7 +52,7 @@ public class AuthenticationService {
 
         var user = userRepository.findByUsername(userName).map(UserSecurity::new)
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtTokenConfig.generateToken(user);
 
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
