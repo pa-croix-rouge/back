@@ -6,8 +6,8 @@ import fr.croixrouge.exception.LocalUnitNotFoundException;
 import fr.croixrouge.exception.UserNotFoundException;
 import fr.croixrouge.exposition.dto.LocalUnitRequest;
 import fr.croixrouge.exposition.dto.LocalUnitResponse;
-import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.LocalUnitService;
+import fr.croixrouge.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LocalUnitController {
 
     private final LocalUnitService localUnitService;
-    private final AuthenticationService authenticationService;
+    private final UserService authenticationService;
 
-    public LocalUnitController(LocalUnitService localUnitService, AuthenticationService authenticationService) {
+    public LocalUnitController(LocalUnitService localUnitService, UserService authenticationService) {
         this.localUnitService = localUnitService;
         this.authenticationService = authenticationService;
     }
@@ -30,7 +30,7 @@ public class LocalUnitController {
     public ResponseEntity<LocalUnitResponse> getLocalUnitFromId(@RequestBody LocalUnitRequest localUnitRequest) {
         try {
             LocalUnit localUnit = localUnitService.getLocalUnitByPostalCode(localUnitRequest.getLocalUnitId());
-            User manager = authenticationService.getUserById(localUnit.getManagerId());
+            User manager = authenticationService.getUserById(localUnit.getManagerId()).orElseThrow();
             LocalUnitResponse localUnitResponse = LocalUnitResponse.fromLocalUnit(localUnit, manager);
             return ResponseEntity.ok(localUnitResponse);
         } catch (LocalUnitNotFoundException | UserNotFoundException e) {

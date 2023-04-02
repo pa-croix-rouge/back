@@ -1,7 +1,7 @@
 package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.croixrouge.Application;
+import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,8 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest(classes = Application.class)
+@SpringBootTest
 @AutoConfigureMockMvc
+@Import(MockRepositoryConfig.class)
 public class ResourceControllerTest {
 
     @Autowired
@@ -48,8 +49,6 @@ public class ResourceControllerTest {
         return objectMapper.readTree(result).get("jwtToken").asText();
     }
 
-
-
     @Test
     @DisplayName("Test that the resources endpoint returns the list of resources when the JWT token is valid.")
     public void resourcesAccessTest() throws Exception {
@@ -63,7 +62,7 @@ public class ResourceControllerTest {
     @DisplayName("Test that the resources endpoint returns a 403 when the JWT token is invalid.")
     public void resourcesAccessDeniedWrongJWTTest() throws Exception {
         mockMvc.perform(get("/resources")
-                        .header("Authorization", "Bearer wrongToken"))
+                        .header("Authorization", "Bearer BEAFAEFAEFAEZFZ"))
                 .andExpect(status().isForbidden());
     }
 

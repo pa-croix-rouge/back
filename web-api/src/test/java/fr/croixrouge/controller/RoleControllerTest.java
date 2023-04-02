@@ -1,6 +1,7 @@
 package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.domain.model.Operations;
 import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.exposition.dto.LoginRequest;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(MockRepositoryConfig.class)
 public class RoleControllerTest {
 
     @Autowired

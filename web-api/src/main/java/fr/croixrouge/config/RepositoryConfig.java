@@ -23,7 +23,7 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public LocalUnitRepository localUnitRepository(){
+    public LocalUnitRepository localUnitRepository() {
         return new InMemoryLocalUnitRepository();
     }
 

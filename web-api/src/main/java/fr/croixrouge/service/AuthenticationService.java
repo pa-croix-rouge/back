@@ -1,65 +1,83 @@
 package fr.croixrouge.service;
 
-import fr.croixrouge.config.JwtTokenConfig;
-import fr.croixrouge.domain.model.User;
+import fr.croixrouge.config.JwtService;
 import fr.croixrouge.domain.repository.UserRepository;
-import fr.croixrouge.exception.UserNotFoundException;
+import fr.croixrouge.exposition.dto.LoginResponse;
 import fr.croixrouge.model.UserSecurity;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
-
 
 
 @Service
-public class AuthenticationService implements UserDetailsService {
-
+public class AuthenticationService {
     private final UserRepository userRepository;
+    //    private final TokenRepository tokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    private final JwtTokenConfig jwtTokenConfig;
-
-    private final SecretKey secretKey;
-
-    public AuthenticationService(UserRepository userRepository, JwtTokenConfig jwtTokenConfig, SecretKey secretKey) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
-        this.jwtTokenConfig = jwtTokenConfig;
-        this.secretKey = secretKey;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
-    public User getUserById(String userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User id not found: " + userId));
+    public void register() {
+       /* var user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
+        var savedUser = repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();*/
     }
 
-    public String getUserIdFromJwtToken(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader(jwtTokenConfig.getTokenHeader());
+    public LoginResponse authenticate(String userName, String password) {
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return null;
-        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userName,
+                        password
+                )
+        );
 
-        String token = authorizationHeader.substring("Bearer ".length());
+        var user = userRepository.findByUsername(userName).map(UserSecurity::new)
+                .orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
 
-        Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token);
-
-        return claimsJws.getBody().get("userId", String.class);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+        return new LoginResponse(jwtToken);
     }
 
-   @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    private void saveUserToken(UserSecurity user, String jwtToken) {
+//        var token = Token.builder()
+//                .user(user)
+//                .token(jwtToken)
+//                .tokenType(TokenType.BEARER)
+//                .expired(false)
+//                .revoked(false)
+//                .build();
+//        tokenRepository.save(token);
+    }
 
-        return userRepository.findByUsername(username).map(UserSecurity::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    private void revokeAllUserTokens(UserSecurity user) {
+//        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+//        if (validUserTokens.isEmpty())
+//            return;
+//        validUserTokens.forEach(token -> {
+//            token.setExpired(true);
+//            token.setRevoked(true);
+//        });
+//        tokenRepository.saveAll(validUserTokens);
     }
 }
