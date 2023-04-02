@@ -6,6 +6,7 @@ import fr.croixrouge.domain.model.ID;
 public class Product {
 
     protected final ID id;
+
     protected final String name;
     protected final Quantifier Quantity;
 
