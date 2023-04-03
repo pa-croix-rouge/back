@@ -27,8 +27,16 @@ public class Quantifier {
         return new Quantifier(this.quantity + other.quantity * other.unit.getConversionFactorTo(this.unit), this.unit);
     }
 
+    public Quantifier multiply(double factor) {
+        return new Quantifier(this.quantity * factor, this.unit);
+    }
+
+    public double getQuantityInBaseUnit() {
+        return this.quantity * this.unit.getConversionFactorTo(this.unit.getBaseUnit());
+    }
+
     public boolean isGreaterThan(Quantifier other) {
-        return this.quantity * this.unit.getConversionFactorTo(other.unit) > other.quantity;
+        return getQuantityInBaseUnit() > other.getQuantityInBaseUnit();
     }
 
     public boolean isGreaterOrEqualThan(Quantifier other) {

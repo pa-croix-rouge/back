@@ -2,7 +2,7 @@ package fr.croix.rouge.storage.model.qauntifier;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class WeightQuantifierTest {
 
@@ -30,6 +30,22 @@ class WeightQuantifierTest {
         Quantifier q2 = q1.convertTo(WeightUnit.KILOGRAM);
 
         assertEquals(0.001, q2.getQuantity(), 0.0001);
+    }
+
+    @Test
+    public void test_1000g_should_not_be_superior_to_1kg() {
+        WeightQuantifier q1 = new WeightQuantifier(1000, WeightUnit.GRAM);
+        WeightQuantifier q2 = new WeightQuantifier(1, WeightUnit.KILOGRAM);
+
+        assertFalse(q1.isGreaterThan(q2));
+    }
+
+    @Test
+    public void test_1001g_should_not_be_superior_to_1kg() {
+        WeightQuantifier q1 = new WeightQuantifier(1001, WeightUnit.GRAM);
+        WeightQuantifier q2 = new WeightQuantifier(1, WeightUnit.KILOGRAM);
+
+        assertTrue(q1.isGreaterThan(q2));
     }
 
 }

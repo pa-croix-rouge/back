@@ -22,4 +22,8 @@ public class Product {
     public ProductLimit getLimit() {
         return limit;
     }
+
+    public Quantifier getQuantity() {
+        return Quantity;
+    }
 }

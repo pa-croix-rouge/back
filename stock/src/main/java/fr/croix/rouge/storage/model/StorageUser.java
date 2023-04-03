@@ -3,6 +3,7 @@ package fr.croix.rouge.storage.model;
 import fr.croix.rouge.storage.model.product.Product;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StorageUser {
@@ -21,7 +22,9 @@ public class StorageUser {
     }
 
     public boolean canAddProduct(Product product, int quantity) {
-        return !product.getLimit().isLimitReached(products.stream().filter(p -> p.product().equals(product)).toList());
+        List<StorageUserProduct> filtered = new ArrayList<>(products.stream().filter(p -> p.product().equals(product)).toList());
+        filtered.add(new StorageUserProduct(product, LocalDate.now(), quantity));
+        return !product.getLimit().isLimitReached(filtered);
     }
 
 }
