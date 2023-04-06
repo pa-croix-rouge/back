@@ -19,6 +19,10 @@ public class Product {
         this.limit = limit;
     }
 
+    public ID getId() {
+        return id;
+    }
+
     public ProductLimit getLimit() {
         return limit;
     }
