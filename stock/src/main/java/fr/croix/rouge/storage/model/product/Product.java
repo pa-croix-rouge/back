@@ -1,11 +1,10 @@
 package fr.croix.rouge.storage.model.product;
 
 import fr.croix.rouge.storage.model.qauntifier.Quantifier;
+import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
 
-public class Product {
-
-    protected final ID id;
+public class Product extends Entity<ID> {
 
     protected final String name;
     protected final Quantifier Quantity;
@@ -13,7 +12,7 @@ public class Product {
     protected final ProductLimit limit;
 
     public Product(ID id, String name, Quantifier quantity, ProductLimit limit) {
-        this.id = id;
+        super(id);
         this.name = name;
         Quantity = quantity;
         this.limit = limit;
