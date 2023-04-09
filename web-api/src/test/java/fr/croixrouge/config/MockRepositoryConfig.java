@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -86,31 +89,34 @@ public class MockRepositoryConfig {
         String eventId1 = "1";
         String eventName1 = "Formation PSC1";
         String eventDescription1 = "Formation au PSC1";
-        LocalDateTime eventStartDate1 = LocalDateTime.of(2000, 6, 1, 10, 0);
-        LocalDateTime eventEndDate1 = LocalDateTime.of(2000, 6, 1, 12, 0);
+        ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
         String referrerId1 = "1";
         String localUnitId1 = "1";
-        Event event1 = new Event(eventId1, eventName1, eventDescription1, eventStartDate1, eventEndDate1, referrerId1, localUnitId1);
+        List<String> participants1 = new ArrayList<>();
+        Event event1 = new Event(eventId1, eventName1, eventDescription1, eventStartDate1, eventEndDate1, referrerId1, localUnitId1, participants1);
         events.put(eventId1, event1);
 
         String eventId2 = "2";
         String eventName2 = "Distribution alimentaire";
         String eventDescription2 = "Distribution alimentaire gratuite";
-        LocalDateTime eventStartDate2 = LocalDateTime.of(2000, 6, 2, 10, 0);
-        LocalDateTime eventEndDate2 = LocalDateTime.of(2000, 6, 2, 12, 0);
+        ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris"));
         String referrerId2 = "1";
         String localUnitId2 = "1";
-        Event event2 = new Event(eventId2, eventName2, eventDescription2, eventStartDate2, eventEndDate2, referrerId2, localUnitId2);
+        List<String> participants2 = new ArrayList<>();
+        Event event2 = new Event(eventId2, eventName2, eventDescription2, eventStartDate2, eventEndDate2, referrerId2, localUnitId2, participants2);
         events.put(eventId2, event2);
 
         String eventId3 = "3";
         String eventName3 = "Formation PSC1";
         String eventDescription3 = "Formation au PSC1";
-        LocalDateTime eventStartDate3 = LocalDateTime.of(2000, 7, 1, 10, 0);
-        LocalDateTime eventEndDate3 = LocalDateTime.of(2000, 7, 1, 12, 0);
+        ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris"));
         String referrerId3 = "1";
         String localUnitId3 = "1";
-        Event event3 = new Event(eventId3, eventName3, eventDescription3, eventStartDate3, eventEndDate3, referrerId3, localUnitId3);
+        List<String> participants3 = new ArrayList<>();
+        Event event3 = new Event(eventId3, eventName3, eventDescription3, eventStartDate3, eventEndDate3, referrerId3, localUnitId3, participants3);
         events.put(eventId3, event3);
 
         return new InMemoryEventRepository(events);

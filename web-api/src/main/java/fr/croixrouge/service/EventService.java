@@ -24,7 +24,19 @@ public class EventService {
         return eventRepository.findByLocalUnitId(localUnitId);
     }
 
-    public List<Event> getEventsByLocalUnitIdAndMonth(String localUnitId, int month) {
-        return eventRepository.findByLocalUnitIdAndMonth(localUnitId, month);
+    public List<Event> getEventsByLocalUnitIdAndMonth(String localUnitId, int month, int year) {
+        return eventRepository.findByLocalUnitIdAndMonth(localUnitId, month, year);
+    }
+
+    public void addEvent(Event event) {
+        eventRepository.save(event);
+    }
+
+    public void deleteEvent(String eventId) {
+        eventRepository.delete(eventId);
+    }
+
+    public void registerParticipant(String eventId, String participantId) {
+        eventRepository.registerParticipant(eventId, participantId);
     }
 }
