@@ -1,31 +1,40 @@
 package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(MockRepositoryConfig.class)
 public class ResourceControllerTest {
 
-    private final MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private String jwtToken;
 
-    public ResourceControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+    @BeforeEach
+    public void setUp() throws Exception {
+        jwtToken = this.loginUserToGetJWTToken("LUManager", "LUPassword");
     }
 
     private String loginUserToGetJWTToken(String username, String password) throws Exception {
@@ -38,11 +47,6 @@ public class ResourceControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
         return objectMapper.readTree(result).get("jwtToken").asText();
-    }
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        jwtToken = this.loginUserToGetJWTToken("LUManager", "LUPassword");
     }
 
     @Test
@@ -58,7 +62,7 @@ public class ResourceControllerTest {
     @DisplayName("Test that the resources endpoint returns a 403 when the JWT token is invalid.")
     public void resourcesAccessDeniedWrongJWTTest() throws Exception {
         mockMvc.perform(get("/resources")
-                        .header("Authorization", "Bearer wrongToken"))
+                        .header("Authorization", "Bearer BEAFAEFAEFAEZFZ"))
                 .andExpect(status().isForbidden());
     }
 
