@@ -3,9 +3,7 @@ package fr.croixrouge.config;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
-import fr.croixrouge.repository.InMemoryLocalUnitRepository;
-import fr.croixrouge.repository.InMemoryRoleRepository;
-import fr.croixrouge.repository.InMemoryUserRepository;
+import fr.croixrouge.repository.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,6 +23,11 @@ public class RepositoryConfig {
     @Bean
     public LocalUnitRepository localUnitRepository() {
         return new InMemoryLocalUnitRepository();
+    }
+
+    @Bean
+    public EventRepository eventRepository() {
+        return new InMemoryEventRepository();
     }
 
 }

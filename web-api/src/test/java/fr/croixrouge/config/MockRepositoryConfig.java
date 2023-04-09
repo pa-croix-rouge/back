@@ -4,14 +4,14 @@ import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
-import fr.croixrouge.repository.InMemoryLocalUnitRepository;
-import fr.croixrouge.repository.InMemoryRoleRepository;
-import fr.croixrouge.repository.InMemoryUserRepository;
+import fr.croixrouge.model.Event;
+import fr.croixrouge.repository.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +77,22 @@ public class MockRepositoryConfig {
         roles.put(roleId, role);
 
         return new InMemoryRoleRepository(roles);
+    }
+
+    @Bean
+    @Primary
+    public EventRepository eventTestRepository() {
+        ConcurrentHashMap<String, Event> events = new ConcurrentHashMap<>();
+        String eventId = "1";
+        String eventName = "Formation PSC1";
+        String eventDescription = "Formation au PSC1";
+        LocalDateTime eventStartDate = LocalDateTime.of(2000, 6, 1, 10, 0);
+        LocalDateTime eventEndDate = LocalDateTime.of(2000, 6, 1, 12, 0);
+        String referrerId = "1";
+        String localUnitId = "1";
+        Event event = new Event(eventId, eventName, eventDescription, eventStartDate, eventEndDate, referrerId, localUnitId);
+        events.put(eventId, event);
+
+        return new InMemoryEventRepository(events);
     }
 }
