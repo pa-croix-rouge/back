@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.ArrayList;
 
 public class EventCreationRequest {
     private String name;
@@ -37,7 +37,7 @@ public class EventCreationRequest {
                 EventCreationRequest.toLocalDateTime(end),
                 referrerId,
                 localUnitId,
-                List.of());
+                new ArrayList<>());
     }
 
     private static ZonedDateTime toLocalDateTime(Timestamp timestamp) {

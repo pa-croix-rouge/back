@@ -20,8 +20,8 @@ public class EventController {
     }
 
     @GetMapping("/details")
-    public ResponseEntity<EventResponse> getEventById(@RequestBody EventRequest eventRequest) {
-        final Optional<EventResponse> eventResponse = eventService.getEventById(eventRequest.getEventId()).map(EventResponse::fromEvent);
+    public ResponseEntity<EventDetailedResponse> getEventById(@RequestBody EventRequest eventRequest) {
+        final Optional<EventDetailedResponse> eventResponse = eventService.getEventById(eventRequest.getEventId()).map(EventDetailedResponse::fromEvent);
         return eventResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -39,14 +39,14 @@ public class EventController {
 
     @GetMapping("/all")
     public ResponseEntity<List<EventResponse>> getEventsByLocalUnitId(@RequestBody EventForLocalUnitRequest eventForLocalUnitRequest) {
-        final List<EventResponse> eventResponses = eventService.getEventsByLocalUnitId(eventForLocalUnitRequest.getLocalUnitId()).stream().map(EventResponse::fromEvent).collect(Collectors.toList());
-        return ResponseEntity.ok(eventResponses);
+        final List<EventResponse> eventResponse = eventService.getEventsByLocalUnitId(eventForLocalUnitRequest.getLocalUnitId()).stream().map(EventResponse::fromEvent).collect(Collectors.toList());
+        return ResponseEntity.ok(eventResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<EventResponse>> getEventsByLocalUnitIdAndMonth(@RequestBody EventForLocalUnitAndMonthRequest eventForLocalUnitAndMonthRequest) {
-        final List<EventResponse> eventResponses = eventService.getEventsByLocalUnitIdAndMonth(eventForLocalUnitAndMonthRequest.getLocalUnitId(), eventForLocalUnitAndMonthRequest.getMonth(), eventForLocalUnitAndMonthRequest.getYear()).stream().map(EventResponse::fromEvent).collect(Collectors.toList());
-        return ResponseEntity.ok(eventResponses);
+        final List<EventResponse> eventResponse = eventService.getEventsByLocalUnitIdAndMonth(eventForLocalUnitAndMonthRequest.getLocalUnitId(), eventForLocalUnitAndMonthRequest.getMonth(), eventForLocalUnitAndMonthRequest.getYear()).stream().map(EventResponse::fromEvent).collect(Collectors.toList());
+        return ResponseEntity.ok(eventResponse);
     }
 
     @PostMapping("/register")

@@ -55,7 +55,7 @@ public class EventControllerTest {
     public void eventIdSuccessTest() throws Exception {
         EventRequest eventRequest = new EventRequest("1");
 
-        EventResponse eventResponse = new EventResponse(
+        EventDetailedResponse eventDetailedResponse = new EventDetailedResponse(
             "Formation PSC1",
             "Formation au PSC1",
             ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -70,12 +70,12 @@ public class EventControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(eventRequest)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value(eventResponse.getName()))
-            .andExpect(jsonPath("$.description").value(eventResponse.getDescription()))
-            .andExpect(jsonPath("$.start").value(eventResponse.getStart()))
-            .andExpect(jsonPath("$.end").value(eventResponse.getEnd()))
-            .andExpect(jsonPath("$.referrerId").value(eventResponse.getReferrerId()))
-            .andExpect(jsonPath("$.localUnitId").value(eventResponse.getLocalUnitId()));
+            .andExpect(jsonPath("$.name").value(eventDetailedResponse.getName()))
+            .andExpect(jsonPath("$.description").value(eventDetailedResponse.getDescription()))
+            .andExpect(jsonPath("$.start").value(eventDetailedResponse.getStart()))
+            .andExpect(jsonPath("$.end").value(eventDetailedResponse.getEnd()))
+            .andExpect(jsonPath("$.referrerId").value(eventDetailedResponse.getReferrerId()))
+            .andExpect(jsonPath("$.localUnitId").value(eventDetailedResponse.getLocalUnitId()));
     }
 
     @Test
@@ -120,7 +120,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$.start").value(eventCreationRequest.getStart().toString()))
                 .andExpect(jsonPath("$.end").value(eventCreationRequest.getEnd().toString()))
                 .andExpect(jsonPath("$.referrerId").value(eventCreationRequest.getReferrerId()))
-                .andExpect(jsonPath("$.localUnitId").value(eventCreationRequest.getLocalUnitId()));
+                .andExpect(jsonPath("$.localUnitId").value(eventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$.participants").isArray());
     }
 
     @Test
@@ -147,7 +148,7 @@ public class EventControllerTest {
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 "1",
                 "1",
-                List.of()
+                0
         );
         EventResponse eventResponse2 = new EventResponse(
                 "Distribution alimentaire",
@@ -156,7 +157,7 @@ public class EventControllerTest {
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 "1",
                 "1",
-                List.of()
+                0
         );
         EventResponse eventResponse3 = new EventResponse(
                 "Formation PSC1",
@@ -165,7 +166,7 @@ public class EventControllerTest {
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 "1",
                 "1",
-                List.of()
+                0
         );
 
         mockMvc.perform(get("/event/all")
@@ -179,18 +180,21 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].end").value(eventResponse1.getEnd()))
                 .andExpect(jsonPath("$[0].referrerId").value(eventResponse1.getReferrerId()))
                 .andExpect(jsonPath("$[0].localUnitId").value(eventResponse1.getLocalUnitId()))
+                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
                 .andExpect(jsonPath("$[1].name").value(eventResponse2.getName()))
                 .andExpect(jsonPath("$[1].description").value(eventResponse2.getDescription()))
                 .andExpect(jsonPath("$[1].start").value(eventResponse2.getStart()))
                 .andExpect(jsonPath("$[1].end").value(eventResponse2.getEnd()))
                 .andExpect(jsonPath("$[1].referrerId").value(eventResponse2.getReferrerId()))
                 .andExpect(jsonPath("$[1].localUnitId").value(eventResponse2.getLocalUnitId()))
+                .andExpect(jsonPath("$[1].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
                 .andExpect(jsonPath("$[2].name").value(eventResponse3.getName()))
                 .andExpect(jsonPath("$[2].description").value(eventResponse3.getDescription()))
                 .andExpect(jsonPath("$[2].start").value(eventResponse3.getStart()))
                 .andExpect(jsonPath("$[2].end").value(eventResponse3.getEnd()))
                 .andExpect(jsonPath("$[2].referrerId").value(eventResponse3.getReferrerId()))
-                .andExpect(jsonPath("$[2].localUnitId").value(eventResponse3.getLocalUnitId()));
+                .andExpect(jsonPath("$[2].localUnitId").value(eventResponse3.getLocalUnitId()))
+                .andExpect(jsonPath("$[2].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()));
     }
 
     @Test
@@ -205,7 +209,7 @@ public class EventControllerTest {
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 "1",
                 "1",
-                List.of()
+                0
         );
 
         mockMvc.perform(get("/event")

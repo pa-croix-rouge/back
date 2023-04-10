@@ -2,37 +2,39 @@ package fr.croixrouge.exposition.dto.event;
 
 import fr.croixrouge.model.Event;
 
-public class EventResponse {
+import java.util.List;
+
+public class EventDetailedResponse {
     private String name;
     private String description;
     private String start;
     private String end;
     private String referrerId;
     private String localUnitId;
-    private int numberOfParticipants;
+    private List<String> participants;
 
-    public EventResponse() {
+    public EventDetailedResponse() {
     }
 
-    public EventResponse(String name, String description, String start, String end, String referrerId, String localUnitId, int numberOfParticipants) {
+    public EventDetailedResponse(String name, String description, String start, String end, String referrerId, String localUnitId, List<String> participants) {
         this.name = name;
         this.description = description;
         this.start = start;
         this.end = end;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
-        this.numberOfParticipants = numberOfParticipants;
+        this.participants = participants;
     }
 
-    public static EventResponse fromEvent(Event event) {
-        return new EventResponse(
+    public static EventDetailedResponse fromEvent(Event event) {
+        return new EventDetailedResponse(
                 event.getName(),
                 event.getDescription(),
                 event.getStart().toString(),
                 event.getEnd().toString(),
                 event.getReferrerId(),
                 event.getLocalUnitId(),
-                event.getParticipants().size()
+                event.getParticipants()
         );
     }
 
@@ -60,7 +62,8 @@ public class EventResponse {
         return localUnitId;
     }
 
-    public int getNumberOfParticipants() {
-        return numberOfParticipants;
+
+    public List<String> getParticipants() {
+        return participants;
     }
 }

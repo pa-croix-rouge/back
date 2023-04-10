@@ -45,7 +45,8 @@ public class InMemoryEventRepository implements EventRepository {
     @Override
     public void save(Event event) {
         String eventId = String.valueOf(nextId.getAndIncrement());
-        this.events.put(eventId, event);
+        Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getStart(), event.getEnd(), event.getReferrerId(), event.getLocalUnitId(), event.getParticipants());
+        this.events.put(eventId, eventToSave);
     }
 
     @Override
