@@ -28,13 +28,19 @@ public class InMemoryEventRepository implements EventRepository {
     @Override
     public Optional<Event> findById(String eventId, String sessionId) {
         final Optional<Event> event =  Optional.ofNullable(events.get(eventId));
-        if (event.isPresent()) {
-            final Optional<EventSession> session = event.get().getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst();
-            if (session.isPresent()) {
-                return Optional.of(new Event(event.get().getId(), event.get().getName(), event.get().getDescription(), event.get().getReferrerId(), event.get().getLocalUnitId(), event.get().getFirstStart(), event.get().getLastEnd(), List.of(session.get()), event.get().getOccurrences()));
-            }
+        if (event.isEmpty()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        final Optional<EventSession> session = event.get().getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst();
+        if (session.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(new Event(event.get().getId(), event.get().getName(), event.get().getDescription(), event.get().getReferrerId(), event.get().getLocalUnitId(), event.get().getFirstStart(), event.get().getLastEnd(), List.of(session.get()), event.get().getOccurrences()));
+    }
+
+    @Override
+    public Optional<Event> findByEventId(String eventId) {
+        return Optional.ofNullable(events.get(eventId));
     }
 
     @Override

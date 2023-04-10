@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
 public class MockRepositoryConfig {
@@ -122,6 +123,26 @@ public class MockRepositoryConfig {
         EventSession eventSession3 = new EventSession("0", eventStartDate3, eventEndDate3, participants3);
         Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
         events.put(eventId3, event3);
+
+        String eventId4 = "4";
+        String eventName4 = "EPISOL";
+        String eventDescription4 = "Ouverture de l'EPISOL";
+        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 2, 1, 12, 0), ZoneId.of("Europe/Paris"));
+        String referrerId4 = "1";
+        String localUnitId4 = "1";
+        List<EventSession> eventSessions4 = new ArrayList<>();
+        AtomicInteger sessionCounter = new AtomicInteger(0);
+        for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {
+            eventSessions4.add(new EventSession(
+                    String.valueOf(sessionCounter.getAndIncrement()),
+                    sessionTime,
+                    sessionTime.plusMinutes(120),
+                    new ArrayList<>()
+            ));
+        }
+        Event event4 = new Event(eventId4, eventName4, eventDescription4, referrerId4, localUnitId4, eventStartDate4, eventEndDate4, eventSessions4, sessionCounter.get());
+        events.put(eventId4, event4);
 
         return new InMemoryEventRepository(events);
     }

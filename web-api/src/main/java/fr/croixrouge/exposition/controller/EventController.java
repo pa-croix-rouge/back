@@ -28,7 +28,7 @@ public class EventController {
     }
 
     @PostMapping("/details")
-    public ResponseEntity createEvent(@RequestBody SingleEventCreationRequest singleEventCreationRequest) {
+    public ResponseEntity createSingleEvent(@RequestBody SingleEventCreationRequest singleEventCreationRequest) {
         eventService.addEvent(singleEventCreationRequest.toEvent());
         return ResponseEntity.ok().build();
     }
@@ -61,6 +61,25 @@ public class EventController {
             }
         }
         return ResponseEntity.ok(eventResponse);
+    }
+
+    @GetMapping("/sessions")
+    public ResponseEntity<List<EventResponse>> getEventSessionsByEventId(@RequestBody SessionForEventRequest sessionForEventRequest) {
+        final List<EventResponse> eventResponse = new ArrayList<>();
+        final Optional<Event> event = eventService.getSessionsByEventId(sessionForEventRequest.getEventId());
+        if (event.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        for (EventSession session : event.get().getSessions()) {
+            eventResponse.add(EventResponse.fromEvent(event.get(), session));
+        }
+        return ResponseEntity.ok(eventResponse);
+    }
+
+    @PostMapping("/sessions")
+    public ResponseEntity createRecurrentEvent(@RequestBody RecurrentEventCreationRequest recurrentEventCreationRequest) {
+        eventService.addEvent(recurrentEventCreationRequest.toEvent());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/register")

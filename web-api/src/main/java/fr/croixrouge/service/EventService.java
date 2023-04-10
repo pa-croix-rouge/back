@@ -20,6 +20,10 @@ public class EventService {
         return eventRepository.findById(eventId, sessionId);
     }
 
+    public Optional<Event> getSessionsByEventId(String eventId) {
+        return eventRepository.findByEventId(eventId);
+    }
+
     public List<Event> getEventsByLocalUnitId(String localUnitId) {
         return eventRepository.findByLocalUnitId(localUnitId);
     }

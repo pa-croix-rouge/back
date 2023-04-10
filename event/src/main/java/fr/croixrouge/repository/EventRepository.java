@@ -9,6 +9,8 @@ public interface EventRepository {
 
     Optional<Event> findById(String eventId, String sessionId);
 
+    Optional<Event> findByEventId(String eventId);
+
     List<Event> findByLocalUnitId(String localUnitId);
 
     List<Event> findByLocalUnitIdAndMonth(String localUnitId, int month, int year);

@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -36,6 +37,10 @@ public class EventControllerTest {
     private ObjectMapper objectMapper;
 
     private String jwtToken;
+
+    private ZonedDateTime timestampToLocalDateTime(Timestamp timestamp) {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.getTime()), ZoneId.of("Europe/Paris"));
+    }
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -75,7 +80,8 @@ public class EventControllerTest {
             .andExpect(jsonPath("$.start").value(singleEventDetailedResponse.getStart()))
             .andExpect(jsonPath("$.end").value(singleEventDetailedResponse.getEnd()))
             .andExpect(jsonPath("$.referrerId").value(singleEventDetailedResponse.getReferrerId()))
-            .andExpect(jsonPath("$.localUnitId").value(singleEventDetailedResponse.getLocalUnitId()));
+            .andExpect(jsonPath("$.localUnitId").value(singleEventDetailedResponse.getLocalUnitId()))
+            .andExpect(jsonPath("$.participants").isArray());
     }
 
     @Test
@@ -108,7 +114,7 @@ public class EventControllerTest {
                 .content(objectMapper.writeValueAsString(singleEventCreationRequest)))
             .andExpect(status().isOk());
 
-        SingleEventRequest singleEventRequest = new SingleEventRequest("4", "0");
+        SingleEventRequest singleEventRequest = new SingleEventRequest("5", "0");
 
         mockMvc.perform(get("/event/details")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -134,6 +140,12 @@ public class EventControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(singleEventRequest)))
             .andExpect(status().isOk());
+
+        mockMvc.perform(get("/event/details")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(singleEventRequest)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -222,7 +234,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].start").value(eventResponse.getStart()))
                 .andExpect(jsonPath("$[0].end").value(eventResponse.getEnd()))
                 .andExpect(jsonPath("$[0].referrerId").value(eventResponse.getReferrerId()))
-                .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()));
+                .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()));
     }
 
     @Test
@@ -242,5 +255,100 @@ public class EventControllerTest {
                         .content(objectMapper.writeValueAsString(eventRegistrationRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.participants[0]").value("1"));
+    }
+
+    @Test
+    @DisplayName("Test that the event sessions endpoint returns a recurring event when given a correct event id")
+    public void eventIdSessionSuccessTest() throws Exception {
+        SessionForEventRequest sessionForEventRequest = new SessionForEventRequest("4");
+
+        EventResponse eventResponse = new EventResponse(
+                "EPISOL",
+                "Ouverture de l'EPISOL",
+                ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                "1",
+                "1",
+                0
+        );
+
+        mockMvc.perform(get("/event/sessions")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sessionForEventRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value(eventResponse.getName()))
+                .andExpect(jsonPath("$[0].description").value(eventResponse.getDescription()))
+                .andExpect(jsonPath("$[0].start").value(eventResponse.getStart()))
+                .andExpect(jsonPath("$[0].end").value(eventResponse.getEnd()))
+                .andExpect(jsonPath("$[0].referrerId").value(eventResponse.getReferrerId()))
+                .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()));
+    }
+
+    @Test
+    @DisplayName("Test that the event sessions endpoint create a recurring event when given the correct parameters")
+    public void eventCreateSessionsSuccessTest() throws Exception {
+        RecurrentEventCreationRequest recurrentEventCreationRequest = new RecurrentEventCreationRequest(
+                "Formation Benevole",
+                "Formation pour devenir benevole",
+                "1",
+                "1",
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 3, 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 4, 1, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                120,
+                7
+        );
+
+        mockMvc.perform(post("/event/sessions")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recurrentEventCreationRequest)))
+                .andExpect(status().isOk());
+
+        SingleEventRequest singleEventRequest = new SingleEventRequest("6", "0");
+
+        mockMvc.perform(get("/event/sessions")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(singleEventRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value(recurrentEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[0].description").value(recurrentEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[0].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).toString()))
+                .andExpect(jsonPath("$[0].end").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusHours(2).toString()))
+                .andExpect(jsonPath("$[0].referrerId").value(recurrentEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[0].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[0].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[1].name").value(recurrentEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[1].description").value(recurrentEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[1].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(7).toString()))
+                .andExpect(jsonPath("$[1].end").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(7).plusHours(2).toString()))
+                .andExpect(jsonPath("$[1].referrerId").value(recurrentEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[1].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[1].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[2].name").value(recurrentEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[2].description").value(recurrentEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[2].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(14).toString()))
+                .andExpect(jsonPath("$[2].end").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(14).plusHours(2).toString()))
+                .andExpect(jsonPath("$[2].referrerId").value(recurrentEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[2].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[2].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[3].name").value(recurrentEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[3].description").value(recurrentEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[3].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(21).toString()))
+                .andExpect(jsonPath("$[3].end").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(21).plusHours(2).toString()))
+                .andExpect(jsonPath("$[3].referrerId").value(recurrentEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[3].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[3].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[4].name").value(recurrentEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[4].description").value(recurrentEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[4].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(28).toString()))
+                .andExpect(jsonPath("$[4].end").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(28).plusHours(2).toString()))
+                .andExpect(jsonPath("$[4].referrerId").value(recurrentEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[4].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[4].numberOfParticipants").value(0));
     }
 }
