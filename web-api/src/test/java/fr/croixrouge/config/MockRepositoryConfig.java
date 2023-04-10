@@ -5,6 +5,7 @@ import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
 import fr.croixrouge.repository.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -94,7 +95,8 @@ public class MockRepositoryConfig {
         String referrerId1 = "1";
         String localUnitId1 = "1";
         List<String> participants1 = new ArrayList<>();
-        Event event1 = new Event(eventId1, eventName1, eventDescription1, eventStartDate1, eventEndDate1, referrerId1, localUnitId1, participants1);
+        EventSession eventSession1 = new EventSession("0", eventStartDate1, eventEndDate1, participants1);
+        Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
         events.put(eventId1, event1);
 
         String eventId2 = "2";
@@ -105,7 +107,8 @@ public class MockRepositoryConfig {
         String referrerId2 = "1";
         String localUnitId2 = "1";
         List<String> participants2 = new ArrayList<>();
-        Event event2 = new Event(eventId2, eventName2, eventDescription2, eventStartDate2, eventEndDate2, referrerId2, localUnitId2, participants2);
+        EventSession eventSession2 = new EventSession("0", eventStartDate2, eventEndDate2, participants2);
+        Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
         events.put(eventId2, event2);
 
         String eventId3 = "3";
@@ -116,7 +119,8 @@ public class MockRepositoryConfig {
         String referrerId3 = "1";
         String localUnitId3 = "1";
         List<String> participants3 = new ArrayList<>();
-        Event event3 = new Event(eventId3, eventName3, eventDescription3, eventStartDate3, eventEndDate3, referrerId3, localUnitId3, participants3);
+        EventSession eventSession3 = new EventSession("0", eventStartDate3, eventEndDate3, participants3);
+        Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
         events.put(eventId3, event3);
 
         return new InMemoryEventRepository(events);

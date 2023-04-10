@@ -53,9 +53,9 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event details endpoint returns an event when given a correct event id")
     public void eventIdSuccessTest() throws Exception {
-        EventRequest eventRequest = new EventRequest("1");
+        SingleEventRequest singleEventRequest = new SingleEventRequest("1", "0");
 
-        EventDetailedResponse eventDetailedResponse = new EventDetailedResponse(
+        SingleEventDetailedResponse singleEventDetailedResponse = new SingleEventDetailedResponse(
             "Formation PSC1",
             "Formation au PSC1",
             ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -68,32 +68,32 @@ public class EventControllerTest {
         mockMvc.perform(get("/event/details")
                 .header("Authorization", "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventRequest)))
+                .content(objectMapper.writeValueAsString(singleEventRequest)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value(eventDetailedResponse.getName()))
-            .andExpect(jsonPath("$.description").value(eventDetailedResponse.getDescription()))
-            .andExpect(jsonPath("$.start").value(eventDetailedResponse.getStart()))
-            .andExpect(jsonPath("$.end").value(eventDetailedResponse.getEnd()))
-            .andExpect(jsonPath("$.referrerId").value(eventDetailedResponse.getReferrerId()))
-            .andExpect(jsonPath("$.localUnitId").value(eventDetailedResponse.getLocalUnitId()));
+            .andExpect(jsonPath("$.name").value(singleEventDetailedResponse.getName()))
+            .andExpect(jsonPath("$.description").value(singleEventDetailedResponse.getDescription()))
+            .andExpect(jsonPath("$.start").value(singleEventDetailedResponse.getStart()))
+            .andExpect(jsonPath("$.end").value(singleEventDetailedResponse.getEnd()))
+            .andExpect(jsonPath("$.referrerId").value(singleEventDetailedResponse.getReferrerId()))
+            .andExpect(jsonPath("$.localUnitId").value(singleEventDetailedResponse.getLocalUnitId()));
     }
 
     @Test
     @DisplayName("Test that the event details endpoint returns a 404 when given an incorrect event id")
     public void eventIdFailureTest() throws Exception {
-        EventRequest eventRequest = new EventRequest("-1");
+        SingleEventRequest singleEventRequest = new SingleEventRequest("-1", "-1");
 
         mockMvc.perform(get("/event/details")
                 .header("Authorization", "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventRequest)))
+                .content(objectMapper.writeValueAsString(singleEventRequest)))
             .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("Test that the event details endpoint create an event when given the correct parameters")
     public void eventCreateSuccessTest() throws Exception {
-        EventCreationRequest eventCreationRequest = new EventCreationRequest(
+        SingleEventCreationRequest singleEventCreationRequest = new SingleEventCreationRequest(
                 "Formation Benevole",
                 "Formation pour devenir benevole",
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2001, 1, 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
@@ -105,34 +105,34 @@ public class EventControllerTest {
         mockMvc.perform(post("/event/details")
                 .header("Authorization", "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventCreationRequest)))
+                .content(objectMapper.writeValueAsString(singleEventCreationRequest)))
             .andExpect(status().isOk());
 
-        EventRequest eventRequest = new EventRequest("4");
+        SingleEventRequest singleEventRequest = new SingleEventRequest("4", "0");
 
         mockMvc.perform(get("/event/details")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventRequest)))
+                        .content(objectMapper.writeValueAsString(singleEventRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(eventCreationRequest.getName()))
-                .andExpect(jsonPath("$.description").value(eventCreationRequest.getDescription()))
-                .andExpect(jsonPath("$.start").value(eventCreationRequest.getStart().toString()))
-                .andExpect(jsonPath("$.end").value(eventCreationRequest.getEnd().toString()))
-                .andExpect(jsonPath("$.referrerId").value(eventCreationRequest.getReferrerId()))
-                .andExpect(jsonPath("$.localUnitId").value(eventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$.name").value(singleEventCreationRequest.getName()))
+                .andExpect(jsonPath("$.description").value(singleEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$.start").value(singleEventCreationRequest.getStart().toString()))
+                .andExpect(jsonPath("$.end").value(singleEventCreationRequest.getEnd().toString()))
+                .andExpect(jsonPath("$.referrerId").value(singleEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$.localUnitId").value(singleEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$.participants").isArray());
     }
 
     @Test
     @DisplayName("Test that the event details endpoint returns a 200 when deleting an event")
     public void eventDeleteSuccessTest() throws Exception {
-        EventRequest eventRequest = new EventRequest("4");
+        SingleEventRequest singleEventRequest = new SingleEventRequest("4", "0");
 
         mockMvc.perform(delete("/event/details")
                 .header("Authorization", "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventRequest)))
+                .content(objectMapper.writeValueAsString(singleEventRequest)))
             .andExpect(status().isOk());
     }
 
@@ -228,7 +228,7 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event register endpoint adds a user to an event")
     public void eventRegisterSuccessTest() throws Exception {
-        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("1", "1");
+        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("1", "0", "1");
 
         mockMvc.perform(post("/event/register")
                         .header("Authorization", "Bearer " + jwtToken)

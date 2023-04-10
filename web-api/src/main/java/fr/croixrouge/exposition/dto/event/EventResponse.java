@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.event;
 
 import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
 
 public class EventResponse {
     private String name;
@@ -24,15 +25,15 @@ public class EventResponse {
         this.numberOfParticipants = numberOfParticipants;
     }
 
-    public static EventResponse fromEvent(Event event) {
+    public static EventResponse fromEvent(Event event, EventSession eventSession) {
         return new EventResponse(
                 event.getName(),
                 event.getDescription(),
-                event.getStart().toString(),
-                event.getEnd().toString(),
+                eventSession.getStart().toString(),
+                eventSession.getEnd().toString(),
                 event.getReferrerId(),
                 event.getLocalUnitId(),
-                event.getParticipants().size()
+                eventSession.getParticipants().size()
         );
     }
 

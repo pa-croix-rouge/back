@@ -8,22 +8,23 @@ public class Event {
     private final String id;
     private final String name;
     private final String description;
-    private final ZonedDateTime start;
-    private final ZonedDateTime end;
     private final String referrerId;
     private final String localUnitId;
-    private final List<String> participants;
+    private final ZonedDateTime firstStart;
+    private final ZonedDateTime lastEnd;
+    private final List<EventSession> sessions;
+    private final int occurrences;
 
-
-    public Event(String id, String name, String description, ZonedDateTime start, ZonedDateTime end, String referrerId, String localUnitId, List<String> participants) {
+    public Event(String id, String name, String description, String referrerId, String localUnitId, ZonedDateTime firstStart, ZonedDateTime lastEnd, List<EventSession> sessions, int occurrences) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.start = start;
-        this.end = end;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
-        this.participants = participants;
+        this.firstStart = firstStart;
+        this.lastEnd = lastEnd;
+        this.sessions = sessions;
+        this.occurrences = occurrences;
     }
 
     public String getId() {
@@ -38,14 +39,6 @@ public class Event {
         return description;
     }
 
-    public ZonedDateTime getStart() {
-        return start;
-    }
-
-    public ZonedDateTime getEnd() {
-        return end;
-    }
-
     public String getReferrerId() {
         return referrerId;
     }
@@ -54,8 +47,20 @@ public class Event {
         return localUnitId;
     }
 
-    public List<String> getParticipants() {
-        return participants;
+    public ZonedDateTime getFirstStart() {
+        return firstStart;
+    }
+
+    public ZonedDateTime getLastEnd() {
+        return lastEnd;
+    }
+
+    public List<EventSession> getSessions() {
+        return sessions;
+    }
+
+    public int getOccurrences() {
+        return occurrences;
     }
 
     @Override
@@ -63,12 +68,12 @@ public class Event {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Event event = (Event) o;
-        return Objects.equals(id, event.id) && Objects.equals(name, event.name) && Objects.equals(description, event.description) && Objects.equals(start, event.start) && Objects.equals(end, event.end) && Objects.equals(referrerId, event.referrerId) && Objects.equals(localUnitId, event.localUnitId) && Objects.equals(participants, event.participants);
+        return occurrences == event.occurrences && Objects.equals(id, event.id) && Objects.equals(name, event.name) && Objects.equals(description, event.description) && Objects.equals(referrerId, event.referrerId) && Objects.equals(localUnitId, event.localUnitId) && Objects.equals(firstStart, event.firstStart) && Objects.equals(lastEnd, event.lastEnd) && Objects.equals(sessions, event.sessions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, start, end, referrerId, localUnitId, participants);
+        return Objects.hash(id, name, description, referrerId, localUnitId, firstStart, lastEnd, sessions, occurrences);
     }
 
     @Override
@@ -77,11 +82,12 @@ public class Event {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", start=" + start +
-                ", end=" + end +
                 ", referrerId='" + referrerId + '\'' +
                 ", localUnitId='" + localUnitId + '\'' +
-                ", participants=" + participants +
+                ", firstStart=" + firstStart +
+                ", lastEnd=" + lastEnd +
+                ", sessions=" + sessions +
+                ", occurrences=" + occurrences +
                 '}';
     }
 }

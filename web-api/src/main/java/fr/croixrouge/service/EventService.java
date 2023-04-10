@@ -16,8 +16,8 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Optional<Event> getEventById(String eventId) {
-        return eventRepository.findById(eventId);
+    public Optional<Event> getEventById(String eventId, String sessionId) {
+        return eventRepository.findById(eventId, sessionId);
     }
 
     public List<Event> getEventsByLocalUnitId(String localUnitId) {
@@ -36,7 +36,7 @@ public class EventService {
         eventRepository.delete(eventId);
     }
 
-    public void registerParticipant(String eventId, String participantId) {
-        eventRepository.registerParticipant(eventId, participantId);
+    public boolean registerParticipant(String eventId, String sessionId, String participantId) {
+        return eventRepository.registerParticipant(eventId, sessionId, participantId);
     }
 }

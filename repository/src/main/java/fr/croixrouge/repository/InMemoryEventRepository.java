@@ -1,7 +1,9 @@
 package fr.croixrouge.repository;
 
 import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,8 +26,15 @@ public class InMemoryEventRepository implements EventRepository {
     }
 
     @Override
-    public Optional<Event> findById(String eventId) {
-        return Optional.ofNullable(events.get(eventId));
+    public Optional<Event> findById(String eventId, String sessionId) {
+        final Optional<Event> event =  Optional.ofNullable(events.get(eventId));
+        if (event.isPresent()) {
+            final Optional<EventSession> session = event.get().getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst();
+            if (session.isPresent()) {
+                return Optional.of(new Event(event.get().getId(), event.get().getName(), event.get().getDescription(), event.get().getReferrerId(), event.get().getLocalUnitId(), event.get().getFirstStart(), event.get().getLastEnd(), List.of(session.get()), event.get().getOccurrences()));
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -35,17 +44,24 @@ public class InMemoryEventRepository implements EventRepository {
 
     @Override
     public List<Event> findByLocalUnitIdAndMonth(String localUnitId, int month, int year) {
-        return this.events.values().stream().filter(event ->
-                event.getLocalUnitId().equals(localUnitId) &&
-                ((event.getStart().getMonthValue() == month && event.getStart().getYear() == year))
-                || event.getEnd().getMonthValue() == month && event.getEnd().getYear() == year)
-                .collect(Collectors.toList());
+        List<Event> localUnitEvents = this.events.values().stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).toList();
+        List<Event> result = new ArrayList<>();
+        for (Event event : localUnitEvents) {
+            List<EventSession> sessionsInMonth = event.getSessions().stream().filter(session -> session.getStart().getMonthValue() == month && session.getStart().getYear() == year || session.getEnd().getMonthValue() == month && session.getEnd().getYear() == year).toList();
+            if (!sessionsInMonth.isEmpty()) {
+                result.add(new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), sessionsInMonth, event.getOccurrences()));
+            }
+        }
+        return result;
     }
 
     @Override
     public void save(Event event) {
         String eventId = String.valueOf(nextId.getAndIncrement());
-        Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getStart(), event.getEnd(), event.getReferrerId(), event.getLocalUnitId(), event.getParticipants());
+        Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), new ArrayList<>(), event.getOccurrences());
+        for (EventSession session : event.getSessions()) {
+            eventToSave.getSessions().add(new EventSession(String.valueOf(eventToSave.getSessions().size()), session.getStart(), session.getEnd(), new ArrayList<>()));
+        }
         this.events.put(eventId, eventToSave);
     }
 
@@ -55,9 +71,17 @@ public class InMemoryEventRepository implements EventRepository {
     }
 
     @Override
-    public void registerParticipant(String eventId, String participantId) {
+    public boolean registerParticipant(String eventId, String sessionId, String participantId) {
         Event event = this.events.get(eventId);
-        event.getParticipants().add(participantId);
+        if (event == null) {
+            return false;
+        }
+        EventSession session = event.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+        if (session == null) {
+            return false;
+        }
+        session.getParticipants().add(participantId);
         this.events.put(eventId, event);
+        return true;
     }
 }

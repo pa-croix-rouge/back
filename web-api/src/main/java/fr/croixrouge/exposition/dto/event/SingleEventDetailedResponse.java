@@ -1,10 +1,11 @@
 package fr.croixrouge.exposition.dto.event;
 
 import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
 
 import java.util.List;
 
-public class EventDetailedResponse {
+public class SingleEventDetailedResponse {
     private String name;
     private String description;
     private String start;
@@ -13,10 +14,10 @@ public class EventDetailedResponse {
     private String localUnitId;
     private List<String> participants;
 
-    public EventDetailedResponse() {
+    public SingleEventDetailedResponse() {
     }
 
-    public EventDetailedResponse(String name, String description, String start, String end, String referrerId, String localUnitId, List<String> participants) {
+    public SingleEventDetailedResponse(String name, String description, String start, String end, String referrerId, String localUnitId, List<String> participants) {
         this.name = name;
         this.description = description;
         this.start = start;
@@ -26,15 +27,15 @@ public class EventDetailedResponse {
         this.participants = participants;
     }
 
-    public static EventDetailedResponse fromEvent(Event event) {
-        return new EventDetailedResponse(
+    public static SingleEventDetailedResponse fromEvent(Event event, EventSession eventSession) {
+        return new SingleEventDetailedResponse(
                 event.getName(),
                 event.getDescription(),
-                event.getStart().toString(),
-                event.getEnd().toString(),
+                eventSession.getStart().toString(),
+                eventSession.getEnd().toString(),
                 event.getReferrerId(),
                 event.getLocalUnitId(),
-                event.getParticipants()
+                eventSession.getParticipants()
         );
     }
 

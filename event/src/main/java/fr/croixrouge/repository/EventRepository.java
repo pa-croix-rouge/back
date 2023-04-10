@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface EventRepository {
 
-    Optional<Event> findById(String eventId);
+    Optional<Event> findById(String eventId, String sessionId);
 
     List<Event> findByLocalUnitId(String localUnitId);
 
@@ -17,5 +17,5 @@ public interface EventRepository {
 
     void delete(String eventId);
 
-    void registerParticipant(String eventId, String participantId);
+    boolean registerParticipant(String eventId, String sessionId, String participantId);
 }

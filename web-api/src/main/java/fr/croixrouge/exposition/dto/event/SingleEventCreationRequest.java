@@ -1,14 +1,16 @@
 package fr.croixrouge.exposition.dto.event;
 
 import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
-public class EventCreationRequest {
+public class SingleEventCreationRequest {
     private String name;
     private String description;
     private Timestamp start;
@@ -16,10 +18,10 @@ public class EventCreationRequest {
     private String referrerId;
     private String localUnitId;
 
-    public EventCreationRequest() {
+    public SingleEventCreationRequest() {
     }
 
-    public EventCreationRequest(String name, String description, Timestamp start, Timestamp end, String referrerId, String localUnitId) {
+    public SingleEventCreationRequest(String name, String description, Timestamp start, Timestamp end, String referrerId, String localUnitId) {
         this.name = name;
         this.description = description;
         this.start = start;
@@ -29,15 +31,23 @@ public class EventCreationRequest {
     }
 
     public Event toEvent() {
+        ZonedDateTime startDateTime = SingleEventCreationRequest.toLocalDateTime(start);
+        ZonedDateTime endDateTime = SingleEventCreationRequest.toLocalDateTime(end);
         return new Event(
                 null,
                 name,
                 description,
-                EventCreationRequest.toLocalDateTime(start),
-                EventCreationRequest.toLocalDateTime(end),
                 referrerId,
                 localUnitId,
-                new ArrayList<>());
+                startDateTime,
+                endDateTime,
+                List.of(new EventSession(
+                        null,
+                        startDateTime,
+                        endDateTime,
+                        new ArrayList<>()
+                )),
+                1);
     }
 
     private static ZonedDateTime toLocalDateTime(Timestamp timestamp) {
@@ -53,11 +63,11 @@ public class EventCreationRequest {
     }
 
     public ZonedDateTime getStart() {
-        return EventCreationRequest.toLocalDateTime(start);
+        return SingleEventCreationRequest.toLocalDateTime(start);
     }
 
     public ZonedDateTime getEnd() {
-        return EventCreationRequest.toLocalDateTime(end);
+        return SingleEventCreationRequest.toLocalDateTime(end);
     }
 
     public String getReferrerId() {
