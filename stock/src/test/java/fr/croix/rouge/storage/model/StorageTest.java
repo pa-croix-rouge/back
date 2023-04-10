@@ -32,12 +32,14 @@ class StorageTest {
     }
 
     @Test
-    void addProduct() {
+    void should_add_one_product() {
         storage.addProduct(product, 1);
         assertEquals(2, storage.getProductQuantity(product));
     }
 
     @Test
-    void removeProduct() {
+    void should_remove_one_product() {
+        storage.removeProduct(product, 1);
+        assertEquals(0, storage.getProductQuantity(product));
     }
 }
