@@ -1,10 +1,10 @@
 package fr.croixrouge.service;
 
-import fr.croix.rouge.storage.model.product.FoodProduct;
-import fr.croix.rouge.storage.model.product.ProductLimit;
-import fr.croix.rouge.storage.model.qauntifier.LiquidQuantifier;
-import fr.croix.rouge.storage.model.qauntifier.LiquidUnit;
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.storage.model.product.FoodProduct;
+import fr.croixrouge.storage.model.product.ProductLimit;
+import fr.croixrouge.storage.model.quantifier.LiquidQuantifier;
+import fr.croixrouge.storage.model.quantifier.LiquidUnit;
 
 public class FoodProductService {
 
