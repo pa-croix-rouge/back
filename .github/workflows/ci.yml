@@ -41,23 +41,14 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Archive Maven dependencies
-        run: tar czvf maven_dependencies.tgz -C ~/.m2/repository .
-
-      - name: Upload Maven dependencies artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: maven-dependencies
-          path: ./maven_dependencies.tgz
+        run: tar czvf maven_dependencies.tgz -C ~/.m2 repository .
 
   sca_testing:
     needs: archive_dependencies
     runs-on: self-hosted
     steps:
-      - name: Download Maven dependencies archive
-        uses: actions/download-artifact@v2
-        with:
-          name: maven-dependencies
-          path: .
+      - name: Restore local Maven cache
+        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
 
       - name: Extract Maven dependencies
         run: tar xvf maven_dependencies.tgz
@@ -81,11 +72,8 @@ jobs:
     needs: sca_testing
     runs-on: self-hosted
     steps:
-      - name: Download Maven dependencies archive
-        uses: actions/download-artifact@v2
-        with:
-          name: maven-dependencies
-          path: .
+      - name: Restore local Maven cache
+        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
 
       - name: Extract Maven dependencies
         run: tar xvf maven_dependencies.tgz
@@ -119,13 +107,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      - name: Restore local Maven cache
+        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
 
       - name: Run tests
         env:
