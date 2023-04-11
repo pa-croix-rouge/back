@@ -19,36 +19,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Archive code
-        uses: actions/upload-artifact@v2
-        with:
-          name: source-code
-          path: .
-
-  download_artifact:
+  archive_dependencies:
     needs: checkout_code
     runs-on: self-hosted
     steps:
-      - name: Download code
-        uses: actions/download-artifact@v2
-        with:
-          name: source-code
-
-      - name: Archive code
-        uses: actions/upload-artifact@v2
-        with:
-          name: downloaded-source-code
-          path: .
-
-  archive_dependencies:
-    needs: download_artifact
-    runs-on: self-hosted
-    steps:
-      - name: Download code
-        uses: actions/download-artifact@v2
-        with:
-          name: downloaded-source-code
-
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -76,11 +50,6 @@ jobs:
     needs: archive_dependencies
     runs-on: self-hosted
     steps:
-      - name: Download code
-        uses: actions/download-artifact@v2
-        with:
-          name: downloaded-source-code
-
       - name: Download Maven dependencies archive
         uses: actions/download-artifact@v2
         with:
@@ -109,11 +78,6 @@ jobs:
     needs: sca_testing
     runs-on: self-hosted
     steps:
-      - name: Download code
-        uses: actions/download-artifact@v2
-        with:
-          name: downloaded-source-code
-
       - name: Download Maven dependencies archive
         uses: actions/download-artifact@v2
         with:
@@ -146,11 +110,6 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Download code
-        uses: actions/download-artifact@v2
-        with:
-          name: downloaded-source-code
-
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
