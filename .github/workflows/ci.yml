@@ -63,7 +63,7 @@ jobs:
         run: npm install -g snyk
 
       - name: Run Snyk test
-        run: snyk test --all-projects
+        run: DEBUG=*snyk* snyk test --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: false
