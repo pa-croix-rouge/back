@@ -14,7 +14,7 @@ on:
 
 jobs:
   checkout_code:
-    runs-on: runner-back
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
 
   download_artifact:
     needs: checkout_code
-    runs-on: runner-back
+    runs-on: self-hosted
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
@@ -42,7 +42,7 @@ jobs:
 
   archive_dependencies:
     needs: download_artifact
-    runs-on: runner-back
+    runs-on: self-hosted
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
@@ -74,7 +74,7 @@ jobs:
 
   sca_testing:
     needs: archive_dependencies
-    runs-on: runner-back
+    runs-on: self-hosted
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
@@ -107,7 +107,7 @@ jobs:
 
   build:
     needs: sca_testing
-    runs-on: runner-back
+    runs-on: self-hosted
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
@@ -144,7 +144,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: runner-back
+    runs-on: self-hosted
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
