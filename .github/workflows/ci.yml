@@ -58,12 +58,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          maven-version: '3.8.1'
 
       - name: Install Snyk CLI
         run: npm install -g snyk
 
       - name: Run Snyk test
-        run: DEBUG=*snyk* snyk test --all-projects
+        run: snyk test --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: false
