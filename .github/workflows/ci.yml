@@ -26,8 +26,8 @@ jobs:
           path: .
 
   download_artifact:
-    needs: runner-back
-    runs-on: ubuntu-latest
+    needs: checkout_code
+    runs-on: runner-back
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
