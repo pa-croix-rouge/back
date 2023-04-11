@@ -14,7 +14,7 @@ on:
 
 jobs:
   checkout_code:
-    runs-on: ubuntu-latest
+    runs-on: runner-back
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
           path: .
 
   download_artifact:
-    needs: checkout_code
+    needs: runner-back
     runs-on: ubuntu-latest
     steps:
       - name: Download code
@@ -42,7 +42,7 @@ jobs:
 
   archive_dependencies:
     needs: download_artifact
-    runs-on: ubuntu-latest
+    runs-on: runner-back
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
@@ -74,7 +74,7 @@ jobs:
 
   sca_testing:
     needs: archive_dependencies
-    runs-on: ubuntu-latest
+    runs-on: runner-back
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
@@ -107,7 +107,7 @@ jobs:
 
   build:
     needs: sca_testing
-    runs-on: ubuntu-latest
+    runs-on: runner-back
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
@@ -144,7 +144,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: runner-back
     steps:
       - name: Download code
         uses: actions/download-artifact@v2
