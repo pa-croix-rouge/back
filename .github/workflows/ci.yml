@@ -94,7 +94,7 @@ jobs:
           JWT_HEADER: ${{ secrets.JWT_HEADER }}
           JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
         run: |
-          mvn clean compile --batch-mode --no-transfer-progress \
+          mvn clean compile package -Dmaven.test.skip=true --batch-mode --no-transfer-progress \
           -Djwt.secret="${JWT_SECRET}" \
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
