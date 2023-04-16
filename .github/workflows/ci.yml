@@ -125,3 +125,23 @@ jobs:
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
           -Djwt.token.prefix="${JWT_PREFIX}"
+
+  deploy:
+    needs: test
+    runs-on: self-hosted
+    steps:
+      - name: Copy built artifacts (pre-production)
+        if: github.ref == 'refs/heads/dev'
+        run: for jarFile in `find . -name *SNAPSHOT.jar`; do cp $jarFile /root/pa-cxr/pre-prod/back/.; done
+
+      - name: Run the application (pre-production)
+        if: github.ref == 'refs/heads/dev'
+        run: sh /root/pa-cxr/pre-prod/back/run_back.sh
+
+      - name: Copy built artifacts (production)
+        if: github.ref == 'refs/heads/master'
+        run: for jarFile in `find . -name *SNAPSHOT.jar`; do cp $jarFile /root/pa-cxr/prod/back/.; done
+
+      - name: Run the application (production)
+        if: github.ref == 'refs/heads/master'
+        run: sh /root/pa-cxr/prod/back/run_back.sh
