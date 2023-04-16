@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - master
+      - dev
       - 'feature/**'
       - 'fix/**'
   pull_request:
     branches:
       - master
+      - dev
       - 'feature/**'
       - 'fix/**'
 
@@ -92,7 +94,7 @@ jobs:
           JWT_HEADER: ${{ secrets.JWT_HEADER }}
           JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
         run: |
-          mvn clean compile --batch-mode --no-transfer-progress \
+          mvn clean compile package -Dmaven.test.skip=true --batch-mode --no-transfer-progress \
           -Djwt.secret="${JWT_SECRET}" \
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
@@ -123,3 +125,23 @@ jobs:
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
           -Djwt.token.prefix="${JWT_PREFIX}"
+
+  deploy:
+    needs: test
+    runs-on: self-hosted
+    steps:
+      - name: Copy built artifacts (pre-production)
+        if: github.ref == 'refs/heads/dev'
+        run: for jarFile in `find . -name *SNAPSHOT.jar`; do cp $jarFile /root/pa-cxr/pre-prod/back/.; done
+
+      - name: Run the application (pre-production)
+        if: github.ref == 'refs/heads/dev'
+        run: sh /root/pa-cxr/pre-prod/back/run_back.sh
+
+      - name: Copy built artifacts (production)
+        if: github.ref == 'refs/heads/master'
+        run: for jarFile in `find . -name *SNAPSHOT.jar`; do cp $jarFile /root/pa-cxr/prod/back/.; done
+
+      - name: Run the application (production)
+        if: github.ref == 'refs/heads/master'
+        run: sh /root/pa-cxr/prod/back/run_back.sh
