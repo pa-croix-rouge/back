@@ -23,7 +23,7 @@ public class CreateStorageDTO extends CreationDTO<Storage> {
     }
 
     public Storage toModel(LocalUnit localUnit) {
-        return new Storage(null, localUnit, address.toModel(), null, null);
+        return new Storage(null, localUnit, address.toModel());
     }
 
     @Override

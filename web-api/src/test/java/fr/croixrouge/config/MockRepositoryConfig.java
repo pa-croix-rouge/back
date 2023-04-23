@@ -103,8 +103,8 @@ public class MockRepositoryConfig {
     public StorageRepository storageTestRepository() {
         List<Storage> storages = new ArrayList<>();
 
-        storages.add(new Storage(new ID("1"), localUnit, address, null, null));
-        storages.add(new Storage(new ID("2"), localUnit, address, null, null));
+        storages.add(new Storage(new ID("1"), localUnit, address));
+        storages.add(new Storage(new ID("2"), localUnit, address));
 
         return new InMemoryStorageRepository(storages);
     }
