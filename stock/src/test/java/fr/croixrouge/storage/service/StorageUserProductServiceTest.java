@@ -22,8 +22,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StorageUserProductServiceTest {
 
@@ -62,26 +61,32 @@ class StorageUserProductServiceTest {
     }
 
     @Test
+    void should_add_product_and_decrease_storage_quantity() {
+        storageUserProductService.addProduct(user, storage, productWeight1KgNoLimit, 1);
+        assertEquals(-1, storageProductService.getProductQuantity(storage, productWeight1KgNoLimit));
+    }
+
+    @Test
     void should_not_add_product_when_limit_is_reached() {
-        storageUserProductService.addProduct(user, productWeight1KgLimit1KgFor7Days, 1);
+        storageUserProductService.addProduct(user, storage, productWeight1KgLimit1KgFor7Days, 1);
         assertFalse(storageUserProductService.canAddProduct(user, storage, productWeight1KgLimit1KgFor7Days, 1));
     }
 
     @Test
     void should_not_add_2product_when_limit_is_reached() {
-        storageUserProductService.addProduct(user, productWeight500gLimit1KgFor7Days, 1);
+        storageUserProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1);
         assertFalse(storageUserProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 2));
     }
 
     @Test
     void should_add_product_when_limit_is_not_entirely_reached() {
-        storageUserProductService.addProduct(user, productWeight500gLimit1KgFor7Days, 1);
+        storageUserProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1);
         assertTrue(storageUserProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 1));
     }
 
     @Test
     void should_add_product_if_duration() {
-        storageUserProductService.addProduct(user, productWeight500gLimit1KgFor7Days, 1, LocalDate.now().minusDays(8));
+        storageUserProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1, LocalDate.now().minusDays(8));
         assertTrue(storageUserProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 1));
     }
 }

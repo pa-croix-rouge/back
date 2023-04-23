@@ -11,7 +11,6 @@ import java.util.List;
 
 public class StorageUserProductService {
 
-
     private final StorageUserProductRepository storageUserProductRepository;
 
     private final StorageProductService storageProductService;
@@ -21,12 +20,13 @@ public class StorageUserProductService {
         this.storageProductService = storageProductService;
     }
 
-    public void addProduct(User user, Product product, int quantity) {
-        addProduct(user, product, quantity, LocalDate.now());
+    public void addProduct(User user, Storage storage, Product product, int quantity) {
+        addProduct(user, storage, product, quantity, LocalDate.now());
     }
 
-    public void addProduct(User user, Product product, int quantity, LocalDate date) {
+    public void addProduct(User user, Storage storage, Product product, int quantity, LocalDate date) {
         storageUserProductRepository.save(new StorageUserProduct(null, user, product, date, quantity));
+        storageProductService.removeProduct(storage, product, quantity);
     }
 
     public boolean canAddProduct(User user, Storage storage, Product product, int quantity) {
