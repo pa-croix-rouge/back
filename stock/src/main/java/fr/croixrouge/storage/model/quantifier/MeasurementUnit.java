@@ -30,12 +30,12 @@ public abstract class MeasurementUnit {
             return WeightUnit.KILOGRAM;
         } else if (name.equals(WeightUnit.GRAM.getName())) {
             return WeightUnit.GRAM;
-        } else if (name.equals(LiquidUnit.LITER.getName())) {
-            return LiquidUnit.LITER;
-        } else if (name.equals(LiquidUnit.MILLILITER.getName())) {
-            return LiquidUnit.MILLILITER;
-        } else if (name.equals(LiquidUnit.DECILITER.getName())) {
-            return LiquidUnit.DECILITER;
+        } else if (name.equals(VolumeUnit.LITER.getName())) {
+            return VolumeUnit.LITER;
+        } else if (name.equals(VolumeUnit.MILLILITER.getName())) {
+            return VolumeUnit.MILLILITER;
+        } else if (name.equals(VolumeUnit.DECILITER.getName())) {
+            return VolumeUnit.DECILITER;
         } else {
             throw new IllegalArgumentException("Unknown measurement unit: " + name);
         }

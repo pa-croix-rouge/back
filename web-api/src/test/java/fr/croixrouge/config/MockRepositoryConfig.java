@@ -8,8 +8,8 @@ import fr.croixrouge.repository.InMemoryLocalUnitRepository;
 import fr.croixrouge.repository.InMemoryRoleRepository;
 import fr.croixrouge.repository.InMemoryUserRepository;
 import fr.croixrouge.storage.model.product.Product;
-import fr.croixrouge.storage.model.quantifier.LiquidQuantifier;
-import fr.croixrouge.storage.model.quantifier.LiquidUnit;
+import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
+import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import fr.croixrouge.storage.repository.ProductRepository;
@@ -93,7 +93,7 @@ public class MockRepositoryConfig {
         List<Product> products = new ArrayList<>();
 
         products.add(new Product(new ID("1"), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null));
-        products.add(new Product(new ID("2"), "Product 2", new LiquidQuantifier(1, LiquidUnit.LITER), null));
+        products.add(new Product(new ID("2"), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null));
 
         return new InMemoryProductRepository(products);
     }
