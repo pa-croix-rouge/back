@@ -1,18 +1,18 @@
 package fr.croixrouge.storage.model;
 
+import fr.croixrouge.domain.model.Entity;
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.product.Product;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StorageUser {
-
-    private final String userId;
+public class StorageUser extends Entity<ID> {
     private final List<StorageUserProduct> products;
 
-    public StorageUser(String userId, List<StorageUserProduct> products) {
-        this.userId = userId;
+    public StorageUser(ID userId, List<StorageUserProduct> products) {
+        super(userId);
         this.products = products;
     }
 

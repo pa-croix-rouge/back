@@ -34,35 +34,35 @@ class StorageUserTest {
     @Test
     void should_add_product() {
         Product product = get1KgProduct(ProductLimit.NO_LIMIT);
-        StorageUser user = new StorageUser("1", new ArrayList<>());
+        StorageUser user = new StorageUser(new ID("1"), new ArrayList<>());
         assertTrue(user.canAddProduct(product, 1));
     }
 
     @Test
     void should_not_add_product_when_limit_is_reached() {
         Product product = get1KgProduct(new ProductLimit(Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM)));
-        StorageUser user = new StorageUser("1", new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now(), 1))));
+        StorageUser user = new StorageUser(new ID("1"), new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now(), 1))));
         assertFalse(user.canAddProduct(product, 1));
     }
 
     @Test
     void should_not_add_2product_when_limit_is_reached() {
         Product product = get500gProduct(new ProductLimit(Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM)));
-        StorageUser user = new StorageUser("1", new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now(), 1))));
+        StorageUser user = new StorageUser(new ID("1"), new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now(), 1))));
         assertFalse(user.canAddProduct(product, 2));
     }
 
     @Test
     void should_add_product_when_limit_is_not_entirely_reached() {
         Product product = get500gProduct(new ProductLimit(Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM)));
-        StorageUser user = new StorageUser("1", new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now(), 1))));
+        StorageUser user = new StorageUser(new ID("1"), new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now(), 1))));
         assertTrue(user.canAddProduct(product, 1));
     }
 
     @Test
     void should_add_product_if_duration() {
         Product product = get1KgProduct(new ProductLimit(Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM)));
-        StorageUser user = new StorageUser("1", new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now().minusDays(8), 1))));
+        StorageUser user = new StorageUser(new ID("1"), new ArrayList<>(List.of(new StorageUserProduct(product, LocalDate.now().minusDays(8), 1))));
         assertTrue(user.canAddProduct(product, 1));
     }
 
