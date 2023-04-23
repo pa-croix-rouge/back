@@ -10,6 +10,11 @@ public class CreateProductDTO extends CreationDTO<Product> {
     public CreateProductDTO() {
     }
 
+    public CreateProductDTO(String name, QuantifierDTO quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public String getName() {
         return name;
     }

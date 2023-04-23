@@ -10,7 +10,7 @@ public interface ProductRepository extends CRUDRepository<ID, Product> {
 
     Optional<Product> findById(ID id);
 
-    void save(Product product);
+    ID save(Product product);
 
     void delete(Product product);
 

@@ -8,7 +8,7 @@ public class QuantifierDTO {
     private final String measurementUnit;
     private final double value;
 
-    protected QuantifierDTO(String measurementUnit, double value) {
+    public QuantifierDTO(String measurementUnit, double value) {
         this.measurementUnit = measurementUnit;
         this.value = value;
     }

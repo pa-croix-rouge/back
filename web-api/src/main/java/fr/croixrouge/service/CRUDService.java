@@ -19,8 +19,8 @@ public class CRUDService<K extends ID, V extends Entity<K>, R extends CRUDReposi
         return repository.findById(id).orElseThrow();
     }
 
-    public void save(V object) {
-        repository.save(object);
+    public K save(V object) {
+        return repository.save(object);
     }
 
     public void delete(V object) {

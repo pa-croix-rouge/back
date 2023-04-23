@@ -37,8 +37,8 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
     }
 
     @PostMapping()
-    public void post(@RequestBody CREATION_DTO model) {
-        service.save(model.toModel());
+    public K post(@RequestBody CREATION_DTO model) {
+        return service.save(model.toModel());
     }
 
     @DeleteMapping(value = "/{id}")

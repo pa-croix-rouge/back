@@ -24,7 +24,7 @@ public class CRUDInMemoryRepository<K extends ID, V extends Entity<K>> implement
     }
 
     @Override
-    public void save(V object) {
+    public K save(V object) {
 
         if (object.getId() == null) {
             object.setId(idGenerator.generate());
@@ -32,6 +32,7 @@ public class CRUDInMemoryRepository<K extends ID, V extends Entity<K>> implement
 
         objects.removeIf(o -> o.getId().equals(object.getId()));
         objects.add(object);
+        return object.getId();
     }
 
     @Override
