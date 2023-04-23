@@ -1,11 +1,11 @@
 package fr.croixrouge.domain.repository;
 
-import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Entity;
+import fr.croixrouge.domain.model.ID;
 
 import java.util.Optional;
 
-public interface CRUDRepository<K, V> {
-
+public interface CRUDRepository<K extends ID, V extends Entity<K>> {
     Optional<V> findById(K id);
 
     void save(V object);

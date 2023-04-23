@@ -41,10 +41,10 @@ public class Storage {
                 .orElse(0);
     }
 
-    public void removeProduct(Product foodProduct, int quantity) {
-        storageProductRepository.findById(this, foodProduct)
-                .ifPresentOrElse(storageProduct -> storageProductRepository.save(new StorageProduct(storageProduct.getId(), this, foodProduct, storageProduct.getQuantity() - quantity)),
-                        () -> storageProductRepository.save(new StorageProduct(this, foodProduct, -quantity)));
+    public void removeProduct(Product product, int quantity) {
+        storageProductRepository.findById(this, product)
+                .ifPresentOrElse(storageProduct -> storageProductRepository.save(new StorageProduct(storageProduct.getId(), this, product, storageProduct.getQuantity() - quantity)),
+                        () -> storageProductRepository.save(new StorageProduct(this, product, -quantity)));
     }
 
 }

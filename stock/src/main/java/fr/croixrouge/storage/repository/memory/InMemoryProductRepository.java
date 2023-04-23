@@ -19,8 +19,4 @@ public class InMemoryProductRepository extends CRUDInMemoryRepository<ID, Produc
         super(new ArrayList<>(), new TimeStampIDGenerator());
     }
 
-    @Override
-    public void delete(Product product) {
-
-    }
 }
