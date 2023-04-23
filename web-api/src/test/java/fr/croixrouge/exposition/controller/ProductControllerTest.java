@@ -46,8 +46,8 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the role endpoint returns a list of roles when given a correct local unit id")
-    public void roleLocalUnitIdSuccessTest() throws Exception {
+    @DisplayName("Test that the product endpoint returns a product when given a correct local unit id")
+    public void productIdSuccessTest() throws Exception {
         mockMvc.perform(get("/product/1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -56,6 +56,15 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.name").value("Product 1"))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(1));
+    }
+
+    @Test
+    @DisplayName("Test that the product endpoint returns a 404 when given a incorrect local unit id")
+    public void productIdFailedTest() throws Exception {
+        var test = mockMvc.perform(get("/product/invalid-product-id")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 }
