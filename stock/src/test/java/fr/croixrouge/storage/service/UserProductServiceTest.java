@@ -10,11 +10,11 @@ import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
-import fr.croixrouge.storage.repository.StorageUserProductRepository;
+import fr.croixrouge.storage.repository.UserProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryStorageUserProductRepository;
+import fr.croixrouge.storage.repository.memory.InMemoryUserProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,20 +24,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StorageUserProductServiceTest {
+class UserProductServiceTest {
 
     StorageRepository storageRepository = new InMemoryStorageRepository();
 
     ProductRepository productRepository = new InMemoryProductRepository();
 
     StorageProductRepository storageProductRepository = new InMemoryStorageProductRepository();
-    StorageUserProductRepository storageUserProductRepository = new InMemoryStorageUserProductRepository();
+    UserProductRepository userProductRepository = new InMemoryUserProductRepository();
 
     Storage storage = new Storage(new ID("1"), null, null);
 
     private final StorageProductService storageProductService = new StorageProductService(storageRepository, productRepository, storageProductRepository);
 
-    private final StorageUserProductService storageUserProductService = new StorageUserProductService(storageUserProductRepository, storageProductService);
+    private final UserProductService userProductService = new UserProductService(userProductRepository, storageProductService);
 
     private final User user = new User("1", "TEST", "TEST", List.of());
 
@@ -57,36 +57,36 @@ class StorageUserProductServiceTest {
 
     @Test
     void should_add_product() {
-        assertTrue(storageUserProductService.canAddProduct(user, storage, productWeight1KgNoLimit, 1));
+        assertTrue(userProductService.canAddProduct(user, storage, productWeight1KgNoLimit, 1));
     }
 
     @Test
     void should_add_product_and_decrease_storage_quantity() {
-        storageUserProductService.addProduct(user, storage, productWeight1KgNoLimit, 1);
+        userProductService.addProduct(user, storage, productWeight1KgNoLimit, 1);
         assertEquals(-1, storageProductService.getProductQuantity(storage, productWeight1KgNoLimit));
     }
 
     @Test
     void should_not_add_product_when_limit_is_reached() {
-        storageUserProductService.addProduct(user, storage, productWeight1KgLimit1KgFor7Days, 1);
-        assertFalse(storageUserProductService.canAddProduct(user, storage, productWeight1KgLimit1KgFor7Days, 1));
+        userProductService.addProduct(user, storage, productWeight1KgLimit1KgFor7Days, 1);
+        assertFalse(userProductService.canAddProduct(user, storage, productWeight1KgLimit1KgFor7Days, 1));
     }
 
     @Test
     void should_not_add_2product_when_limit_is_reached() {
-        storageUserProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1);
-        assertFalse(storageUserProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 2));
+        userProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1);
+        assertFalse(userProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 2));
     }
 
     @Test
     void should_add_product_when_limit_is_not_entirely_reached() {
-        storageUserProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1);
-        assertTrue(storageUserProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 1));
+        userProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1);
+        assertTrue(userProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 1));
     }
 
     @Test
     void should_add_product_if_duration() {
-        storageUserProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1, LocalDate.now().minusDays(8));
-        assertTrue(storageUserProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 1));
+        userProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1, LocalDate.now().minusDays(8));
+        assertTrue(userProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 1));
     }
 }

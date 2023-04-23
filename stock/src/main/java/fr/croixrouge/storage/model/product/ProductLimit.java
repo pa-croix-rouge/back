@@ -1,6 +1,6 @@
 package fr.croixrouge.storage.model.product;
 
-import fr.croixrouge.storage.model.StorageUserProduct;
+import fr.croixrouge.storage.model.UserProduct;
 import fr.croixrouge.storage.model.quantifier.MeasurementUnit;
 import fr.croixrouge.storage.model.quantifier.Quantifier;
 
@@ -20,12 +20,12 @@ public class ProductLimit {
         this.quantity = quantity;
     }
 
-    public boolean isLimitReached(List<StorageUserProduct> products) {
+    public boolean isLimitReached(List<UserProduct> products) {
         if (duration == null || quantity == null) return false;
 
         LocalDate start = LocalDate.now().minusDays(duration.toDays());
 
-        List<StorageUserProduct> q = products.stream().filter(p -> p.date().isAfter(start)).toList();
+        List<UserProduct> q = products.stream().filter(p -> p.date().isAfter(start)).toList();
         if (q.isEmpty()) return false;
 
         MeasurementUnit unit = q.get(0).product().getQuantity().getUnit();

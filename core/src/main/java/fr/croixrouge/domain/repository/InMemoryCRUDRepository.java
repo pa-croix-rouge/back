@@ -6,14 +6,14 @@ import fr.croixrouge.domain.model.ID;
 import java.util.List;
 import java.util.Optional;
 
-public class CRUDInMemoryRepository<K extends ID, V extends Entity<K>> implements CRUDRepository<K, V> {
+public class InMemoryCRUDRepository<K extends ID, V extends Entity<K>> implements CRUDRepository<K, V> {
 
 
     protected final List<V> objects;
 
     protected final IDGenerator<K> idGenerator;
 
-    public CRUDInMemoryRepository(List<V> objects, IDGenerator<K> idGenerator) {
+    public InMemoryCRUDRepository(List<V> objects, IDGenerator<K> idGenerator) {
         this.objects = objects;
         this.idGenerator = idGenerator;
     }

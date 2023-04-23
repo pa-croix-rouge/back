@@ -8,14 +8,14 @@ import fr.croixrouge.storage.model.product.Product;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public final class StorageUserProduct extends Entity<ID> {
+public final class UserProduct extends Entity<ID> {
 
     private final User user;
     private final Product product;
     private final LocalDate date;
     private final int quantity;
 
-    public StorageUserProduct(ID id, User user, Product product, LocalDate date, int quantity) {
+    public UserProduct(ID id, User user, Product product, LocalDate date, int quantity) {
         super(id);
         this.user = user;
         this.product = product;
@@ -43,7 +43,7 @@ public final class StorageUserProduct extends Entity<ID> {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (StorageUserProduct) obj;
+        var that = (UserProduct) obj;
         return Objects.equals(this.product, that.product) &&
                 Objects.equals(this.date, that.date) &&
                 this.quantity == that.quantity;

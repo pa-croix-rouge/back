@@ -1,7 +1,7 @@
 package fr.croixrouge.storage.repository.memory;
 
 import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.domain.repository.CRUDInMemoryRepository;
+import fr.croixrouge.domain.repository.InMemoryCRUDRepository;
 import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class InMemoryStorageProductRepository extends CRUDInMemoryRepository<ID, StorageProduct> implements StorageProductRepository {
+public class InMemoryStorageProductRepository extends InMemoryCRUDRepository<ID, StorageProduct> implements StorageProductRepository {
     public InMemoryStorageProductRepository(List<StorageProduct> objects) {
         super(objects, new TimeStampIDGenerator());
     }
 
     public InMemoryStorageProductRepository() {
-        super (new ArrayList<>(), new TimeStampIDGenerator());
+        super(new ArrayList<>(), new TimeStampIDGenerator());
     }
 
     @Override
