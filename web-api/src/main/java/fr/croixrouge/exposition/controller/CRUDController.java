@@ -3,7 +3,6 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.CreationDTO;
-import fr.croixrouge.exposition.dto.ModelDTO;
 import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.CRUDService;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class CRUDController<K extends ID, V extends Entity<K>, S extends CRUDService<K, V, ?>, MODEL_DTO extends ModelDTO<V>, CREATION_DTO extends CreationDTO<V>> extends ErrorHandler {
+public abstract class CRUDController<K extends ID, V extends Entity<K>, S extends CRUDService<K, V, ?>, MODEL_DTO, CREATION_DTO extends CreationDTO<V>> extends ErrorHandler {
 
     private final S service;
 
@@ -24,11 +23,7 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<MODEL_DTO> getBiID(@PathVariable K id) {
-        V model = service.findById(id);
-        MODEL_DTO dto = toDTO(model);
-        ResponseEntity<MODEL_DTO> response = ResponseEntity.ok(dto);
-
-        return response;
+        return ResponseEntity.ok(toDTO(service.findById(id)));
     }
 
     @GetMapping()

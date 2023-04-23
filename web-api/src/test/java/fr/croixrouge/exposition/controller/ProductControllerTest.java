@@ -95,7 +95,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("Test that the product delete endpoint returns OK when given a correct product")
     public void productDeleteSuccessTest() throws Exception {
-        String id = "1";
+        String id = "2";
 
         mockMvc.perform(delete("/product/" + id)
                         .header("Authorization", "Bearer " + jwtToken)
