@@ -38,4 +38,9 @@ public class CRUDInMemoryRepository<K extends ID, V extends Entity<K>> implement
     public void delete(V object) {
         objects.remove(object);
     }
+
+    @Override
+    public List<V> findAll() {
+        return objects;
+    }
 }

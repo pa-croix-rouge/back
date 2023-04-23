@@ -7,11 +7,19 @@ import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.repository.InMemoryLocalUnitRepository;
 import fr.croixrouge.repository.InMemoryRoleRepository;
 import fr.croixrouge.repository.InMemoryUserRepository;
+import fr.croixrouge.storage.model.product.Product;
+import fr.croixrouge.storage.model.quantifier.LiquidQuantifier;
+import fr.croixrouge.storage.model.quantifier.LiquidUnit;
+import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
+import fr.croixrouge.storage.model.quantifier.WeightUnit;
+import fr.croixrouge.storage.repository.ProductRepository;
+import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +85,16 @@ public class MockRepositoryConfig {
         roles.put(roleId, role);
 
         return new InMemoryRoleRepository(roles);
+    }
+
+    @Bean
+    @Primary
+    public ProductRepository productTestRepository() {
+        List<Product> products = new ArrayList<>();
+
+        products.add(new Product(new ID("1"), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null));
+        products.add(new Product(new ID("2"), "Product 2", new LiquidQuantifier(1, LiquidUnit.LITER), null));
+
+        return new InMemoryProductRepository(products);
     }
 }
