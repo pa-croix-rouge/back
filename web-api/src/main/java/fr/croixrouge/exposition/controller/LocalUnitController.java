@@ -1,7 +1,6 @@
 package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.LocalUnit;
-import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exception.LocalUnitNotFoundException;
 import fr.croixrouge.exception.UserNotFoundException;
 import fr.croixrouge.exposition.dto.LocalUnitRequest;
@@ -30,8 +29,7 @@ public class LocalUnitController {
     public ResponseEntity<LocalUnitResponse> getLocalUnitFromId(@RequestBody LocalUnitRequest localUnitRequest) {
         try {
             LocalUnit localUnit = localUnitService.getLocalUnitByPostalCode(localUnitRequest.getLocalUnitId());
-            User manager = authenticationService.getUserById(localUnit.getManagerId()).orElseThrow();
-            LocalUnitResponse localUnitResponse = LocalUnitResponse.fromLocalUnit(localUnit, manager);
+            LocalUnitResponse localUnitResponse = LocalUnitResponse.fromLocalUnit(localUnit);
             return ResponseEntity.ok(localUnitResponse);
         } catch (LocalUnitNotFoundException | UserNotFoundException e) {
             return ResponseEntity.notFound().build();

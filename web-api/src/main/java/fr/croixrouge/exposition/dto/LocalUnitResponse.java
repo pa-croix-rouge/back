@@ -1,56 +1,43 @@
 package fr.croixrouge.exposition.dto;
 
 import fr.croixrouge.domain.model.LocalUnit;
-import fr.croixrouge.domain.model.User;
 
 public class LocalUnitResponse {
 
-    private String name;
-    private String department;
-    private String postalCode;
-    private String city;
-    private String streetNumberAndName;
-    private String managerName;
+    private final String Id;
 
-    public LocalUnitResponse(String name, String department, String postalCode, String city, String streetNumberAndName, String managerName) {
+    private final String name;
+    private final AddressDTO address;
+    private final String managerName;
+
+    public LocalUnitResponse(String id, String name, AddressDTO address, String managerName) {
+        this.Id = id;
         this.name = name;
-        this.department = department;
-        this.postalCode = postalCode;
-        this.city = city;
-        this.streetNumberAndName = streetNumberAndName;
+        this.address = address;
         this.managerName = managerName;
     }
 
-    public static LocalUnitResponse fromLocalUnit(LocalUnit localUnit, User manager) {
+    public static LocalUnitResponse fromLocalUnit(LocalUnit localUnit) {
         return new LocalUnitResponse(
+                localUnit.getLocalUnitId(),
                 localUnit.getName(),
-                localUnit.getAddress().getDepartment().getName(),
-                localUnit.getAddress().getPostalCode(),
-                localUnit.getAddress().getCity(),
-                localUnit.getAddress().getStreetNumberAndName(),
-                manager.getUsername()
+                new AddressDTO(localUnit.getAddress()),
+                localUnit.getManager().getUsername()
         );
+    }
+
+    public AddressDTO getAddress() {
+        return address;
+    }
+
+    public String getId() {
+        return Id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getDepartment() {
-        return department;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getStreetNumberAndName() {
-        return streetNumberAndName;
-    }
 
     public String getManagerName() {
         return managerName;

@@ -21,6 +21,10 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
 
     public abstract MODEL_DTO toDTO(V model);
 
+    public V toModel(CREATION_DTO dto) {
+        return dto.toModel();
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<MODEL_DTO> getBiID(@PathVariable K id) {
         return ResponseEntity.ok(toDTO(service.findById(id)));
@@ -33,7 +37,7 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
 
     @PostMapping()
     public K post(@RequestBody CREATION_DTO model) {
-        return service.save(model.toModel());
+        return service.save(toModel(model));
     }
 
     @DeleteMapping(value = "/{id}")

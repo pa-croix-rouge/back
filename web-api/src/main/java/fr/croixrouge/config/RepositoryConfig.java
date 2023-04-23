@@ -7,7 +7,9 @@ import fr.croixrouge.repository.InMemoryLocalUnitRepository;
 import fr.croixrouge.repository.InMemoryRoleRepository;
 import fr.croixrouge.repository.InMemoryUserRepository;
 import fr.croixrouge.storage.repository.ProductRepository;
+import fr.croixrouge.storage.repository.StorageRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
+import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +34,11 @@ public class RepositoryConfig {
     @Bean
     public ProductRepository productRepository() {
         return new InMemoryProductRepository();
+    }
+
+    @Bean
+    public StorageRepository storageRepository() {
+        return new InMemoryStorageRepository();
     }
 
 }
