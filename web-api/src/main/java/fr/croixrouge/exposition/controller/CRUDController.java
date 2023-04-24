@@ -26,7 +26,7 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<MODEL_DTO> getBiID(@PathVariable K id) {
+    public ResponseEntity<MODEL_DTO> getByID(@PathVariable K id) {
         return ResponseEntity.ok(toDTO(service.findById(id)));
     }
 

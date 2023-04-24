@@ -7,13 +7,9 @@ import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.product.ProductLimit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
-import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageProductRepository;
-import fr.croixrouge.storage.repository.StorageRepository;
 import fr.croixrouge.storage.repository.UserProductRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageProductRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryUserProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,16 +22,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserProductServiceTest {
 
-    StorageRepository storageRepository = new InMemoryStorageRepository();
-
-    ProductRepository productRepository = new InMemoryProductRepository();
-
     StorageProductRepository storageProductRepository = new InMemoryStorageProductRepository();
     UserProductRepository userProductRepository = new InMemoryUserProductRepository();
 
     Storage storage = new Storage(new ID("1"), null, null);
 
-    private final StorageProductService storageProductService = new StorageProductService(storageRepository, productRepository, storageProductRepository);
+    private final StorageProductService storageProductService = new StorageProductService(storageProductRepository);
 
     private final UserProductService userProductService = new UserProductService(userProductRepository, storageProductService);
 
@@ -48,11 +40,6 @@ class UserProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.save(productWeight1KgNoLimit);
-        productRepository.save(productWeight1KgLimit1KgFor7Days);
-        productRepository.save(productWeight500gLimit1KgFor7Days);
-
-        storageRepository.save(storage);
     }
 
     @Test
