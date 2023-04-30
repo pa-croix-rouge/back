@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/storage/{storageId}/product}")
+@RequestMapping("storage/{storageId}/product")
 public class StorageProductController {
 
     private final StorageProductService service;
@@ -20,7 +20,6 @@ public class StorageProductController {
 
     @GetMapping(value = "/{id}/quantity")
     public ResponseEntity<Integer> getProductQuantity(@PathVariable ID storageId, @PathVariable ID id) {
-        ;
         return ResponseEntity.ok(service.getProductQuantity(storageId, id));
     }
 }
