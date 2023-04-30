@@ -74,7 +74,7 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public StorageProductService storageProductService(StorageProductRepository storageProductRepository) {
+    public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
         return new StorageProductService(storageProductRepository);
     }
 
