@@ -1,5 +1,6 @@
 package fr.croixrouge.repository;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
@@ -14,9 +15,9 @@ public class InMemoryEventRepository implements EventRepository {
 
     private final AtomicInteger nextId = new AtomicInteger(0);
 
-    private final ConcurrentHashMap<String, Event> events;
+    private final ConcurrentHashMap<ID, Event> events;
 
-    public InMemoryEventRepository(ConcurrentHashMap<String, Event> events) {
+    public InMemoryEventRepository(ConcurrentHashMap<ID, Event> events) {
         this.events = events;
         nextId.set(events.size() + 1);
     }
@@ -26,7 +27,7 @@ public class InMemoryEventRepository implements EventRepository {
     }
 
     @Override
-    public Optional<Event> findById(String eventId, String sessionId) {
+    public Optional<Event> findById(ID eventId, ID sessionId) {
         final Optional<Event> event =  Optional.ofNullable(events.get(eventId));
         if (event.isEmpty()) {
             return Optional.empty();
@@ -39,7 +40,7 @@ public class InMemoryEventRepository implements EventRepository {
     }
 
     @Override
-    public Optional<Event> findByEventId(String eventId) {
+    public Optional<Event> findByEventId(ID eventId) {
         return Optional.ofNullable(events.get(eventId));
     }
 
@@ -63,21 +64,21 @@ public class InMemoryEventRepository implements EventRepository {
 
     @Override
     public void save(Event event) {
-        String eventId = String.valueOf(nextId.getAndIncrement());
+        ID eventId = new ID(String.valueOf(nextId.getAndIncrement()));
         Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), new ArrayList<>(), event.getOccurrences());
         for (EventSession session : event.getSessions()) {
-            eventToSave.getSessions().add(new EventSession(String.valueOf(eventToSave.getSessions().size()), session.getStart(), session.getEnd(), new ArrayList<>()));
+            eventToSave.getSessions().add(new EventSession(new ID(String.valueOf(eventToSave.getSessions().size())), session.getStart(), session.getEnd(), new ArrayList<>()));
         }
         this.events.put(eventId, eventToSave);
     }
 
     @Override
-    public void delete(String eventId) {
+    public void delete(ID eventId) {
         this.events.remove(eventId);
     }
 
     @Override
-    public boolean registerParticipant(String eventId, String sessionId, String participantId) {
+    public boolean registerParticipant(ID eventId, ID sessionId, String participantId) {
         Event event = this.events.get(eventId);
         if (event == null) {
             return false;

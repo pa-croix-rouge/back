@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.controller;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.event.*;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
@@ -23,7 +24,7 @@ public class EventController {
 
     @GetMapping("/details")
     public ResponseEntity<SingleEventDetailedResponse> getEventById(@RequestBody SingleEventRequest singleEventRequest) {
-        final Optional<SingleEventDetailedResponse> eventResponse = eventService.getEventById(singleEventRequest.getEventId(), singleEventRequest.getSessionId()).map(event -> SingleEventDetailedResponse.fromEvent(event, event.getSessions().get(0)));
+        final Optional<SingleEventDetailedResponse> eventResponse = eventService.getEventById(new ID(singleEventRequest.getEventId()), new ID(singleEventRequest.getSessionId())).map(event -> SingleEventDetailedResponse.fromEvent(event, event.getSessions().get(0)));
         return eventResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -35,7 +36,7 @@ public class EventController {
 
     @DeleteMapping("/details")
     public ResponseEntity deleteEvent(@RequestBody SingleEventRequest singleEventRequest) {
-        eventService.deleteEvent(singleEventRequest.getEventId());
+        eventService.deleteEvent(new ID(singleEventRequest.getEventId()));
         return ResponseEntity.ok().build();
     }
 
@@ -66,7 +67,7 @@ public class EventController {
     @GetMapping("/sessions")
     public ResponseEntity<List<EventResponse>> getEventSessionsByEventId(@RequestBody SessionForEventRequest sessionForEventRequest) {
         final List<EventResponse> eventResponse = new ArrayList<>();
-        final Optional<Event> event = eventService.getSessionsByEventId(sessionForEventRequest.getEventId());
+        final Optional<Event> event = eventService.getSessionsByEventId(new ID(sessionForEventRequest.getEventId()));
         if (event.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -84,7 +85,7 @@ public class EventController {
 
     @PostMapping("/register")
     public ResponseEntity registerParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
-        eventService.registerParticipant(eventRegistrationRequest.getEventId(), eventRegistrationRequest.getSessionId(), eventRegistrationRequest.getParticipantId());
+        eventService.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), eventRegistrationRequest.getParticipantId());
         return ResponseEntity.ok().build();
     }
 }

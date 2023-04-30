@@ -1,5 +1,6 @@
 package fr.croixrouge.repository;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
 
 import java.util.List;
@@ -7,9 +8,9 @@ import java.util.Optional;
 
 public interface EventRepository {
 
-    Optional<Event> findById(String eventId, String sessionId);
+    Optional<Event> findById(ID eventId, ID sessionId);
 
-    Optional<Event> findByEventId(String eventId);
+    Optional<Event> findByEventId(ID eventId);
 
     List<Event> findByLocalUnitId(String localUnitId);
 
@@ -17,7 +18,7 @@ public interface EventRepository {
 
     void save(Event event);
 
-    void delete(String eventId);
+    void delete(ID eventId);
 
-    boolean registerParticipant(String eventId, String sessionId, String participantId);
+    boolean registerParticipant(ID eventId, ID sessionId, String participantId);
 }

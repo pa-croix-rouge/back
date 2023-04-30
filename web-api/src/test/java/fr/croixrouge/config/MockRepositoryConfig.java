@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -98,8 +97,8 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public EventRepository eventTestRepository() {
-        ConcurrentHashMap<String, Event> events = new ConcurrentHashMap<>();
-        String eventId1 = "1";
+        ConcurrentHashMap<ID, Event> events = new ConcurrentHashMap<>();
+        ID eventId1 = new ID("1");
         String eventName1 = "Formation PSC1";
         String eventDescription1 = "Formation au PSC1";
         ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris"));
@@ -107,11 +106,11 @@ public class MockRepositoryConfig {
         String referrerId1 = "1";
         String localUnitId1 = "1";
         List<String> participants1 = new ArrayList<>();
-        EventSession eventSession1 = new EventSession("0", eventStartDate1, eventEndDate1, participants1);
+        EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, participants1);
         Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
         events.put(eventId1, event1);
 
-        String eventId2 = "2";
+        ID eventId2 = new ID("2");
         String eventName2 = "Distribution alimentaire";
         String eventDescription2 = "Distribution alimentaire gratuite";
         ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris"));
@@ -119,11 +118,11 @@ public class MockRepositoryConfig {
         String referrerId2 = "1";
         String localUnitId2 = "1";
         List<String> participants2 = new ArrayList<>();
-        EventSession eventSession2 = new EventSession("0", eventStartDate2, eventEndDate2, participants2);
+        EventSession eventSession2 = new EventSession(new ID("0"), eventStartDate2, eventEndDate2, participants2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
         events.put(eventId2, event2);
 
-        String eventId3 = "3";
+        ID eventId3 = new ID("3");
         String eventName3 = "Formation PSC1";
         String eventDescription3 = "Formation au PSC1";
         ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris"));
@@ -131,11 +130,11 @@ public class MockRepositoryConfig {
         String referrerId3 = "1";
         String localUnitId3 = "1";
         List<String> participants3 = new ArrayList<>();
-        EventSession eventSession3 = new EventSession("0", eventStartDate3, eventEndDate3, participants3);
+        EventSession eventSession3 = new EventSession(new ID("0"), eventStartDate3, eventEndDate3, participants3);
         Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
         events.put(eventId3, event3);
 
-        String eventId4 = "4";
+        ID eventId4 = new ID("4");
         String eventName4 = "EPISOL";
         String eventDescription4 = "Ouverture de l'EPISOL";
         ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
@@ -146,7 +145,7 @@ public class MockRepositoryConfig {
         AtomicInteger sessionCounter = new AtomicInteger(0);
         for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {
             eventSessions4.add(new EventSession(
-                    String.valueOf(sessionCounter.getAndIncrement()),
+                    new ID(String.valueOf(sessionCounter.getAndIncrement())),
                     sessionTime,
                     sessionTime.plusMinutes(120),
                     new ArrayList<>()

@@ -1,5 +1,6 @@
 package fr.croixrouge.service;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.repository.EventRepository;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Optional<Event> getEventById(String eventId, String sessionId) {
+    public Optional<Event> getEventById(ID eventId, ID sessionId) {
         return eventRepository.findById(eventId, sessionId);
     }
 
-    public Optional<Event> getSessionsByEventId(String eventId) {
+    public Optional<Event> getSessionsByEventId(ID eventId) {
         return eventRepository.findByEventId(eventId);
     }
 
@@ -36,11 +37,11 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public void deleteEvent(String eventId) {
+    public void deleteEvent(ID eventId) {
         eventRepository.delete(eventId);
     }
 
-    public boolean registerParticipant(String eventId, String sessionId, String participantId) {
+    public boolean registerParticipant(ID eventId, ID sessionId, String participantId) {
         return eventRepository.registerParticipant(eventId, sessionId, participantId);
     }
 }
