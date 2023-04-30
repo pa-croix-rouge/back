@@ -19,4 +19,8 @@ public class LocalUnitService {
                 .orElseThrow(() -> new LocalUnitNotFoundException("Local unit not found for postal code: " + postalCode));
         return localUnit;
     }
+
+    public LocalUnit findById(String id) {
+        return localUnitRepository.findById(id).orElseThrow();
+    }
 }

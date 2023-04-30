@@ -6,13 +6,13 @@ public class LocalUnit {
     private final String localUnitId;
     private final String name;
     private final Address address;
-    private final String managerId;
+    private final User manager;
 
-    public LocalUnit(String localUnitId, String name, Address address, String managerId) {
+    public LocalUnit(String localUnitId, String name, Address address, User manager) {
         this.localUnitId = localUnitId;
         this.name = name;
         this.address = address;
-        this.managerId = managerId;
+        this.manager = manager;
     }
 
     public String getLocalUnitId() {
@@ -27,8 +27,8 @@ public class LocalUnit {
         return address;
     }
 
-    public String getManagerId() {
-        return managerId;
+    public User getManager() {
+        return manager;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class LocalUnit {
                 "localUnitId='" + localUnitId + '\'' +
                 ", name='" + name + '\'' +
                 ", address=" + address +
-                ", managerId='" + managerId + '\'' +
+                ", managerId='" + manager.getUserId() + '\'' +
                 '}';
     }
 
@@ -46,11 +46,11 @@ public class LocalUnit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocalUnit localUnit = (LocalUnit) o;
-        return Objects.equals(localUnitId, localUnit.localUnitId) && Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(managerId, localUnit.managerId);
+        return Objects.equals(localUnitId, localUnit.localUnitId) && Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(manager, localUnit.manager);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(localUnitId, name, address, managerId);
+        return Objects.hash(localUnitId, name, address, manager);
     }
 }
