@@ -32,7 +32,6 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
@@ -57,14 +56,14 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public UserRepository userTestRepository() {
-        ConcurrentHashMap<ID, User> users = new ConcurrentHashMap<>();
+        ArrayList<User> users = new ArrayList<>();
         ID defaultUserId = new ID("1");
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode("defaultPassword");
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
-        users.put(defaultUserId, defaultUser);
+        users.add(defaultUser);
 
-        users.put(mangerUser.getId(), mangerUser);
+        users.add(mangerUser);
 
         return new InMemoryUserRepository(users);
     }

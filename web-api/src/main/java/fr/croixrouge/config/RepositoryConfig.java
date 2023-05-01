@@ -19,8 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class RepositoryConfig {
@@ -33,12 +33,12 @@ public class RepositoryConfig {
 
     @Bean
     public UserRepository userRepository(){
-        ConcurrentHashMap<ID, User> users = new ConcurrentHashMap<>();
+        ArrayList<User> users = new ArrayList<>();
         ID defaultUserId = new ID("1");
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode("defaultPassword");
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
-        users.put(defaultUserId, defaultUser);
+        users.add(defaultUser);
         return new InMemoryUserRepository(users);
     }
 

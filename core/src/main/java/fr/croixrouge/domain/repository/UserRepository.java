@@ -5,12 +5,8 @@ import fr.croixrouge.domain.model.User;
 
 import java.util.Optional;
 
-public interface UserRepository {
-
-    Optional<User> findById(ID userId);
+public interface UserRepository extends CRUDRepository<ID, User> {
 
     Optional<User> findByUsername(String username);
-
-    void save(User user);
 
 }
