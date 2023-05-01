@@ -1,36 +1,27 @@
 package fr.croixrouge.repository;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.repository.InMemoryCRUDRepository;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
+import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 
+import java.util.ArrayList;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 
-public class InMemoryLocalUnitRepository implements LocalUnitRepository {
+public class InMemoryLocalUnitRepository extends InMemoryCRUDRepository<ID, LocalUnit> implements LocalUnitRepository {
 
-    private final ConcurrentHashMap<String, LocalUnit> localUnits;
-
-    public InMemoryLocalUnitRepository(ConcurrentHashMap<String, LocalUnit> localUnits) {
-        this.localUnits = localUnits;
+    public InMemoryLocalUnitRepository(ArrayList<LocalUnit> localUnits) {
+        super(localUnits, new TimeStampIDGenerator());
     }
 
     public InMemoryLocalUnitRepository() {
-        this.localUnits = new ConcurrentHashMap<>();
-    }
-
-    @Override
-    public Optional<LocalUnit> findById(String localUnitId) {
-        return Optional.ofNullable(localUnits.get(localUnitId));
+        super(new ArrayList<>(), new TimeStampIDGenerator());
     }
 
     @Override
     public Optional<LocalUnit> findByPostalCode(String postalCode) {
-        return localUnits.values().stream().filter(localUnit -> localUnit.getAddress().getPostalCode().equals(postalCode)).findFirst();
-    }
-
-    @Override
-    public void save(LocalUnit localUnit) {
-        localUnits.put(localUnit.getLocalUnitId(), localUnit);
+        return objects.stream().filter(localUnit -> localUnit.getAddress().getPostalCode().equals(postalCode)).findFirst();
     }
 }

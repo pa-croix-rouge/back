@@ -2,6 +2,7 @@ package fr.croixrouge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;
+import fr.croixrouge.exposition.dto.AddressDTO;
 import fr.croixrouge.exposition.dto.LocalUnitRequest;
 import fr.croixrouge.exposition.dto.LocalUnitResponse;
 import fr.croixrouge.exposition.dto.LoginRequest;
@@ -50,14 +51,18 @@ public class LocalUnitControllerTest {
     @Test
     @DisplayName("Test that the localunit endpoint returns a local unit when given a correct postal code")
     public void localUnitPostalCodeSuccessTest() throws Exception {
+        AddressDTO addressDTO = new AddressDTO(
+                "91",
+                "91240",
+                "St Michel sur Orge",
+                "76 rue des Liers"
+        );
         LocalUnitRequest localUnitRequest = new LocalUnitRequest("91240");
 
         LocalUnitResponse localUnitResponse = new LocalUnitResponse(
-                "Unite Local du Val d'Orge",
-                "Essonne",
                 "91240",
-                "St Michel sur Orge",
-                "76 rue des Liers",
+                "Unite Local du Val d'Orge",
+                addressDTO,
                 "LUManager"
         );
 
@@ -67,10 +72,10 @@ public class LocalUnitControllerTest {
                         .content(objectMapper.writeValueAsString(localUnitRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value(localUnitResponse.getName()))
-                .andExpect(jsonPath("department").value(localUnitResponse.getDepartment()))
-                .andExpect(jsonPath("postalCode").value(localUnitResponse.getPostalCode()))
-                .andExpect(jsonPath("city").value(localUnitResponse.getCity()))
-                .andExpect(jsonPath("streetNumberAndName").value(localUnitResponse.getStreetNumberAndName()))
+                .andExpect(jsonPath("address.departmentCode").value(addressDTO.getDepartmentCode()))
+                .andExpect(jsonPath("address.postalCode").value(addressDTO.getPostalCode()))
+                .andExpect(jsonPath("address.city").value(addressDTO.getCity()))
+                .andExpect(jsonPath("address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
                 .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()));
     }
 

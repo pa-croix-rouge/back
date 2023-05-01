@@ -1,5 +1,6 @@
 package fr.croixrouge.model;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,13 +12,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserSecurity implements UserDetails {
-    private final String userId;
+    private final ID userId;
     private final String username;
     private final String password;
     private final List<GrantedAuthority> authorities;
 
     public UserSecurity(User user) {
-        this.userId = user.getUserId();
+        this.userId = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.authorities = user.getAuthorities().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -28,7 +29,7 @@ public class UserSecurity implements UserDetails {
         return authorities;
     }
 
-    public String getUserId() {
+    public ID getUserId() {
         return userId;
     }
 

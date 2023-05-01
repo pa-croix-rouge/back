@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.controller;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.RoleRequest;
 import fr.croixrouge.exposition.dto.RoleResponse;
 import fr.croixrouge.service.RoleService;
@@ -24,7 +25,7 @@ public class RoleController {
 
     @GetMapping
     public ResponseEntity<List<RoleResponse>> getRolesFromLocalUnitId(@RequestBody RoleRequest roleRequest) {
-        List<RoleResponse> roleResponse = roleService.getRoleByLocalUnitId(roleRequest.getLocalUnitId()).stream().map(RoleResponse::fromRole).collect(Collectors.toList());
+        List<RoleResponse> roleResponse = roleService.getRoleByLocalUnitId(new ID(roleRequest.getLocalUnitId())).stream().map(RoleResponse::fromRole).collect(Collectors.toList());
         if (roleResponse.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

@@ -1,5 +1,6 @@
 package fr.croixrouge.service;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.exception.LocalUnitNotFoundException;
@@ -18,5 +19,9 @@ public class LocalUnitService {
         LocalUnit localUnit = localUnitRepository.findByPostalCode(postalCode)
                 .orElseThrow(() -> new LocalUnitNotFoundException("Local unit not found for postal code: " + postalCode));
         return localUnit;
+    }
+
+    public LocalUnit findById(ID id) {
+        return localUnitRepository.findById(id).orElseThrow();
     }
 }
