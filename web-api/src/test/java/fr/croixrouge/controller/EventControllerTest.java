@@ -108,13 +108,14 @@ public class EventControllerTest {
                 "1"
         );
 
-        mockMvc.perform(post("/event/details")
+        String eventId = mockMvc.perform(post("/event/details")
                 .header("Authorization", "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(singleEventCreationRequest)))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
 
-        SingleEventRequest singleEventRequest = new SingleEventRequest("5", "0");
+        SingleEventRequest singleEventRequest = new SingleEventRequest(eventId, "0");
 
         mockMvc.perform(get("/event/details")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -301,13 +302,14 @@ public class EventControllerTest {
                 7
         );
 
-        mockMvc.perform(post("/event/sessions")
+        String eventId = mockMvc.perform(post("/event/sessions")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(recurrentEventCreationRequest)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
 
-        SingleEventRequest singleEventRequest = new SingleEventRequest("6", "0");
+        SingleEventRequest singleEventRequest = new SingleEventRequest(eventId, "0");
 
         mockMvc.perform(get("/event/sessions")
                         .header("Authorization", "Bearer " + jwtToken)

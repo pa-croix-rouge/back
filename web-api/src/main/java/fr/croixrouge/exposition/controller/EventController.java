@@ -24,19 +24,23 @@ public class EventController {
 
     @GetMapping("/details")
     public ResponseEntity<SingleEventDetailedResponse> getEventById(@RequestBody SingleEventRequest singleEventRequest) {
-        final Optional<SingleEventDetailedResponse> eventResponse = eventService.getEventById(new ID(singleEventRequest.getEventId()), new ID(singleEventRequest.getSessionId())).map(event -> SingleEventDetailedResponse.fromEvent(event, event.getSessions().get(0)));
+        final Optional<SingleEventDetailedResponse> eventResponse = eventService.getEventByIdSessionId(new ID(singleEventRequest.getEventId()), new ID(singleEventRequest.getSessionId())).map(event -> SingleEventDetailedResponse.fromEvent(event, event.getSessions().get(0)));
         return eventResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/details")
-    public ResponseEntity createSingleEvent(@RequestBody SingleEventCreationRequest singleEventCreationRequest) {
-        eventService.addEvent(singleEventCreationRequest.toEvent());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> createSingleEvent(@RequestBody SingleEventCreationRequest singleEventCreationRequest) {
+        String eventId = eventService.addEvent(singleEventCreationRequest.toEvent()).value();
+        return ResponseEntity.ok(eventId);
     }
 
     @DeleteMapping("/details")
     public ResponseEntity deleteEvent(@RequestBody SingleEventRequest singleEventRequest) {
-        eventService.deleteEvent(new ID(singleEventRequest.getEventId()));
+        Event event = eventService.getEventById(new ID(singleEventRequest.getEventId())).orElse(null);
+        if (event == null) {
+            return ResponseEntity.notFound().build();
+        }
+        eventService.deleteEvent(event);
         return ResponseEntity.ok().build();
     }
 
@@ -67,7 +71,7 @@ public class EventController {
     @GetMapping("/sessions")
     public ResponseEntity<List<EventResponse>> getEventSessionsByEventId(@RequestBody SessionForEventRequest sessionForEventRequest) {
         final List<EventResponse> eventResponse = new ArrayList<>();
-        final Optional<Event> event = eventService.getSessionsByEventId(new ID(sessionForEventRequest.getEventId()));
+        final Optional<Event> event = eventService.getEventById(new ID(sessionForEventRequest.getEventId()));
         if (event.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -78,9 +82,9 @@ public class EventController {
     }
 
     @PostMapping("/sessions")
-    public ResponseEntity createRecurrentEvent(@RequestBody RecurrentEventCreationRequest recurrentEventCreationRequest) {
-        eventService.addEvent(recurrentEventCreationRequest.toEvent());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> createRecurrentEvent(@RequestBody RecurrentEventCreationRequest recurrentEventCreationRequest) {
+        String eventId = eventService.addEvent(recurrentEventCreationRequest.toEvent()).value();
+        return ResponseEntity.ok(eventId);
     }
 
     @PostMapping("/register")

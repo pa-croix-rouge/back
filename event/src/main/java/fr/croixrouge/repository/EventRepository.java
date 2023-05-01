@@ -8,17 +8,17 @@ import java.util.Optional;
 
 public interface EventRepository {
 
-    Optional<Event> findById(ID eventId, ID sessionId);
+    Optional<Event> findById(ID eventId);
 
-    Optional<Event> findByEventId(ID eventId);
+    Optional<Event> findByEventIdSessionId(ID eventId, ID sessionId);
 
     List<Event> findByLocalUnitId(String localUnitId);
 
     List<Event> findByLocalUnitIdAndMonth(String localUnitId, int month, int year);
 
-    void save(Event event);
+    ID save(Event event);
 
-    void delete(ID eventId);
+    void delete(Event event);
 
     boolean registerParticipant(ID eventId, ID sessionId, String participantId);
 }

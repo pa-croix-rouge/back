@@ -1,34 +1,29 @@
 package fr.croixrouge.repository;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.repository.InMemoryCRUDRepository;
+import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class InMemoryEventRepository implements EventRepository {
+public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> implements EventRepository {
 
-    private final AtomicInteger nextId = new AtomicInteger(0);
-
-    private final ConcurrentHashMap<ID, Event> events;
-
-    public InMemoryEventRepository(ConcurrentHashMap<ID, Event> events) {
-        this.events = events;
-        nextId.set(events.size() + 1);
+    public InMemoryEventRepository(List<Event> objects) {
+        super(objects, new TimeStampIDGenerator());
     }
 
     public InMemoryEventRepository() {
-        this.events = new ConcurrentHashMap<>();
+        super(new ArrayList<>(), new TimeStampIDGenerator());
     }
 
     @Override
-    public Optional<Event> findById(ID eventId, ID sessionId) {
-        final Optional<Event> event =  Optional.ofNullable(events.get(eventId));
+    public Optional<Event> findByEventIdSessionId(ID eventId, ID sessionId) {
+        final Optional<Event> event =  this.findById(eventId);
         if (event.isEmpty()) {
             return Optional.empty();
         }
@@ -40,18 +35,13 @@ public class InMemoryEventRepository implements EventRepository {
     }
 
     @Override
-    public Optional<Event> findByEventId(ID eventId) {
-        return Optional.ofNullable(events.get(eventId));
-    }
-
-    @Override
     public List<Event> findByLocalUnitId(String localUnitId) {
-        return this.events.values().stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).collect(Collectors.toList());
+        return this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).collect(Collectors.toList());
     }
 
     @Override
     public List<Event> findByLocalUnitIdAndMonth(String localUnitId, int month, int year) {
-        List<Event> localUnitEvents = this.events.values().stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).toList();
+        List<Event> localUnitEvents = this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).toList();
         List<Event> result = new ArrayList<>();
         for (Event event : localUnitEvents) {
             List<EventSession> sessionsInMonth = event.getSessions().stream().filter(session -> session.getStart().getMonthValue() == month && session.getStart().getYear() == year || session.getEnd().getMonthValue() == month && session.getEnd().getYear() == year).toList();
@@ -63,23 +53,19 @@ public class InMemoryEventRepository implements EventRepository {
     }
 
     @Override
-    public void save(Event event) {
-        ID eventId = new ID(String.valueOf(nextId.getAndIncrement()));
+    public ID save(Event event) {
+        ID eventId = idGenerator.generate();
         Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), new ArrayList<>(), event.getOccurrences());
         for (EventSession session : event.getSessions()) {
             eventToSave.getSessions().add(new EventSession(new ID(String.valueOf(eventToSave.getSessions().size())), session.getStart(), session.getEnd(), new ArrayList<>()));
         }
-        this.events.put(eventId, eventToSave);
-    }
-
-    @Override
-    public void delete(ID eventId) {
-        this.events.remove(eventId);
+        this.objects.add(eventToSave);
+        return eventId;
     }
 
     @Override
     public boolean registerParticipant(ID eventId, ID sessionId, String participantId) {
-        Event event = this.events.get(eventId);
+        Event event = this.findById(eventId).orElse(null);
         if (event == null) {
             return false;
         }
@@ -88,7 +74,7 @@ public class InMemoryEventRepository implements EventRepository {
             return false;
         }
         session.getParticipants().add(participantId);
-        this.events.put(eventId, event);
+        this.objects.add(event);
         return true;
     }
 }

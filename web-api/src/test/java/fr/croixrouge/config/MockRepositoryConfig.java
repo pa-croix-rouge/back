@@ -97,7 +97,7 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public EventRepository eventTestRepository() {
-        ConcurrentHashMap<ID, Event> events = new ConcurrentHashMap<>();
+        ArrayList<Event> events = new ArrayList<>();
         ID eventId1 = new ID("1");
         String eventName1 = "Formation PSC1";
         String eventDescription1 = "Formation au PSC1";
@@ -108,7 +108,7 @@ public class MockRepositoryConfig {
         List<String> participants1 = new ArrayList<>();
         EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, participants1);
         Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
-        events.put(eventId1, event1);
+        events.add(event1);
 
         ID eventId2 = new ID("2");
         String eventName2 = "Distribution alimentaire";
@@ -120,7 +120,7 @@ public class MockRepositoryConfig {
         List<String> participants2 = new ArrayList<>();
         EventSession eventSession2 = new EventSession(new ID("0"), eventStartDate2, eventEndDate2, participants2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
-        events.put(eventId2, event2);
+        events.add(event2);
 
         ID eventId3 = new ID("3");
         String eventName3 = "Formation PSC1";
@@ -132,7 +132,7 @@ public class MockRepositoryConfig {
         List<String> participants3 = new ArrayList<>();
         EventSession eventSession3 = new EventSession(new ID("0"), eventStartDate3, eventEndDate3, participants3);
         Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
-        events.put(eventId3, event3);
+        events.add(event3);
 
         ID eventId4 = new ID("4");
         String eventName4 = "EPISOL";
@@ -152,7 +152,7 @@ public class MockRepositoryConfig {
             ));
         }
         Event event4 = new Event(eventId4, eventName4, eventDescription4, referrerId4, localUnitId4, eventStartDate4, eventEndDate4, eventSessions4, sessionCounter.get());
-        events.put(eventId4, event4);
+        events.add(event4);
 
         return new InMemoryEventRepository(events);
     }

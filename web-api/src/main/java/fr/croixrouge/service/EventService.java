@@ -17,12 +17,12 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Optional<Event> getEventById(ID eventId, ID sessionId) {
-        return eventRepository.findById(eventId, sessionId);
+    public Optional<Event> getEventByIdSessionId(ID eventId, ID sessionId) {
+        return eventRepository.findByEventIdSessionId(eventId, sessionId);
     }
 
-    public Optional<Event> getSessionsByEventId(ID eventId) {
-        return eventRepository.findByEventId(eventId);
+    public Optional<Event> getEventById(ID eventId) {
+        return eventRepository.findById(eventId);
     }
 
     public List<Event> getEventsByLocalUnitId(String localUnitId) {
@@ -33,12 +33,12 @@ public class EventService {
         return eventRepository.findByLocalUnitIdAndMonth(localUnitId, month, year);
     }
 
-    public void addEvent(Event event) {
-        eventRepository.save(event);
+    public ID addEvent(Event event) {
+        return eventRepository.save(event);
     }
 
-    public void deleteEvent(ID eventId) {
-        eventRepository.delete(eventId);
+    public void deleteEvent(Event event) {
+        eventRepository.delete(event);
     }
 
     public boolean registerParticipant(ID eventId, ID sessionId, String participantId) {
