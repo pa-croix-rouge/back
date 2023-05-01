@@ -1,4 +1,4 @@
-package fr.croixrouge.controller;
+package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;

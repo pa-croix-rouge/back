@@ -1,11 +1,10 @@
-package fr.croixrouge.controller;
+package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;
-import fr.croixrouge.domain.model.Operations;
-import fr.croixrouge.domain.model.Resources;
+import fr.croixrouge.exposition.dto.core.AddressDTO;
+import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
-import fr.croixrouge.exposition.dto.core.RoleResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,11 +15,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,15 +23,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(MockRepositoryConfig.class)
-public class RoleControllerTest {
+public class LocalUnitControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private  ObjectMapper objectMapper;
 
     private String jwtToken;
+
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -53,32 +48,41 @@ public class RoleControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the role endpoint returns a list of roles when given a correct local unit id")
-    public void roleLocalUnitIdSuccessTest() throws Exception {
-        String roleId ="1";
+    @DisplayName("Test that the localunit endpoint returns a local unit when given a correct postal code")
+    public void localUnitPostalCodeSuccessTest() throws Exception {
+        String localUnitPostCode = "91240";
 
-        RoleResponse roleResponse = new RoleResponse(
-                "Val d'Orge default role",
-                "Default role for Val d'Orge",
-                Map.of( Resources.RESOURCE, List.of(Operations.READ)),
-                new ArrayList<>(Collections.singletonList("2"))
+        AddressDTO addressDTO = new AddressDTO(
+                "91",
+                "91240",
+                "St Michel sur Orge",
+                "76 rue des Liers"
         );
 
-        mockMvc.perform(get("/role/localunit/" + roleId)
+        LocalUnitResponse localUnitResponse = new LocalUnitResponse(
+                "91240",
+                "Unite Local du Val d'Orge",
+                addressDTO,
+                "LUManager"
+        );
+
+        mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(roleResponse.getName()))
-                .andExpect(jsonPath("$[0].description").value(roleResponse.getDescription()))
-                .andExpect(jsonPath("$[0].authorizations").value(roleResponse.getAuthorizations()))
-                .andExpect(jsonPath("$[0].userIds").value(roleResponse.getUserIds()));
+                .andExpect(jsonPath("name").value(localUnitResponse.getName()))
+                .andExpect(jsonPath("address.departmentCode").value(addressDTO.getDepartmentCode()))
+                .andExpect(jsonPath("address.postalCode").value(addressDTO.getPostalCode()))
+                .andExpect(jsonPath("address.city").value(addressDTO.getCity()))
+                .andExpect(jsonPath("address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
+                .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()));
     }
 
     @Test
-    @DisplayName("Test that the role endpoint returns a 404 when given an incorrect local unit id")
-    public void roleLocalUnitIdFailedTest() throws Exception {
-        String roleId = "2";
+    @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong postal code")
+    public void localUnitPostalCodeFailedTest() throws Exception {
+        String localUnitPostCode ="00100";
 
-        mockMvc.perform(get("/role/localunit/" + roleId)
+        mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }
