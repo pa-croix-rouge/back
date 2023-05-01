@@ -72,8 +72,8 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public LocalUnitRepository localTestUnitRepository() {
-        ConcurrentHashMap<ID, LocalUnit> localUnits = new ConcurrentHashMap<>();
-        localUnits.put(new ID("1"), localUnit);
+        ArrayList<LocalUnit> localUnits = new ArrayList<>();
+        localUnits.add(localUnit);
         return new InMemoryLocalUnitRepository(localUnits);
     }
 

@@ -5,11 +5,7 @@ import fr.croixrouge.domain.model.LocalUnit;
 
 import java.util.Optional;
 
-public interface LocalUnitRepository {
-
-    Optional<LocalUnit> findById(ID localUnitId);
+public interface LocalUnitRepository extends CRUDRepository<ID, LocalUnit> {
 
     Optional<LocalUnit> findByPostalCode(String postalCode);
-
-    void save(LocalUnit localUnit);
 }
