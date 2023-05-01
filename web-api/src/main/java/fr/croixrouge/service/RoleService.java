@@ -10,20 +10,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RoleService {
-
-    private final RoleRepository roleRepository;
+public class RoleService extends CRUDService<ID, Role, RoleRepository> {
 
     public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+        super(roleRepository);
     }
 
     public List<Role> getRoleByLocalUnitId(ID localUnitId) {
-        return roleRepository.findAllByLocalUnitId(localUnitId);
+        return repository.findAllByLocalUnitId(localUnitId);
     }
 
     public boolean isUserIdAuthorizedToAccessRoute(ID userId, Resources route, Operations operation) {
-        List<Role> roles = roleRepository.findAllByUserId(userId);
+        List<Role> roles = repository.findAllByUserId(userId);
         for (Role role : roles) {
             if (role.canAccessResource(route, operation)) {
                 return true;
