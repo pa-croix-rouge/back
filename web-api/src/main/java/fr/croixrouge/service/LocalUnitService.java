@@ -15,4 +15,8 @@ public class LocalUnitService extends CRUDService<ID, LocalUnit, LocalUnitReposi
     public LocalUnit getLocalUnitByPostalCode(String postalCode) {
         return repository.findByPostalCode(postalCode).orElseThrow();
     }
+
+    public LocalUnit getLocalUnitByCode(String code) {
+        return repository.findByCode(code).orElseThrow();
+    }
 }

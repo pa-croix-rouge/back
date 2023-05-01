@@ -6,12 +6,14 @@ public class LocalUnit extends Entity<ID> {
     private final String name;
     private final Address address;
     private final User manager;
+    private final String code;
 
-    public LocalUnit(ID localUnitId, String name, Address address, User manager) {
+    public LocalUnit(ID localUnitId, String name, Address address, User manager, String code) {
         super(localUnitId);
         this.name = name;
         this.address = address;
         this.manager = manager;
+        this.code = code;
     }
 
     public String getName() {
@@ -26,14 +28,8 @@ public class LocalUnit extends Entity<ID> {
         return manager;
     }
 
-    @Override
-    public String toString() {
-        return "LocalUnit{" +
-                "localUnitId='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", address=" + address +
-                ", managerId='" + manager.getId() + '\'' +
-                '}';
+    public String getCode() {
+        return code;
     }
 
     @Override
@@ -41,11 +37,21 @@ public class LocalUnit extends Entity<ID> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocalUnit localUnit = (LocalUnit) o;
-        return Objects.equals(id, localUnit.id) && Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(manager, localUnit.manager);
+        return Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(manager, localUnit.manager) && Objects.equals(code, localUnit.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, manager);
+        return Objects.hash(name, address, manager, code);
+    }
+
+    @Override
+    public String toString() {
+        return "LocalUnit{" +
+                "name='" + name + '\'' +
+                ", address=" + address +
+                ", manager=" + manager +
+                ", code='" + code + '\'' +
+                '}';
     }
 }

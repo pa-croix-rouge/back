@@ -3,6 +3,7 @@ package fr.croixrouge.exposition.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
+import fr.croixrouge.exposition.dto.core.VolunteerCreationRequest;
 import fr.croixrouge.exposition.dto.core.VolunteerResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +47,7 @@ public class VolunteerControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the volunteer details endpoint retunrs volunteer's informations when given the correct id")
+    @DisplayName("Test that the volunteer details endpoint returns volunteer's informations when given the correct id")
     public void volunteerIdSuccessTest() throws Exception {
         String volunteerId = "1";
 
@@ -56,6 +57,55 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true
+        );
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(volunteerResponse.getUsername()))
+                .andExpect(jsonPath("$.firstName").value(volunteerResponse.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(volunteerResponse.getLastName()))
+                .andExpect(jsonPath("$.phoneNumber").value(volunteerResponse.getPhoneNumber()))
+                .andExpect(jsonPath("$.isValidated").value(volunteerResponse.getIsValidated()));
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer details endpoint returns a 404 when given incorrect id")
+    public void volunteerIdFailingTest() throws Exception {
+        String volunteerId = "-1";
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer endpoint register a new volunteer when given the correct parameters")
+    public void volunteerCreateSuccessTest() throws Exception {
+        VolunteerCreationRequest volunteerCreationRequest = new VolunteerCreationRequest(
+                "newvolunteer@croix-rouge.fr",
+                "secretPassword",
+                "John",
+                "Doe",
+                "+33 6 00 11 00 11",
+                "91240-000"
+        );
+
+        String result = mockMvc.perform(post("/volunteer")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(volunteerCreationRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        String volunteerId = objectMapper.readTree(result).get("value").asText();
+
+        VolunteerResponse volunteerResponse = new VolunteerResponse(
+                "newvolunteer@croix-rouge.fr",
+                "John",
+                "Doe",
+                "+33 6 00 11 00 11",
+                false
         );
 
         mockMvc.perform(get("/volunteer/" + volunteerId)

@@ -36,13 +36,13 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
     }
 
     @PostMapping()
-    public K post(@RequestBody CREATION_DTO model) {
-        return service.save(toModel(model));
+    public ResponseEntity<K> post(@RequestBody CREATION_DTO model) {
+        return ResponseEntity.ok(service.save(toModel(model)));
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable K id) {
+    public ResponseEntity delete(@PathVariable K id) {
         service.delete(service.findById(id));
+        return ResponseEntity.ok().build();
     }
-
 }

@@ -63,7 +63,8 @@ public class LocalUnitControllerTest {
                 "91240",
                 "Unite Local du Val d'Orge",
                 addressDTO,
-                "LUManager"
+                "LUManager",
+                "91240-000"
         );
 
         mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
@@ -74,7 +75,8 @@ public class LocalUnitControllerTest {
                 .andExpect(jsonPath("address.postalCode").value(addressDTO.getPostalCode()))
                 .andExpect(jsonPath("address.city").value(addressDTO.getCity()))
                 .andExpect(jsonPath("address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
-                .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()));
+                .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()))
+                .andExpect(jsonPath("code").value(localUnitResponse.getCode()));
     }
 
     @Test

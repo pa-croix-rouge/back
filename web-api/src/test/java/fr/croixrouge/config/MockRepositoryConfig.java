@@ -5,9 +5,9 @@ import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.domain.repository.VolunteerRepository;
-import fr.croixrouge.repository.InMemoryLocalUnitRepository;
-import fr.croixrouge.repository.InMemoryRoleRepository;
-import fr.croixrouge.repository.InMemoryUserRepository;
+import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
+import fr.croixrouge.repository.*;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
@@ -18,18 +18,15 @@ import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
-import fr.croixrouge.model.Event;
-import fr.croixrouge.model.EventSession;
-import fr.croixrouge.repository.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,18 +36,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MockRepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
-    private final User mangerUser;
+    private final User managerUser;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
     private final LocalUnit localUnit;
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        mangerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
+        managerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
 
         localUnit = new LocalUnit(new ID("1"),
                 "Unite Local du Val d'Orge",
                 address,
-                mangerUser);
+                managerUser,
+                address.getPostalCode() + "-000");
     }
 
     @Bean
@@ -63,7 +61,7 @@ public class MockRepositoryConfig {
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
         users.add(defaultUser);
 
-        users.add(mangerUser);
+        users.add(managerUser);
 
         return new InMemoryUserRepository(users);
     }
@@ -77,7 +75,7 @@ public class MockRepositoryConfig {
         String lastName = "volunteerLastName";
         String phoneNumber = "+33 6 00 00 00 00";
         boolean isValidated = true;
-        Volunteer volunteer = new Volunteer(volunteerId, mangerUser, firstName, lastName, phoneNumber, isValidated);
+        Volunteer volunteer = new Volunteer(volunteerId, managerUser, firstName, lastName, phoneNumber, isValidated, localUnit.getId());
 
         volunteers.add(volunteer);
 
