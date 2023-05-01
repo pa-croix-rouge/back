@@ -1,8 +1,8 @@
 package fr.croixrouge.exposition.controller;
 
 
-import fr.croixrouge.exposition.dto.LoginRequest;
-import fr.croixrouge.exposition.dto.LoginResponse;
+import fr.croixrouge.exposition.dto.core.LoginRequest;
+import fr.croixrouge.exposition.dto.core.LoginResponse;
 import fr.croixrouge.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

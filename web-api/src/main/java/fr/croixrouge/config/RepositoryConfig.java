@@ -5,6 +5,7 @@ import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
+import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.repository.*;
 import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageProductRepository;
@@ -82,4 +83,8 @@ public class RepositoryConfig {
         return new InMemoryEventRepository();
     }
 
+    @Bean
+    public VolunteerRepository volunteerRepository() {
+        return new InMemoryVolunteerRepository();
+    }
 }

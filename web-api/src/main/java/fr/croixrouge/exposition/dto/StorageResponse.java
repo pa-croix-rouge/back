@@ -1,5 +1,7 @@
 package fr.croixrouge.exposition.dto;
 
+import fr.croixrouge.exposition.dto.core.AddressDTO;
+import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
 import fr.croixrouge.storage.model.Storage;
 
 public class StorageResponse {

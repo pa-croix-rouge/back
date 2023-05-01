@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
+import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.repository.InMemoryLocalUnitRepository;
 import fr.croixrouge.repository.InMemoryRoleRepository;
 import fr.croixrouge.repository.InMemoryUserRepository;
@@ -38,7 +39,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MockRepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
-
     private final User mangerUser;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
     private final LocalUnit localUnit;
@@ -66,6 +66,22 @@ public class MockRepositoryConfig {
         users.add(mangerUser);
 
         return new InMemoryUserRepository(users);
+    }
+
+    @Bean
+    @Primary
+    public VolunteerRepository volunteerTestRepository() {
+        ArrayList<Volunteer> volunteers = new ArrayList<>();
+        ID volunteerId = new ID("1");
+        String firstName = "volunteerFirstName";
+        String lastName = "volunteerLastName";
+        String phoneNumber = "+33 6 00 00 00 00";
+        boolean isValidated = true;
+        Volunteer volunteer = new Volunteer(volunteerId, mangerUser, firstName, lastName, phoneNumber, isValidated);
+
+        volunteers.add(volunteer);
+
+        return new InMemoryVolunteerRepository(volunteers);
     }
 
     @Bean

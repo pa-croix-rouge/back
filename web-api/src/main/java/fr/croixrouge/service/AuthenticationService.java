@@ -2,7 +2,7 @@ package fr.croixrouge.service;
 
 import fr.croixrouge.config.JwtTokenConfig;
 import fr.croixrouge.domain.repository.UserRepository;
-import fr.croixrouge.exposition.dto.LoginResponse;
+import fr.croixrouge.exposition.dto.core.LoginResponse;
 import fr.croixrouge.model.UserSecurity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

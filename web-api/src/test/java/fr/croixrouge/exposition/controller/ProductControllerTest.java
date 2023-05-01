@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.CreateProductDTO;
-import fr.croixrouge.exposition.dto.LoginRequest;
+import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import org.junit.jupiter.api.BeforeEach;

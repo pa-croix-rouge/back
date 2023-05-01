@@ -8,8 +8,7 @@ import java.util.List;
 
 public class CRUDService<K extends ID, V extends Entity<K>, R extends CRUDRepository<K, V>> {
 
-    private final R repository;
-
+    protected final R repository;
 
     public CRUDService(R repository) {
         this.repository = repository;
