@@ -10,14 +10,14 @@ import java.util.Objects;
 public class Event extends Entity<ID> {
     private final String name;
     private final String description;
-    private final String referrerId;
-    private final String localUnitId;
+    private final ID referrerId;
+    private final ID localUnitId;
     private final ZonedDateTime firstStart;
     private final ZonedDateTime lastEnd;
     private final List<EventSession> sessions;
     private final int occurrences;
 
-    public Event(ID id, String name, String description, String referrerId, String localUnitId, ZonedDateTime firstStart, ZonedDateTime lastEnd, List<EventSession> sessions, int occurrences) {
+    public Event(ID id, String name, String description, ID referrerId, ID localUnitId, ZonedDateTime firstStart, ZonedDateTime lastEnd, List<EventSession> sessions, int occurrences) {
         super(id);
         this.name = name;
         this.description = description;
@@ -37,11 +37,11 @@ public class Event extends Entity<ID> {
         return description;
     }
 
-    public String getReferrerId() {
+    public ID getReferrerId() {
         return referrerId;
     }
 
-    public String getLocalUnitId() {
+    public ID getLocalUnitId() {
         return localUnitId;
     }
 

@@ -35,12 +35,12 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
-    public List<Event> findByLocalUnitId(String localUnitId) {
+    public List<Event> findByLocalUnitId(ID localUnitId) {
         return this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Event> findByLocalUnitIdAndMonth(String localUnitId, int month, int year) {
+    public List<Event> findByLocalUnitIdAndMonth(ID localUnitId, int month, int year) {
         List<Event> localUnitEvents = this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).toList();
         List<Event> result = new ArrayList<>();
         for (Event event : localUnitEvents) {
@@ -64,7 +64,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
-    public boolean registerParticipant(ID eventId, ID sessionId, String participantId) {
+    public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
         Event event = this.findById(eventId).orElse(null);
         if (event == null) {
             return false;

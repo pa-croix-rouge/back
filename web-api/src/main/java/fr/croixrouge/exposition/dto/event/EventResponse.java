@@ -31,8 +31,8 @@ public class EventResponse {
                 event.getDescription(),
                 eventSession.getStart().toString(),
                 eventSession.getEnd().toString(),
-                event.getReferrerId(),
-                event.getLocalUnitId(),
+                event.getReferrerId().value(),
+                event.getLocalUnitId().value(),
                 eventSession.getParticipants().size()
         );
     }

@@ -25,11 +25,11 @@ public class EventService {
         return eventRepository.findById(eventId);
     }
 
-    public List<Event> getEventsByLocalUnitId(String localUnitId) {
+    public List<Event> getEventsByLocalUnitId(ID localUnitId) {
         return eventRepository.findByLocalUnitId(localUnitId);
     }
 
-    public List<Event> getEventsByLocalUnitIdAndMonth(String localUnitId, int month, int year) {
+    public List<Event> getEventsByLocalUnitIdAndMonth(ID localUnitId, int month, int year) {
         return eventRepository.findByLocalUnitIdAndMonth(localUnitId, month, year);
     }
 
@@ -41,7 +41,7 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public boolean registerParticipant(ID eventId, ID sessionId, String participantId) {
+    public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
         return eventRepository.registerParticipant(eventId, sessionId, participantId);
     }
 }

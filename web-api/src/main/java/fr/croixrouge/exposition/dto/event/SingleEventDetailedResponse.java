@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.dto.event;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
@@ -33,9 +34,9 @@ public class SingleEventDetailedResponse {
                 event.getDescription(),
                 eventSession.getStart().toString(),
                 eventSession.getEnd().toString(),
-                event.getReferrerId(),
-                event.getLocalUnitId(),
-                eventSession.getParticipants()
+                event.getReferrerId().value(),
+                event.getLocalUnitId().value(),
+                eventSession.getParticipants().stream().map(ID::value).toList()
         );
     }
 

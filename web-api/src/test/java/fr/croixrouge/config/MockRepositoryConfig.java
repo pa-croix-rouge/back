@@ -103,9 +103,9 @@ public class MockRepositoryConfig {
         String eventDescription1 = "Formation au PSC1";
         ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        String referrerId1 = "1";
-        String localUnitId1 = "1";
-        List<String> participants1 = new ArrayList<>();
+        ID referrerId1 = new ID("1");
+        ID localUnitId1 = new ID("1");
+        List<ID> participants1 = new ArrayList<>();
         EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, participants1);
         Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
         events.add(event1);
@@ -115,9 +115,9 @@ public class MockRepositoryConfig {
         String eventDescription2 = "Distribution alimentaire gratuite";
         ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris"));
-        String referrerId2 = "1";
-        String localUnitId2 = "1";
-        List<String> participants2 = new ArrayList<>();
+        ID referrerId2 = new ID("1");
+        ID localUnitId2 = new ID("1");
+        List<ID> participants2 = new ArrayList<>();
         EventSession eventSession2 = new EventSession(new ID("0"), eventStartDate2, eventEndDate2, participants2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
         events.add(event2);
@@ -127,9 +127,9 @@ public class MockRepositoryConfig {
         String eventDescription3 = "Formation au PSC1";
         ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        String referrerId3 = "1";
-        String localUnitId3 = "1";
-        List<String> participants3 = new ArrayList<>();
+        ID referrerId3 = new ID("1");
+        ID localUnitId3 = new ID("1");
+        List<ID> participants3 = new ArrayList<>();
         EventSession eventSession3 = new EventSession(new ID("0"), eventStartDate3, eventEndDate3, participants3);
         Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
         events.add(event3);
@@ -139,8 +139,8 @@ public class MockRepositoryConfig {
         String eventDescription4 = "Ouverture de l'EPISOL";
         ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 2, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        String referrerId4 = "1";
-        String localUnitId4 = "1";
+        ID referrerId4 = new ID("1");
+        ID localUnitId4 = new ID("1");
         List<EventSession> eventSessions4 = new ArrayList<>();
         AtomicInteger sessionCounter = new AtomicInteger(0);
         for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {

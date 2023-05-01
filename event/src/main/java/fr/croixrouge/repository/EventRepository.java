@@ -12,13 +12,13 @@ public interface EventRepository {
 
     Optional<Event> findByEventIdSessionId(ID eventId, ID sessionId);
 
-    List<Event> findByLocalUnitId(String localUnitId);
+    List<Event> findByLocalUnitId(ID localUnitId);
 
-    List<Event> findByLocalUnitIdAndMonth(String localUnitId, int month, int year);
+    List<Event> findByLocalUnitIdAndMonth(ID localUnitId, int month, int year);
 
     ID save(Event event);
 
     void delete(Event event);
 
-    boolean registerParticipant(ID eventId, ID sessionId, String participantId);
+    boolean registerParticipant(ID eventId, ID sessionId, ID participantId);
 }

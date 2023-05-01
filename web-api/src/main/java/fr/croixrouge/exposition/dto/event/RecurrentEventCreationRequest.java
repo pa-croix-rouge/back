@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.dto.event;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
@@ -52,8 +53,8 @@ public class RecurrentEventCreationRequest {
                 null,
                 name,
                 description,
-                referrerId,
-                localUnitId,
+                new ID(referrerId),
+                new ID(localUnitId),
                 startDateTime,
                 endDateTime,
                 eventSessions,

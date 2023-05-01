@@ -9,9 +9,9 @@ import java.util.List;
 public class EventSession extends Entity<ID> {
     private final ZonedDateTime start;
     private final ZonedDateTime end;
-    private final List<String> participants;
+    private final List<ID> participants;
 
-    public EventSession(ID id, ZonedDateTime start, ZonedDateTime end, List<String> participants) {
+    public EventSession(ID id, ZonedDateTime start, ZonedDateTime end, List<ID> participants) {
         super(id);
         this.start = start;
         this.end = end;
@@ -30,7 +30,7 @@ public class EventSession extends Entity<ID> {
         return end;
     }
 
-    public List<String> getParticipants() {
+    public List<ID> getParticipants() {
         return participants;
     }
 }

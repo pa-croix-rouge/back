@@ -47,7 +47,7 @@ public class EventController {
     @GetMapping("/all")
     public ResponseEntity<List<EventResponse>> getEventsByLocalUnitId(@RequestBody EventForLocalUnitRequest eventForLocalUnitRequest) {
         final List<EventResponse> eventResponse = new ArrayList<>();
-        final List<Event> events = eventService.getEventsByLocalUnitId(eventForLocalUnitRequest.getLocalUnitId());
+        final List<Event> events = eventService.getEventsByLocalUnitId(new ID(eventForLocalUnitRequest.getLocalUnitId()));
         for (Event event : events) {
             for (EventSession session : event.getSessions()) {
                 eventResponse.add(EventResponse.fromEvent(event, session));
@@ -59,7 +59,7 @@ public class EventController {
     @GetMapping
     public ResponseEntity<List<EventResponse>> getEventsByLocalUnitIdAndMonth(@RequestBody EventForLocalUnitAndMonthRequest eventForLocalUnitAndMonthRequest) {
         final List<EventResponse> eventResponse = new ArrayList<>();
-        final List<Event> events = eventService.getEventsByLocalUnitIdAndMonth(eventForLocalUnitAndMonthRequest.getLocalUnitId(), eventForLocalUnitAndMonthRequest.getMonth(), eventForLocalUnitAndMonthRequest.getYear());
+        final List<Event> events = eventService.getEventsByLocalUnitIdAndMonth(new ID(eventForLocalUnitAndMonthRequest.getLocalUnitId()), eventForLocalUnitAndMonthRequest.getMonth(), eventForLocalUnitAndMonthRequest.getYear());
         for (Event event : events) {
             for (EventSession session : event.getSessions()) {
                 eventResponse.add(EventResponse.fromEvent(event, session));
@@ -89,7 +89,7 @@ public class EventController {
 
     @PostMapping("/register")
     public ResponseEntity registerParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
-        eventService.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), eventRegistrationRequest.getParticipantId());
+        eventService.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getParticipantId()));
         return ResponseEntity.ok().build();
     }
 }
