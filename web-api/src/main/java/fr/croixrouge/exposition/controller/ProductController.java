@@ -1,8 +1,8 @@
 package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.exposition.dto.CreateProductDTO;
-import fr.croixrouge.exposition.dto.ProductResponse;
+import fr.croixrouge.exposition.dto.product.CreateProductDTO;
+import fr.croixrouge.exposition.dto.product.ProductResponse;
 import fr.croixrouge.service.ProductService;
 import fr.croixrouge.storage.model.product.Product;
 import org.springframework.web.bind.annotation.RequestMapping;

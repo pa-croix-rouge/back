@@ -8,13 +8,17 @@ import fr.croixrouge.repository.InMemoryLocalUnitRepository;
 import fr.croixrouge.repository.InMemoryRoleRepository;
 import fr.croixrouge.repository.InMemoryUserRepository;
 import fr.croixrouge.storage.model.Storage;
+import fr.croixrouge.storage.model.product.FoodConservation;
+import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
 import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
+import fr.croixrouge.storage.repository.FoodProductRepository;
 import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
+import fr.croixrouge.storage.repository.memory.InMemoryFoodProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
 import fr.croixrouge.model.Event;
@@ -25,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -164,7 +169,31 @@ public class MockRepositoryConfig {
         products.add(new Product(new ID("1"), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null));
         products.add(new Product(new ID("2"), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null));
 
+
         return new InMemoryProductRepository(products);
+    }
+
+    @Bean
+    @Primary
+    public FoodProductRepository foodProductTestRepository() {
+        List<FoodProduct> products = new ArrayList<>();
+
+        products.add(new FoodProduct(new ID("1"), "FoodProduct 1",
+                new WeightQuantifier(1, WeightUnit.KILOGRAM),
+                null,
+                FoodConservation.ROOM_TEMPERATURE,
+                LocalDateTime.of(2023, 5, 1, 15, 14, 1, 1),
+                LocalDateTime.of(2023, 4, 10, 15, 14, 1, 1),
+                1));
+        products.add(new FoodProduct(new ID("2"), "FoodProduct 2",
+                new WeightQuantifier(1, WeightUnit.KILOGRAM),
+                null,
+                FoodConservation.ROOM_TEMPERATURE,
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now(),
+                1));
+
+        return new InMemoryFoodProductRepository(products);
     }
 
     @Bean
@@ -179,3 +208,4 @@ public class MockRepositoryConfig {
     }
 
 }
+

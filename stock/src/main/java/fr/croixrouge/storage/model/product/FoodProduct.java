@@ -13,9 +13,9 @@ public class FoodProduct extends Product {
 
     private final LocalDateTime optimalConsumptionDate;
 
-    private final float price;
+    private final double price;
 
-    public FoodProduct(ID id, String name, Quantifier quantity, ProductLimit limit, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate, float price) {
+    public FoodProduct(ID id, String name, Quantifier quantity, ProductLimit limit, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate, double price) {
         super(id, name, quantity, limit);
         this.foodConservation = foodConservation;
         this.expirationDate = expirationDate;
@@ -35,7 +35,7 @@ public class FoodProduct extends Product {
         return optimalConsumptionDate;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 }
