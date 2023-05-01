@@ -37,7 +37,7 @@ public class LocalUnit {
                 "localUnitId='" + localUnitId + '\'' +
                 ", name='" + name + '\'' +
                 ", address=" + address +
-                ", managerId='" + manager.getUserId() + '\'' +
+                ", managerId='" + manager.getId() + '\'' +
                 '}';
     }
 

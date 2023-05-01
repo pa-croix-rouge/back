@@ -19,7 +19,7 @@ public class InMemoryUserProductRepository extends InMemoryCRUDRepository<ID, Us
     }
 
     @Override
-    public List<UserProduct> findAll(String userId, ID productId) {
-        return new ArrayList<>(objects.stream().filter(p -> p.product().getId().equals(productId) && p.user().getUserId().equals(userId)).toList());
+    public List<UserProduct> findAll(ID userId, ID productId) {
+        return new ArrayList<>(objects.stream().filter(p -> p.product().getId().equals(productId) && p.user().getId().equals(userId)).toList());
     }
 }

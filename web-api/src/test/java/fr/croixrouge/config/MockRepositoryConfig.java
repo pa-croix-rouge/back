@@ -46,7 +46,7 @@ public class MockRepositoryConfig {
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        mangerUser = new User("2", "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
+        mangerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
 
         localUnit = new LocalUnit("1",
                 "Unite Local du Val d'Orge",
@@ -57,14 +57,14 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public UserRepository userTestRepository() {
-        ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
-        String defaultUserId = "1";
+        ConcurrentHashMap<ID, User> users = new ConcurrentHashMap<>();
+        ID defaultUserId = new ID("1");
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode("defaultPassword");
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
         users.put(defaultUserId, defaultUser);
 
-        users.put(mangerUser.getUserId(), mangerUser);
+        users.put(mangerUser.getId(), mangerUser);
 
         return new InMemoryUserRepository(users);
     }

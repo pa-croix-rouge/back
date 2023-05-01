@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface UserProductRepository extends CRUDRepository<ID, UserProduct> {
 
-    List<UserProduct> findAll(String userId, ID productId);
+    List<UserProduct> findAll(ID userId, ID productId);
 }

@@ -30,7 +30,7 @@ public class UserProductService {
     }
 
     public boolean canAddProduct(User user, Storage storage, Product product, int quantity) {
-        List<UserProduct> products = userProductRepository.findAll(user.getUserId(), storage.getId());
+        List<UserProduct> products = userProductRepository.findAll(user.getId(), storage.getId());
         products.add(new UserProduct(null, user, product, LocalDate.now(), quantity));
         return !product.getLimit().isLimitReached(products);
 

@@ -1,5 +1,6 @@
 package fr.croixrouge.repository;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
 
@@ -9,9 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryUserRepository implements UserRepository {
 
-    private final ConcurrentHashMap<String, User> users;
+    private final ConcurrentHashMap<ID, User> users;
 
-    public InMemoryUserRepository(ConcurrentHashMap<String, User> users) {
+    public InMemoryUserRepository(ConcurrentHashMap<ID, User> users) {
         this.users = users;
     }
 
@@ -20,7 +21,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(String userId) {
+    public Optional<User> findById(ID userId) {
         return Optional.ofNullable(users.get(userId));
     }
 
@@ -33,6 +34,6 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public void save(User user) {
-        users.put(user.getUserId(), user);
+        users.put(user.getId(), user);
     }
 }

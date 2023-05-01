@@ -1,5 +1,6 @@
 package fr.croixrouge.config;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
@@ -32,8 +33,8 @@ public class RepositoryConfig {
 
     @Bean
     public UserRepository userRepository(){
-        ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
-        String defaultUserId = "1";
+        ConcurrentHashMap<ID, User> users = new ConcurrentHashMap<>();
+        ID defaultUserId = new ID("1");
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode("defaultPassword");
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());

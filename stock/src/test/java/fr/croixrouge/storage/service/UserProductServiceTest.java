@@ -31,7 +31,7 @@ class UserProductServiceTest {
 
     private final UserProductService userProductService = new UserProductService(userProductRepository, storageProductService);
 
-    private final User user = new User("1", "TEST", "TEST", List.of());
+    private final User user = new User(new ID("1"), "TEST", "TEST", List.of());
 
     private final ProductLimit limit1KgFor7Days = new ProductLimit(Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM));
     private final Product productWeight1KgNoLimit = new Product(new ID("1"), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);

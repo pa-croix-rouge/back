@@ -1,5 +1,6 @@
 package fr.croixrouge.service;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> getUserById(String userId) {
+    public Optional<User> getUserById(ID userId) {
         return userRepository.findById(userId);
     }
 }
