@@ -8,4 +8,8 @@ import java.util.Optional;
 public interface VolunteerRepository extends CRUDRepository<ID, Volunteer>{
 
     Optional<Volunteer> findByUserId(ID id);
+
+    boolean validateVolunteerAccount(Volunteer volunteer);
+
+    boolean invalidateVolunteerAccount(Volunteer volunteer);
 }

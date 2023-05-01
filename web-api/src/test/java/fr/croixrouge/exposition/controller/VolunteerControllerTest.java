@@ -117,4 +117,64 @@ public class VolunteerControllerTest {
                 .andExpect(jsonPath("$.phoneNumber").value(volunteerResponse.getPhoneNumber()))
                 .andExpect(jsonPath("$.isValidated").value(volunteerResponse.getIsValidated()));
     }
+
+    @Test
+    @DisplayName("Test that the volunteer validate endpoint validate the volunteer account of an existing account")
+    public void volunteerValidateAccountSuccessTest() throws Exception {
+        String volunteerId = "2";
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isValidated").value(false));
+
+        mockMvc.perform(post("/volunteer/validate/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isValidated").value(true));
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer validate endpoint returns a 404 when given incorrect account")
+    public void volunteerValidateAccountFailedTest() throws Exception {
+        String volunteerId = "-1";
+
+        mockMvc.perform(post("/volunteer/validate/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer invalidate endpoint invalidate the volunteer account of an existing account")
+    public void volunteerInvalidateAccountSuccessTest() throws Exception {
+        String volunteerId = "2";
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isValidated").value(true));
+
+        mockMvc.perform(post("/volunteer/invalidate/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isValidated").value(false));
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer invalidate endpoint returns a 404 when given incorrect account")
+    public void volunteerInvalidateAccountFailedTest() throws Exception {
+        String volunteerId = "-1";
+
+        mockMvc.perform(post("/volunteer/validate/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
 }

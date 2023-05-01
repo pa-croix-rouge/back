@@ -15,4 +15,12 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
     public Volunteer findByUserId(ID id) {
         return this.repository.findByUserId(id).orElseThrow();
     }
+
+    public boolean validateVolunteerAccount(Volunteer volunteer) {
+        return this.repository.validateVolunteerAccount(volunteer);
+    }
+
+    public boolean invalidateVolunteerAccount(Volunteer volunteer) {
+        return this.repository.invalidateVolunteerAccount(volunteer);
+    }
 }

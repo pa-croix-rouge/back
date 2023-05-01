@@ -70,14 +70,23 @@ public class MockRepositoryConfig {
     @Primary
     public VolunteerRepository volunteerTestRepository() {
         ArrayList<Volunteer> volunteers = new ArrayList<>();
-        ID volunteerId = new ID("1");
-        String firstName = "volunteerFirstName";
-        String lastName = "volunteerLastName";
-        String phoneNumber = "+33 6 00 00 00 00";
-        boolean isValidated = true;
-        Volunteer volunteer = new Volunteer(volunteerId, managerUser, firstName, lastName, phoneNumber, isValidated, localUnit.getId());
 
-        volunteers.add(volunteer);
+        ID volunteerId1 = new ID("1");
+        String firstName1 = "volunteerFirstName";
+        String lastName1 = "volunteerLastName";
+        String phoneNumber1 = "+33 6 00 00 00 00";
+        boolean isValidated1 = true;
+        Volunteer volunteer1 = new Volunteer(volunteerId1, managerUser, firstName1, lastName1, phoneNumber1, isValidated1, localUnit.getId());
+
+        ID volunteerId2 = new ID("2");
+        String firstName2 = "newVolunteer";
+        String lastName2 = "newVolunteerName";
+        String phoneNumber2 = "+33 6 00 11 22 33";
+        boolean isValidated2 = false;
+        Volunteer volunteer2 = new Volunteer(volunteerId2, managerUser, firstName2, lastName2, phoneNumber2, isValidated2, localUnit.getId());
+
+        volunteers.add(volunteer1);
+        volunteers.add(volunteer2);
 
         return new InMemoryVolunteerRepository(volunteers);
     }

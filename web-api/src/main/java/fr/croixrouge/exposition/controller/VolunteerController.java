@@ -10,10 +10,7 @@ import fr.croixrouge.service.LocalUnitService;
 import fr.croixrouge.service.UserService;
 import fr.croixrouge.service.VolunteerService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,7 +40,7 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
             return ResponseEntity.notFound().build();
         }
         User user = new User(null, model.getUsername(), model.getPassword(), List.of());
-        ID userId = userService.save(user);
+        ID userId = this.userService.save(user);
         if (userId == null) {
             return ResponseEntity.internalServerError().build();
         }
@@ -53,5 +50,31 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok(volunteerId);
+    }
+
+    @PostMapping("/validate/{id}")
+    public ResponseEntity validateVolunteer(@PathVariable ID id) {
+        Volunteer volunteer = service.findById(id);
+        if (volunteer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        boolean success = service.validateVolunteerAccount(volunteer);
+        if (!success) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/invalidate/{id}")
+    public ResponseEntity invalidateVolunteer(@PathVariable ID id) {
+        Volunteer volunteer = service.findById(id);
+        if (volunteer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        boolean success = service.invalidateVolunteerAccount(volunteer);
+        if (!success) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().build();
     }
 }
