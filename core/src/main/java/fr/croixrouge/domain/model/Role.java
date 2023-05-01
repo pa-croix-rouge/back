@@ -4,26 +4,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Role {
-    private final String id;
+public class Role extends Entity<ID> {
     private final String name;
     private final String description;
     private final Map<Resources, List<Operations>> authorizations;
 
-    private final String localUnitId;
-    private final List<String> userIds;
+    private final ID localUnitId;
+    private final List<ID> userIds;
 
-    public Role(String id, String name, String description, Map<Resources, List<Operations>> authorizations, String localUnitId, List<String> userIds) {
-        this.id = id;
+    public Role(ID id, String name, String description, Map<Resources, List<Operations>> authorizations, ID localUnitId, List<ID> userIds) {
+        super(id);
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
         this.localUnitId = localUnitId;
         this.userIds = userIds;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {
@@ -42,11 +37,11 @@ public class Role {
         return authorizations;
     }
 
-    public String getLocalUnitId() {
+    public ID getLocalUnitId() {
         return localUnitId;
     }
 
-    public List<String> getUserIds() {
+    public List<ID> getUserIds() {
         return userIds;
     }
 

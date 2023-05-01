@@ -80,14 +80,14 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public RoleRepository roleTestRepository() {
-        ConcurrentHashMap<String, Role> roles = new ConcurrentHashMap<>();
-        String roleId = "1";
+        ConcurrentHashMap<ID, Role> roles = new ConcurrentHashMap<>();
+        ID roleId = new ID("1");
         String roleName = "Val d'Orge default role";
         String roleDescription = "Default role for Val d'Orge";
         Map<Resources, List<Operations>> resources = Map.of(Resources.RESOURCE, List.of(Operations.READ));
 
-        String localUnitId = "1";
-        List<String> userIds = Collections.singletonList("2");
+        ID localUnitId = new ID("1");
+        List<ID> userIds = Collections.singletonList(new ID("2"));
         Role role = new Role(roleId, roleName, roleDescription, resources, localUnitId, userIds);
         roles.put(roleId, role);
 

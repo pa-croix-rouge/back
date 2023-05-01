@@ -1,5 +1,6 @@
 package fr.croixrouge.repository;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.repository.RoleRepository;
 
@@ -11,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryRoleRepository implements RoleRepository {
 
-    private final ConcurrentHashMap<String, Role> roles;
+    private final ConcurrentHashMap<ID, Role> roles;
 
-    public InMemoryRoleRepository(ConcurrentHashMap<String, Role> roles) {
+    public InMemoryRoleRepository(ConcurrentHashMap<ID, Role> roles) {
         this.roles = roles;
     }
 
@@ -23,12 +24,12 @@ public class InMemoryRoleRepository implements RoleRepository {
 
 
     @Override
-    public Optional<Role> findById(String roleId) {
+    public Optional<Role> findById(ID roleId) {
         return Optional.ofNullable(roles.get(roleId));
     }
 
     @Override
-    public List<Role> findAllByLocalUnitId(String localUnitId) {
+    public List<Role> findAllByLocalUnitId(ID localUnitId) {
         List<Role> rolesByLocalUnitId = new ArrayList<>();
         this.roles.values().stream()
                 .filter(role -> role.getLocalUnitId().equals(localUnitId))
@@ -37,7 +38,7 @@ public class InMemoryRoleRepository implements RoleRepository {
     }
 
     @Override
-    public List<Role> findAllByUserId(String userId) {
+    public List<Role> findAllByUserId(ID userId) {
         List<Role> rolesByUserId = new ArrayList<>();
         this.roles.values().stream()
                 .filter(role -> role.getUserIds().contains(userId))
