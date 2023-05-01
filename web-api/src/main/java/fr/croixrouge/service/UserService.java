@@ -5,18 +5,10 @@ import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class UserService {
-
-    private final UserRepository userRepository;
+public class UserService extends CRUDService<ID, User, UserRepository> {
 
     public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public Optional<User> getUserById(ID userId) {
-        return userRepository.findById(userId);
+        super(userRepository);
     }
 }
