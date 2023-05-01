@@ -1,38 +1,31 @@
 package fr.croixrouge.exposition.controller;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
-import fr.croixrouge.exception.LocalUnitNotFoundException;
-import fr.croixrouge.exception.UserNotFoundException;
-import fr.croixrouge.exposition.dto.core.LocalUnitRequest;
+import fr.croixrouge.exposition.dto.core.AddressDTO;
+import fr.croixrouge.exposition.dto.core.LocalUnitCreationRequest;
 import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
 import fr.croixrouge.service.LocalUnitService;
-import fr.croixrouge.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/localunit")
-public class LocalUnitController {
+public class LocalUnitController extends CRUDController<ID, LocalUnit, LocalUnitService, LocalUnitResponse, LocalUnitCreationRequest> {
 
-    private final LocalUnitService localUnitService;
-    private final UserService authenticationService;
-
-    public LocalUnitController(LocalUnitService localUnitService, UserService authenticationService) {
-        this.localUnitService = localUnitService;
-        this.authenticationService = authenticationService;
+    public LocalUnitController(LocalUnitService localUnitService) {
+        super(localUnitService);
     }
 
-    @GetMapping
-    public ResponseEntity<LocalUnitResponse> getLocalUnitFromId(@RequestBody LocalUnitRequest localUnitRequest) {
-        try {
-            LocalUnit localUnit = localUnitService.getLocalUnitByPostalCode(localUnitRequest.getLocalUnitId());
-            LocalUnitResponse localUnitResponse = LocalUnitResponse.fromLocalUnit(localUnit);
-            return ResponseEntity.ok(localUnitResponse);
-        } catch (LocalUnitNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @Override
+    public LocalUnitResponse toDTO(LocalUnit model) {
+        return new LocalUnitResponse(model.getId().value(), model.getName(), new AddressDTO(model.getAddress()), model.getManager().getUsername());
+    }
+
+    @GetMapping("/postcode/{code}")
+    public ResponseEntity<LocalUnitResponse> getLocalUnitFromId(@PathVariable String code) {
+        LocalUnit localUnit = service.getLocalUnitByPostalCode(code);
+        LocalUnitResponse localUnitResponse = this.toDTO(localUnit);
+        return ResponseEntity.ok(localUnitResponse);
     }
 }

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public abstract class CRUDController<K extends ID, V extends Entity<K>, S extends CRUDService<K, V, ?>, MODEL_DTO, CREATION_DTO extends CreationDTO<V>> extends ErrorHandler {
 
-    private final S service;
+    protected final S service;
 
     public CRUDController(S service) {
         this.service = service;

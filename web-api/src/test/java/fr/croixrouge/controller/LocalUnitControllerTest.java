@@ -3,7 +3,6 @@ package fr.croixrouge.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.core.AddressDTO;
-import fr.croixrouge.exposition.dto.core.LocalUnitRequest;
 import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,13 +50,14 @@ public class LocalUnitControllerTest {
     @Test
     @DisplayName("Test that the localunit endpoint returns a local unit when given a correct postal code")
     public void localUnitPostalCodeSuccessTest() throws Exception {
+        String localUnitPostCode = "91240";
+
         AddressDTO addressDTO = new AddressDTO(
                 "91",
                 "91240",
                 "St Michel sur Orge",
                 "76 rue des Liers"
         );
-        LocalUnitRequest localUnitRequest = new LocalUnitRequest("91240");
 
         LocalUnitResponse localUnitResponse = new LocalUnitResponse(
                 "91240",
@@ -66,10 +66,8 @@ public class LocalUnitControllerTest {
                 "LUManager"
         );
 
-        mockMvc.perform(get("/localunit")
-                        .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(localUnitRequest)))
+        mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value(localUnitResponse.getName()))
                 .andExpect(jsonPath("address.departmentCode").value(addressDTO.getDepartmentCode()))
@@ -82,12 +80,10 @@ public class LocalUnitControllerTest {
     @Test
     @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong postal code")
     public void localUnitPostalCodeFailedTest() throws Exception {
-        LocalUnitRequest localUnitRequest = new LocalUnitRequest("00100");
+        String localUnitPostCode ="00100";
 
-        mockMvc.perform(get("/localunit")
-                        .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(localUnitRequest)))
+        mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }
 }
