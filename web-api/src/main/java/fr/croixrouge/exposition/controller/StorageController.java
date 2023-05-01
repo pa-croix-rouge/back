@@ -28,7 +28,7 @@ public class StorageController extends CRUDController<ID, Storage, StorageServic
 
     @Override
     public Storage toModel(CreateStorageDTO dto) {
-        LocalUnit localUnit = localUnitService.findById(dto.getLocalUnitID());
+        LocalUnit localUnit = localUnitService.findById(new ID(dto.getLocalUnitID()));
         return dto.toModel(localUnit);
     }
 }

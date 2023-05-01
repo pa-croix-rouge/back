@@ -48,7 +48,7 @@ public class MockRepositoryConfig {
         this.passwordEncoder = passwordEncoder;
         mangerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
 
-        localUnit = new LocalUnit("1",
+        localUnit = new LocalUnit(new ID("1"),
                 "Unite Local du Val d'Orge",
                 address,
                 mangerUser);
@@ -72,8 +72,8 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public LocalUnitRepository localTestUnitRepository() {
-        ConcurrentHashMap<String, LocalUnit> localUnits = new ConcurrentHashMap<>();
-        localUnits.put("1", localUnit);
+        ConcurrentHashMap<ID, LocalUnit> localUnits = new ConcurrentHashMap<>();
+        localUnits.put(new ID("1"), localUnit);
         return new InMemoryLocalUnitRepository(localUnits);
     }
 

@@ -1,5 +1,6 @@
 package fr.croixrouge.repository;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 
@@ -9,9 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryLocalUnitRepository implements LocalUnitRepository {
 
-    private final ConcurrentHashMap<String, LocalUnit> localUnits;
+    private final ConcurrentHashMap<ID, LocalUnit> localUnits;
 
-    public InMemoryLocalUnitRepository(ConcurrentHashMap<String, LocalUnit> localUnits) {
+    public InMemoryLocalUnitRepository(ConcurrentHashMap<ID, LocalUnit> localUnits) {
         this.localUnits = localUnits;
     }
 
@@ -20,7 +21,7 @@ public class InMemoryLocalUnitRepository implements LocalUnitRepository {
     }
 
     @Override
-    public Optional<LocalUnit> findById(String localUnitId) {
+    public Optional<LocalUnit> findById(ID localUnitId) {
         return Optional.ofNullable(localUnits.get(localUnitId));
     }
 
@@ -31,6 +32,6 @@ public class InMemoryLocalUnitRepository implements LocalUnitRepository {
 
     @Override
     public void save(LocalUnit localUnit) {
-        localUnits.put(localUnit.getLocalUnitId(), localUnit);
+        localUnits.put(localUnit.getId(), localUnit);
     }
 }

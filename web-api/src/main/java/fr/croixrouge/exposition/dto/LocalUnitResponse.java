@@ -19,7 +19,7 @@ public class LocalUnitResponse {
 
     public static LocalUnitResponse fromLocalUnit(LocalUnit localUnit) {
         return new LocalUnitResponse(
-                localUnit.getLocalUnitId(),
+                localUnit.getId().value(),
                 localUnit.getName(),
                 new AddressDTO(localUnit.getAddress()),
                 localUnit.getManager().getUsername()

@@ -2,21 +2,16 @@ package fr.croixrouge.domain.model;
 
 import java.util.Objects;
 
-public class LocalUnit {
-    private final String localUnitId;
+public class LocalUnit extends Entity<ID> {
     private final String name;
     private final Address address;
     private final User manager;
 
-    public LocalUnit(String localUnitId, String name, Address address, User manager) {
-        this.localUnitId = localUnitId;
+    public LocalUnit(ID localUnitId, String name, Address address, User manager) {
+        super(localUnitId);
         this.name = name;
         this.address = address;
         this.manager = manager;
-    }
-
-    public String getLocalUnitId() {
-        return localUnitId;
     }
 
     public String getName() {
@@ -34,7 +29,7 @@ public class LocalUnit {
     @Override
     public String toString() {
         return "LocalUnit{" +
-                "localUnitId='" + localUnitId + '\'' +
+                "localUnitId='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address=" + address +
                 ", managerId='" + manager.getId() + '\'' +
@@ -46,11 +41,11 @@ public class LocalUnit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocalUnit localUnit = (LocalUnit) o;
-        return Objects.equals(localUnitId, localUnit.localUnitId) && Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(manager, localUnit.manager);
+        return Objects.equals(id, localUnit.id) && Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(manager, localUnit.manager);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(localUnitId, name, address, manager);
+        return Objects.hash(id, name, address, manager);
     }
 }
