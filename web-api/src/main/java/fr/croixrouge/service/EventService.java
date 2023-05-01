@@ -9,39 +9,25 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EventService {
-
-    private final EventRepository eventRepository;
+public class EventService extends CRUDService<ID, Event, EventRepository> {
 
     public EventService(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
+        super(eventRepository);
     }
 
-    public Optional<Event> getEventByIdSessionId(ID eventId, ID sessionId) {
-        return eventRepository.findByEventIdSessionId(eventId, sessionId);
+    public Optional<Event> findByEventIdAndSessionId(ID eventId, ID sessionId) {
+        return repository.findByEventIdSessionId(eventId, sessionId);
     }
 
-    public Optional<Event> getEventById(ID eventId) {
-        return eventRepository.findById(eventId);
+    public List<Event> findEventsByLocalUnitId(ID localUnitId) {
+        return repository.findByLocalUnitId(localUnitId);
     }
 
-    public List<Event> getEventsByLocalUnitId(ID localUnitId) {
-        return eventRepository.findByLocalUnitId(localUnitId);
-    }
-
-    public List<Event> getEventsByLocalUnitIdAndMonth(ID localUnitId, int month, int year) {
-        return eventRepository.findByLocalUnitIdAndMonth(localUnitId, month, year);
-    }
-
-    public ID addEvent(Event event) {
-        return eventRepository.save(event);
-    }
-
-    public void deleteEvent(Event event) {
-        eventRepository.delete(event);
+    public List<Event> findEventsByLocalUnitIdAndMonth(ID localUnitId, int month, int year) {
+        return repository.findByLocalUnitIdAndMonth(localUnitId, month, year);
     }
 
     public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
-        return eventRepository.registerParticipant(eventId, sessionId, participantId);
+        return repository.registerParticipant(eventId, sessionId, participantId);
     }
 }

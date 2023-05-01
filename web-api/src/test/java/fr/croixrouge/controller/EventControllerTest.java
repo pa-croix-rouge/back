@@ -225,7 +225,7 @@ public class EventControllerTest {
                 0
         );
 
-        mockMvc.perform(get("/event")
+        mockMvc.perform(get("/event/date")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventForLocalUnitAndMonthRequest)))
