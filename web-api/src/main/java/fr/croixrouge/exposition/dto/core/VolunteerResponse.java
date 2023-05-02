@@ -6,13 +6,15 @@ public class VolunteerResponse {
     public String lastName;
     public String phoneNumber;
     public boolean isValidated;
+    public String localUnitId;
 
-    public VolunteerResponse(String username, String firstName, String lastName, String phoneNumber, boolean isValidated) {
+    public VolunteerResponse(String username, String firstName, String lastName, String phoneNumber, boolean isValidated, String localUnitId) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.isValidated = isValidated;
+        this.localUnitId = localUnitId;
     }
 
     public String getUsername() {
@@ -32,6 +34,10 @@ public class VolunteerResponse {
     }
 
     public boolean getIsValidated() {
+        return isValidated;
+    }
+
+    public boolean isValidated() {
         return isValidated;
     }
 }

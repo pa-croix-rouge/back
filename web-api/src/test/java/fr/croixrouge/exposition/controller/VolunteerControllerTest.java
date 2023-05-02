@@ -56,7 +56,8 @@ public class VolunteerControllerTest {
                 "volunteerFirstName",
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
-                true
+                true,
+                "1"
         );
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
@@ -77,7 +78,8 @@ public class VolunteerControllerTest {
                 "volunteerFirstName",
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
-                true
+                true,
+                "1"
         );
 
         mockMvc.perform(get("/volunteer/token")
@@ -126,7 +128,8 @@ public class VolunteerControllerTest {
                 "John",
                 "Doe",
                 "+33 6 00 11 00 11",
-                false
+                false,
+                "1"
         );
 
         mockMvc.perform(get("/volunteer/" + volunteerId)

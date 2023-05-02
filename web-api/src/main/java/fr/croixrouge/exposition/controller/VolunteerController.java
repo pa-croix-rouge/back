@@ -33,7 +33,7 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
 
     @Override
     public VolunteerResponse toDTO(Volunteer model) {
-        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated());
+        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getLocalUnitId().value());
     }
 
     @GetMapping("/token")
