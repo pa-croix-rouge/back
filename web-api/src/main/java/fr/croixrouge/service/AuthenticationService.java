@@ -4,11 +4,11 @@ import fr.croixrouge.config.JwtTokenConfig;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.exposition.dto.core.LoginResponse;
 import fr.croixrouge.model.UserSecurity;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class AuthenticationService {
@@ -79,5 +79,17 @@ public class AuthenticationService {
 //            token.setRevoked(true);
 //        });
 //        tokenRepository.saveAll(validUserTokens);
+    }
+
+    public String getUserIdFromJwtToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(jwtTokenConfig.getTokenHeader());
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+
+        String token = authorizationHeader.substring("Bearer ".length());
+
+        return this.jwtTokenConfig.extractUsername(token);
     }
 }

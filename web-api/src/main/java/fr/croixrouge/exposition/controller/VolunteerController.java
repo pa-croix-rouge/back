@@ -6,9 +6,11 @@ import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.exposition.dto.core.VolunteerCreationRequest;
 import fr.croixrouge.exposition.dto.core.VolunteerResponse;
+import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.LocalUnitService;
 import fr.croixrouge.service.UserService;
 import fr.croixrouge.service.VolunteerService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +22,25 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
 
     private final LocalUnitService localUnitService;
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
-    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService) {
+    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService, AuthenticationService authenticationService) {
         super(service);
         this.localUnitService = localUnitService;
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
     public VolunteerResponse toDTO(Volunteer model) {
         return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated());
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity<VolunteerResponse> get(HttpServletRequest request) {
+        String username = authenticationService.getUserIdFromJwtToken(request);
+        Volunteer volunteer = service.findByUsername(username);
+        return ResponseEntity.ok(this.toDTO(volunteer));
     }
 
     @Override

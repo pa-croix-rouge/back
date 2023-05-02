@@ -16,6 +16,10 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
         return this.repository.findByUserId(id).orElseThrow();
     }
 
+    public Volunteer findByUsername(String username) {
+        return this.repository.findByUsername(username).orElseThrow();
+    }
+
     public boolean validateVolunteerAccount(Volunteer volunteer) {
         return this.repository.validateVolunteerAccount(volunteer);
     }

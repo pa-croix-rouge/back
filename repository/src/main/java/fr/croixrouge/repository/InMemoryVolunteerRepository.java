@@ -26,6 +26,11 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
     }
 
     @Override
+    public Optional<Volunteer> findByUsername(String username) {
+        return this.objects.stream().filter(o -> o.getUser().getUsername().equals(username)).findFirst();
+    }
+
+    @Override
     public boolean validateVolunteerAccount(Volunteer volunteer) {
         Volunteer updatedVolunteer = new Volunteer(volunteer.getId(),
                 volunteer.getUser(),

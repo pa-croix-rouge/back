@@ -35,7 +35,7 @@ public class VolunteerControllerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+        LoginRequest loginRequest = new LoginRequest("LUManager", "LUPassword");
 
         String result = mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -60,6 +60,27 @@ public class VolunteerControllerTest {
         );
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(volunteerResponse.getUsername()))
+                .andExpect(jsonPath("$.firstName").value(volunteerResponse.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(volunteerResponse.getLastName()))
+                .andExpect(jsonPath("$.phoneNumber").value(volunteerResponse.getPhoneNumber()))
+                .andExpect(jsonPath("$.isValidated").value(volunteerResponse.getIsValidated()));
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer details endpoint returns volunteer's informations when given the correct id")
+    public void volunteerFromTokenSuccessTest() throws Exception {
+        VolunteerResponse volunteerResponse = new VolunteerResponse(
+                "LUManager",
+                "volunteerFirstName",
+                "volunteerLastName",
+                "+33 6 00 00 00 00",
+                true
+        );
+
+        mockMvc.perform(get("/volunteer/token")
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(volunteerResponse.getUsername()))
