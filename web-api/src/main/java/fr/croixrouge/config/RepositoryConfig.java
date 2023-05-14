@@ -1,7 +1,6 @@
 package fr.croixrouge.config;
 
-import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.domain.model.User;
+import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
@@ -28,8 +27,16 @@ public class RepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final User managerUser;
+
+    private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
+
+    private final LocalUnit localUnit;
+
     public RepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+        this.managerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
+        this.localUnit = new LocalUnit(new ID("1"), "Unite Local du Val d'Orge", address, managerUser, address.getPostalCode() + "-000");
     }
 
     @Bean
@@ -40,6 +47,7 @@ public class RepositoryConfig {
         String defaultPassword = passwordEncoder.encode("defaultPassword");
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
         users.add(defaultUser);
+        users.add(managerUser);
         return new InMemoryUserRepository(users);
     }
 
@@ -50,7 +58,9 @@ public class RepositoryConfig {
 
     @Bean
     public LocalUnitRepository localUnitRepository() {
-        return new InMemoryLocalUnitRepository();
+        ArrayList<LocalUnit> localUnits = new ArrayList<>();
+        localUnits.add(localUnit);
+        return new InMemoryLocalUnitRepository(localUnits);
     }
 
     @Bean
@@ -85,6 +95,9 @@ public class RepositoryConfig {
 
     @Bean
     public VolunteerRepository volunteerRepository() {
-        return new InMemoryVolunteerRepository();
+        ArrayList<Volunteer> volunteers = new ArrayList<>();
+        Volunteer volunteer1 = new Volunteer(new ID("1"), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit.getId());
+        volunteers.add(volunteer1);
+        return new InMemoryVolunteerRepository(volunteers);
     }
 }
