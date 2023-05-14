@@ -88,4 +88,46 @@ public class LocalUnitControllerTest {
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    @DisplayName("Test that the localunit endpoint returns a local unit when given a correct id")
+    public void localUnitIdSuccessTest() throws Exception {
+        String localUnitId = "1";
+
+        AddressDTO addressDTO = new AddressDTO(
+                "91",
+                "91240",
+                "St Michel sur Orge",
+                "76 rue des Liers"
+        );
+
+        LocalUnitResponse localUnitResponse = new LocalUnitResponse(
+                "91240",
+                "Unite Local du Val d'Orge",
+                addressDTO,
+                "LUManager",
+                "91240-000"
+        );
+
+        mockMvc.perform(get("/localunit/" + localUnitId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value(localUnitResponse.getName()))
+                .andExpect(jsonPath("address.departmentCode").value(addressDTO.getDepartmentCode()))
+                .andExpect(jsonPath("address.postalCode").value(addressDTO.getPostalCode()))
+                .andExpect(jsonPath("address.city").value(addressDTO.getCity()))
+                .andExpect(jsonPath("address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
+                .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()))
+                .andExpect(jsonPath("code").value(localUnitResponse.getCode()));
+    }
+
+    @Test
+    @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong id")
+    public void localUnitIdFailedTest() throws Exception {
+        String localUnitId ="-1";
+
+        mockMvc.perform(get("/localunit/" + localUnitId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
 }
