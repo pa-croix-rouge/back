@@ -62,17 +62,13 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @GetMapping("/stats/{localUnitId}")
     public ResponseEntity<EventStatsResponse> getEventsStatsByLocalUnitId(@PathVariable ID localUnitId) {
-        final List<EventSession> sessionList = new ArrayList<>();
-        final List<EventSession> sessionListOverMonth = new ArrayList<>();
-        final List<Event> events = service.findByLocalUnitIdOver12Month(localUnitId);
+        final List<EventSession> sessions = service.findByLocalUnitIdOver12Month(localUnitId);
         final YearMonth now = YearMonth.now();
-        for (Event event : events) {
-            sessionList.addAll(event.getSessions());
-            sessionListOverMonth.addAll(event.getSessions().stream().filter(session -> {
-                YearMonth sessionDate = YearMonth.from(session.getStart());
-                return sessionDate.equals(now);
-            }).toList());
-        }
+        final List<EventSession> sessionList = new ArrayList<>(sessions);
+        final List<EventSession> sessionListOverMonth = new ArrayList<>(sessions.stream().filter(session -> {
+            YearMonth sessionDate = YearMonth.from(session.getStart());
+            return sessionDate.equals(now);
+        }).toList());
         final EventStatsResponse eventStatsResponse = new EventStatsResponse(sessionListOverMonth.size(), sessionListOverMonth.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum), sessionList.size(), sessionList.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum));
         return ResponseEntity.ok(eventStatsResponse);
     }

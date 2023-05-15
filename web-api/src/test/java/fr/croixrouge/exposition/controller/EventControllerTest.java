@@ -217,8 +217,8 @@ public class EventControllerTest {
         EventStatsResponse eventStatsResponse = new EventStatsResponse(
                 0,
                 0,
-                15,
-                2
+                0,
+                0
         );
 
         mockMvc.perform(get("/event/stats/" + localUnitId)
