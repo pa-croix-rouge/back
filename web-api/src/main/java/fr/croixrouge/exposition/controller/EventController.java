@@ -8,6 +8,10 @@ import fr.croixrouge.service.EventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +61,20 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
             }
         }
         return ResponseEntity.ok(eventResponse);
+    }
+
+    @GetMapping("/stats/{localUnitId}")
+    public ResponseEntity<EventStatsResponse> getEventsStatsByLocalUnitId(@PathVariable ID localUnitId) {
+        final List<EventSession> sessionList = new ArrayList<>();
+        final List<EventSession> sessionListOverMonth = new ArrayList<>();
+        final List<Event> events = service.findByLocalUnitIdOver12Month(localUnitId);
+        final ChronoZonedDateTime<LocalDate> now = ZonedDateTime.now();
+        for (Event event : events) {
+            sessionList.addAll(event.getSessions());
+            sessionListOverMonth.addAll(event.getSessions().stream().filter(session -> session.getStart().isAfter(now.minus(1, ChronoUnit.MONTHS))).toList());
+        }
+        final EventStatsResponse eventStatsResponse = new EventStatsResponse(sessionListOverMonth.size(), sessionListOverMonth.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum), sessionList.size(), sessionList.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum));
+        return ResponseEntity.ok(eventStatsResponse);
     }
 
     @GetMapping("/date")

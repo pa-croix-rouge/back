@@ -210,6 +210,28 @@ public class EventControllerTest {
     }
 
     @Test
+    @DisplayName("Test that the event endpoint for local unit returns the stats when given a correct local unit id")
+    public void eventsStatsLocalUnitSuccessTest() throws Exception {
+        String localUnitId = "1";
+
+        EventStatsResponse eventStatsResponse = new EventStatsResponse(
+                0,
+                0,
+                15,
+                2
+        );
+
+        mockMvc.perform(get("/event/stats/" + localUnitId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numberOfEventsOverTheMonth").value(eventStatsResponse.getNumberOfEventsOverTheMonth()))
+                .andExpect(jsonPath("$.totalParticipantsOverTheMonth").value(eventStatsResponse.getTotalParticipantsOverTheMonth()))
+                .andExpect(jsonPath("$.numberOfEventsOverTheYear").value(eventStatsResponse.getNumberOfEventsOverTheYear()))
+                .andExpect(jsonPath("$.totalParticipantsOverTheYear").value(eventStatsResponse.getTotalParticipantsOverTheYear()));
+    }
+
+    @Test
     @DisplayName("Test that the event endpoint for local unit and month returns a list of events when given a correct local unit id and month")
     public void eventsLocalUnitAndMonthSuccessTest() throws Exception {
         EventForLocalUnitAndMonthRequest eventForLocalUnitAndMonthRequest = new EventForLocalUnitAndMonthRequest("1", 7, 2000);

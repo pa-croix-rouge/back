@@ -6,6 +6,10 @@ import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +41,12 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     @Override
     public List<Event> findByLocalUnitId(ID localUnitId) {
         return this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Event> findByLocalUnitIdOver12Month(ID localUnitId) {
+        ChronoZonedDateTime<LocalDate> now = ZonedDateTime.now();
+        return this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId) && event.getFirstStart().isBefore(now.minus(12, ChronoUnit.MONTHS))).collect(Collectors.toList());
     }
 
     @Override

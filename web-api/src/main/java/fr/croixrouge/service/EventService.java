@@ -23,6 +23,10 @@ public class EventService extends CRUDService<ID, Event, EventRepository> {
         return repository.findByLocalUnitId(localUnitId);
     }
 
+    public List<Event> findByLocalUnitIdOver12Month(ID localUnitId) {
+        return repository.findByLocalUnitIdOver12Month(localUnitId);
+    }
+
     public List<Event> findEventsByLocalUnitIdAndMonth(ID localUnitId, int month, int year) {
         return repository.findByLocalUnitIdAndMonth(localUnitId, month, year);
     }
