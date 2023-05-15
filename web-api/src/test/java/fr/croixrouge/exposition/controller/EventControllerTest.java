@@ -152,7 +152,7 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event endpoint for local unit returns a list of events when given a correct local unit id")
     public void eventsLocalUnitSuccessTest() throws Exception {
-        EventForLocalUnitRequest eventForLocalUnitRequest = new EventForLocalUnitRequest("1");
+        String localUnitId = "1";
 
         EventResponse eventResponse1 = new EventResponse(
                 "Formation PSC1",
@@ -182,10 +182,9 @@ public class EventControllerTest {
                 0
         );
 
-        mockMvc.perform(get("/event/all")
+        mockMvc.perform(get("/event/all/" + localUnitId)
                         .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventForLocalUnitRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(eventResponse1.getName()))
                 .andExpect(jsonPath("$[0].description").value(eventResponse1.getDescription()))
