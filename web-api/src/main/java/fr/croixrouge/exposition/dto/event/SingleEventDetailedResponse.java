@@ -13,18 +13,20 @@ public class SingleEventDetailedResponse {
     private String end;
     private String referrerId;
     private String localUnitId;
+    private int maxParticipants;
     private List<String> participants;
 
     public SingleEventDetailedResponse() {
     }
 
-    public SingleEventDetailedResponse(String name, String description, String start, String end, String referrerId, String localUnitId, List<String> participants) {
+    public SingleEventDetailedResponse(String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, List<String> participants) {
         this.name = name;
         this.description = description;
         this.start = start;
         this.end = end;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
+        this.maxParticipants = maxParticipants;
         this.participants = participants;
     }
 
@@ -36,6 +38,7 @@ public class SingleEventDetailedResponse {
                 eventSession.getEnd().toString(),
                 event.getReferrerId().value(),
                 event.getLocalUnitId().value(),
+                eventSession.getMaxParticipants(),
                 eventSession.getParticipants().stream().map(ID::value).toList()
         );
     }
@@ -64,6 +67,9 @@ public class SingleEventDetailedResponse {
         return localUnitId;
     }
 
+    public int getMaxParticipants() {
+        return maxParticipants;
+    }
 
     public List<String> getParticipants() {
         return participants;

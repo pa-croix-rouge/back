@@ -10,18 +10,20 @@ public class EventResponse {
     private String end;
     private String referrerId;
     private String localUnitId;
+    private int maxParticipants;
     private int numberOfParticipants;
 
     public EventResponse() {
     }
 
-    public EventResponse(String name, String description, String start, String end, String referrerId, String localUnitId, int numberOfParticipants) {
+    public EventResponse(String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, int numberOfParticipants) {
         this.name = name;
         this.description = description;
         this.start = start;
         this.end = end;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
+        this.maxParticipants = maxParticipants;
         this.numberOfParticipants = numberOfParticipants;
     }
 
@@ -33,6 +35,7 @@ public class EventResponse {
                 eventSession.getEnd().toString(),
                 event.getReferrerId().value(),
                 event.getLocalUnitId().value(),
+                eventSession.getMaxParticipants(),
                 eventSession.getParticipants().size()
         );
     }
@@ -59,6 +62,10 @@ public class EventResponse {
 
     public String getLocalUnitId() {
         return localUnitId;
+    }
+
+    public int getMaxParticipants() {
+        return maxParticipants;
     }
 
     public int getNumberOfParticipants() {

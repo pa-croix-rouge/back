@@ -104,8 +104,9 @@ public class RepositoryConfig {
         ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId1 = new ID("1");
         ID localUnitId1 = new ID("1");
+        int maxParticipants1 = 30;
         List<ID> participants1 = new ArrayList<>();
-        EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, participants1);
+        EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
         Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
         events.add(event1);
 
@@ -116,8 +117,9 @@ public class RepositoryConfig {
         ZonedDateTime eventEndDate2 = ZonedDateTime.of(LocalDateTime.of(2023, 5, 2, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId2 = new ID("1");
         ID localUnitId2 = new ID("1");
+        int maxParticipants2 = 30;
         List<ID> participants2 = new ArrayList<>();
-        EventSession eventSession2 = new EventSession(new ID("0"), eventStartDate2, eventEndDate2, participants2);
+        EventSession eventSession2 = new EventSession(new ID("0"), eventStartDate2, eventEndDate2, maxParticipants2, participants2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
         events.add(event2);
 
@@ -128,8 +130,9 @@ public class RepositoryConfig {
         ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(2023, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId3 = new ID("1");
         ID localUnitId3 = new ID("1");
+        int maxParticipants3 = 30;
         List<ID> participants3 = new ArrayList<>();
-        EventSession eventSession3 = new EventSession(new ID("0"), eventStartDate3, eventEndDate3, participants3);
+        EventSession eventSession3 = new EventSession(new ID("0"), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
         Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
         events.add(event3);
 
@@ -140,6 +143,7 @@ public class RepositoryConfig {
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId4 = new ID("1");
         ID localUnitId4 = new ID("1");
+        int maxParticipants4 = 30;
         List<EventSession> eventSessions4 = new ArrayList<>();
         AtomicInteger sessionCounter = new AtomicInteger(0);
         for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {
@@ -147,6 +151,7 @@ public class RepositoryConfig {
                     new ID(String.valueOf(sessionCounter.getAndIncrement())),
                     sessionTime,
                     sessionTime.plusMinutes(120),
+                    maxParticipants4,
                     new ArrayList<>()
             ));
         }
