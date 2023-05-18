@@ -71,7 +71,7 @@ public class EventControllerTest {
             ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
             "1",
             "1",
-            1,
+            2,
             List.of()
         );
 
@@ -89,6 +89,57 @@ public class EventControllerTest {
             .andExpect(jsonPath("$.localUnitId").value(singleEventDetailedResponse.getLocalUnitId()))
             .andExpect(jsonPath("$.maxParticipants").value(singleEventDetailedResponse.getMaxParticipants()))
             .andExpect(jsonPath("$.participants").isArray());
+    }
+
+    @Test
+    @DisplayName("Test that the event details endpoint updates an event when given a correct event and session id")
+    public void eventUpdateSuccessTest() throws Exception {
+        String eventId = "1";
+        String sessionId = "0";
+
+        SingleEventCreationRequest singleEventCreationRequest = new SingleEventCreationRequest(
+                "Formation Premier Secours de niveau 1",
+                "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                "1",
+                "1",
+                1
+        );
+
+        mockMvc.perform(post("/event/details/" + eventId + "/" + sessionId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(singleEventCreationRequest)))
+                .andExpect(status().isOk());
+
+        SingleEventDetailedResponse singleEventDetailedResponse = new SingleEventDetailedResponse(
+                eventId,
+                sessionId,
+                "Formation Premier Secours de niveau 1",
+                "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
+                ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                "1",
+                "1",
+                1,
+                List.of()
+        );
+
+        mockMvc.perform(get("/event/details/" + eventId + "/" + sessionId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventId").value(singleEventDetailedResponse.getEventId()))
+                .andExpect(jsonPath("$.sessionId").value(singleEventDetailedResponse.getSessionId()))
+                .andExpect(jsonPath("$.name").value(singleEventDetailedResponse.getName()))
+                .andExpect(jsonPath("$.description").value(singleEventDetailedResponse.getDescription()))
+                .andExpect(jsonPath("$.start").value(singleEventDetailedResponse.getStart()))
+                .andExpect(jsonPath("$.end").value(singleEventDetailedResponse.getEnd()))
+                .andExpect(jsonPath("$.referrerId").value(singleEventDetailedResponse.getReferrerId()))
+                .andExpect(jsonPath("$.localUnitId").value(singleEventDetailedResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$.maxParticipants").value(singleEventDetailedResponse.getMaxParticipants()))
+                .andExpect(jsonPath("$.participants").isArray());
     }
 
     @Test
@@ -170,7 +221,7 @@ public class EventControllerTest {
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 "1",
                 "1",
-                1,
+                2,
                 0,
                 false
         );
@@ -331,6 +382,7 @@ public class EventControllerTest {
 
     @Test
     @DisplayName("Test that the event register endpoint does not adds a user to an event if it's full")
+    @AfterTestMethod("eventUpdateSuccessTest")
     public void eventRegisterWhenAnEventIsFullFailTest() throws Exception {
         EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("1", "0", "2");
 

@@ -20,5 +20,7 @@ public interface EventRepository extends CRUDRepository<ID, Event> {
 
     boolean registerParticipant(ID eventId, ID sessionId, ID participantId);
 
+    boolean updateSingleEvent(ID eventId, ID sessionId, Event event);
+
     boolean deleteEventSession(ID eventId, ID sessionId);
 }

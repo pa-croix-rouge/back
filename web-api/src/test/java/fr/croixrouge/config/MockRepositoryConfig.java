@@ -127,7 +127,7 @@ public class MockRepositoryConfig {
         ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId1 = new ID("1");
         ID localUnitId1 = new ID("1");
-        int maxParticipants1 = 1;
+        int maxParticipants1 = 2;
         List<ID> participants1 = new ArrayList<>();
         EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
         Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
