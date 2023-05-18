@@ -104,6 +104,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         if (session == null) {
             return false;
         }
+        this.objects.remove(event);
         event.getSessions().remove(session);
         this.objects.add(event);
         return true;
