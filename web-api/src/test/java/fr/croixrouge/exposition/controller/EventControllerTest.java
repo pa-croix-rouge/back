@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.event.annotation.AfterTestMethod;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
@@ -483,5 +484,39 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[4].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[4].numberOfParticipants").value(0))
                 .andExpect(jsonPath("$[4].recurring").value(true));
+    }
+
+    @Test
+    @DisplayName("Test the the event sessions endpoint can delete all the sessions of a recurrent event")
+    @AfterTestMethod("eventCreateSessionsSuccessTest")
+    public void eventDeleteSessionsSuccessTest() throws Exception {
+        RecurrentEventCreationRequest recurrentEventCreationRequest = new RecurrentEventCreationRequest(
+                "Formation Benevole",
+                "Formation pour devenir benevole",
+                "1",
+                "1",
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 3, 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 4, 1, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                120,
+                7,
+                30
+        );
+
+        String eventId = mockMvc.perform(post("/event/sessions")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recurrentEventCreationRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        mockMvc.perform(delete("/event/sessions/" + eventId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/event/sessions/" + eventId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

@@ -103,6 +103,16 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(eventId);
     }
 
+    @DeleteMapping("/sessions/{eventId}")
+    public ResponseEntity<String> deleteEventSessionsByEventId(@PathVariable ID eventId) {
+        final Event event = service.findById(eventId);
+        if (event == null) {
+            return ResponseEntity.notFound().build();
+        }
+        service.deleteEventSessions(event);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> registerParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
         boolean isRegistered = service.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getParticipantId()));
