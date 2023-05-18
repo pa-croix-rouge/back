@@ -369,8 +369,6 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event sessions endpoint returns a recurring event when given a correct event id")
     public void eventIdSessionSuccessTest() throws Exception {
-        SessionForEventRequest sessionForEventRequest = new SessionForEventRequest("4");
-
         EventResponse eventResponse = new EventResponse(
                 "4",
                 "0",
@@ -385,10 +383,9 @@ public class EventControllerTest {
                 true
         );
 
-        mockMvc.perform(get("/event/sessions")
+        mockMvc.perform(get("/event/sessions/" + eventResponse.getEventId())
                         .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sessionForEventRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].eventId").value(eventResponse.getEventId()))
@@ -426,12 +423,9 @@ public class EventControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        SingleEventRequest singleEventRequest = new SingleEventRequest(eventId, "0");
-
-        mockMvc.perform(get("/event/sessions")
+        mockMvc.perform(get("/event/sessions/" + eventId)
                         .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(singleEventRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].eventId").value(eventId))

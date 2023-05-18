@@ -84,10 +84,10 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(eventResponse);
     }
 
-    @GetMapping("/sessions")
-    public ResponseEntity<List<EventResponse>> getEventSessionsByEventId(@RequestBody SessionForEventRequest sessionForEventRequest) {
+    @GetMapping("/sessions/{eventId}")
+    public ResponseEntity<List<EventResponse>> getEventSessionsByEventId(@PathVariable ID eventId) {
         final List<EventResponse> eventResponse = new ArrayList<>();
-        final Event event = service.findById(new ID(sessionForEventRequest.getEventId()));
+        final Event event = service.findById(eventId);
         if (event == null) {
             return ResponseEntity.notFound().build();
         }
