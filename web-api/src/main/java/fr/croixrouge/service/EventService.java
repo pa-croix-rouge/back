@@ -35,4 +35,8 @@ public class EventService extends CRUDService<ID, Event, EventRepository> {
     public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
         return repository.registerParticipant(eventId, sessionId, participantId);
     }
+
+    public boolean deleteEvent(ID eventId, ID sessionId) {
+        return repository.deleteEventSession(eventId, sessionId);
+    }
 }

@@ -93,4 +93,19 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         this.objects.add(event);
         return true;
     }
+
+    @Override
+    public boolean deleteEventSession(ID eventId, ID sessionId) {
+        Event event = this.findById(eventId).orElse(null);
+        if (event == null) {
+            return false;
+        }
+        EventSession session = event.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+        if (session == null) {
+            return false;
+        }
+        event.getSessions().remove(session);
+        this.objects.add(event);
+        return true;
+    }
 }

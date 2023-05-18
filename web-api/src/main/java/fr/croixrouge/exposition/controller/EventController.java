@@ -39,12 +39,11 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
     }
 
     @DeleteMapping("/details")
-    public ResponseEntity deleteEvent(@RequestBody SingleEventRequest singleEventRequest) {
-        Event event = service.findById(new ID(singleEventRequest.getEventId()));
-        if (event == null) {
+    public ResponseEntity<String> deleteEvent(@RequestBody SingleEventRequest singleEventRequest) {
+        boolean result = service.deleteEvent(new ID(singleEventRequest.getEventId()), new ID(singleEventRequest.getSessionId()));
+        if (!result) {
             return ResponseEntity.notFound().build();
         }
-        service.delete(event);
         return ResponseEntity.ok().build();
     }
 
