@@ -174,7 +174,8 @@ public class EventControllerTest {
                 "1",
                 "1",
                 1,
-                0
+                0,
+                false
         );
         EventResponse eventResponse2 = new EventResponse(
                 "2",
@@ -186,7 +187,8 @@ public class EventControllerTest {
                 "1",
                 "1",
                 30,
-                0
+                0,
+                false
         );
         EventResponse eventResponse3 = new EventResponse(
                 "3",
@@ -198,7 +200,8 @@ public class EventControllerTest {
                 "1",
                 "1",
                 30,
-                0
+                0,
+                false
         );
 
         mockMvc.perform(get("/event/all/" + localUnitId)
@@ -215,6 +218,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].localUnitId").value(eventResponse1.getLocalUnitId()))
                 .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse1.getMaxParticipants()))
                 .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[0].recurring").value(eventResponse1.isRecurring()))
                 .andExpect(jsonPath("$[1].eventId").value(eventResponse2.getEventId()))
                 .andExpect(jsonPath("$[1].sessionId").value(eventResponse2.getSessionId()))
                 .andExpect(jsonPath("$[1].name").value(eventResponse2.getName()))
@@ -224,7 +228,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[1].referrerId").value(eventResponse2.getReferrerId()))
                 .andExpect(jsonPath("$[1].localUnitId").value(eventResponse2.getLocalUnitId()))
                 .andExpect(jsonPath("$[1].maxParticipants").value(eventResponse2.getMaxParticipants()))
-                .andExpect(jsonPath("$[1].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[1].numberOfParticipants").value(eventResponse2.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[1].recurring").value(eventResponse2.isRecurring()))
                 .andExpect(jsonPath("$[2].eventId").value(eventResponse3.getEventId()))
                 .andExpect(jsonPath("$[2].sessionId").value(eventResponse3.getSessionId()))
                 .andExpect(jsonPath("$[2].name").value(eventResponse3.getName()))
@@ -234,7 +239,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[2].referrerId").value(eventResponse3.getReferrerId()))
                 .andExpect(jsonPath("$[2].localUnitId").value(eventResponse3.getLocalUnitId()))
                 .andExpect(jsonPath("$[2].maxParticipants").value(eventResponse3.getMaxParticipants()))
-                .andExpect(jsonPath("$[2].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()));
+                .andExpect(jsonPath("$[2].numberOfParticipants").value(eventResponse3.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[2].recurring").value(eventResponse3.isRecurring()));
     }
 
     @Test
@@ -274,7 +280,8 @@ public class EventControllerTest {
                 "1",
                 "1",
                 30,
-                0
+                0,
+                false
         );
 
         mockMvc.perform(get("/event/date")
@@ -291,7 +298,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].referrerId").value(eventResponse.getReferrerId()))
                 .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()))
                 .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse.getMaxParticipants()))
-                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()));
+                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[0].recurring").value(eventResponse.isRecurring()));
     }
 
     @Test
@@ -373,7 +381,8 @@ public class EventControllerTest {
                 "1",
                 "1",
                 30,
-                0
+                0,
+                true
         );
 
         mockMvc.perform(get("/event/sessions")
@@ -391,7 +400,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].referrerId").value(eventResponse.getReferrerId()))
                 .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()))
                 .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse.getMaxParticipants()))
-                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()));
+                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[0].recurring").value(eventResponse.isRecurring()));
     }
 
     @Test
@@ -434,6 +444,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[0].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[0].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[0].recurring").value(true))
                 .andExpect(jsonPath("$[1].eventId").value(eventId))
                 .andExpect(jsonPath("$[1].sessionId").value("1"))
                 .andExpect(jsonPath("$[1].name").value(recurrentEventCreationRequest.getName()))
@@ -444,6 +455,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[1].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[1].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[1].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[1].recurring").value(true))
                 .andExpect(jsonPath("$[2].eventId").value(eventId))
                 .andExpect(jsonPath("$[2].sessionId").value("2"))
                 .andExpect(jsonPath("$[2].name").value(recurrentEventCreationRequest.getName()))
@@ -454,6 +466,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[2].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[2].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[2].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[2].recurring").value(true))
                 .andExpect(jsonPath("$[3].eventId").value(eventId))
                 .andExpect(jsonPath("$[3].sessionId").value("3"))
                 .andExpect(jsonPath("$[3].name").value(recurrentEventCreationRequest.getName()))
@@ -464,6 +477,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[3].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[3].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[3].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[3].recurring").value(true))
                 .andExpect(jsonPath("$[4].eventId").value(eventId))
                 .andExpect(jsonPath("$[4].sessionId").value("4"))
                 .andExpect(jsonPath("$[4].name").value(recurrentEventCreationRequest.getName()))
@@ -473,6 +487,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[4].referrerId").value(recurrentEventCreationRequest.getReferrerId()))
                 .andExpect(jsonPath("$[4].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[4].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
-                .andExpect(jsonPath("$[4].numberOfParticipants").value(0));
+                .andExpect(jsonPath("$[4].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[4].recurring").value(true));
     }
 }

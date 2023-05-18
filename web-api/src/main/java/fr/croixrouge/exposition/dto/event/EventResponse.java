@@ -14,11 +14,12 @@ public class EventResponse {
     private String localUnitId;
     private int maxParticipants;
     private int numberOfParticipants;
+    private boolean isRecurring;
 
     public EventResponse() {
     }
 
-    public EventResponse(String eventId, String sessionId, String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, int numberOfParticipants) {
+    public EventResponse(String eventId, String sessionId, String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, int numberOfParticipants, boolean isRecurring) {
         this.eventId = eventId;
         this.sessionId = sessionId;
         this.name = name;
@@ -29,6 +30,7 @@ public class EventResponse {
         this.localUnitId = localUnitId;
         this.maxParticipants = maxParticipants;
         this.numberOfParticipants = numberOfParticipants;
+        this.isRecurring = isRecurring;
     }
 
     public static EventResponse fromEvent(Event event, EventSession eventSession) {
@@ -42,7 +44,8 @@ public class EventResponse {
                 event.getReferrerId().value(),
                 event.getLocalUnitId().value(),
                 eventSession.getMaxParticipants(),
-                eventSession.getParticipants().size()
+                eventSession.getParticipants().size(),
+                event.getOccurrences() > 1
         );
     }
 
@@ -84,5 +87,9 @@ public class EventResponse {
 
     public int getNumberOfParticipants() {
         return numberOfParticipants;
+    }
+
+    public boolean isRecurring() {
+        return isRecurring;
     }
 }
