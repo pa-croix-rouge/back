@@ -59,11 +59,12 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event details endpoint returns an event when given a correct event id")
     public void eventIdSuccessTest() throws Exception {
-        SingleEventRequest singleEventRequest = new SingleEventRequest("1", "0");
+        String eventId = "1";
+        String sessionId = "0";
 
         SingleEventDetailedResponse singleEventDetailedResponse = new SingleEventDetailedResponse(
-            "1",
-            "0",
+            eventId,
+            sessionId,
             "Formation PSC1",
             "Formation au PSC1",
             ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -74,10 +75,9 @@ public class EventControllerTest {
             List.of()
         );
 
-        mockMvc.perform(get("/event/details")
+        mockMvc.perform(get("/event/details/" + eventId + "/" + sessionId)
                 .header("Authorization", "Bearer " + jwtToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(singleEventRequest)))
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.eventId").value(singleEventDetailedResponse.getEventId()))
             .andExpect(jsonPath("$.sessionId").value(singleEventDetailedResponse.getSessionId()))
@@ -94,12 +94,12 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event details endpoint returns a 404 when given an incorrect event id")
     public void eventIdFailureTest() throws Exception {
-        SingleEventRequest singleEventRequest = new SingleEventRequest("-1", "-1");
+        String eventId = "-1";
+        String sessionId = "-1";
 
-        mockMvc.perform(get("/event/details")
+        mockMvc.perform(get("/event/details/" + eventId + "/" + sessionId)
                 .header("Authorization", "Bearer " + jwtToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(singleEventRequest)))
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
@@ -123,12 +123,9 @@ public class EventControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsString();
 
-        SingleEventRequest singleEventRequest = new SingleEventRequest(eventId, "0");
-
-        mockMvc.perform(get("/event/details")
+        mockMvc.perform(get("/event/details/" + eventId + "/0")
                         .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(singleEventRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventId").value(eventId))
                 .andExpect(jsonPath("$.sessionId").value("0"))
@@ -145,18 +142,17 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event details endpoint returns a 200 when deleting an event")
     public void eventDeleteSuccessTest() throws Exception {
-        SingleEventRequest singleEventRequest = new SingleEventRequest("4", "0");
+        String eventId = "4";
+        String sessionId = "0";
 
-        mockMvc.perform(delete("/event/details")
+        mockMvc.perform(delete("/event/details/" + eventId + "/" + sessionId)
                 .header("Authorization", "Bearer " + jwtToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(singleEventRequest)))
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        mockMvc.perform(get("/event/details")
+        mockMvc.perform(get("/event/details/" + eventId + "/" + sessionId)
                         .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(singleEventRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
@@ -314,10 +310,9 @@ public class EventControllerTest {
                         .content(objectMapper.writeValueAsString(eventRegistrationRequest)))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/event/details")
+        mockMvc.perform(get("/event/details/" + eventRegistrationRequest.getEventId() + "/" + eventRegistrationRequest.getSessionId())
                         .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventRegistrationRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.participants[0]").value("1"));
     }

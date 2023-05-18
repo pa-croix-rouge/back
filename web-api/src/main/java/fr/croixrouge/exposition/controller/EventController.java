@@ -26,9 +26,9 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return null;
     }
 
-    @GetMapping("/details")
-    public ResponseEntity<SingleEventDetailedResponse> getEventById(@RequestBody SingleEventRequest singleEventRequest) {
-        final Optional<SingleEventDetailedResponse> eventResponse = service.findByEventIdAndSessionId(new ID(singleEventRequest.getEventId()), new ID(singleEventRequest.getSessionId())).map(event -> SingleEventDetailedResponse.fromEvent(event, event.getSessions().get(0)));
+    @GetMapping("/details/{eventId}/{sessionId}")
+    public ResponseEntity<SingleEventDetailedResponse> getEventById(@PathVariable ID eventId, @PathVariable ID sessionId) {
+        final Optional<SingleEventDetailedResponse> eventResponse = service.findByEventIdAndSessionId(eventId, sessionId).map(event -> SingleEventDetailedResponse.fromEvent(event, event.getSessions().get(0)));
         return eventResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -38,9 +38,9 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(eventId);
     }
 
-    @DeleteMapping("/details")
-    public ResponseEntity<String> deleteEvent(@RequestBody SingleEventRequest singleEventRequest) {
-        boolean result = service.deleteEvent(new ID(singleEventRequest.getEventId()), new ID(singleEventRequest.getSessionId()));
+    @DeleteMapping("/details/{eventId}/{sessionId}")
+    public ResponseEntity<String> deleteEvent(@PathVariable ID eventId, @PathVariable ID sessionId) {
+        boolean result = service.deleteEvent(eventId, sessionId);
         if (!result) {
             return ResponseEntity.notFound().build();
         }
