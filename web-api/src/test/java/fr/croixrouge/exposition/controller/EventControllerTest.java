@@ -61,6 +61,8 @@ public class EventControllerTest {
         SingleEventRequest singleEventRequest = new SingleEventRequest("1", "0");
 
         SingleEventDetailedResponse singleEventDetailedResponse = new SingleEventDetailedResponse(
+            "1",
+            "0",
             "Formation PSC1",
             "Formation au PSC1",
             ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -76,6 +78,8 @@ public class EventControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(singleEventRequest)))
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.eventId").value(singleEventDetailedResponse.getEventId()))
+            .andExpect(jsonPath("$.sessionId").value(singleEventDetailedResponse.getSessionId()))
             .andExpect(jsonPath("$.name").value(singleEventDetailedResponse.getName()))
             .andExpect(jsonPath("$.description").value(singleEventDetailedResponse.getDescription()))
             .andExpect(jsonPath("$.start").value(singleEventDetailedResponse.getStart()))
@@ -125,6 +129,8 @@ public class EventControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(singleEventRequest)))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventId").value(eventId))
+                .andExpect(jsonPath("$.sessionId").value("0"))
                 .andExpect(jsonPath("$.name").value(singleEventCreationRequest.getName()))
                 .andExpect(jsonPath("$.description").value(singleEventCreationRequest.getDescription()))
                 .andExpect(jsonPath("$.start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).toString()))
@@ -159,6 +165,8 @@ public class EventControllerTest {
         String localUnitId = "1";
 
         EventResponse eventResponse1 = new EventResponse(
+                "1",
+                "0",
                 "Formation PSC1",
                 "Formation au PSC1",
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -169,6 +177,8 @@ public class EventControllerTest {
                 0
         );
         EventResponse eventResponse2 = new EventResponse(
+                "2",
+                "0",
                 "Distribution alimentaire",
                 "Distribution alimentaire gratuite",
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -179,6 +189,8 @@ public class EventControllerTest {
                 0
         );
         EventResponse eventResponse3 = new EventResponse(
+                "3",
+                "0",
                 "Formation PSC1",
                 "Formation au PSC1",
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -193,6 +205,8 @@ public class EventControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].eventId").value(eventResponse1.getEventId()))
+                .andExpect(jsonPath("$[0].sessionId").value(eventResponse1.getSessionId()))
                 .andExpect(jsonPath("$[0].name").value(eventResponse1.getName()))
                 .andExpect(jsonPath("$[0].description").value(eventResponse1.getDescription()))
                 .andExpect(jsonPath("$[0].start").value(eventResponse1.getStart()))
@@ -201,6 +215,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].localUnitId").value(eventResponse1.getLocalUnitId()))
                 .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse1.getMaxParticipants()))
                 .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[1].eventId").value(eventResponse2.getEventId()))
+                .andExpect(jsonPath("$[1].sessionId").value(eventResponse2.getSessionId()))
                 .andExpect(jsonPath("$[1].name").value(eventResponse2.getName()))
                 .andExpect(jsonPath("$[1].description").value(eventResponse2.getDescription()))
                 .andExpect(jsonPath("$[1].start").value(eventResponse2.getStart()))
@@ -209,6 +225,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[1].localUnitId").value(eventResponse2.getLocalUnitId()))
                 .andExpect(jsonPath("$[1].maxParticipants").value(eventResponse2.getMaxParticipants()))
                 .andExpect(jsonPath("$[1].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[2].eventId").value(eventResponse3.getEventId()))
+                .andExpect(jsonPath("$[2].sessionId").value(eventResponse3.getSessionId()))
                 .andExpect(jsonPath("$[2].name").value(eventResponse3.getName()))
                 .andExpect(jsonPath("$[2].description").value(eventResponse3.getDescription()))
                 .andExpect(jsonPath("$[2].start").value(eventResponse3.getStart()))
@@ -247,6 +265,8 @@ public class EventControllerTest {
         EventForLocalUnitAndMonthRequest eventForLocalUnitAndMonthRequest = new EventForLocalUnitAndMonthRequest("1", 7, 2000);
 
         EventResponse eventResponse = new EventResponse(
+                "3",
+                "0",
                 "Formation PSC1",
                 "Formation au PSC1",
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -262,6 +282,8 @@ public class EventControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventForLocalUnitAndMonthRequest)))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].eventId").value(eventResponse.getEventId()))
+                .andExpect(jsonPath("$[0].sessionId").value(eventResponse.getSessionId()))
                 .andExpect(jsonPath("$[0].name").value(eventResponse.getName()))
                 .andExpect(jsonPath("$[0].description").value(eventResponse.getDescription()))
                 .andExpect(jsonPath("$[0].start").value(eventResponse.getStart()))
@@ -342,6 +364,8 @@ public class EventControllerTest {
         SessionForEventRequest sessionForEventRequest = new SessionForEventRequest("4");
 
         EventResponse eventResponse = new EventResponse(
+                "4",
+                "0",
                 "EPISOL",
                 "Ouverture de l'EPISOL",
                 ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
@@ -358,6 +382,8 @@ public class EventControllerTest {
                         .content(objectMapper.writeValueAsString(sessionForEventRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].eventId").value(eventResponse.getEventId()))
+                .andExpect(jsonPath("$[0].sessionId").value(eventResponse.getSessionId()))
                 .andExpect(jsonPath("$[0].name").value(eventResponse.getName()))
                 .andExpect(jsonPath("$[0].description").value(eventResponse.getDescription()))
                 .andExpect(jsonPath("$[0].start").value(eventResponse.getStart()))
@@ -398,6 +424,8 @@ public class EventControllerTest {
                         .content(objectMapper.writeValueAsString(singleEventRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].eventId").value(eventId))
+                .andExpect(jsonPath("$[0].sessionId").value("0"))
                 .andExpect(jsonPath("$[0].name").value(recurrentEventCreationRequest.getName()))
                 .andExpect(jsonPath("$[0].description").value(recurrentEventCreationRequest.getDescription()))
                 .andExpect(jsonPath("$[0].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).toString()))
@@ -406,6 +434,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[0].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[0].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[1].eventId").value(eventId))
+                .andExpect(jsonPath("$[1].sessionId").value("1"))
                 .andExpect(jsonPath("$[1].name").value(recurrentEventCreationRequest.getName()))
                 .andExpect(jsonPath("$[1].description").value(recurrentEventCreationRequest.getDescription()))
                 .andExpect(jsonPath("$[1].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(7).toString()))
@@ -414,6 +444,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[1].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[1].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[1].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[2].eventId").value(eventId))
+                .andExpect(jsonPath("$[2].sessionId").value("2"))
                 .andExpect(jsonPath("$[2].name").value(recurrentEventCreationRequest.getName()))
                 .andExpect(jsonPath("$[2].description").value(recurrentEventCreationRequest.getDescription()))
                 .andExpect(jsonPath("$[2].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(14).toString()))
@@ -422,6 +454,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[2].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[2].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[2].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[3].eventId").value(eventId))
+                .andExpect(jsonPath("$[3].sessionId").value("3"))
                 .andExpect(jsonPath("$[3].name").value(recurrentEventCreationRequest.getName()))
                 .andExpect(jsonPath("$[3].description").value(recurrentEventCreationRequest.getDescription()))
                 .andExpect(jsonPath("$[3].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(21).toString()))
@@ -430,6 +464,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[3].localUnitId").value(recurrentEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[3].maxParticipants").value(recurrentEventCreationRequest.getMaxParticipants()))
                 .andExpect(jsonPath("$[3].numberOfParticipants").value(0))
+                .andExpect(jsonPath("$[4].eventId").value(eventId))
+                .andExpect(jsonPath("$[4].sessionId").value("4"))
                 .andExpect(jsonPath("$[4].name").value(recurrentEventCreationRequest.getName()))
                 .andExpect(jsonPath("$[4].description").value(recurrentEventCreationRequest.getDescription()))
                 .andExpect(jsonPath("$[4].start").value(timestampToLocalDateTime(recurrentEventCreationRequest.getFirstStart()).plusDays(28).toString()))

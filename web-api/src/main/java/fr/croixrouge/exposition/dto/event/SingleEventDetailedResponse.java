@@ -7,6 +7,8 @@ import fr.croixrouge.model.EventSession;
 import java.util.List;
 
 public class SingleEventDetailedResponse {
+    private String eventId;
+    private String sessionId;
     private String name;
     private String description;
     private String start;
@@ -19,7 +21,9 @@ public class SingleEventDetailedResponse {
     public SingleEventDetailedResponse() {
     }
 
-    public SingleEventDetailedResponse(String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, List<String> participants) {
+    public SingleEventDetailedResponse(String eventId, String sessionId, String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, List<String> participants) {
+        this.eventId = eventId;
+        this.sessionId = sessionId;
         this.name = name;
         this.description = description;
         this.start = start;
@@ -32,6 +36,8 @@ public class SingleEventDetailedResponse {
 
     public static SingleEventDetailedResponse fromEvent(Event event, EventSession eventSession) {
         return new SingleEventDetailedResponse(
+                event.getId().value(),
+                eventSession.getId().value(),
                 event.getName(),
                 event.getDescription(),
                 eventSession.getStart().toString(),
@@ -41,6 +47,14 @@ public class SingleEventDetailedResponse {
                 eventSession.getMaxParticipants(),
                 eventSession.getParticipants().stream().map(ID::value).toList()
         );
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
     }
 
     public String getName() {
