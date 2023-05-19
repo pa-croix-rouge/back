@@ -139,7 +139,7 @@ public class RepositoryConfig {
         ID eventId4 = new ID("4");
         String eventName4 = "EPISOL";
         String eventDescription4 = "Ouverture de l'EPISOL";
-        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2022, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2022, 9, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId4 = new ID("1");
         ID localUnitId4 = new ID("1");
