@@ -120,6 +120,30 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
+    public boolean updateEventSessions(ID eventId, ID sessionId, Event event) {
+        Event eventToUpdate = this.findById(eventId).orElse(null);
+        if (eventToUpdate == null) {
+            return false;
+        }
+        EventSession sessionToUpdate = eventToUpdate.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+        if (sessionToUpdate == null) {
+            return false;
+        }
+        List<EventSession> updatedSessions = new ArrayList<>();
+        for (EventSession session : eventToUpdate.getSessions()) {
+            if (session.getId().equals(sessionId)) {
+                updatedSessions.add(new EventSession(session.getId(), event.getSessions().get(0).getStart(), event.getSessions().get(0).getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+            } else {
+                updatedSessions.add(new EventSession(session.getId(), session.getStart(), session.getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+            }
+        }
+        Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), updatedSessions, eventToUpdate.getOccurrences());
+        this.objects.remove(eventToUpdate);
+        this.objects.add(updatedEvent);
+        return true;
+    }
+
+    @Override
     public boolean deleteEventSession(ID eventId, ID sessionId) {
         Event event = this.findById(eventId).orElse(null);
         if (event == null) {

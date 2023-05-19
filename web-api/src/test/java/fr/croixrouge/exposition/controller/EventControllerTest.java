@@ -4,15 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.event.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.event.annotation.AfterTestMethod;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
@@ -26,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(MockRepositoryConfig.class)
@@ -382,7 +380,6 @@ public class EventControllerTest {
 
     @Test
     @DisplayName("Test that the event register endpoint does not adds a user to an event if it's full")
-    @AfterTestMethod("eventUpdateSuccessTest")
     public void eventRegisterWhenAnEventIsFullFailTest() throws Exception {
         EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("1", "0", "2");
 
@@ -415,15 +412,19 @@ public class EventControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test that the event sessions endpoint returns a recurring event when given a correct event id")
     public void eventIdSessionSuccessTest() throws Exception {
+        final ZonedDateTime eventStart = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
+        final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 12, 0), ZoneId.of("Europe/Paris"));
+
         EventResponse eventResponse = new EventResponse(
                 "4",
                 "0",
                 "EPISOL",
                 "Ouverture de l'EPISOL",
-                ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                eventStart.toString(),
+                eventEnd.toString(),
                 "1",
                 "1",
                 30,
@@ -446,7 +447,133 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()))
                 .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse.getMaxParticipants()))
                 .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[0].recurring").value(eventResponse.isRecurring()));
+                .andExpect(jsonPath("$[0].recurring").value(eventResponse.isRecurring()))
+                .andExpect(jsonPath("$[1].eventId").value(eventResponse.getEventId()))
+                .andExpect(jsonPath("$[1].sessionId").value("1"))
+                .andExpect(jsonPath("$[1].name").value(eventResponse.getName()))
+                .andExpect(jsonPath("$[1].description").value(eventResponse.getDescription()))
+                .andExpect(jsonPath("$[1].start").value(eventStart.plusDays(7).toString()))
+                .andExpect(jsonPath("$[1].end").value(eventEnd.plusDays(7).toString()))
+                .andExpect(jsonPath("$[1].referrerId").value(eventResponse.getReferrerId()))
+                .andExpect(jsonPath("$[1].localUnitId").value(eventResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$[1].maxParticipants").value(eventResponse.getMaxParticipants()))
+                .andExpect(jsonPath("$[1].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[1].recurring").value(eventResponse.isRecurring()))
+                .andExpect(jsonPath("$[2].eventId").value(eventResponse.getEventId()))
+                .andExpect(jsonPath("$[2].sessionId").value("2"))
+                .andExpect(jsonPath("$[2].name").value(eventResponse.getName()))
+                .andExpect(jsonPath("$[2].description").value(eventResponse.getDescription()))
+                .andExpect(jsonPath("$[2].start").value(eventStart.plusDays(14).toString()))
+                .andExpect(jsonPath("$[2].end").value(eventEnd.plusDays(14).toString()))
+                .andExpect(jsonPath("$[2].referrerId").value(eventResponse.getReferrerId()))
+                .andExpect(jsonPath("$[2].localUnitId").value(eventResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$[2].maxParticipants").value(eventResponse.getMaxParticipants()))
+                .andExpect(jsonPath("$[2].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[2].recurring").value(eventResponse.isRecurring()))
+                .andExpect(jsonPath("$[3].eventId").value(eventResponse.getEventId()))
+                .andExpect(jsonPath("$[3].sessionId").value("3"))
+                .andExpect(jsonPath("$[3].name").value(eventResponse.getName()))
+                .andExpect(jsonPath("$[3].description").value(eventResponse.getDescription()))
+                .andExpect(jsonPath("$[3].start").value(eventStart.plusDays(21).toString()))
+                .andExpect(jsonPath("$[3].end").value(eventEnd.plusDays(21).toString()))
+                .andExpect(jsonPath("$[3].referrerId").value(eventResponse.getReferrerId()))
+                .andExpect(jsonPath("$[3].localUnitId").value(eventResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$[3].maxParticipants").value(eventResponse.getMaxParticipants()))
+                .andExpect(jsonPath("$[3].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[3].recurring").value(eventResponse.isRecurring()))
+                .andExpect(jsonPath("$[4].eventId").value(eventResponse.getEventId()))
+                .andExpect(jsonPath("$[4].sessionId").value("4"))
+                .andExpect(jsonPath("$[4].name").value(eventResponse.getName()))
+                .andExpect(jsonPath("$[4].description").value(eventResponse.getDescription()))
+                .andExpect(jsonPath("$[4].start").value(eventStart.plusDays(28).toString()))
+                .andExpect(jsonPath("$[4].end").value(eventEnd.plusDays(28).toString()))
+                .andExpect(jsonPath("$[4].referrerId").value(eventResponse.getReferrerId()))
+                .andExpect(jsonPath("$[4].localUnitId").value(eventResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$[4].maxParticipants").value(eventResponse.getMaxParticipants()))
+                .andExpect(jsonPath("$[4].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[4].recurring").value(eventResponse.isRecurring()));
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Test that the event sessions endpoint updates a recurring event when given correct event id and parameters")
+    public void eventUpdatesSessionSuccessTest() throws Exception {
+        final String eventId = "4";
+        final String sessionId = "0";
+        final ZonedDateTime eventStart = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
+        final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 12, 0), ZoneId.of("Europe/Paris"));
+
+        SingleEventCreationRequest singleEventCreationRequest = new SingleEventCreationRequest(
+                "EPIcerie SOciaLe",
+                "Ouverture de l'epicerie sociale pour les personnes dans le besoin",
+                Timestamp.valueOf(eventStart.toLocalDateTime()),
+                Timestamp.valueOf(eventEnd.toLocalDateTime()),
+                "1",
+                "1",
+                20
+        );
+
+        mockMvc.perform(post("/event/sessions/" + eventId + "/" + sessionId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(singleEventCreationRequest)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/event/sessions/" + eventId )
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].eventId").value(eventId))
+                .andExpect(jsonPath("$[0].sessionId").value(sessionId))
+                .andExpect(jsonPath("$[0].name").value(singleEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[0].description").value(singleEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).toString()))
+                .andExpect(jsonPath("$[0].end").value(timestampToLocalDateTime(singleEventCreationRequest.getEnd()).toString()))
+                .andExpect(jsonPath("$[0].referrerId").value(singleEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[0].localUnitId").value(singleEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[0].maxParticipants").value(singleEventCreationRequest.getMaxParticipants()))
+                .andExpect(jsonPath("$[0].recurring").value(true))
+                .andExpect(jsonPath("$[1].eventId").value(eventId))
+                .andExpect(jsonPath("$[1].sessionId").value("1"))
+                .andExpect(jsonPath("$[1].name").value(singleEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[1].description").value(singleEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[1].start").value(timestampToLocalDateTime(Timestamp.valueOf(eventStart.plusDays(7).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[1].end").value(timestampToLocalDateTime(Timestamp.valueOf(eventEnd.plusDays(7).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[1].referrerId").value(singleEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[1].localUnitId").value(singleEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[1].maxParticipants").value(singleEventCreationRequest.getMaxParticipants()))
+                .andExpect(jsonPath("$[1].recurring").value(true))
+                .andExpect(jsonPath("$[2].eventId").value(eventId))
+                .andExpect(jsonPath("$[2].sessionId").value("2"))
+                .andExpect(jsonPath("$[2].name").value(singleEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[2].description").value(singleEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[2].start").value(timestampToLocalDateTime(Timestamp.valueOf(eventStart.plusDays(14).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[2].end").value(timestampToLocalDateTime(Timestamp.valueOf(eventEnd.plusDays(14).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[2].referrerId").value(singleEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[2].localUnitId").value(singleEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[2].maxParticipants").value(singleEventCreationRequest.getMaxParticipants()))
+                .andExpect(jsonPath("$[2].recurring").value(true))
+                .andExpect(jsonPath("$[3].eventId").value(eventId))
+                .andExpect(jsonPath("$[3].sessionId").value("3"))
+                .andExpect(jsonPath("$[3].name").value(singleEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[3].description").value(singleEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[3].start").value(timestampToLocalDateTime(Timestamp.valueOf(eventStart.plusDays(21).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[3].end").value(timestampToLocalDateTime(Timestamp.valueOf(eventEnd.plusDays(21).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[3].referrerId").value(singleEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[3].localUnitId").value(singleEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[3].maxParticipants").value(singleEventCreationRequest.getMaxParticipants()))
+                .andExpect(jsonPath("$[3].recurring").value(true))
+                .andExpect(jsonPath("$[4].eventId").value(eventId))
+                .andExpect(jsonPath("$[4].sessionId").value("4"))
+                .andExpect(jsonPath("$[4].name").value(singleEventCreationRequest.getName()))
+                .andExpect(jsonPath("$[4].description").value(singleEventCreationRequest.getDescription()))
+                .andExpect(jsonPath("$[4].start").value(timestampToLocalDateTime(Timestamp.valueOf(eventStart.plusDays(28).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[4].end").value(timestampToLocalDateTime(Timestamp.valueOf(eventEnd.plusDays(28).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$[4].referrerId").value(singleEventCreationRequest.getReferrerId()))
+                .andExpect(jsonPath("$[4].localUnitId").value(singleEventCreationRequest.getLocalUnitId()))
+                .andExpect(jsonPath("$[4].maxParticipants").value(singleEventCreationRequest.getMaxParticipants()))
+                .andExpect(jsonPath("$[4].recurring").value(true));
     }
 
     @Test
@@ -535,7 +662,6 @@ public class EventControllerTest {
 
     @Test
     @DisplayName("Test the the event sessions endpoint can delete all the sessions of a recurrent event")
-    @AfterTestMethod("eventCreateSessionsSuccessTest")
     public void eventDeleteSessionsSuccessTest() throws Exception {
         RecurrentEventCreationRequest recurrentEventCreationRequest = new RecurrentEventCreationRequest(
                 "Formation Benevole",
