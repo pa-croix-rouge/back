@@ -18,17 +18,19 @@ public class SingleEventCreationRequest {
     private Timestamp end;
     private String referrerId;
     private String localUnitId;
+    private int maxParticipants;
 
     public SingleEventCreationRequest() {
     }
 
-    public SingleEventCreationRequest(String name, String description, Timestamp start, Timestamp end, String referrerId, String localUnitId) {
+    public SingleEventCreationRequest(String name, String description, Timestamp start, Timestamp end, String referrerId, String localUnitId, int maxParticipants) {
         this.name = name;
         this.description = description;
         this.start = start;
         this.end = end;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
+        this.maxParticipants = maxParticipants;
     }
 
     public Event toEvent() {
@@ -46,6 +48,7 @@ public class SingleEventCreationRequest {
                         null,
                         startDateTime,
                         endDateTime,
+                        maxParticipants,
                         new ArrayList<>()
                 )),
                 1);
@@ -59,47 +62,55 @@ public class SingleEventCreationRequest {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public ZonedDateTime getStart() {
-        return SingleEventCreationRequest.toLocalDateTime(start);
-    }
-
-    public ZonedDateTime getEnd() {
-        return SingleEventCreationRequest.toLocalDateTime(end);
-    }
-
-    public String getReferrerId() {
-        return referrerId;
-    }
-
-    public String getLocalUnitId() {
-        return localUnitId;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public Timestamp getStart() {
+        return start;
+    }
+
     public void setStart(Timestamp start) {
         this.start = start;
+    }
+
+    public Timestamp getEnd() {
+        return end;
     }
 
     public void setEnd(Timestamp end) {
         this.end = end;
     }
 
+    public String getReferrerId() {
+        return referrerId;
+    }
+
     public void setReferrerId(String referrerId) {
         this.referrerId = referrerId;
     }
 
+    public String getLocalUnitId() {
+        return localUnitId;
+    }
+
     public void setLocalUnitId(String localUnitId) {
         this.localUnitId = localUnitId;
+    }
+
+    public int getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public void setMaxParticipants(int maxParticipants) {
+        this.maxParticipants = maxParticipants;
     }
 }

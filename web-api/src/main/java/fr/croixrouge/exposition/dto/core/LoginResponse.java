@@ -1,4 +1,4 @@
-package fr.croixrouge.exposition.dto;
+package fr.croixrouge.exposition.dto.core;
 
 public class LoginResponse {
 

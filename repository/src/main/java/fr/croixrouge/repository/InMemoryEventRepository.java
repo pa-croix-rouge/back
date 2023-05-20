@@ -6,6 +6,10 @@ import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +44,12 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
+    public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
+        ChronoZonedDateTime<LocalDate> now = ZonedDateTime.now();
+        return this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).map(Event::getSessions).flatMap(List::stream).filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS))).toList();
+    }
+
+    @Override
     public List<Event> findByLocalUnitIdAndMonth(ID localUnitId, int month, int year) {
         List<Event> localUnitEvents = this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).toList();
         List<Event> result = new ArrayList<>();
@@ -57,7 +67,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         ID eventId = idGenerator.generate();
         Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), new ArrayList<>(), event.getOccurrences());
         for (EventSession session : event.getSessions()) {
-            eventToSave.getSessions().add(new EventSession(new ID(String.valueOf(eventToSave.getSessions().size())), session.getStart(), session.getEnd(), new ArrayList<>()));
+            eventToSave.getSessions().add(new EventSession(new ID(String.valueOf(eventToSave.getSessions().size())), session.getStart(), session.getEnd(), session.getMaxParticipants(), new ArrayList<>()));
         }
         this.objects.add(eventToSave);
         return eventId;
@@ -73,7 +83,78 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         if (session == null) {
             return false;
         }
+        if (session.getParticipants().size() >= session.getMaxParticipants()) {
+            return false;
+        }
+        if (session.getParticipants().contains(participantId)) {
+            return false;
+        }
         session.getParticipants().add(participantId);
+        this.objects.remove(event);
+        this.objects.add(event);
+        return true;
+    }
+
+    @Override
+    public boolean updateSingleEvent(ID eventId, ID sessionId, Event event) {
+        Event eventToUpdate = this.findById(eventId).orElse(null);
+        if (eventToUpdate == null) {
+            return false;
+        }
+        EventSession sessionToUpdate = eventToUpdate.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+        if (sessionToUpdate == null) {
+            return false;
+        }
+        List<EventSession> updatedSessions = new ArrayList<>();
+        for (EventSession session : eventToUpdate.getSessions()) {
+            if (session.getId().equals(sessionId)) {
+                updatedSessions.add(new EventSession(session.getId(), event.getSessions().get(0).getStart(), event.getSessions().get(0).getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+            } else {
+                updatedSessions.add(session);
+            }
+        }
+        Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), updatedSessions, eventToUpdate.getOccurrences());
+        this.objects.remove(eventToUpdate);
+        this.objects.add(updatedEvent);
+        return true;
+    }
+
+    @Override
+    public boolean updateEventSessions(ID eventId, ID sessionId, Event event) {
+        Event eventToUpdate = this.findById(eventId).orElse(null);
+        if (eventToUpdate == null) {
+            return false;
+        }
+        EventSession sessionToUpdate = eventToUpdate.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+        if (sessionToUpdate == null) {
+            return false;
+        }
+        List<EventSession> updatedSessions = new ArrayList<>();
+        for (EventSession session : eventToUpdate.getSessions()) {
+            if (session.getId().equals(sessionId)) {
+                updatedSessions.add(new EventSession(session.getId(), event.getSessions().get(0).getStart(), event.getSessions().get(0).getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+            } else {
+                updatedSessions.add(new EventSession(session.getId(), session.getStart(), session.getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+            }
+        }
+        Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), updatedSessions, eventToUpdate.getOccurrences());
+        this.objects.remove(eventToUpdate);
+        this.objects.add(updatedEvent);
+        return true;
+    }
+
+    @Override
+    public boolean deleteEventSession(ID eventId, ID sessionId) {
+        Event event = this.findById(eventId).orElse(null);
+        if (event == null) {
+            return false;
+        }
+        EventSession session = event.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+        if (session == null) {
+            return false;
+        }
+        this.objects.remove(event);
+        event.getSessions().remove(session);
         this.objects.add(event);
         return true;
     }

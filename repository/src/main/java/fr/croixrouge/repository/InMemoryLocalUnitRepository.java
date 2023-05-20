@@ -24,4 +24,9 @@ public class InMemoryLocalUnitRepository extends InMemoryCRUDRepository<ID, Loca
     public Optional<LocalUnit> findByPostalCode(String postalCode) {
         return objects.stream().filter(localUnit -> localUnit.getAddress().getPostalCode().equals(postalCode)).findFirst();
     }
+
+    @Override
+    public Optional<LocalUnit> findByCode(String code) {
+        return objects.stream().filter(localUnit -> localUnit.getCode().equals(code)).findFirst();
+    }
 }

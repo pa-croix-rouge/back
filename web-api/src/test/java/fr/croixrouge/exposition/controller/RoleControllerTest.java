@@ -1,12 +1,11 @@
-package fr.croixrouge.controller;
+package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.domain.model.Operations;
 import fr.croixrouge.domain.model.Resources;
-import fr.croixrouge.exposition.dto.LoginRequest;
-import fr.croixrouge.exposition.dto.RoleRequest;
-import fr.croixrouge.exposition.dto.RoleResponse;
+import fr.croixrouge.exposition.dto.core.LoginRequest;
+import fr.croixrouge.exposition.dto.core.RoleResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,8 +39,6 @@ public class RoleControllerTest {
 
     private String jwtToken;
 
-
-
     @BeforeEach
     public void setUp() throws Exception {
         LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
@@ -58,7 +55,7 @@ public class RoleControllerTest {
     @Test
     @DisplayName("Test that the role endpoint returns a list of roles when given a correct local unit id")
     public void roleLocalUnitIdSuccessTest() throws Exception {
-        RoleRequest roleRequest = new RoleRequest("1");
+        String roleId ="1";
 
         RoleResponse roleResponse = new RoleResponse(
                 "Val d'Orge default role",
@@ -67,10 +64,8 @@ public class RoleControllerTest {
                 new ArrayList<>(Collections.singletonList("2"))
         );
 
-        mockMvc.perform(get("/role")
-                        .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(roleRequest)))
+        mockMvc.perform(get("/role/localunit/" + roleId)
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(roleResponse.getName()))
                 .andExpect(jsonPath("$[0].description").value(roleResponse.getDescription()))
@@ -81,12 +76,10 @@ public class RoleControllerTest {
     @Test
     @DisplayName("Test that the role endpoint returns a 404 when given an incorrect local unit id")
     public void roleLocalUnitIdFailedTest() throws Exception {
-        RoleRequest roleRequest = new RoleRequest("2");
+        String roleId = "2";
 
-        mockMvc.perform(get("/role")
-                        .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(roleRequest)))
+        mockMvc.perform(get("/role/localunit/" + roleId)
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }
 }

@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto;
 
 import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.storage.model.Storage;
 
 public class CreateStorageDTO extends CreationDTO<Storage> {

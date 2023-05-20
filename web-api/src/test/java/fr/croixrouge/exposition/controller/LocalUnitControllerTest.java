@@ -1,11 +1,10 @@
-package fr.croixrouge.controller;
+package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.MockRepositoryConfig;
-import fr.croixrouge.exposition.dto.AddressDTO;
-import fr.croixrouge.exposition.dto.LocalUnitRequest;
-import fr.croixrouge.exposition.dto.LocalUnitResponse;
-import fr.croixrouge.exposition.dto.LoginRequest;
+import fr.croixrouge.exposition.dto.core.AddressDTO;
+import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
+import fr.croixrouge.exposition.dto.core.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,43 +50,84 @@ public class LocalUnitControllerTest {
     @Test
     @DisplayName("Test that the localunit endpoint returns a local unit when given a correct postal code")
     public void localUnitPostalCodeSuccessTest() throws Exception {
+        String localUnitPostCode = "91240";
+
         AddressDTO addressDTO = new AddressDTO(
                 "91",
                 "91240",
                 "St Michel sur Orge",
                 "76 rue des Liers"
         );
-        LocalUnitRequest localUnitRequest = new LocalUnitRequest("91240");
 
         LocalUnitResponse localUnitResponse = new LocalUnitResponse(
                 "91240",
                 "Unite Local du Val d'Orge",
                 addressDTO,
-                "LUManager"
+                "LUManager",
+                "91240-000"
         );
 
-        mockMvc.perform(get("/localunit")
-                        .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(localUnitRequest)))
+        mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value(localUnitResponse.getName()))
                 .andExpect(jsonPath("address.departmentCode").value(addressDTO.getDepartmentCode()))
                 .andExpect(jsonPath("address.postalCode").value(addressDTO.getPostalCode()))
                 .andExpect(jsonPath("address.city").value(addressDTO.getCity()))
                 .andExpect(jsonPath("address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
-                .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()));
+                .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()))
+                .andExpect(jsonPath("code").value(localUnitResponse.getCode()));
     }
 
     @Test
     @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong postal code")
     public void localUnitPostalCodeFailedTest() throws Exception {
-        LocalUnitRequest localUnitRequest = new LocalUnitRequest("00100");
+        String localUnitPostCode ="00100";
 
-        mockMvc.perform(get("/localunit")
-                        .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(localUnitRequest)))
+        mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Test that the localunit endpoint returns a local unit when given a correct id")
+    public void localUnitIdSuccessTest() throws Exception {
+        String localUnitId = "1";
+
+        AddressDTO addressDTO = new AddressDTO(
+                "91",
+                "91240",
+                "St Michel sur Orge",
+                "76 rue des Liers"
+        );
+
+        LocalUnitResponse localUnitResponse = new LocalUnitResponse(
+                "91240",
+                "Unite Local du Val d'Orge",
+                addressDTO,
+                "LUManager",
+                "91240-000"
+        );
+
+        mockMvc.perform(get("/localunit/" + localUnitId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value(localUnitResponse.getName()))
+                .andExpect(jsonPath("address.departmentCode").value(addressDTO.getDepartmentCode()))
+                .andExpect(jsonPath("address.postalCode").value(addressDTO.getPostalCode()))
+                .andExpect(jsonPath("address.city").value(addressDTO.getCity()))
+                .andExpect(jsonPath("address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
+                .andExpect(jsonPath("managerName").value(localUnitResponse.getManagerName()))
+                .andExpect(jsonPath("code").value(localUnitResponse.getCode()));
+    }
+
+    @Test
+    @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong id")
+    public void localUnitIdFailedTest() throws Exception {
+        String localUnitId ="-1";
+
+        mockMvc.perform(get("/localunit/" + localUnitId)
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }
 }

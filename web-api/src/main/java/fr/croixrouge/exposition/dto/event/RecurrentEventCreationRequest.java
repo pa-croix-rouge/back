@@ -20,11 +20,12 @@ public class RecurrentEventCreationRequest {
     private Timestamp firstEnd;
     private int duration;
     private int frequency;
+    private int maxParticipants;
 
     public RecurrentEventCreationRequest() {
     }
 
-    public RecurrentEventCreationRequest(String name, String description, String referrerId, String localUnitId, Timestamp firstStart, Timestamp firstEnd, int duration, int frequency) {
+    public RecurrentEventCreationRequest(String name, String description, String referrerId, String localUnitId, Timestamp firstStart, Timestamp firstEnd, int duration, int frequency, int maxParticipants) {
         this.name = name;
         this.description = description;
         this.referrerId = referrerId;
@@ -33,6 +34,7 @@ public class RecurrentEventCreationRequest {
         this.firstEnd = firstEnd;
         this.duration = duration;
         this.frequency = frequency;
+        this.maxParticipants = maxParticipants;
     }
 
     public Event toEvent() {
@@ -45,6 +47,7 @@ public class RecurrentEventCreationRequest {
                     null,
                     sessionTime,
                     sessionTime.plusMinutes(this.duration),
+                    maxParticipants,
                     new ArrayList<>()
             ));
         }
@@ -69,63 +72,71 @@ public class RecurrentEventCreationRequest {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getReferrerId() {
-        return referrerId;
-    }
-
-    public String getLocalUnitId() {
-        return localUnitId;
-    }
-
-    public Timestamp getFirstStart() {
-        return firstStart;
-    }
-
-    public Timestamp getFirstEnd() {
-        return firstEnd;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public int getFrequency() {
-        return frequency;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public String getReferrerId() {
+        return referrerId;
+    }
+
     public void setReferrerId(String referrerId) {
         this.referrerId = referrerId;
+    }
+
+    public String getLocalUnitId() {
+        return localUnitId;
     }
 
     public void setLocalUnitId(String localUnitId) {
         this.localUnitId = localUnitId;
     }
 
+    public Timestamp getFirstStart() {
+        return firstStart;
+    }
+
     public void setFirstStart(Timestamp firstStart) {
         this.firstStart = firstStart;
+    }
+
+    public Timestamp getFirstEnd() {
+        return firstEnd;
     }
 
     public void setFirstEnd(Timestamp firstEnd) {
         this.firstEnd = firstEnd;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
     public void setDuration(int duration) {
         this.duration = duration;
     }
 
+    public int getFrequency() {
+        return frequency;
+    }
+
     public void setFrequency(int frequency) {
         this.frequency = frequency;
+    }
+
+    public int getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public void setMaxParticipants(int maxParticipants) {
+        this.maxParticipants = maxParticipants;
     }
 }

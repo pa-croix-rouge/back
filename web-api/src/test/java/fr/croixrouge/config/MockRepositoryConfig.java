@@ -4,9 +4,10 @@ import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
-import fr.croixrouge.repository.InMemoryLocalUnitRepository;
-import fr.croixrouge.repository.InMemoryRoleRepository;
-import fr.croixrouge.repository.InMemoryUserRepository;
+import fr.croixrouge.domain.repository.VolunteerRepository;
+import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
+import fr.croixrouge.repository.*;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
@@ -17,18 +18,15 @@ import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
-import fr.croixrouge.model.Event;
-import fr.croixrouge.model.EventSession;
-import fr.croixrouge.repository.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,19 +36,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MockRepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
-
-    private final User mangerUser;
+    private final User managerUser;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
     private final LocalUnit localUnit;
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        mangerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
+        managerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
 
         localUnit = new LocalUnit(new ID("1"),
                 "Unite Local du Val d'Orge",
                 address,
-                mangerUser);
+                managerUser,
+                address.getPostalCode() + "-000");
     }
 
     @Bean
@@ -63,9 +61,34 @@ public class MockRepositoryConfig {
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
         users.add(defaultUser);
 
-        users.add(mangerUser);
+        users.add(managerUser);
 
         return new InMemoryUserRepository(users);
+    }
+
+    @Bean
+    @Primary
+    public VolunteerRepository volunteerTestRepository() {
+        ArrayList<Volunteer> volunteers = new ArrayList<>();
+
+        ID volunteerId1 = new ID("1");
+        String firstName1 = "volunteerFirstName";
+        String lastName1 = "volunteerLastName";
+        String phoneNumber1 = "+33 6 00 00 00 00";
+        boolean isValidated1 = true;
+        Volunteer volunteer1 = new Volunteer(volunteerId1, managerUser, firstName1, lastName1, phoneNumber1, isValidated1, localUnit.getId());
+
+        ID volunteerId2 = new ID("2");
+        String firstName2 = "newVolunteer";
+        String lastName2 = "newVolunteerName";
+        String phoneNumber2 = "+33 6 00 11 22 33";
+        boolean isValidated2 = false;
+        Volunteer volunteer2 = new Volunteer(volunteerId2, managerUser, firstName2, lastName2, phoneNumber2, isValidated2, localUnit.getId());
+
+        volunteers.add(volunteer1);
+        volunteers.add(volunteer2);
+
+        return new InMemoryVolunteerRepository(volunteers);
     }
 
     @Bean
@@ -104,8 +127,9 @@ public class MockRepositoryConfig {
         ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId1 = new ID("1");
         ID localUnitId1 = new ID("1");
+        int maxParticipants1 = 2;
         List<ID> participants1 = new ArrayList<>();
-        EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, participants1);
+        EventSession eventSession1 = new EventSession(new ID("0"), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
         Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
         events.add(event1);
 
@@ -116,8 +140,9 @@ public class MockRepositoryConfig {
         ZonedDateTime eventEndDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId2 = new ID("1");
         ID localUnitId2 = new ID("1");
+        int maxParticipants2 = 30;
         List<ID> participants2 = new ArrayList<>();
-        EventSession eventSession2 = new EventSession(new ID("0"), eventStartDate2, eventEndDate2, participants2);
+        EventSession eventSession2 = new EventSession(new ID("0"), eventStartDate2, eventEndDate2, maxParticipants2, participants2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
         events.add(event2);
 
@@ -128,8 +153,9 @@ public class MockRepositoryConfig {
         ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId3 = new ID("1");
         ID localUnitId3 = new ID("1");
+        int maxParticipants3 = 30;
         List<ID> participants3 = new ArrayList<>();
-        EventSession eventSession3 = new EventSession(new ID("0"), eventStartDate3, eventEndDate3, participants3);
+        EventSession eventSession3 = new EventSession(new ID("0"), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
         Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
         events.add(event3);
 
@@ -140,6 +166,7 @@ public class MockRepositoryConfig {
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 2, 1, 12, 0), ZoneId.of("Europe/Paris"));
         ID referrerId4 = new ID("1");
         ID localUnitId4 = new ID("1");
+        int maxParticipants4 = 30;
         List<EventSession> eventSessions4 = new ArrayList<>();
         AtomicInteger sessionCounter = new AtomicInteger(0);
         for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {
@@ -147,6 +174,7 @@ public class MockRepositoryConfig {
                     new ID(String.valueOf(sessionCounter.getAndIncrement())),
                     sessionTime,
                     sessionTime.plusMinutes(120),
+                    maxParticipants4,
                     new ArrayList<>()
             ));
         }
