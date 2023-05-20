@@ -314,7 +314,9 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event endpoint for local unit and month returns a list of events when given a correct local unit id and month")
     public void eventsLocalUnitAndMonthSuccessTest() throws Exception {
-        EventForLocalUnitAndMonthRequest eventForLocalUnitAndMonthRequest = new EventForLocalUnitAndMonthRequest("1", 7, 2000);
+        final String localUnitId = "1";
+        final int month = 7;
+        final int year = 2000;
 
         EventResponse eventResponse = new EventResponse(
                 "3",
@@ -330,10 +332,9 @@ public class EventControllerTest {
                 false
         );
 
-        mockMvc.perform(get("/event/date")
+        mockMvc.perform(get("/event/date?localUnitId=" + localUnitId + "&month=" + month + "&year=" + year)
                         .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventForLocalUnitAndMonthRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].eventId").value(eventResponse.getEventId()))
                 .andExpect(jsonPath("$[0].sessionId").value(eventResponse.getSessionId()))
