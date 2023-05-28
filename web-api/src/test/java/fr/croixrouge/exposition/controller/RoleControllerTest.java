@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.domain.model.Operations;
 import fr.croixrouge.domain.model.Resources;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(MockRepositoryConfig.class)
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 public class RoleControllerTest {
 
     @Autowired

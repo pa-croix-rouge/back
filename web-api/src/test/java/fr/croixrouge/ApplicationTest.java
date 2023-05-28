@@ -1,10 +1,14 @@
 package fr.croixrouge;
 
+import fr.croixrouge.config.InDBMockRepositoryConfig;
+import fr.croixrouge.config.MockRepositoryConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 @SpringBootTest
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 public class ApplicationTest {
 
     @Test
