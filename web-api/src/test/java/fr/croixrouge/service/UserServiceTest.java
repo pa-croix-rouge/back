@@ -1,6 +1,7 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.config.InDBMockRepositoryConfig;
+import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.domain.model.ID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(InDBMockRepositoryConfig.class)
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 class UserServiceTest {
 
     @Autowired

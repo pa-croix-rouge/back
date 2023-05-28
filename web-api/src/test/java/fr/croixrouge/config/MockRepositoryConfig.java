@@ -16,12 +16,18 @@ import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import fr.croixrouge.storage.repository.ProductRepository;
+import fr.croixrouge.storage.repository.StorageProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
+import fr.croixrouge.storage.repository.UserProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
+import fr.croixrouge.storage.repository.memory.InMemoryStorageProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
+import fr.croixrouge.storage.repository.memory.InMemoryUserProductRepository;
+import fr.croixrouge.storage.service.StorageProductService;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -34,6 +40,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
+@Profile("test-in-memory")
 public class MockRepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
@@ -232,4 +239,18 @@ public class MockRepositoryConfig {
         return new InMemoryStorageRepository(storages);
     }
 
+    @Bean
+    public UserProductRepository storageUserProductRepository() {
+        return new InMemoryUserProductRepository();
+    }
+
+    @Bean
+    public StorageProductRepository storageProductRepository() {
+        return new InMemoryStorageProductRepository();
+    }
+
+    @Bean
+    public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
+        return new StorageProductService(storageProductRepository);
+    }
 }

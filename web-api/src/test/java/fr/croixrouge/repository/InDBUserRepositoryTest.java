@@ -1,6 +1,8 @@
 package fr.croixrouge.repository;
 
 
+import fr.croixrouge.config.InDBMockRepositoryConfig;
+import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
@@ -10,12 +12,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 public class InDBUserRepositoryTest {
 
     private final UserRepository userRepository;
