@@ -4,7 +4,7 @@ import fr.croixrouge.storage.model.product.Product;
 
 public class ProductResponse {
 
-    protected final String id;
+    protected final Long id;
 
     protected final String name;
     protected final QuantifierDTO quantity;
@@ -19,7 +19,7 @@ public class ProductResponse {
         return name;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

@@ -6,9 +6,9 @@ public class VolunteerResponse {
     public String lastName;
     public String phoneNumber;
     public boolean isValidated;
-    public String localUnitId;
+    public Long localUnitId;
 
-    public VolunteerResponse(String username, String firstName, String lastName, String phoneNumber, boolean isValidated, String localUnitId) {
+    public VolunteerResponse(String username, String firstName, String lastName, String phoneNumber, boolean isValidated, Long localUnitId) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;

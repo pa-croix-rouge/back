@@ -9,7 +9,7 @@ public class LocalUnitDB {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "localunit_id")
-    private String localUnitID;
+    private Long localUnitID;
 
     @Column(name = "address", nullable = false)
     private String address;
@@ -17,7 +17,7 @@ public class LocalUnitDB {
     @Column(name = "name", nullable = false)
     private String name;
 
-    public LocalUnitDB(String localUnitID, String address, String name) {
+    public LocalUnitDB(Long localUnitID, String address, String name) {
         this.localUnitID = localUnitID;
         this.address = address;
         this.name = name;
@@ -42,7 +42,7 @@ public class LocalUnitDB {
         this.name = name;
     }
 
-    public String getLocalUnitID() {
+    public Long getLocalUnitID() {
         return localUnitID;
     }
 }

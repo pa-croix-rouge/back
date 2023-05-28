@@ -6,14 +6,14 @@ import fr.croixrouge.model.EventSession;
 import java.util.List;
 
 public class EventResponse {
-    private String eventId;
-    private String sessionId;
+    private Long eventId;
+    private Long sessionId;
     private String name;
     private String description;
     private String start;
     private String end;
-    private String referrerId;
-    private String localUnitId;
+    private Long referrerId;
+    private Long localUnitId;
     private int maxParticipants;
     private int numberOfParticipants;
     private List<TimeWindowResponse> timeWindows;
@@ -22,7 +22,7 @@ public class EventResponse {
     public EventResponse() {
     }
 
-    public EventResponse(String eventId, String sessionId, String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, int numberOfParticipants, List<TimeWindowResponse> timeWindows, boolean isRecurring) {
+    public EventResponse(Long eventId, Long sessionId, String name, String description, String start, String end, Long referrerId, Long localUnitId, int maxParticipants, int numberOfParticipants, List<TimeWindowResponse> timeWindows, boolean isRecurring) {
         this.eventId = eventId;
         this.sessionId = sessionId;
         this.name = name;
@@ -54,19 +54,19 @@ public class EventResponse {
         );
     }
 
-    public String getEventId() {
+    public Long getEventId() {
         return eventId;
     }
 
-    public void setEventId(String eventId) {
+    public void setEventId(Long eventId) {
         this.eventId = eventId;
     }
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 
@@ -102,19 +102,19 @@ public class EventResponse {
         this.end = end;
     }
 
-    public String getReferrerId() {
+    public Long getReferrerId() {
         return referrerId;
     }
 
-    public void setReferrerId(String referrerId) {
+    public void setReferrerId(Long referrerId) {
         this.referrerId = referrerId;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 
-    public void setLocalUnitId(String localUnitId) {
+    public void setLocalUnitId(Long localUnitId) {
         this.localUnitId = localUnitId;
     }
 

@@ -34,8 +34,8 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/details")
     public ResponseEntity<String> createSingleEvent(@RequestBody SingleEventCreationRequest singleEventCreationRequest) {
-        String eventId = service.save(singleEventCreationRequest.toEvent()).value();
-        return ResponseEntity.ok(eventId);
+        Long eventId = service.save(singleEventCreationRequest.toEvent()).value();
+        return ResponseEntity.ok(String.valueOf(eventId));
     }
 
     @PostMapping("/details/{eventId}/{sessionId}")
@@ -132,8 +132,8 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/sessions")
     public ResponseEntity<String> createRecurrentEvent(@RequestBody RecurrentEventCreationRequest recurrentEventCreationRequest) {
-        String eventId = service.save(recurrentEventCreationRequest.toEvent()).value();
-        return ResponseEntity.ok(eventId);
+        Long eventId = service.save(recurrentEventCreationRequest.toEvent()).value();
+        return ResponseEntity.ok(String.valueOf(eventId));
     }
 
     @PostMapping("/sessions/{eventId}/{sessionId}")

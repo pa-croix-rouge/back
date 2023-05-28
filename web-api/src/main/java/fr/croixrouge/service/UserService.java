@@ -11,4 +11,8 @@ public class UserService extends CRUDService<ID, User, UserRepository> {
     public UserService(UserRepository userRepository) {
         super(userRepository);
     }
+
+    public User findByUsername(String username) {
+        return repository.findByUsername(username).orElse(null);
+    }
 }

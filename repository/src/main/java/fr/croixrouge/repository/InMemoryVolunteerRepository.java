@@ -43,7 +43,7 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
                 true,
-                volunteer.getLocalUnitId());
+                volunteer.getLocalUnit());
         return this.save(updatedVolunteer) != null;
     }
 
@@ -55,7 +55,7 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
                 false,
-                volunteer.getLocalUnitId());
+                volunteer.getLocalUnit());
         return this.save(updatedVolunteer) != null;
     }
 }

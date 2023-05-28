@@ -15,8 +15,8 @@ import java.util.List;
 public class RecurrentEventCreationRequest {
     private String name;
     private String description;
-    private String referrerId;
-    private String localUnitId;
+    private Long referrerId;
+    private Long localUnitId;
     private Timestamp firstStart;
     private Timestamp firstEnd;
     private int frequency;
@@ -27,7 +27,7 @@ public class RecurrentEventCreationRequest {
     public RecurrentEventCreationRequest() {
     }
 
-    public RecurrentEventCreationRequest(String name, String description, String referrerId, String localUnitId, Timestamp firstStart, Timestamp firstEnd, int frequency, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
+    public RecurrentEventCreationRequest(String name, String description, Long referrerId, Long localUnitId, Timestamp firstStart, Timestamp firstEnd, int duration, int frequency, int eventTimeWindowDuration, int maxParticipants) {
         this.name = name;
         this.description = description;
         this.referrerId = referrerId;
@@ -96,19 +96,19 @@ public class RecurrentEventCreationRequest {
         this.description = description;
     }
 
-    public String getReferrerId() {
+    public Long getReferrerId() {
         return referrerId;
     }
 
-    public void setReferrerId(String referrerId) {
+    public void setReferrerId(Long referrerId) {
         this.referrerId = referrerId;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 
-    public void setLocalUnitId(String localUnitId) {
+    public void setLocalUnitId(Long localUnitId) {
         this.localUnitId = localUnitId;
     }
 

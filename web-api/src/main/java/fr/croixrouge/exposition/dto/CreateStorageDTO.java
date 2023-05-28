@@ -6,16 +6,16 @@ import fr.croixrouge.storage.model.Storage;
 
 public class CreateStorageDTO extends CreationDTO<Storage> {
 
-    private final String localUnitID;
+    private final Long localUnitID;
 
     private final AddressDTO address;
 
-    public CreateStorageDTO(String localUnitID, AddressDTO address) {
+    public CreateStorageDTO(Long localUnitID, AddressDTO address) {
         this.localUnitID = localUnitID;
         this.address = address;
     }
 
-    public String getLocalUnitID() {
+    public Long getLocalUnitID() {
         return localUnitID;
     }
 

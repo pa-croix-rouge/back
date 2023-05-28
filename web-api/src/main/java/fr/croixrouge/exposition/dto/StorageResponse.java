@@ -6,7 +6,7 @@ import fr.croixrouge.storage.model.Storage;
 
 public class StorageResponse {
 
-    private final String id;
+    private final Long id;
 
     AddressDTO address;
 
@@ -18,7 +18,7 @@ public class StorageResponse {
         this.localUnit = LocalUnitResponse.fromLocalUnit(storage.getLocalUnit());
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

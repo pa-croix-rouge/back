@@ -48,16 +48,16 @@ public class RepositoryConfig {
 
     public RepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        this.managerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
-        this.localUnit = new LocalUnit(new ID("1"), "Unite Local du Val d'Orge", address, managerUser, address.getPostalCode() + "-000");
-        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of("ROLE_ADMIN"));
-        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
+         this.southernManagerUser = new User(new ID(3l), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of("ROLE_ADMIN"));
+        this.southernLocalUnit = new LocalUnit(new ID(2l), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
+        this.managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
+        this.localUnit = new LocalUnit(new ID(1L), "Unite Local du Val d'Orge", address, managerUser, address.getPostalCode() + "-000");
     }
 
     @Bean
     public UserRepository userRepository(){
         ArrayList<User> users = new ArrayList<>();
-        ID defaultUserId = new ID("1");
+        ID defaultUserId = new ID(1L);
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode("defaultPassword");
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
@@ -108,58 +108,58 @@ public class RepositoryConfig {
     @Bean
     public EventRepository eventRepository() {
         ArrayList<Event> events = new ArrayList<>();
-        ID eventId1 = new ID("1");
+        ID eventId1 = new ID(1L);
         String eventName1 = "Formation PSC1";
         String eventDescription1 = "Formation au PSC1";
         ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId1 = new ID("1");
-        ID localUnitId1 = new ID("1");
+        ID referrerId1 = new ID(1L);
+        ID localUnitId1 = new ID(1L);
         int maxParticipants1 = 30;
         List<ID> participants1 = new ArrayList<>();
-        EventTimeWindow eventTimeWindow1 = new EventTimeWindow(new ID("0"), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
-        EventSession eventSession1 = new EventSession(new ID("0"), List.of(eventTimeWindow1));
+        EventTimeWindow eventTimeWindow1 = new EventTimeWindow(new ID(0L), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
+        EventSession eventSession1 = new EventSession(new ID(0L), List.of(eventTimeWindow1));
         Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, List.of(eventSession1), 1);
         events.add(event1);
 
-        ID eventId2 = new ID("2");
+        ID eventId2 = new ID(2L);
         String eventName2 = "Distribution alimentaire";
         String eventDescription2 = "Distribution alimentaire gratuite";
         ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2023, 5, 2, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate2 = ZonedDateTime.of(LocalDateTime.of(2023, 5, 2, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId2 = new ID("1");
-        ID localUnitId2 = new ID("1");
+        ID referrerId2 = new ID(1L);
+        ID localUnitId2 = new ID(1L);
         int maxParticipants2 = 30;
         List<ID> participants2 = new ArrayList<>();
         List<EventTimeWindow> eventTimeWindowList2 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            eventTimeWindowList2.add(new EventTimeWindow(new ID(String.valueOf(i)), eventStartDate2.plusMinutes(i * 40), eventEndDate2.plusMinutes((i + 1) * 40), maxParticipants2 / 3, participants2));
+            eventTimeWindowList2.add(new EventTimeWindow(new ID(i), eventStartDate2.plusMinutes(i * 40), eventEndDate2.plusMinutes((i + 1) * 40), maxParticipants2 / 3, participants2));
         }
-        EventSession eventSession2 = new EventSession(new ID("0"), eventTimeWindowList2);
+        EventSession eventSession2 = new EventSession(new ID(0L), eventTimeWindowList2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, List.of(eventSession2), 1);
         events.add(event2);
 
-        ID eventId3 = new ID("3");
+        ID eventId3 = new ID(3L);
         String eventName3 = "Formation PSC1";
         String eventDescription3 = "Formation au PSC1";
         ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2023, 6, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(2023, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId3 = new ID("1");
-        ID localUnitId3 = new ID("1");
+        ID referrerId3 = new ID(1L);
+        ID localUnitId3 = new ID(1L);
         int maxParticipants3 = 30;
         List<ID> participants3 = new ArrayList<>();
-        EventTimeWindow eventTimeWindow3 = new EventTimeWindow(new ID("0"), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
-        EventSession eventSession3 = new EventSession(new ID("0"), List.of(eventTimeWindow3));
+        EventTimeWindow eventTimeWindow3 = new EventTimeWindow(new ID(0L), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
+        EventSession eventSession3 = new EventSession(new ID(0L), List.of(eventTimeWindow3));
         Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, List.of(eventSession3), 1);
         events.add(event3);
 
-        ID eventId4 = new ID("4");
+        ID eventId4 = new ID(4L);
         String eventName4 = "EPISOL";
         String eventDescription4 = "Ouverture de l'EPISOL";
         ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId4 = new ID("1");
-        ID localUnitId4 = new ID("1");
+        ID referrerId4 = new ID(1L);
+        ID localUnitId4 = new ID(1L);
         int maxParticipants4 = 32;
         List<EventSession> eventSessions4 = new ArrayList<>();
         AtomicInteger sessionCounter = new AtomicInteger(0);
@@ -169,7 +169,7 @@ public class RepositoryConfig {
                 eventTimeWindowList4.add(new EventTimeWindow(new ID(String.valueOf(i)), sessionTime.plusMinutes(i * 30), sessionTime.plusMinutes((i + 1) * 30), maxParticipants4 / 4, new ArrayList<>()));
             }
             eventSessions4.add(new EventSession(
-                    new ID(String.valueOf(sessionCounter.getAndIncrement())),
+                    new ID(sessionCounter.getAndIncrement()),
                     eventTimeWindowList4
             ));
         }
@@ -182,7 +182,7 @@ public class RepositoryConfig {
     @Bean
     public VolunteerRepository volunteerRepository() {
         ArrayList<Volunteer> volunteers = new ArrayList<>();
-        Volunteer volunteer1 = new Volunteer(new ID("1"), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit.getId());
+        Volunteer volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
         volunteers.add(volunteer1);
         Volunteer volunteer2 = new Volunteer(new ID("2"), southernManagerUser, "volunteerFirstNameS", "volunteerLastNameS", "+33 6 00 00 00 83", true, southernLocalUnit.getId());
         volunteers.add(volunteer2);

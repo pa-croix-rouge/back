@@ -9,7 +9,7 @@ public class UserDB {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private String userID;
+    private Long userID;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -43,7 +43,7 @@ public class UserDB {
         this.username = username;
     }
 
-    public String getUserID() {
+    public Long getUserID() {
         return userID;
     }
 }
