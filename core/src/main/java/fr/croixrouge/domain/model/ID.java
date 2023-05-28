@@ -1,4 +1,4 @@
 package fr.croixrouge.domain.model;
 
-public record ID(String value) {
+public record ID(Long value) {
 }

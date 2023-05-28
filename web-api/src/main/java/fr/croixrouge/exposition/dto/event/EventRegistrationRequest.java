@@ -1,40 +1,40 @@
 package fr.croixrouge.exposition.dto.event;
 
 public class EventRegistrationRequest {
-    private String eventId;
-    private String sessionId;
-    private String participantId;
+    private Long eventId;
+    private Long sessionId;
+    private Long participantId;
 
     public EventRegistrationRequest() {
     }
 
-    public EventRegistrationRequest(String eventId, String sessionId, String participantId) {
+    public EventRegistrationRequest(Long eventId, Long sessionId, Long participantId) {
         this.eventId = eventId;
         this.sessionId = sessionId;
         this.participantId = participantId;
     }
 
-    public String getEventId() {
+    public Long getEventId() {
         return eventId;
     }
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public String getParticipantId() {
+    public Long getParticipantId() {
         return participantId;
     }
 
-    public void setEventId(String eventId) {
+    public void setEventId(Long eventId) {
         this.eventId = eventId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 
-    public void setParticipantId(String participantId) {
+    public void setParticipantId(Long participantId) {
         this.participantId = participantId;
     }
 }

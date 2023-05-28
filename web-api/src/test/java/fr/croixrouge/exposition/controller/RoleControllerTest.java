@@ -61,7 +61,7 @@ public class RoleControllerTest {
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
                 Map.of( Resources.RESOURCE, List.of(Operations.READ)),
-                new ArrayList<>(Collections.singletonList("2"))
+                new ArrayList<>(Collections.singletonList(2L))
         );
 
         mockMvc.perform(get("/role/localunit/" + roleId)

@@ -3,8 +3,8 @@ package fr.croixrouge.exposition.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import fr.croixrouge.config.MockRepositoryConfig;
-import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.exposition.dto.CreateStorageDTO;
+import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,7 +69,7 @@ class StorageControllerTest {
     @DisplayName("Test that the storage post endpoint returns OK when given a correct storage")
     public void productAddSuccessTest() throws Exception {
         AddressDTO addressDTO = new AddressDTO("91", "91240", "St Michel sur Orge", "760 rue des Liers");
-        CreateStorageDTO createStorageDTO = new CreateStorageDTO("1", addressDTO);
+        CreateStorageDTO createStorageDTO = new CreateStorageDTO(1L, addressDTO);
 
         var res = mockMvc.perform(post("/storage")
                         .header("Authorization", "Bearer " + jwtToken)

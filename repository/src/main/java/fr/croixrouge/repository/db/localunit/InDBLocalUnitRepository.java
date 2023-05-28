@@ -16,7 +16,7 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
         this.localUnitDBRepository = localUnitDBRepository;
     }
 
-    private LocalUnit toLocalUnit(LocalUnitDB localUnitDB) {
+    public LocalUnit toLocalUnit(LocalUnitDB localUnitDB) {
         return new LocalUnit(
                 new ID(localUnitDB.getLocalUnitID()),
                 localUnitDB.getName(),
@@ -26,7 +26,7 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
         );
     }
 
-    private LocalUnitDB toLocalUnitDB(LocalUnit localUnit) {
+    public LocalUnitDB toLocalUnitDB(LocalUnit localUnit) {
         return new LocalUnitDB(
                 localUnit.getId().value(),
                 null,
@@ -36,7 +36,7 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
 
     @Override
     public Optional<LocalUnit> findById(ID id) {
-        return localUnitDBRepository.findById(id).map(this::toLocalUnit);
+        return localUnitDBRepository.findById(id.value()).map(this::toLocalUnit);
     }
 
     @Override

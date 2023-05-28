@@ -57,20 +57,20 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event details endpoint returns an event when given a correct event id")
     public void eventIdSuccessTest() throws Exception {
-        String eventId = "1";
-        String sessionId = "0";
+        Long eventId = 1L;
+        Long sessionId = 0L;
 
         SingleEventDetailedResponse singleEventDetailedResponse = new SingleEventDetailedResponse(
-            eventId,
-            sessionId,
-            "Formation PSC1",
-            "Formation au PSC1",
-            ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-            ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
-            "1",
-            "1",
-            2,
-            List.of()
+                eventId,
+                sessionId,
+                "Formation PSC1",
+                "Formation au PSC1",
+                ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                1L,
+                1L,
+                2,
+                List.of()
         );
 
         mockMvc.perform(get("/event/details/" + eventId + "/" + sessionId)
@@ -92,16 +92,16 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event details endpoint updates an event when given a correct event and session id")
     public void eventUpdateSuccessTest() throws Exception {
-        String eventId = "1";
-        String sessionId = "0";
+        Long eventId = 1L;
+        Long sessionId = 0L;
 
         SingleEventCreationRequest singleEventCreationRequest = new SingleEventCreationRequest(
                 "Formation Premier Secours de niveau 1",
                 "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
-                "1",
-                "1",
+                1L,
+                1L,
                 1
         );
 
@@ -118,8 +118,8 @@ public class EventControllerTest {
                 "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
                 timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
                 timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
-                "1",
-                "1",
+                1L,
+                1L,
                 1,
                 List.of()
         );
@@ -160,8 +160,8 @@ public class EventControllerTest {
                 "Formation pour devenir benevole",
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2001, 1, 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2001, 1, 1, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
-                "1",
-                "1",
+                1L,
+                1L,
                 30
         );
 
@@ -211,40 +211,40 @@ public class EventControllerTest {
         String localUnitId = "1";
 
         EventResponse eventResponse1 = new EventResponse(
-                "1",
-                "0",
+                1L,
+                0L,
                 "Formation PSC1",
                 "Formation au PSC1",
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
-                "1",
-                "1",
+                1L,
+                1L,
                 2,
                 0,
                 false
         );
         EventResponse eventResponse2 = new EventResponse(
-                "2",
-                "0",
+                2L,
+                0L,
                 "Distribution alimentaire",
                 "Distribution alimentaire gratuite",
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toString(),
                 ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toString(),
-                "1",
-                "1",
+                1L,
+                1L,
                 30,
                 0,
                 false
         );
         EventResponse eventResponse3 = new EventResponse(
-                "3",
-                "0",
+                3L,
+                0L,
                 "Formation PSC1",
                 "Formation au PSC1",
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
-                "1",
-                "1",
+                1L,
+                1L,
                 30,
                 0,
                 false
@@ -319,14 +319,14 @@ public class EventControllerTest {
         final int year = 2000;
 
         EventResponse eventResponse = new EventResponse(
-                "3",
-                "0",
+                3L,
+                0L,
                 "Formation PSC1",
                 "Formation au PSC1",
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
                 ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
-                "1",
-                "1",
+                1L,
+                1L,
                 30,
                 0,
                 false
@@ -352,7 +352,7 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event register endpoint adds a user to an event")
     public void eventRegisterSuccessTest() throws Exception {
-        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("1", "0", "1");
+        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest(1L, 0L, 1L);
 
         mockMvc.perform(post("/event/register")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -370,7 +370,7 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event register endpoint does not adds an already registered user to an event")
     public void eventRegisterTwiceFailTest() throws Exception {
-        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("1", "0", "1");
+        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest(1L, 0L, 1L);
 
         mockMvc.perform(post("/event/register")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -382,7 +382,7 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event register endpoint does not adds a user to an event if it's full")
     public void eventRegisterWhenAnEventIsFullFailTest() throws Exception {
-        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("1", "0", "2");
+        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest(1L, 0L, 2L);
 
         mockMvc.perform(post("/event/register")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -394,7 +394,7 @@ public class EventControllerTest {
     @Test
     @DisplayName("Test that the event register endpoint does not adds a user to a non existing event or session")
     public void eventRegisterFailOnNonExistingEventOrSessionTest() throws Exception {
-        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest("-1", "0", "1");
+        EventRegistrationRequest eventRegistrationRequest = new EventRegistrationRequest(-1L, 0L, 1L);
 
         mockMvc.perform(post("/event/register")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -402,8 +402,8 @@ public class EventControllerTest {
                         .content(objectMapper.writeValueAsString(eventRegistrationRequest)))
                 .andExpect(status().isInternalServerError());
 
-        eventRegistrationRequest.setEventId("1");
-        eventRegistrationRequest.setSessionId("-1");
+        eventRegistrationRequest.setEventId(1L);
+        eventRegistrationRequest.setSessionId(-1L);
 
         mockMvc.perform(post("/event/register")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -420,14 +420,14 @@ public class EventControllerTest {
         final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 12, 0), ZoneId.of("Europe/Paris"));
 
         EventResponse eventResponse = new EventResponse(
-                "4",
-                "0",
+                4L,
+                0L,
                 "EPISOL",
                 "Ouverture de l'EPISOL",
                 eventStart.toString(),
                 eventEnd.toString(),
-                "1",
-                "1",
+                1L,
+                1L,
                 30,
                 0,
                 true
@@ -509,8 +509,8 @@ public class EventControllerTest {
                 "Ouverture de l'epicerie sociale pour les personnes dans le besoin",
                 Timestamp.valueOf(eventStart.toLocalDateTime()),
                 Timestamp.valueOf(eventEnd.toLocalDateTime()),
-                "1",
-                "1",
+                1L,
+                1L,
                 20
         );
 
@@ -583,8 +583,8 @@ public class EventControllerTest {
         RecurrentEventCreationRequest recurrentEventCreationRequest = new RecurrentEventCreationRequest(
                 "Formation Benevole",
                 "Formation pour devenir benevole",
-                "1",
-                "1",
+                1L,
+                1L,
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 3, 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 4, 1, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 120,
@@ -667,8 +667,8 @@ public class EventControllerTest {
         RecurrentEventCreationRequest recurrentEventCreationRequest = new RecurrentEventCreationRequest(
                 "Formation Benevole",
                 "Formation pour devenir benevole",
-                "1",
-                "1",
+                1L,
+                1L,
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 3, 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2002, 4, 1, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 120,

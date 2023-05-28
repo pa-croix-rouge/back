@@ -16,14 +16,14 @@ public class SingleEventCreationRequest {
     private String description;
     private Timestamp start;
     private Timestamp end;
-    private String referrerId;
-    private String localUnitId;
+    private Long referrerId;
+    private Long localUnitId;
     private int maxParticipants;
 
     public SingleEventCreationRequest() {
     }
 
-    public SingleEventCreationRequest(String name, String description, Timestamp start, Timestamp end, String referrerId, String localUnitId, int maxParticipants) {
+    public SingleEventCreationRequest(String name, String description, Timestamp start, Timestamp end, Long referrerId, Long localUnitId, int maxParticipants) {
         this.name = name;
         this.description = description;
         this.start = start;
@@ -90,19 +90,19 @@ public class SingleEventCreationRequest {
         this.end = end;
     }
 
-    public String getReferrerId() {
+    public Long getReferrerId() {
         return referrerId;
     }
 
-    public void setReferrerId(String referrerId) {
+    public void setReferrerId(Long referrerId) {
         this.referrerId = referrerId;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 
-    public void setLocalUnitId(String localUnitId) {
+    public void setLocalUnitId(Long localUnitId) {
         this.localUnitId = localUnitId;
     }
 

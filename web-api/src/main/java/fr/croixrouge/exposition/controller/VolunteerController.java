@@ -33,7 +33,7 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
 
     @Override
     public VolunteerResponse toDTO(Volunteer model) {
-        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getLocalUnitId().value());
+        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getLocalUnit().getId().value());
     }
 
     @GetMapping("/token")
@@ -55,7 +55,7 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
         if (userId == null) {
             return ResponseEntity.internalServerError().build();
         }
-        Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false, localUnit.getId());
+        Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false, localUnit);
         ID volunteerId = service.save(volunteer);
         if (volunteerId == null) {
             return ResponseEntity.internalServerError().build();

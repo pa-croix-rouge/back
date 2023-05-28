@@ -16,7 +16,7 @@ public class InDBUserRepository implements UserRepository {
         this.userDBRepository = userDBRepository;
     }
 
-    private User toUser(UserDB userDB) {
+    public User toUser(UserDB userDB) {
         return new User(
                 new ID(userDB.getUserID()),
                 userDB.getUsername(),
@@ -25,7 +25,7 @@ public class InDBUserRepository implements UserRepository {
         );
     }
 
-    private UserDB toUserDB(User user) {
+    public UserDB toUserDB(User user) {
         return new UserDB(
                 user.getId(),
                 user.getUsername(),
@@ -35,7 +35,7 @@ public class InDBUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(ID id) {
-        return userDBRepository.findById(id).map(this::toUser);
+        return userDBRepository.findById(id.value()).map(this::toUser);
     }
 
     @Override

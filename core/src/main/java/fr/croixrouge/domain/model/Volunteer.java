@@ -8,16 +8,16 @@ public class Volunteer extends Entity<ID> {
     private final String lastName;
     private final String phoneNumber;
     private final boolean isValidated;
-    private final ID localUnitId;
+    private final LocalUnit localUnit;
 
-    public Volunteer(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, ID localUnitId) {
+    public Volunteer(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, LocalUnit localUnit) {
         super(id);
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.isValidated = isValidated;
-        this.localUnitId = localUnitId;
+        this.localUnit = localUnit;
     }
 
     public User getUser() {
@@ -40,8 +40,8 @@ public class Volunteer extends Entity<ID> {
         return isValidated;
     }
 
-    public ID getLocalUnitId() {
-        return localUnitId;
+    public LocalUnit getLocalUnit() {
+        return localUnit;
     }
 
     @Override
@@ -49,12 +49,12 @@ public class Volunteer extends Entity<ID> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Volunteer volunteer = (Volunteer) o;
-        return isValidated == volunteer.isValidated && Objects.equals(user, volunteer.user) && Objects.equals(firstName, volunteer.firstName) && Objects.equals(lastName, volunteer.lastName) && Objects.equals(phoneNumber, volunteer.phoneNumber) && Objects.equals(localUnitId, volunteer.localUnitId);
+        return isValidated == volunteer.isValidated && Objects.equals(user, volunteer.user) && Objects.equals(firstName, volunteer.firstName) && Objects.equals(lastName, volunteer.lastName) && Objects.equals(phoneNumber, volunteer.phoneNumber) && Objects.equals(localUnit, volunteer.localUnit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, firstName, lastName, phoneNumber, isValidated, localUnitId);
+        return Objects.hash(user, firstName, lastName, phoneNumber, isValidated, localUnit);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Volunteer extends Entity<ID> {
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", isValidated=" + isValidated +
-                ", localUnitId=" + localUnitId +
+                ", localUnitId=" + localUnit.getId() +
                 '}';
     }
 }

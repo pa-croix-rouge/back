@@ -67,7 +67,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         ID eventId = idGenerator.generate();
         Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), event.getFirstStart(), event.getLastEnd(), new ArrayList<>(), event.getOccurrences());
         for (EventSession session : event.getSessions()) {
-            eventToSave.getSessions().add(new EventSession(new ID(String.valueOf(eventToSave.getSessions().size())), session.getStart(), session.getEnd(), session.getMaxParticipants(), new ArrayList<>()));
+            eventToSave.getSessions().add(new EventSession(new ID((long) eventToSave.getSessions().size()), session.getStart(), session.getEnd(), session.getMaxParticipants(), new ArrayList<>()));
         }
         this.objects.add(eventToSave);
         return eventId;

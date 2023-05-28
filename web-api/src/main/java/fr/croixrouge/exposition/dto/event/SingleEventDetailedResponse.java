@@ -7,21 +7,21 @@ import fr.croixrouge.model.EventSession;
 import java.util.List;
 
 public class SingleEventDetailedResponse {
-    private String eventId;
-    private String sessionId;
+    private Long eventId;
+    private Long sessionId;
     private String name;
     private String description;
     private String start;
     private String end;
-    private String referrerId;
-    private String localUnitId;
+    private Long referrerId;
+    private Long localUnitId;
     private int maxParticipants;
-    private List<String> participants;
+    private List<Long> participants;
 
     public SingleEventDetailedResponse() {
     }
 
-    public SingleEventDetailedResponse(String eventId, String sessionId, String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, List<String> participants) {
+    public SingleEventDetailedResponse(Long eventId, Long sessionId, String name, String description, String start, String end, Long referrerId, Long localUnitId, int maxParticipants, List<Long> participants) {
         this.eventId = eventId;
         this.sessionId = sessionId;
         this.name = name;
@@ -49,11 +49,11 @@ public class SingleEventDetailedResponse {
         );
     }
 
-    public String getEventId() {
+    public Long getEventId() {
         return eventId;
     }
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
@@ -73,11 +73,11 @@ public class SingleEventDetailedResponse {
         return end;
     }
 
-    public String getReferrerId() {
+    public Long getReferrerId() {
         return referrerId;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 
@@ -85,7 +85,7 @@ public class SingleEventDetailedResponse {
         return maxParticipants;
     }
 
-    public List<String> getParticipants() {
+    public List<Long> getParticipants() {
         return participants;
     }
 }

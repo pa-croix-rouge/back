@@ -12,12 +12,12 @@ public class RoleResponse {
     private String name;
     private String description;
     private Map<Resources, List<Operations>> authorizations;
-    private List<String> userIds;
+    private List<Long> userIds;
 
     public RoleResponse() {
     }
 
-    public RoleResponse(String name, String description, Map<Resources, List<Operations>> authorizations, List<String> userIds) {
+    public RoleResponse(String name, String description, Map<Resources, List<Operations>> authorizations, List<Long> userIds) {
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
@@ -45,7 +45,7 @@ public class RoleResponse {
         return authorizations.toString();
     }
 
-    public List<String> getUserIds() {
+    public List<Long> getUserIds() {
         return userIds;
     }
 }

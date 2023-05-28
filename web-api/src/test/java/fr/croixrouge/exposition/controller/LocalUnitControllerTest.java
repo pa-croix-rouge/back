@@ -60,7 +60,7 @@ public class LocalUnitControllerTest {
         );
 
         LocalUnitResponse localUnitResponse = new LocalUnitResponse(
-                "91240",
+                91240L,
                 "Unite Local du Val d'Orge",
                 addressDTO,
                 "LUManager",
@@ -102,7 +102,7 @@ public class LocalUnitControllerTest {
         );
 
         LocalUnitResponse localUnitResponse = new LocalUnitResponse(
-                "91240",
+                91240L,
                 "Unite Local du Val d'Orge",
                 addressDTO,
                 "LUManager",

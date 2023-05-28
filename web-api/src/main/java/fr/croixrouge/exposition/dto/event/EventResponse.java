@@ -4,14 +4,14 @@ import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
 public class EventResponse {
-    private String eventId;
-    private String sessionId;
+    private Long eventId;
+    private Long sessionId;
     private String name;
     private String description;
     private String start;
     private String end;
-    private String referrerId;
-    private String localUnitId;
+    private Long referrerId;
+    private Long localUnitId;
     private int maxParticipants;
     private int numberOfParticipants;
     private boolean isRecurring;
@@ -19,7 +19,7 @@ public class EventResponse {
     public EventResponse() {
     }
 
-    public EventResponse(String eventId, String sessionId, String name, String description, String start, String end, String referrerId, String localUnitId, int maxParticipants, int numberOfParticipants, boolean isRecurring) {
+    public EventResponse(Long eventId, Long sessionId, String name, String description, String start, String end, Long referrerId, Long localUnitId, int maxParticipants, int numberOfParticipants, boolean isRecurring) {
         this.eventId = eventId;
         this.sessionId = sessionId;
         this.name = name;
@@ -49,11 +49,11 @@ public class EventResponse {
         );
     }
 
-    public String getEventId() {
+    public Long getEventId() {
         return eventId;
     }
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
@@ -73,11 +73,11 @@ public class EventResponse {
         return end;
     }
 
-    public String getReferrerId() {
+    public Long getReferrerId() {
         return referrerId;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 
