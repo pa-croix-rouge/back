@@ -28,4 +28,4 @@ target/
 # iml file
 *.iml
 
-application.properties
+*.properties
