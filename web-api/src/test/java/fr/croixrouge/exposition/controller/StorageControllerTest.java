@@ -78,7 +78,7 @@ class StorageControllerTest {
                         .content(objectMapper.writeValueAsString(createStorageDTO)))
                 .andExpect(status().isOk());
 
-        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
+        Long id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
 
         mockMvc.perform(get("/storage/" + id)
                         .header("Authorization", "Bearer " + jwtToken)

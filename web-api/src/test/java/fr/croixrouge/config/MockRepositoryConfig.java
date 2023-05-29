@@ -23,6 +23,9 @@ import fr.croixrouge.storage.repository.memory.InMemoryStorageProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryUserProductRepository;
 import fr.croixrouge.storage.service.StorageProductService;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -39,6 +42,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 @Profile("test-in-memory")
 public class MockRepositoryConfig {
 
