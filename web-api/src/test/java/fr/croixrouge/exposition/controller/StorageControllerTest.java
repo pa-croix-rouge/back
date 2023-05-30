@@ -60,7 +60,7 @@ class StorageControllerTest {
     @Test
     @DisplayName("Test that the storage endpoint returns a 404 when given a incorrect storage id")
     public void productIdFailedTest() throws Exception {
-        mockMvc.perform(get("/storage/invalid-storage-id")
+        mockMvc.perform(get("/storage/-1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

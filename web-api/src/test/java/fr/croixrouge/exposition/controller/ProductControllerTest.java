@@ -64,7 +64,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("Test that the product endpoint returns a 404 when given a incorrect product id")
     public void productIdFailedTest() throws Exception {
-        mockMvc.perform(get("/product/invalid-product-id")
+        mockMvc.perform(get("/product/-1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -81,7 +81,7 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(createProductDTO)))
                 .andExpect(status().isOk());
 
-        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
+        Long id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
 
         mockMvc.perform(get("/product/" + id)
                         .header("Authorization", "Bearer " + jwtToken)

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class CRUDController<K extends ID, V extends Entity<K>, S extends CRUDService<K, V, ?>, MODEL_DTO, CREATION_DTO extends CreationDTO<V>> extends ErrorHandler {
 
@@ -32,7 +31,7 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
 
     @GetMapping()
     public ResponseEntity<List<MODEL_DTO>> findAll() {
-        return ResponseEntity.ok(service.findAll().stream().map(this::toDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok(service.findAll().stream().map(this::toDTO).toList());
     }
 
     @PostMapping()
@@ -41,7 +40,7 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity delete(@PathVariable K id) {
+    public ResponseEntity<?> delete(@PathVariable K id) {
         service.delete(service.findById(id));
         return ResponseEntity.ok().build();
     }
