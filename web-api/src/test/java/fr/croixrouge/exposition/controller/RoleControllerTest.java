@@ -16,12 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,22 +57,25 @@ public class RoleControllerTest {
     @Test
     @DisplayName("Test that the role endpoint returns a list of roles when given a correct local unit id")
     public void roleLocalUnitIdSuccessTest() throws Exception {
-        String roleId ="1";
+        long roleId = 1L;
 
         RoleResponse roleResponse = new RoleResponse(
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
                 Map.of( Resources.RESOURCE, List.of(Operations.READ)),
-                new ArrayList<>(Collections.singletonList(2L))
+                new ArrayList<>(List.of(2L))
         );
 
-        mockMvc.perform(get("/role/localunit/" + roleId)
+        ResultActions res = mockMvc.perform(get("/role/localunit/" + roleId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(roleResponse.getName()))
                 .andExpect(jsonPath("$[0].description").value(roleResponse.getDescription()))
                 .andExpect(jsonPath("$[0].authorizations").value(roleResponse.getAuthorizations()))
-                .andExpect(jsonPath("$[0].userIds").value(roleResponse.getUserIds()));
+                .andExpect(jsonPath("$[0].userIds").exists())
+                .andExpect(jsonPath("$[0].userIds").isArray())
+                .andExpect(jsonPath("$[0].userIds").isNotEmpty())
+                .andExpect(jsonPath("$[0].userIds").value(containsInAnyOrder(2)));
     }
 
     @Test
