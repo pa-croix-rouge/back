@@ -44,7 +44,7 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
     }
 
     @Override
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<ID> post(@RequestBody VolunteerCreationRequest model) {
         LocalUnit localUnit = this.localUnitService.getLocalUnitByCode(model.getLocalUnitCode());
         if (localUnit == null) {

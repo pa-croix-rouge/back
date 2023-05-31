@@ -114,8 +114,7 @@ public class VolunteerControllerTest {
                 "91240-000"
         );
 
-        String result = mockMvc.perform(post("/volunteer")
-                        .header("Authorization", "Bearer " + jwtToken)
+        String result = mockMvc.perform(post("/volunteer/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(volunteerCreationRequest)))
                 .andExpect(status().isOk())
