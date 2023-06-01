@@ -31,6 +31,11 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
     }
 
     @Override
+    public List<Volunteer> findAllByLocalUnitId(ID id) {
+        return this.objects.stream().filter(o -> o.getLocalUnitId().equals(id)).toList();
+    }
+
+    @Override
     public boolean validateVolunteerAccount(Volunteer volunteer) {
         Volunteer updatedVolunteer = new Volunteer(volunteer.getId(),
                 volunteer.getUser(),

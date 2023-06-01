@@ -5,6 +5,8 @@ import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.domain.repository.VolunteerRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerRepository> {
 
@@ -18,6 +20,10 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
 
     public Volunteer findByUsername(String username) {
         return this.repository.findByUsername(username).orElseThrow();
+    }
+
+    public List<Volunteer> findAllByLocalUnitId(ID id) {
+        return this.repository.findAllByLocalUnitId(id);
     }
 
     public boolean validateVolunteerAccount(Volunteer volunteer) {

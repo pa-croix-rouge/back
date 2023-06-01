@@ -35,14 +35,22 @@ public class RepositoryConfig {
 
     private final User managerUser;
 
+    private final User southernManagerUser;
+
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
 
+    private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
+
     private final LocalUnit localUnit;
+
+    private final LocalUnit southernLocalUnit;
 
     public RepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
         this.managerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
         this.localUnit = new LocalUnit(new ID("1"), "Unite Local du Val d'Orge", address, managerUser, address.getPostalCode() + "-000");
+        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of("ROLE_ADMIN"));
+        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
     }
 
     @Bean
@@ -54,6 +62,7 @@ public class RepositoryConfig {
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
         users.add(defaultUser);
         users.add(managerUser);
+        users.add(southernManagerUser);
         return new InMemoryUserRepository(users);
     }
 
@@ -66,6 +75,7 @@ public class RepositoryConfig {
     public LocalUnitRepository localUnitRepository() {
         ArrayList<LocalUnit> localUnits = new ArrayList<>();
         localUnits.add(localUnit);
+        localUnits.add(southernLocalUnit);
         return new InMemoryLocalUnitRepository(localUnits);
     }
 
@@ -166,6 +176,8 @@ public class RepositoryConfig {
         ArrayList<Volunteer> volunteers = new ArrayList<>();
         Volunteer volunteer1 = new Volunteer(new ID("1"), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit.getId());
         volunteers.add(volunteer1);
+        Volunteer volunteer2 = new Volunteer(new ID("2"), southernManagerUser, "volunteerFirstNameS", "volunteerLastNameS", "+33 6 00 00 00 83", true, southernLocalUnit.getId());
+        volunteers.add(volunteer2);
         return new InMemoryVolunteerRepository(volunteers);
     }
 }
