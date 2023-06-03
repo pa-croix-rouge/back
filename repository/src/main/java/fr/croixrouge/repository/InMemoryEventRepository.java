@@ -48,7 +48,12 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     @Override
     public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
         ChronoZonedDateTime<LocalDate> now = ZonedDateTime.now();
-        return this.objects.stream().filter(event -> event.getLocalUnit().getId().equals(localUnitId)).map(Event::getSessions).flatMap(List::stream).filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS))).toList();
+        return this.objects.stream()
+                .filter(event -> event.getLocalUnit().getId().equals(localUnitId))
+                .map(Event::getSessions)
+                .flatMap(List::stream)
+                .filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS)))
+                .toList();
     }
 
     @Override
@@ -79,6 +84,17 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
             }
         }
         return result;
+    }
+
+    @Override
+    public void updateEventSession(EventSession event) {
+        Event eventToUpdate = this.findById(event.getId()).orElse(null);
+        if (eventToUpdate == null) {
+            return;
+        }
+
+        eventToUpdate.getSessions().remove(eventToUpdate);
+        eventToUpdate.getSessions().add(event);
     }
 
     @Override
