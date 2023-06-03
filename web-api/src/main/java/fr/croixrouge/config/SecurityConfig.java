@@ -1,5 +1,7 @@
 package fr.croixrouge.config;
 
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
@@ -36,9 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/login")
                 .permitAll()
-                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //allow CORS option calls
                 .requestMatchers("/resources")
-                .hasAuthority("ROLE_ADMIN")
+                .hasAuthority(Resources.RESOURCE.name() + "_" + Operations.READ.name())
                 .anyRequest()
                 .authenticated()
                 .and()

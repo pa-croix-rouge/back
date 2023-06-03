@@ -3,7 +3,6 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.ResourceService;
 import fr.croixrouge.service.RoleService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +24,8 @@ public class ResourceController {
         this.roleService = roleService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<String>> getResources(HttpServletRequest request) {
-
+    @GetMapping()
+    public ResponseEntity<List<String>> getResources() {
         List<String> resources = resourceService.getResources();
         return ResponseEntity.ok(resources);
     }

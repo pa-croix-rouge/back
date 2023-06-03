@@ -42,7 +42,6 @@ public class AuthenticationService {
     }
 
     public LoginResponse authenticate(String userName, String password) {
-
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userName,

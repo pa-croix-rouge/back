@@ -3,17 +3,22 @@ package fr.croixrouge.repository.db.user;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
+import fr.croixrouge.repository.db.role.InDBRoleRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class InDBUserRepository implements UserRepository {
 
     private final UserDBRepository userDBRepository;
 
-    public InDBUserRepository(UserDBRepository userDBRepository) {
+    private final InDBRoleRepository roleDBRepository;
+
+    public InDBUserRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository) {
         this.userDBRepository = userDBRepository;
+        this.roleDBRepository = roleDBRepository;
     }
 
     public User toUser(UserDB userDB) {
@@ -21,7 +26,7 @@ public class InDBUserRepository implements UserRepository {
                 new ID(userDB.getUserID()),
                 userDB.getUsername(),
                 userDB.getPassword(),
-                List.of()
+                userDB.getRoleDBs().stream().map(roleDBRepository::toRole).toList()
         );
     }
 
@@ -29,8 +34,10 @@ public class InDBUserRepository implements UserRepository {
         return new UserDB(
                 user.getId(),
                 user.getUsername(),
-                user.getPassword()
+                user.getPassword(),
+                user.getRoles().stream().map(roleDBRepository::toRoleDB).collect(Collectors.toSet())
         );
+
     }
 
     @Override

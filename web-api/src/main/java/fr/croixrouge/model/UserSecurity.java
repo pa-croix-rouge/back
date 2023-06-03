@@ -1,36 +1,35 @@
 package fr.croixrouge.model;
 
-import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.domain.model.User;
+import fr.croixrouge.domain.model.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
-public class UserSecurity implements UserDetails {
-    private final ID userId;
-    private final String username;
-    private final String password;
-    private final List<GrantedAuthority> authorities;
+public class UserSecurity extends User implements UserDetails {
+
+
+    public UserSecurity(ID userId, String username, String password, List<Role> roles) {
+        super(userId, username, password, roles);
+    }
 
     public UserSecurity(User user) {
-        this.userId = user.getId();
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.authorities = user.getAuthorities().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        super(user.getId(), user.getUsername(), user.getPassword(), user.getRoles());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            for (Map.Entry<Resources, List<Operations>> entry : role.getAuthorizations().entrySet()) {
+                Resources resource = entry.getKey();
+                for (Operations operation : entry.getValue()) {
+                    authorities.add(new SimpleGrantedAuthority(resource.name() + "_" + operation.name()));
+                }
+            }
+        }
         return authorities;
-    }
-
-    public ID getUserId() {
-        return userId;
     }
 
     @Override
@@ -66,10 +65,10 @@ public class UserSecurity implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "userId='" + userId + '\'' +
+                "userId='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", authorities=" + authorities +
+                ", authorities=" + getAuthorities() +
                 '}';
     }
 
@@ -78,11 +77,11 @@ public class UserSecurity implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserSecurity userSecurity = (UserSecurity) o;
-        return Objects.equals(userId, userSecurity.userId) && Objects.equals(username, userSecurity.username) && Objects.equals(password, userSecurity.password) && Objects.equals(authorities, userSecurity.authorities);
+        return Objects.equals(id, userSecurity.id) && Objects.equals(username, userSecurity.username) && Objects.equals(password, userSecurity.password) && Objects.equals(roles, userSecurity.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username, password, authorities);
+        return Objects.hash(id, username, password, roles);
     }
 }

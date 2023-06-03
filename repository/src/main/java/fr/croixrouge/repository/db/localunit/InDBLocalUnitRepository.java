@@ -1,5 +1,7 @@
 package fr.croixrouge.repository.db.localunit;
 
+import fr.croixrouge.domain.model.Address;
+import fr.croixrouge.domain.model.Department;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
@@ -20,17 +22,25 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
         return new LocalUnit(
                 new ID(localUnitDB.getLocalUnitID()),
                 localUnitDB.getName(),
+                new Address(
+                        Department.getDepartmentFromPostalCode(localUnitDB.getDepartment()),
+                        localUnitDB.getPostalCode(),
+                        localUnitDB.getCity(),
+                        localUnitDB.getStreetNumberAndName()),
                 null,
-                null,
-                null
+                localUnitDB.getCode()
         );
     }
 
     public LocalUnitDB toLocalUnitDB(LocalUnit localUnit) {
         return new LocalUnitDB(
                 localUnit.getId().value(),
-                null,
-                localUnit.getName()
+                localUnit.getName(),
+                localUnit.getCode(),
+                localUnit.getAddress().getDepartment().getCode(),
+                localUnit.getAddress().getStreetNumberAndName(),
+                localUnit.getAddress().getCity(),
+                localUnit.getAddress().getPostalCode()
         );
     }
 
@@ -57,11 +67,11 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
 
     @Override
     public Optional<LocalUnit> findByPostalCode(String postalCode) {
-        return Optional.empty();
+        return localUnitDBRepository.findByPostalCodeIgnoreCase(postalCode).map(this::toLocalUnit);
     }
 
     @Override
     public Optional<LocalUnit> findByCode(String code) {
-        return Optional.empty();
+        return localUnitDBRepository.findByCodeIgnoreCase(code).map(this::toLocalUnit);
     }
 }

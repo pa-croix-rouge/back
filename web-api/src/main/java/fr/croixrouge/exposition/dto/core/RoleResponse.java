@@ -1,6 +1,5 @@
 package fr.croixrouge.exposition.dto.core;
 
-import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Operations;
 import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.domain.model.Role;
@@ -29,7 +28,7 @@ public class RoleResponse {
                 role.getName(),
                 role.getDescription(),
                 role.getAuthorizations(),
-                role.getUserIds().stream().map(ID::value).toList()
+                List.of()// role.getUserIds().stream().map(ID::value).toList()
         );
     }
 

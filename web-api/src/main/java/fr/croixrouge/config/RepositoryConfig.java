@@ -27,6 +27,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
@@ -37,14 +38,26 @@ public class RepositoryConfig {
 
     private final User managerUser;
 
+    private final Role managerRole;
+
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
 
     private final LocalUnit localUnit;
 
     public RepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        this.managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
-        this.localUnit = new LocalUnit(new ID(1L), "Unite Local du Val d'Orge", address, managerUser, address.getPostalCode() + "-000");
+
+        this.localUnit = new LocalUnit(new ID(1L), "Unite Local du Val d'Orge", address, null, address.getPostalCode() + "-000");
+
+        managerRole = new Role(new ID(1L),
+                "Val d'Orge default role",
+                "Default role for Val d'Orge",
+                Map.of(Resources.RESOURCE, List.of(Operations.READ)),
+                localUnit,
+                List.of());
+
+        this.managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
+
     }
 
     @Bean
