@@ -117,7 +117,24 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         List<EventSession> updatedSessions = new ArrayList<>();
         for (EventSession session : eventToUpdate.getSessions()) {
             if (session.getId().equals(sessionId)) {
-//                updatedSessions.add(new EventSession(session.getId(), event.getSessions().get(0).getStart(), event.getSessions().get(0).getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+                if (sessionToUpdate.getParticipants() > event.getSessions().get(0).getMaxParticipants()) {
+                    return false;
+                }
+                List<EventTimeWindow> updatedTimeWindows = new ArrayList<>();
+                for (EventTimeWindow timeWindow : event.getSessions().get(0).getTimeWindows()) {
+                    updatedTimeWindows.add(new EventTimeWindow(new ID(String.valueOf(updatedTimeWindows.size())), timeWindow.getStart(), timeWindow.getEnd(), timeWindow.getMaxParticipants(), new ArrayList<>()));
+                }
+                List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
+                int currentTimeWindowIndex = 0;
+                for (ID participant : participants) {
+                    EventTimeWindow timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
+                    if (timeWindow.getParticipants().size() >= timeWindow.getMaxParticipants()) {
+                        currentTimeWindowIndex++;
+                        timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
+                    }
+                    timeWindow.getParticipants().add(participant);
+                }
+                updatedSessions.add(new EventSession(session.getId(), updatedTimeWindows));
             } else {
                 updatedSessions.add(session);
             }
@@ -129,7 +146,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
-    public boolean updateEventSessions(ID eventId, ID sessionId, Event event) {
+    public boolean updateEventSessions(ID eventId, ID sessionId, Event event, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
         Event eventToUpdate = this.findById(eventId).orElse(null);
         if (eventToUpdate == null) {
             return false;
@@ -141,9 +158,49 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         List<EventSession> updatedSessions = new ArrayList<>();
         for (EventSession session : eventToUpdate.getSessions()) {
             if (session.getId().equals(sessionId)) {
-//                updatedSessions.add(new EventSession(session.getId(), event.getSessions().get(0).getStart(), event.getSessions().get(0).getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+                if (sessionToUpdate.getParticipants() > event.getSessions().get(0).getMaxParticipants()) {
+                    return false;
+                }
+                List<EventTimeWindow> updatedTimeWindows = new ArrayList<>();
+                for (EventTimeWindow timeWindow : event.getSessions().get(0).getTimeWindows()) {
+                    updatedTimeWindows.add(new EventTimeWindow(new ID(String.valueOf(updatedTimeWindows.size())), timeWindow.getStart(), timeWindow.getEnd(), timeWindow.getMaxParticipants(), new ArrayList<>()));
+                }
+                List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
+                int currentTimeWindowIndex = 0;
+                for (ID participant : participants) {
+                    EventTimeWindow timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
+                    if (timeWindow.getParticipants().size() >= timeWindow.getMaxParticipants()) {
+                        currentTimeWindowIndex++;
+                        timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
+                    }
+                    timeWindow.getParticipants().add(participant);
+                }
+                updatedSessions.add(new EventSession(session.getId(), updatedTimeWindows));
             } else {
-//                updatedSessions.add(new EventSession(session.getId(), session.getStart(), session.getEnd(), event.getSessions().get(0).getMaxParticipants(), session.getParticipants()));
+                if (sessionToUpdate.getParticipants() > event.getSessions().get(0).getMaxParticipants()) {
+                    return false;
+                }
+                List<EventTimeWindow> updatedTimeWindows = new ArrayList<>();
+                for (int i = 0; i < eventTimeWindowOccurrence; i++) {
+                    updatedTimeWindows.add(new EventTimeWindow(
+                            new ID(String.valueOf(updatedTimeWindows.size())),
+                            session.getStart().plusMinutes((long) i * eventTimeWindowDuration),
+                            session.getStart().plusMinutes((long) (i + 1) * eventTimeWindowDuration),
+                            eventTimeWindowMaxParticipants,
+                            new ArrayList<>()
+                    ));
+                }
+                List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
+                int currentTimeWindowIndex = 0;
+                for (ID participant : participants) {
+                    EventTimeWindow timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
+                    if (timeWindow.getParticipants().size() >= timeWindow.getMaxParticipants()) {
+                        currentTimeWindowIndex++;
+                        timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
+                    }
+                    timeWindow.getParticipants().add(participant);
+                }
+                updatedSessions.add(new EventSession(session.getId(), updatedTimeWindows));
             }
         }
         Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), updatedSessions, eventToUpdate.getOccurrences());

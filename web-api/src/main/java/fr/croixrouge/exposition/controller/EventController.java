@@ -126,7 +126,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/sessions/{eventId}/{sessionId}")
     public ResponseEntity<String> updateRecurrentEvent(@PathVariable ID eventId, @PathVariable ID sessionId, @RequestBody SingleEventCreationRequest singleEventCreationRequest) {
-        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent());
+        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent(), singleEventCreationRequest.getEventTimeWindowDuration(), singleEventCreationRequest.getEventTimeWindowOccurrence(), singleEventCreationRequest.getEventTimeWindowMaxParticipants());
         if (!result) {
             return ResponseEntity.notFound().build();
         }

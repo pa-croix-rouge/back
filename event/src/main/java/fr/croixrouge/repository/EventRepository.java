@@ -22,7 +22,7 @@ public interface EventRepository extends CRUDRepository<ID, Event> {
 
     boolean updateSingleEvent(ID eventId, ID sessionId, Event event);
 
-    boolean updateEventSessions(ID eventId, ID sessionId, Event event);
+    boolean updateEventSessions(ID eventId, ID sessionId, Event event, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants);
 
     boolean deleteEventSession(ID eventId, ID sessionId);
 }
