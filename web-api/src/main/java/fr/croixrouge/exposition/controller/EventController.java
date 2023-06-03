@@ -5,6 +5,8 @@ import fr.croixrouge.exposition.dto.event.*;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.service.EventService;
+import fr.croixrouge.service.LocalUnitService;
+import fr.croixrouge.service.VolunteerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,14 @@ import java.util.Optional;
 @RequestMapping("/event")
 public class EventController extends CRUDController<ID, Event, EventService, EventResponse, EventCreationRequest> {
 
-    public EventController(EventService eventService) {
+    private final VolunteerService volunteerService;
+
+    private final LocalUnitService localUnitService;
+
+    public EventController(EventService eventService, VolunteerService volunteerService, LocalUnitService localUnitService) {
         super(eventService);
+        this.volunteerService = volunteerService;
+        this.localUnitService = localUnitService;
     }
 
     @Override
@@ -34,13 +42,19 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/details")
     public ResponseEntity<String> createSingleEvent(@RequestBody SingleEventCreationRequest singleEventCreationRequest) {
-        Long eventId = service.save(singleEventCreationRequest.toEvent()).value();
+        var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
+        var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
+
+        Long eventId = service.save(singleEventCreationRequest.toEvent(referrer, localUnit)).value();
         return ResponseEntity.ok(String.valueOf(eventId));
     }
 
     @PostMapping("/details/{eventId}/{sessionId}")
     public ResponseEntity<String> updateSingleEvent(@PathVariable ID eventId, @PathVariable ID sessionId, @RequestBody SingleEventCreationRequest singleEventCreationRequest) {
-        boolean result = service.updateSingleEvent(eventId, sessionId, singleEventCreationRequest.toEvent());
+        var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
+        var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
+
+        boolean result = service.updateSingleEvent(eventId, sessionId, singleEventCreationRequest.toEvent(referrer, localUnit));
         if (!result) {
             return ResponseEntity.notFound().build();
         }
@@ -132,13 +146,19 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/sessions")
     public ResponseEntity<String> createRecurrentEvent(@RequestBody RecurrentEventCreationRequest recurrentEventCreationRequest) {
-        Long eventId = service.save(recurrentEventCreationRequest.toEvent()).value();
+        var referrer = volunteerService.findById(new ID(recurrentEventCreationRequest.getReferrerId()));
+        var localUnit = localUnitService.findById(new ID(recurrentEventCreationRequest.getLocalUnitId()));
+
+        Long eventId = service.save(recurrentEventCreationRequest.toEvent(referrer, localUnit)).value();
         return ResponseEntity.ok(String.valueOf(eventId));
     }
 
     @PostMapping("/sessions/{eventId}/{sessionId}")
     public ResponseEntity<String> updateRecurrentEvent(@PathVariable ID eventId, @PathVariable ID sessionId, @RequestBody SingleEventCreationRequest singleEventCreationRequest) {
-        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent(), singleEventCreationRequest.getEventTimeWindowDuration(), singleEventCreationRequest.getEventTimeWindowOccurrence(), singleEventCreationRequest.getEventTimeWindowMaxParticipants());
+        var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
+        var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
+
+        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent(referrer, localUnit));
         if (!result) {
             return ResponseEntity.notFound().build();
         }

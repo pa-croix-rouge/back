@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.event;
 
-import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
@@ -36,7 +37,7 @@ public class SingleEventCreationRequest {
         this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 
-    public Event toEvent() {
+    public Event toEvent(Volunteer referrer, LocalUnit localUnit) {
         List<EventTimeWindow> timeWindows = new ArrayList<>();
         for (int i = 0; i < eventTimeWindowOccurrence; i++) {
             ZonedDateTime startDateTime = SingleEventCreationRequest.toLocalDateTime(start).plusMinutes((long) i * eventTimeWindowDuration);
@@ -53,8 +54,8 @@ public class SingleEventCreationRequest {
                 null,
                 name,
                 description,
-                new ID(referrerId),
-                new ID(localUnitId),
+                referrer,
+                localUnit,
                 List.of(new EventSession(
                         null,
                         timeWindows

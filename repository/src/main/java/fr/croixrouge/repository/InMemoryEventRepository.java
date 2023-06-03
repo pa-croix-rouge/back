@@ -37,28 +37,28 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         if (session.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(new Event(event.get().getId(), event.get().getName(), event.get().getDescription(), event.get().getReferrerId(), event.get().getLocalUnitId(), List.of(session.get()), event.get().getOccurrences()));
+        return Optional.of(new Event(event.get().getId(), event.get().getName(), event.get().getDescription(), event.get().getReferrer(), event.get().getLocalUnit(),  List.of(session.get()), event.get().getOccurrences()));
     }
 
     @Override
     public List<Event> findByLocalUnitId(ID localUnitId) {
-        return this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).collect(Collectors.toList());
+        return this.objects.stream().filter(event -> event.getLocalUnit().getId().equals(localUnitId)).collect(Collectors.toList());
     }
 
     @Override
     public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
         ChronoZonedDateTime<LocalDate> now = ZonedDateTime.now();
-        return this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).map(Event::getSessions).flatMap(List::stream).filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS))).toList();
+        return this.objects.stream().filter(event -> event.getLocalUnit().getId().equals(localUnitId)).map(Event::getSessions).flatMap(List::stream).filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS))).toList();
     }
 
     @Override
     public List<Event> findByLocalUnitIdAndMonth(ID localUnitId, int month, int year) {
-        List<Event> localUnitEvents = this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).toList();
+        List<Event> localUnitEvents = this.objects.stream().filter(event -> event.getLocalUnit().getId().equals(localUnitId)).toList();
         List<Event> result = new ArrayList<>();
         for (Event event : localUnitEvents) {
             List<EventSession> sessionsInMonth = event.getSessions().stream().filter(session -> session.getStart().getMonthValue() == month && session.getStart().getYear() == year || session.getEnd().getMonthValue() == month && session.getEnd().getYear() == year).toList();
             if (!sessionsInMonth.isEmpty()) {
-                result.add(new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), sessionsInMonth, event.getOccurrences()));
+                result.add(new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), sessionsInMonth, event.getOccurrences()));
             }
         }
         return result;
@@ -84,7 +84,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     @Override
     public ID save(Event event) {
         ID eventId = idGenerator.generate();
-        Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(),new ArrayList<>(), event.getOccurrences());
+        Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(),new ArrayList<>(), event.getOccurrences());
         for (EventSession session : event.getSessions()) {
             EventSession sessionToSave = new EventSession(new ID( (long) eventToSave.getSessions().size()), new ArrayList<>());
             for (EventTimeWindow timeWindow : session.getTimeWindows()) {
@@ -157,7 +157,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
                 updatedSessions.add(session);
             }
         }
-        Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), updatedSessions, eventToUpdate.getOccurrences());
+        Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), updatedSessions, eventToUpdate.getOccurrences());
         this.objects.remove(eventToUpdate);
         this.objects.add(updatedEvent);
         return true;
@@ -227,7 +227,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
                 updatedSessions.add(new EventSession(session.getId(), updatedTimeWindows));
             }
         }
-        Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), updatedSessions, eventToUpdate.getOccurrences());
+        Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), updatedSessions, eventToUpdate.getOccurrences());
         this.objects.remove(eventToUpdate);
         this.objects.add(updatedEvent);
         return true;

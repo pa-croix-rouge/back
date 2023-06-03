@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.event;
 
-import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
@@ -40,7 +41,7 @@ public class RecurrentEventCreationRequest {
         this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 
-    public Event toEvent() {
+    public Event toEvent(Volunteer referrer, LocalUnit localUnit) {
         ZonedDateTime startDateTime = RecurrentEventCreationRequest.toLocalDateTime(firstStart);
         ZonedDateTime endDateTime = RecurrentEventCreationRequest.toLocalDateTime(firstEnd);
 
@@ -70,8 +71,8 @@ public class RecurrentEventCreationRequest {
                 null,
                 name,
                 description,
-                new ID(referrerId),
-                new ID(localUnitId),
+                referrer,
+                localUnit,
                 eventSessions,
                 eventSessions.size());
     }

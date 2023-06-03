@@ -48,7 +48,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MockRepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
-    private final User managerUser;
+    private final User managerUser, defaultUser;
+
+    private final Volunteer volunteer1;
 
     private final User southernManagerUser;
 
@@ -79,7 +81,11 @@ public class MockRepositoryConfig {
                 List.of());
 
 
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), List.of());
+
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
+
+        volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
 
     }
 
@@ -87,12 +93,8 @@ public class MockRepositoryConfig {
     @Primary
     public UserRepository userTestRepository() {
         ArrayList<User> users = new ArrayList<>();
-        ID defaultUserId = new ID(1L);
-        String defaultUsername = "defaultUser";
-        String defaultPassword = passwordEncoder.encode("defaultPassword");
-        User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
-        users.add(defaultUser);
 
+        users.add(defaultUser);
         users.add(managerUser);
         users.add(southernManagerUser);
 
@@ -172,7 +174,7 @@ public class MockRepositoryConfig {
         List<ID> participants1 = new ArrayList<>();
         EventTimeWindow eventTimeWindow1 = new EventTimeWindow(new ID(0L), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
         EventSession eventSession1 = new EventSession(new ID(0L), List.of(eventTimeWindow1));
-        Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, List.of(eventSession1), 1);
+        Event event1 = new Event(eventId1, eventName1, eventDescription1, volunteer1, localUnit, List.of(eventSession1), 1);
         events.add(event1);
 
         ID eventId2 = new ID(2L);
@@ -189,7 +191,7 @@ public class MockRepositoryConfig {
             eventTimeWindowList2.add(new EventTimeWindow(new ID(i), eventStartDate2.plusMinutes(i * 40), eventStartDate2.plusMinutes((i + 1) * 40), maxParticipants2 / 3, participants2));
         }
         EventSession eventSession2 = new EventSession(new ID(0L), eventTimeWindowList2);
-        Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, List.of(eventSession2), 1);
+        Event event2 = new Event(eventId2, eventName2, eventDescription2, volunteer1, localUnit, List.of(eventSession2), 1);
         events.add(event2);
 
         ID eventId3 = new ID(3L);
@@ -203,7 +205,7 @@ public class MockRepositoryConfig {
         List<ID> participants3 = new ArrayList<>();
         EventTimeWindow eventTimeWindow3 = new EventTimeWindow(new ID(0L), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
         EventSession eventSession3 = new EventSession(new ID(0L), List.of(eventTimeWindow3));
-        Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, List.of(eventSession3), 1);
+        Event event3 = new Event(eventId3, eventName3, eventDescription3, volunteer1, localUnit, List.of(eventSession3), 1);
         events.add(event3);
 
         ID eventId4 = new ID(4L);
@@ -226,7 +228,7 @@ public class MockRepositoryConfig {
                     eventTimeWindowList4
             ));
         }
-        Event event4 = new Event(eventId4, eventName4, eventDescription4, referrerId4, localUnitId4, eventSessions4, sessionCounter.get());
+        Event event4 = new Event(eventId4, eventName4, eventDescription4, volunteer1, localUnit, eventSessions4, sessionCounter.get());
         events.add(event4);
 
         return new InMemoryEventRepository(events);
