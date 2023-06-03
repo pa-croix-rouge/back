@@ -3,14 +3,16 @@ package fr.croixrouge.exposition.dto.event;
 public class EventRegistrationRequest {
     private String eventId;
     private String sessionId;
+    private String timeWindowId;
     private String participantId;
 
     public EventRegistrationRequest() {
     }
 
-    public EventRegistrationRequest(String eventId, String sessionId, String participantId) {
+    public EventRegistrationRequest(String eventId, String sessionId, String timeWindowId, String participantId) {
         this.eventId = eventId;
         this.sessionId = sessionId;
+        this.timeWindowId = timeWindowId;
         this.participantId = participantId;
     }
 
@@ -20,6 +22,10 @@ public class EventRegistrationRequest {
 
     public String getSessionId() {
         return sessionId;
+    }
+
+    public String getTimeWindowId() {
+        return timeWindowId;
     }
 
     public String getParticipantId() {
@@ -32,6 +38,10 @@ public class EventRegistrationRequest {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public void setTimeWindowId(String timeWindowId) {
+        this.timeWindowId = timeWindowId;
     }
 
     public void setParticipantId(String participantId) {

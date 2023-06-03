@@ -77,7 +77,19 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
             YearMonth sessionDate = YearMonth.from(session.getStart());
             return sessionDate.equals(now);
         }).toList());
-        final EventStatsResponse eventStatsResponse = new EventStatsResponse(sessionListOverMonth.size(), sessionListOverMonth.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum), sessionList.size(), sessionList.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum));
+        final EventStatsResponse eventStatsResponse = new EventStatsResponse(
+                sessionListOverMonth.size(),
+                sessionListOverMonth.stream().map(
+                        eventSession -> eventSession.getTimeWindows().stream().map(
+                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
+                        ).reduce(0, Integer::sum)
+                ).reduce(0, Integer::sum),
+                sessionList.size(),
+                sessionList.stream().map(
+                        eventSession -> eventSession.getTimeWindows().stream().map(
+                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
+                        ).reduce(0, Integer::sum)
+                ).reduce(0, Integer::sum));
         return ResponseEntity.ok(eventStatsResponse);
     }
 
@@ -133,7 +145,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/register")
     public ResponseEntity<String> registerParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
-        boolean isRegistered = service.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getParticipantId()));
+        boolean isRegistered = service.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getTimeWindowId()), new ID(eventRegistrationRequest.getParticipantId()));
         if (!isRegistered) {
             return ResponseEntity.internalServerError().body("Cannot register participant, event session doesn't exist, is full or participant already registered");
         }

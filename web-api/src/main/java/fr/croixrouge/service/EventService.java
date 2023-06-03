@@ -32,8 +32,8 @@ public class EventService extends CRUDService<ID, Event, EventRepository> {
         return repository.findByLocalUnitIdAndMonth(localUnitId, month, year);
     }
 
-    public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
-        return repository.registerParticipant(eventId, sessionId, participantId);
+    public boolean registerParticipant(ID eventId, ID sessionId, ID timeWindow, ID participantId) {
+        return repository.registerParticipant(eventId, sessionId, timeWindow, participantId);
     }
 
     public boolean updateSingleEvent(ID eventId, ID sessionId, Event event) {
