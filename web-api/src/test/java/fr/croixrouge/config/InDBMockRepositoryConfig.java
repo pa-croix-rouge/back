@@ -1,13 +1,11 @@
 package fr.croixrouge.config;
 
 import fr.croixrouge.domain.model.*;
-import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.InMemoryEventRepository;
-import fr.croixrouge.repository.InMemoryVolunteerRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
@@ -15,6 +13,8 @@ import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
+import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
+import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
@@ -50,7 +50,7 @@ public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
     private final Role managerRole;
-    private final User managerUser;
+    private final User managerUser, defaultUser;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
     private final LocalUnit localUnit;
 
@@ -69,6 +69,8 @@ public class InDBMockRepositoryConfig {
                 Map.of(Resources.RESOURCE, List.of(Operations.READ)),
                 localUnit,
                 List.of());
+
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), List.of());
 
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
     }
@@ -93,12 +95,7 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public UserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository) {
-        ID defaultUserId = new ID(1L);
-        String defaultUsername = "defaultUser";
-        String defaultPassword = passwordEncoder.encode("defaultPassword");
-        User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
-
+    public InDBUserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository) {
         InDBUserRepository inDBUserRepository = new InDBUserRepository(userDBRepository, roleDBRepository);
 
         inDBUserRepository.save(defaultUser);
@@ -109,8 +106,8 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public VolunteerRepository volunteerTestRepository() {
-        ArrayList<Volunteer> volunteers = new ArrayList<>();
+    public VolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, InDBUserRepository inDBUserRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+        var volunteerRepository = new InDBVolunteerRepository(volunteerDBRepository, inDBUserRepository, inDBLocalUnitRepository);
 
         ID volunteerId1 = new ID(1L);
         String firstName1 = "volunteerFirstName";
@@ -124,12 +121,12 @@ public class InDBMockRepositoryConfig {
         String lastName2 = "newVolunteerName";
         String phoneNumber2 = "+33 6 00 11 22 33";
         boolean isValidated2 = false;
-        Volunteer volunteer2 = new Volunteer(volunteerId2, managerUser, firstName2, lastName2, phoneNumber2, isValidated2, localUnit);
+        Volunteer volunteer2 = new Volunteer(volunteerId2, defaultUser, firstName2, lastName2, phoneNumber2, isValidated2, localUnit);
 
-        volunteers.add(volunteer1);
-        volunteers.add(volunteer2);
+        volunteerRepository.save(volunteer1);
+        volunteerRepository.save(volunteer2);
 
-        return new InMemoryVolunteerRepository(volunteers);
+        return volunteerRepository;
     }
 
     @Bean
