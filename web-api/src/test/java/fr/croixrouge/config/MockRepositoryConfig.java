@@ -51,6 +51,8 @@ public class MockRepositoryConfig {
     private final User managerUser;
 
     private final User southernManagerUser;
+
+    private final Role managerRole;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
 
     private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
@@ -60,15 +62,25 @@ public class MockRepositoryConfig {
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
 
         localUnit = new LocalUnit(new ID(1L),
                 "Unite Local du Val d'Orge",
                 address,
-                managerUser,
+                null,
                 address.getPostalCode() + "-000");
         this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of("ROLE_ADMIN"));
         this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
+
+        managerRole = new Role(new ID(1L),
+                "Val d'Orge default role",
+                "Default role for Val d'Orge",
+                Map.of(Resources.RESOURCE, List.of(Operations.READ)),
+                localUnit,
+                List.of());
+
+
+        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
+
     }
 
     @Bean
@@ -138,9 +150,8 @@ public class MockRepositoryConfig {
         String roleDescription = "Default role for Val d'Orge";
         Map<Resources, List<Operations>> resources = Map.of(Resources.RESOURCE, List.of(Operations.READ));
 
-        ID localUnitId = new ID(1L);
         List<ID> userIds = Collections.singletonList(new ID(2L));
-        Role role = new Role(roleId, roleName, roleDescription, resources, localUnitId, userIds);
+        Role role = new Role(roleId, roleName, roleDescription, resources, localUnit, userIds);
         roles.add(role);
 
         return new InMemoryRoleRepository(roles);

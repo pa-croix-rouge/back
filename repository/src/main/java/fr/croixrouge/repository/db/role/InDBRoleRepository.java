@@ -3,9 +3,13 @@ package fr.croixrouge.repository.db.role;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.repository.RoleRepository;
+import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class InDBRoleRepository implements RoleRepository {
@@ -14,28 +18,41 @@ public class InDBRoleRepository implements RoleRepository {
 
     private final RoleResourceDBRepository roleResourceDBRepository;
 
-    public InDBRoleRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository) {
+    private final InDBLocalUnitRepository inDBLocalUnitRepository;
+
+    public InDBRoleRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         this.roleDBRepository = roleDBRepository;
         this.roleResourceDBRepository = roleResourceDBRepository;
+        this.inDBLocalUnitRepository = inDBLocalUnitRepository;
     }
 
-    private Role toRole(RoleDB roleDB) {
+    public Role toRole(RoleDB roleDB) {
         return new Role(
                 new ID(roleDB.getRoleID()),
                 roleDB.getName(),
                 roleDB.getDescription(),
-                null,
-                null,
+                roleDB.getRoleResourceDBs().stream().collect(Collectors.groupingBy(RoleResourceDB::getResources, Collectors.mapping(RoleResourceDB::getOperations, Collectors.toList()))),
+                inDBLocalUnitRepository.toLocalUnit(roleDB.getLocalUnitDB()),
                 null
         );
     }
 
-    private RoleDB toRoleDB(Role role) {
+    public RoleDB toRoleDB(Role role) {
+        Set<RoleResourceDB> roleResourceDBs = new HashSet<>();
+        for (var entry : role.getAuthorizations().entrySet()) {
+            for (var operation : entry.getValue()) {
+                roleResourceDBs.add(new RoleResourceDB(entry.getKey(), operation));
+            }
+        }
+
         return new RoleDB(
                 role.getId().value(),
                 role.getName(),
-                role.getDescription()
+                role.getDescription(),
+                inDBLocalUnitRepository.toLocalUnitDB(role.getLocalUnit()),
+                roleResourceDBs
         );
+
     }
 
     @Override
@@ -61,7 +78,7 @@ public class InDBRoleRepository implements RoleRepository {
 
     @Override
     public List<Role> findAllByLocalUnitId(ID localUnitId) {
-        return null;
+        return roleDBRepository.findByLocalUnitDB_LocalUnitID(localUnitId.value()).stream().map(this::toRole).toList();
     }
 
     @Override

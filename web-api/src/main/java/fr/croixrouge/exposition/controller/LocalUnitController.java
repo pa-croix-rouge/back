@@ -22,7 +22,7 @@ public class LocalUnitController extends CRUDController<ID, LocalUnit, LocalUnit
 
     @Override
     public LocalUnitResponse toDTO(LocalUnit model) {
-        return new LocalUnitResponse(model.getId().value(), model.getName(), new AddressDTO(model.getAddress()), model.getManager().getUsername(), model.getCode());
+        return new LocalUnitResponse(model.getId().value(), model.getName(), new AddressDTO(model.getAddress()), null, model.getCode());
     }
 
     @GetMapping("/postcode/{code}")

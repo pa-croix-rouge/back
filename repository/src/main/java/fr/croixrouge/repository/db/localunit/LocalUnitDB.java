@@ -11,27 +11,76 @@ public class LocalUnitDB {
     @Column(name = "localunit_id")
     private Long localUnitID;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Column(name = "department")
+    private String department;
+
+    @Column(name = "street_number_and_name")
+    private String streetNumberAndName;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "postal_code")
+    private String postalCode;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    public LocalUnitDB(Long localUnitID, String address, String name) {
-        this.localUnitID = localUnitID;
-        this.address = address;
-        this.name = name;
-    }
+    @Column(name = "code")
+    private String code;
 
     public LocalUnitDB() {
     }
 
-    public String getAddress() {
-        return address;
+    public LocalUnitDB(Long localUnitID, String name, String code, String department, String streetNumberAndName, String city, String postalCode) {
+        this.localUnitID = localUnitID;
+        this.department = department;
+        this.code = code;
+        this.streetNumberAndName = streetNumberAndName;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.name = name;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+
+    public String getStreetNumberAndName() {
+        return streetNumberAndName;
+    }
+
+    public void setStreetNumberAndName(String streetNumberAndName) {
+        this.streetNumberAndName = streetNumberAndName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getName() {

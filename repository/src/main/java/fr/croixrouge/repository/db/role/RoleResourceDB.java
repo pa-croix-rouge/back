@@ -3,6 +3,9 @@ package fr.croixrouge.repository.db.role;
 import fr.croixrouge.domain.model.Operations;
 import fr.croixrouge.domain.model.Resources;
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 @Table(name = "role-resource")
 @Entity
@@ -13,10 +16,6 @@ public class RoleResourceDB {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "role_db_role_id", nullable = false)
-    private RoleDB roleDB;
-
     @Enumerated
     @Column(name = "operations")
     private Operations operations;
@@ -25,16 +24,8 @@ public class RoleResourceDB {
     @Column(name = "resources")
     private Resources resources;
 
-    public RoleDB getRoleDB() {
-        return roleDB;
-    }
 
-    public void setRoleDB(RoleDB roleDB) {
-        this.roleDB = roleDB;
-    }
-
-    public RoleResourceDB(Long id, Operations operations, Resources resources) {
-        this.id = id;
+    public RoleResourceDB(Resources resources, Operations operations) {
         this.operations = operations;
         this.resources = resources;
     }
@@ -58,7 +49,21 @@ public class RoleResourceDB {
         this.resources = resources;
     }
 
+
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        RoleResourceDB that = (RoleResourceDB) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

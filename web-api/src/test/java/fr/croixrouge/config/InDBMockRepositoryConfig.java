@@ -1,13 +1,18 @@
 package fr.croixrouge.config;
 
 import fr.croixrouge.domain.model.*;
-import fr.croixrouge.domain.repository.LocalUnitRepository;
-import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
-import fr.croixrouge.repository.*;
+import fr.croixrouge.repository.EventRepository;
+import fr.croixrouge.repository.InMemoryEventRepository;
+import fr.croixrouge.repository.InMemoryVolunteerRepository;
+import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
+import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
+import fr.croixrouge.repository.db.role.InDBRoleRepository;
+import fr.croixrouge.repository.db.role.RoleDBRepository;
+import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
 import fr.croixrouge.storage.model.Storage;
@@ -35,7 +40,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,6 +49,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
+    private final Role managerRole;
     private final User managerUser;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
     private final LocalUnit localUnit;
@@ -52,24 +57,49 @@ public class InDBMockRepositoryConfig {
     public InDBMockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
 
-        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
-
         localUnit = new LocalUnit(new ID(1L),
                 "Unite Local du Val d'Orge",
                 address,
-                managerUser,
+                null,
                 address.getPostalCode() + "-000");
+
+        managerRole = new Role(new ID(1L),
+                "Val d'Orge default role",
+                "Default role for Val d'Orge",
+                Map.of(Resources.RESOURCE, List.of(Operations.READ)),
+                localUnit,
+                List.of());
+
+        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
     }
 
     @Bean
     @Primary
-    public UserRepository userTestRepository(UserDBRepository userDBRepository) {
+    public InDBLocalUnitRepository localTestInDBUnitRepository(LocalUnitDBRepository localUnitDBRepository) {
+        InDBLocalUnitRepository localUnitRepository = new InDBLocalUnitRepository(localUnitDBRepository);
+        localUnitRepository.save(localUnit);
+        return localUnitRepository;
+    }
+
+    @Bean
+    @Primary
+    public InDBRoleRepository roleTestRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
+        InDBRoleRepository inDBRoleRepository = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
+
+        inDBRoleRepository.save(managerRole);
+
+        return inDBRoleRepository;
+    }
+
+    @Bean
+    @Primary
+    public UserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository) {
         ID defaultUserId = new ID(1L);
         String defaultUsername = "defaultUser";
         String defaultPassword = passwordEncoder.encode("defaultPassword");
         User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
 
-        InDBUserRepository inDBUserRepository = new InDBUserRepository(userDBRepository);
+        InDBUserRepository inDBUserRepository = new InDBUserRepository(userDBRepository, roleDBRepository);
 
         inDBUserRepository.save(defaultUser);
         inDBUserRepository.save(managerUser);
@@ -100,31 +130,6 @@ public class InDBMockRepositoryConfig {
         volunteers.add(volunteer2);
 
         return new InMemoryVolunteerRepository(volunteers);
-    }
-
-    @Bean
-    @Primary
-    public LocalUnitRepository localTestUnitRepository() {
-        ArrayList<LocalUnit> localUnits = new ArrayList<>();
-        localUnits.add(localUnit);
-        return new InMemoryLocalUnitRepository(localUnits);
-    }
-
-    @Bean
-    @Primary
-    public RoleRepository roleTestRepository() {
-        ArrayList<Role> roles = new ArrayList<>();
-        ID roleId = new ID(1L);
-        String roleName = "Val d'Orge default role";
-        String roleDescription = "Default role for Val d'Orge";
-        Map<Resources, List<Operations>> resources = Map.of(Resources.RESOURCE, List.of(Operations.READ));
-
-        ID localUnitId = new ID(1L);
-        List<ID> userIds = Collections.singletonList(new ID(2L));
-        Role role = new Role(roleId, roleName, roleDescription, resources, localUnitId, userIds);
-        roles.add(role);
-
-        return new InMemoryRoleRepository(roles);
     }
 
     @Bean
