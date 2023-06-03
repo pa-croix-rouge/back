@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.event;
 
-import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
@@ -33,15 +34,15 @@ public class SingleEventCreationRequest {
         this.maxParticipants = maxParticipants;
     }
 
-    public Event toEvent() {
+    public Event toEvent(Volunteer referrer, LocalUnit localUnit) {
         ZonedDateTime startDateTime = SingleEventCreationRequest.toLocalDateTime(start);
         ZonedDateTime endDateTime = SingleEventCreationRequest.toLocalDateTime(end);
         return new Event(
                 null,
                 name,
                 description,
-                new ID(referrerId),
-                new ID(localUnitId),
+                referrer,
+                localUnit,
                 startDateTime,
                 endDateTime,
                 List.of(new EventSession(

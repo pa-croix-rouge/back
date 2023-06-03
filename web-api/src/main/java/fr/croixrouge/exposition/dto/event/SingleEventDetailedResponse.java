@@ -42,8 +42,8 @@ public class SingleEventDetailedResponse {
                 event.getDescription(),
                 eventSession.getStart().toString(),
                 eventSession.getEnd().toString(),
-                event.getReferrerId().value(),
-                event.getLocalUnitId().value(),
+                event.getReferrer().getId().value(),
+                event.getLocalUnit().getId().value(),
                 eventSession.getMaxParticipants(),
                 eventSession.getParticipants().stream().map(ID::value).toList()
         );

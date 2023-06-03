@@ -25,7 +25,7 @@ public class InDBVolunteerRepository implements VolunteerRepository {
         this.inDBLocalUnitRepository = inDBLocalUnitRepository;
     }
 
-    private VolunteerDB toVolunteerDB(Volunteer volunteer) {
+    public VolunteerDB toVolunteerDB(Volunteer volunteer) {
         return new VolunteerDB(volunteer.getId() == null ? null : volunteer.getId().value(),
                 inDBUserRepository.toUserDB(volunteer.getUser()),
                 volunteer.getFirstName(),
@@ -36,7 +36,7 @@ public class InDBVolunteerRepository implements VolunteerRepository {
         );
     }
 
-    private Volunteer toVolunteer(VolunteerDB volunteerDB) {
+    public Volunteer toVolunteer(VolunteerDB volunteerDB) {
         return new Volunteer(
                 new ID(volunteerDB.getId()),
                 inDBUserRepository.toUser(volunteerDB.getUserDB()),

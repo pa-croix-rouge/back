@@ -47,7 +47,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MockRepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
-    private final User managerUser;
+    private final User managerUser, defaultUser;
+
+    private final Volunteer volunteer1;
 
     private final Role managerRole;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
@@ -70,7 +72,11 @@ public class MockRepositoryConfig {
                 List.of());
 
 
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), List.of());
+
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
+
+        volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
 
     }
 
@@ -78,12 +84,8 @@ public class MockRepositoryConfig {
     @Primary
     public UserRepository userTestRepository() {
         ArrayList<User> users = new ArrayList<>();
-        ID defaultUserId = new ID(1L);
-        String defaultUsername = "defaultUser";
-        String defaultPassword = passwordEncoder.encode("defaultPassword");
-        User defaultUser = new User(defaultUserId, defaultUsername, defaultPassword, List.of());
-        users.add(defaultUser);
 
+        users.add(defaultUser);
         users.add(managerUser);
 
         return new InMemoryUserRepository(users);
@@ -152,7 +154,7 @@ public class MockRepositoryConfig {
         int maxParticipants1 = 2;
         List<ID> participants1 = new ArrayList<>();
         EventSession eventSession1 = new EventSession(new ID(0L), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
-        Event event1 = new Event(eventId1, eventName1, eventDescription1, referrerId1, localUnitId1, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
+        Event event1 = new Event(eventId1, eventName1, eventDescription1, volunteer1, localUnit, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
         events.add(event1);
 
         ID eventId2 = new ID(2L);
@@ -165,7 +167,7 @@ public class MockRepositoryConfig {
         int maxParticipants2 = 30;
         List<ID> participants2 = new ArrayList<>();
         EventSession eventSession2 = new EventSession(new ID(0L), eventStartDate2, eventEndDate2, maxParticipants2, participants2);
-        Event event2 = new Event(eventId2, eventName2, eventDescription2, referrerId2, localUnitId2, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
+        Event event2 = new Event(eventId2, eventName2, eventDescription2, volunteer1, localUnit, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
         events.add(event2);
 
         ID eventId3 = new ID(3L);
@@ -178,7 +180,7 @@ public class MockRepositoryConfig {
         int maxParticipants3 = 30;
         List<ID> participants3 = new ArrayList<>();
         EventSession eventSession3 = new EventSession(new ID(0L), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
-        Event event3 = new Event(eventId3, eventName3, eventDescription3, referrerId3, localUnitId3, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
+        Event event3 = new Event(eventId3, eventName3, eventDescription3, volunteer1, localUnit, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
         events.add(event3);
 
         ID eventId4 = new ID(4L);
@@ -200,7 +202,7 @@ public class MockRepositoryConfig {
                     new ArrayList<>()
             ));
         }
-        Event event4 = new Event(eventId4, eventName4, eventDescription4, referrerId4, localUnitId4, eventStartDate4, eventEndDate4, eventSessions4, sessionCounter.get());
+        Event event4 = new Event(eventId4, eventName4, eventDescription4, volunteer1, localUnit, eventStartDate4, eventEndDate4, eventSessions4, sessionCounter.get());
         events.add(event4);
 
         return new InMemoryEventRepository(events);
