@@ -30,27 +30,4 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
         return this.objects.stream().filter(o -> o.getUser().getUsername().equals(username)).findFirst();
     }
 
-    @Override
-    public boolean validateVolunteerAccount(Volunteer volunteer) {
-        Volunteer updatedVolunteer = new Volunteer(volunteer.getId(),
-                volunteer.getUser(),
-                volunteer.getFirstName(),
-                volunteer.getLastName(),
-                volunteer.getPhoneNumber(),
-                true,
-                volunteer.getLocalUnit());
-        return this.save(updatedVolunteer) != null;
-    }
-
-    @Override
-    public boolean invalidateVolunteerAccount(Volunteer volunteer) {
-        Volunteer updatedVolunteer = new Volunteer(volunteer.getId(),
-                volunteer.getUser(),
-                volunteer.getFirstName(),
-                volunteer.getLastName(),
-                volunteer.getPhoneNumber(),
-                false,
-                volunteer.getLocalUnit());
-        return this.save(updatedVolunteer) != null;
-    }
 }

@@ -55,6 +55,7 @@ public class VolunteerController extends CRUDController<ID, Volunteer, Volunteer
         if (userId == null) {
             return ResponseEntity.internalServerError().build();
         }
+        user.setId(userId);
         Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false, localUnit);
         ID volunteerId = service.save(volunteer);
         if (volunteerId == null) {

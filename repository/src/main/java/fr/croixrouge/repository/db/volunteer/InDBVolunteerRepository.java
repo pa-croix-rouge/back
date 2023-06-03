@@ -26,7 +26,7 @@ public class InDBVolunteerRepository implements VolunteerRepository {
     }
 
     private VolunteerDB toVolunteerDB(Volunteer volunteer) {
-        return new VolunteerDB(volunteer.getId().value(),
+        return new VolunteerDB(volunteer.getId() == null ? null : volunteer.getId().value(),
                 inDBUserRepository.toUserDB(volunteer.getUser()),
                 volunteer.getFirstName(),
                 volunteer.getLastName(),
@@ -70,21 +70,12 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public Optional<Volunteer> findByUserId(ID id) {
-        return Optional.empty();
+        return volunteerDBRepository.findByUserDB_UserID(id.value()).map(this::toVolunteer);
     }
 
     @Override
     public Optional<Volunteer> findByUsername(String username) {
-        return Optional.empty();
+        return volunteerDBRepository.findByUserDB_UsernameIgnoreCase(username).map(this::toVolunteer);
     }
 
-    @Override
-    public boolean validateVolunteerAccount(Volunteer volunteer) {
-        return false;
-    }
-
-    @Override
-    public boolean invalidateVolunteerAccount(Volunteer volunteer) {
-        return false;
-    }
 }
