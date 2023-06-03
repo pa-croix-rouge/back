@@ -46,7 +46,12 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     @Override
     public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
         ChronoZonedDateTime<LocalDate> now = ZonedDateTime.now();
-        return this.objects.stream().filter(event -> event.getLocalUnit().getId().equals(localUnitId)).map(Event::getSessions).flatMap(List::stream).filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS))).toList();
+        return this.objects.stream()
+                .filter(event -> event.getLocalUnit().getId().equals(localUnitId))
+                .map(Event::getSessions)
+                .flatMap(List::stream)
+                .filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS)))
+                .toList();
     }
 
     @Override
@@ -63,6 +68,17 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
+    public void updateEventSession(EventSession event) {
+        Event eventToUpdate = this.findById(event.getId()).orElse(null);
+        if (eventToUpdate == null) {
+            return;
+        }
+
+        eventToUpdate.getSessions().remove(eventToUpdate);
+        eventToUpdate.getSessions().add(event);
+    }
+
+    @Override
     public ID save(Event event) {
         ID eventId = idGenerator.generate();
         Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), event.getFirstStart(), event.getLastEnd(), new ArrayList<>(), event.getOccurrences());
@@ -71,28 +87,6 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         }
         this.objects.add(eventToSave);
         return eventId;
-    }
-
-    @Override
-    public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
-        Event event = this.findById(eventId).orElse(null);
-        if (event == null) {
-            return false;
-        }
-        EventSession session = event.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
-        if (session == null) {
-            return false;
-        }
-        if (session.getParticipants().size() >= session.getMaxParticipants()) {
-            return false;
-        }
-        if (session.getParticipants().contains(participantId)) {
-            return false;
-        }
-        session.getParticipants().add(participantId);
-        this.objects.remove(event);
-        this.objects.add(event);
-        return true;
     }
 
     @Override

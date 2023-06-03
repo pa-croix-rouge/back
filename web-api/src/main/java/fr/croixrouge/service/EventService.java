@@ -33,7 +33,13 @@ public class EventService extends CRUDService<ID, Event, EventRepository> {
     }
 
     public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
-        return repository.registerParticipant(eventId, sessionId, participantId);
+        this.findById(eventId).getSessions()
+                .stream()
+                .filter(session -> session.getId().equals(sessionId)).findFirst().ifPresent(session -> {
+                    session.getParticipants().add(participantId);
+                    repository.updateEventSession(session);
+                });
+        return true;
     }
 
     public boolean updateSingleEvent(ID eventId, ID sessionId, Event event) {
