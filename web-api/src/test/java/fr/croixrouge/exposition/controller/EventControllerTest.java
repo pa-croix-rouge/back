@@ -401,7 +401,7 @@ public class EventControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventRegistrationRequest)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isNotFound());
 
         eventRegistrationRequest.setEventId(1L);
         eventRegistrationRequest.setSessionId(-1L);

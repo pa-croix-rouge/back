@@ -35,9 +35,15 @@ public class EventService extends CRUDService<ID, Event, EventRepository> {
     public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
         this.findById(eventId).getSessions()
                 .stream()
-                .filter(session -> session.getId().equals(sessionId)).findFirst().ifPresent(session -> {
+                .filter(session -> session.getId().equals(sessionId))
+                .filter(session -> session.getParticipants().size() < session.getMaxParticipants())
+                .filter(session -> session.getParticipants().stream().noneMatch(participant -> participant.equals(participantId)))
+                .findFirst()
+                .ifPresentOrElse(session -> {
                     session.getParticipants().add(participantId);
                     repository.updateEventSession(session);
+                }, () -> {
+                    throw new IllegalArgumentException("Cannot register participant, event session doesn't exist, is full or participant already registered");
                 });
         return true;
     }
