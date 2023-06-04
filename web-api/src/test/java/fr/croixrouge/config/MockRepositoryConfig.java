@@ -162,76 +162,69 @@ public class MockRepositoryConfig {
     @Bean
     @Primary
     public EventRepository eventTestRepository() {
-        ArrayList<Event> events = new ArrayList<>();
-        ID eventId1 = new ID(1L);
+        var eventRepository = new InMemoryEventRepository();
+
         String eventName1 = "Formation PSC1";
         String eventDescription1 = "Formation au PSC1";
         ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId1 = new ID(1L);
-        ID localUnitId1 = new ID(1L);
+
         int maxParticipants1 = 2;
         List<ID> participants1 = new ArrayList<>();
-        EventTimeWindow eventTimeWindow1 = new EventTimeWindow(new ID(0L), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
-        EventSession eventSession1 = new EventSession(new ID(0L), List.of(eventTimeWindow1));
+        EventTimeWindow eventTimeWindow1 = new EventTimeWindow(null, eventStartDate1, eventEndDate1, maxParticipants1, participants1);
+        EventSession eventSession1 = new EventSession(null, List.of(eventTimeWindow1));
         Event event1 = new Event(eventId1, eventName1, eventDescription1, volunteer1, localUnit, List.of(eventSession1), 1);
-        events.add(event1);
+        eventRepository.save(event1);
 
-        ID eventId2 = new ID(2L);
         String eventName2 = "Distribution alimentaire";
         String eventDescription2 = "Distribution alimentaire gratuite";
         ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId2 = new ID(1L);
-        ID localUnitId2 = new ID(1L);
+
         int maxParticipants2 = 30;
         List<ID> participants2 = new ArrayList<>();
         List<EventTimeWindow> eventTimeWindowList2 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            eventTimeWindowList2.add(new EventTimeWindow(new ID(i), eventStartDate2.plusMinutes(i * 40), eventStartDate2.plusMinutes((i + 1) * 40), maxParticipants2 / 3, participants2));
+            eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 40), eventStartDate2.plusMinutes((i + 1) * 40), maxParticipants2 / 3, participants2));
         }
-        EventSession eventSession2 = new EventSession(new ID(0L), eventTimeWindowList2);
-        Event event2 = new Event(eventId2, eventName2, eventDescription2, volunteer1, localUnit, List.of(eventSession2), 1);
-        events.add(event2);
+        EventSession eventSession2 = new EventSession(null, eventTimeWindowList2);
+        Event event2 = new Event(null, eventName2, eventDescription2, volunteer1, localUnit, List.of(eventSession2), 1);
+        eventRepository.save(event2);
 
-        ID eventId3 = new ID(3L);
         String eventName3 = "Formation PSC1";
         String eventDescription3 = "Formation au PSC1";
         ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId3 = new ID(1L);
-        ID localUnitId3 = new ID(1L);
+
         int maxParticipants3 = 30;
         List<ID> participants3 = new ArrayList<>();
-        EventTimeWindow eventTimeWindow3 = new EventTimeWindow(new ID(0L), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
-        EventSession eventSession3 = new EventSession(new ID(0L), List.of(eventTimeWindow3));
-        Event event3 = new Event(eventId3, eventName3, eventDescription3, volunteer1, localUnit, List.of(eventSession3), 1);
-        events.add(event3);
+        EventTimeWindow eventTimeWindow3 = new EventTimeWindow(null, eventStartDate3, eventEndDate3, maxParticipants3, participants3);
+        EventSession eventSession3 = new EventSession(null, List.of(eventTimeWindow3));
+        Event event3 = new Event(null, eventName3, eventDescription3, volunteer1, localUnit, List.of(eventSession3), 1);
+        eventRepository.save(event3);
 
-        ID eventId4 = new ID(4L);
         String eventName4 = "EPISOL";
         String eventDescription4 = "Ouverture de l'EPISOL";
         ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 2, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId4 = new ID(1L);
-        ID localUnitId4 = new ID(1L);
+
         int maxParticipants4 = 32;
         List<EventSession> eventSessions4 = new ArrayList<>();
-        AtomicInteger sessionCounter = new AtomicInteger(0);
+        AtomicInteger sessionCounter = new AtomicInteger(4);
         for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList4 = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
                 eventTimeWindowList4.add(new EventTimeWindow(new ID(String.valueOf(i)), sessionTime.plusMinutes(i * 30), sessionTime.plusMinutes((i + 1) * 30), maxParticipants4 / 4, new ArrayList<>()));
             }
             eventSessions4.add(new EventSession(
-                    new ID(sessionCounter.getAndIncrement()),
+                    null,
                     eventTimeWindowList4
             ));
         }
-        Event event4 = new Event(eventId4, eventName4, eventDescription4, volunteer1, localUnit, eventSessions4, sessionCounter.get());
-        events.add(event4);
+        Event event4 = new Event(null, eventName4, eventDescription4, volunteer1, localUnit, sessionCounter.get());
+        eventRepository.save(event4);
 
-        return new InMemoryEventRepository(events);
+        return eventRepository;
     }
 
     @Bean
