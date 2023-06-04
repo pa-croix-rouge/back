@@ -24,7 +24,7 @@ public class InMemoryRoleRepository extends InMemoryCRUDRepository<ID, Role> imp
     public List<Role> findAllByLocalUnitId(ID localUnitId) {
         List<Role> rolesByLocalUnitId = new ArrayList<>();
         this.objects.stream()
-                .filter(role -> role.getLocalUnit().equals(localUnitId))
+                .filter(role -> role.getLocalUnit().getId().equals(localUnitId))
                 .forEach(rolesByLocalUnitId::add);
         return rolesByLocalUnitId;
     }
