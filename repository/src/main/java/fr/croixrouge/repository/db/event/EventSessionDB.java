@@ -27,7 +27,7 @@ public class EventSessionDB {
     @Column(name = "max_participants")
     private Integer maxParticipants;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "event-session_userdbs",
             joinColumns = @JoinColumn(name = "event_sessiondb_id"),
             inverseJoinColumns = @JoinColumn(name = "userdbs_user_id"))
@@ -41,12 +41,13 @@ public class EventSessionDB {
         this.userDBs = userDBs;
     }
 
-    public EventSessionDB(Long id, ZonedDateTime startTime, ZonedDateTime endTime, EventDB eventDB, Integer maxParticipants) {
+    public EventSessionDB(Long id, ZonedDateTime startTime, ZonedDateTime endTime, EventDB eventDB, Integer maxParticipants, Set<UserDB> userDBs) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.eventDB = eventDB;
         this.maxParticipants = maxParticipants;
+        this.userDBs = userDBs;
     }
 
     public EventDB getEventDB() {

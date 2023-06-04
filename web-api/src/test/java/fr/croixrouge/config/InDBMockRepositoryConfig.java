@@ -1,11 +1,12 @@
 package fr.croixrouge.config;
 
 import fr.croixrouge.domain.model.*;
-import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.repository.EventRepository;
-import fr.croixrouge.repository.InMemoryEventRepository;
+import fr.croixrouge.repository.db.event.EventDBRepository;
+import fr.croixrouge.repository.db.event.EventSessionDBRepository;
+import fr.croixrouge.repository.db.event.InDBEventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
@@ -111,7 +112,7 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public VolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, InDBUserRepository inDBUserRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+    public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, InDBUserRepository inDBUserRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var volunteerRepository = new InDBVolunteerRepository(volunteerDBRepository, inDBUserRepository, inDBLocalUnitRepository);
 
         ID volunteerId2 = new ID(2L);
@@ -129,70 +130,68 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public EventRepository eventTestRepository() {
-        ArrayList<Event> events = new ArrayList<>();
+    public EventRepository eventTestRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+        var eventRepository = new InDBEventRepository(eventDBRepository, eventSessionDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
+
         ID eventId1 = new ID(1L);
         String eventName1 = "Formation PSC1";
         String eventDescription1 = "Formation au PSC1";
         ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId1 = new ID(1L);
-        ID localUnitId1 = new ID(1L);
+
         int maxParticipants1 = 2;
         List<ID> participants1 = new ArrayList<>();
-        EventSession eventSession1 = new EventSession(new ID(0L), eventStartDate1, eventEndDate1, maxParticipants1, participants1);
+        EventSession eventSession1 = new EventSession(null, eventStartDate1, eventEndDate1, maxParticipants1, participants1);
         Event event1 = new Event(eventId1, eventName1, eventDescription1, volunteer1, localUnit, eventStartDate1, eventEndDate1, List.of(eventSession1), 1);
-        events.add(event1);
+        eventRepository.save(event1);
 
         ID eventId2 = new ID(2L);
         String eventName2 = "Distribution alimentaire";
         String eventDescription2 = "Distribution alimentaire gratuite";
         ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate2 = ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId2 = new ID(1L);
-        ID localUnitId2 = new ID(1L);
+
         int maxParticipants2 = 30;
         List<ID> participants2 = new ArrayList<>();
-        EventSession eventSession2 = new EventSession(new ID(0L), eventStartDate2, eventEndDate2, maxParticipants2, participants2);
+        EventSession eventSession2 = new EventSession(null, eventStartDate2, eventEndDate2, maxParticipants2, participants2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, volunteer1, localUnit, eventStartDate2, eventEndDate2, List.of(eventSession2), 1);
-        events.add(event2);
+        eventRepository.save(event2);
 
         ID eventId3 = new ID(3L);
         String eventName3 = "Formation PSC1";
         String eventDescription3 = "Formation au PSC1";
         ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId3 = new ID(1L);
-        ID localUnitId3 = new ID(1L);
+
         int maxParticipants3 = 30;
         List<ID> participants3 = new ArrayList<>();
-        EventSession eventSession3 = new EventSession(new ID(0L), eventStartDate3, eventEndDate3, maxParticipants3, participants3);
+        EventSession eventSession3 = new EventSession(null, eventStartDate3, eventEndDate3, maxParticipants3, participants3);
         Event event3 = new Event(eventId3, eventName3, eventDescription3, volunteer1, localUnit, eventStartDate3, eventEndDate3, List.of(eventSession3), 1);
-        events.add(event3);
+        eventRepository.save(event3);
 
         ID eventId4 = new ID(4L);
         String eventName4 = "EPISOL";
         String eventDescription4 = "Ouverture de l'EPISOL";
         ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 2, 1, 12, 0), ZoneId.of("Europe/Paris"));
-        ID referrerId4 = new ID(1L);
-        ID localUnitId4 = new ID(1L);
+
         int maxParticipants4 = 30;
         List<EventSession> eventSessions4 = new ArrayList<>();
-        AtomicInteger sessionCounter = new AtomicInteger(0);
+        AtomicInteger sessionCounter = new AtomicInteger(1);
         for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {
             eventSessions4.add(new EventSession(
-                    new ID((long) sessionCounter.getAndIncrement()),
+                    null,
                     sessionTime,
                     sessionTime.plusMinutes(120),
                     maxParticipants4,
                     new ArrayList<>()
             ));
         }
-        Event event4 = new Event(eventId4, eventName4, eventDescription4, volunteer1, localUnit, eventStartDate4, eventEndDate4, eventSessions4, sessionCounter.get());
-        events.add(event4);
 
-        return new InMemoryEventRepository(events);
+        Event event4 = new Event(eventId4, eventName4, eventDescription4, volunteer1, localUnit, eventStartDate4, eventEndDate4, eventSessions4, sessionCounter.get());
+        eventRepository.save(event4);
+
+        return eventRepository;
     }
 
     @Bean

@@ -1,8 +1,9 @@
 package fr.croixrouge.repository;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.repository.IDGenerator;
 import fr.croixrouge.domain.repository.InMemoryCRUDRepository;
-import fr.croixrouge.domain.repository.TimeStampIDGenerator;
+import fr.croixrouge.domain.repository.IncrementalIDGenerator;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
@@ -17,12 +18,14 @@ import java.util.stream.Collectors;
 
 public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> implements EventRepository {
 
+    private final IDGenerator<ID> eventSessionIdGenerator = new IncrementalIDGenerator();
+
     public InMemoryEventRepository(List<Event> objects) {
-        super(objects, new TimeStampIDGenerator());
+        super(objects, new IncrementalIDGenerator());
     }
 
     public InMemoryEventRepository() {
-        super(new ArrayList<>(), new TimeStampIDGenerator());
+        super(new ArrayList<>(), new IncrementalIDGenerator());
     }
 
     @Override
@@ -68,23 +71,33 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
-    public void updateEventSession(EventSession event) {
+    public void updateEventSession(EventSession eventSession, Event event) {
         Event eventToUpdate = this.findById(event.getId()).orElse(null);
         if (eventToUpdate == null) {
             return;
         }
 
-        eventToUpdate.getSessions().remove(eventToUpdate);
-        eventToUpdate.getSessions().add(event);
+        eventToUpdate.getSessions().remove(eventSession);
+        eventToUpdate.getSessions().add(eventSession);
     }
 
     @Override
     public ID save(Event event) {
-        ID eventId = idGenerator.generate();
-        Event eventToSave = new Event(eventId, event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), event.getFirstStart(), event.getLastEnd(), new ArrayList<>(), event.getOccurrences());
+        ID eventId = event.getId() == null ? idGenerator.generate() : event.getId();
+        Event eventToSave = new Event(eventId,
+                event.getName(),
+                event.getDescription(),
+                event.getReferrer(),
+                event.getLocalUnit(),
+                event.getFirstStart(),
+                event.getLastEnd(),
+                new ArrayList<>(),
+                event.getOccurrences());
+
         for (EventSession session : event.getSessions()) {
-            eventToSave.getSessions().add(new EventSession(new ID((long) eventToSave.getSessions().size()), session.getStart(), session.getEnd(), session.getMaxParticipants(), new ArrayList<>()));
+            eventToSave.getSessions().add(new EventSession(session.getId() == null ? eventSessionIdGenerator.generate() : session.getId(), session.getStart(), session.getEnd(), session.getMaxParticipants(), new ArrayList<>()));
         }
+
         this.objects.add(eventToSave);
         return eventId;
     }
@@ -95,10 +108,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         if (eventToUpdate == null) {
             return false;
         }
-        EventSession sessionToUpdate = eventToUpdate.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
-        if (sessionToUpdate == null) {
-            return false;
-        }
+
         List<EventSession> updatedSessions = new ArrayList<>();
         for (EventSession session : eventToUpdate.getSessions()) {
             if (session.getId().equals(sessionId)) {
@@ -119,10 +129,7 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         if (eventToUpdate == null) {
             return false;
         }
-        EventSession sessionToUpdate = eventToUpdate.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
-        if (sessionToUpdate == null) {
-            return false;
-        }
+
         List<EventSession> updatedSessions = new ArrayList<>();
         for (EventSession session : eventToUpdate.getSessions()) {
             if (session.getId().equals(sessionId)) {

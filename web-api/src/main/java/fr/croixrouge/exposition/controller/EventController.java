@@ -53,6 +53,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
     public ResponseEntity<String> updateSingleEvent(@PathVariable ID eventId, @PathVariable ID sessionId, @RequestBody SingleEventCreationRequest singleEventCreationRequest) {
         var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
         var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
+        var event = service.findById(eventId);
 
         boolean result = service.updateSingleEvent(eventId, sessionId, singleEventCreationRequest.toEvent(referrer, localUnit));
         if (!result) {

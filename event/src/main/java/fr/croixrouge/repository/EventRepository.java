@@ -18,7 +18,7 @@ public interface EventRepository extends CRUDRepository<ID, Event> {
 
     List<Event> findByLocalUnitIdAndMonth(ID localUnitId, int month, int year);
 
-    void updateEventSession(EventSession event);
+    void updateEventSession(EventSession eventSession, Event event);
 
     boolean updateSingleEvent(ID eventId, ID sessionId, Event event);
 
