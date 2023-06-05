@@ -124,7 +124,12 @@ jobs:
           -Djwt.secret="${JWT_SECRET}" \
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
-          -Djwt.token.prefix="${JWT_PREFIX}"
+          -Djwt.token.prefix="${JWT_PREFIX}" \
+          -Dspring.jpa.hibernate.ddl-auto="${SPRING_DDL_AUTO}" \
+          -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
+          -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
+          -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}"
 
   deploy:
     needs: test
