@@ -125,6 +125,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
         run: |
+          echo "${SPRING_DDL_AUTO};${SPRING_DATASOURCE_URL};${SPRING_DATASOURCE_USERNAME};${SPRING_DATASOURCE_PASSWORD};${SPRING_DATASOURCE_DRIVER}"; \
           mvn test --batch-mode --no-transfer-progress \
           -Dspring.profiles.active=test-in-db \
           -Djwt.secret="${JWT_SECRET}" \
