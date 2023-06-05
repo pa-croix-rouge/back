@@ -121,6 +121,7 @@ jobs:
           JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
         run: |
           mvn test --batch-mode --no-transfer-progress \
+          -Dspring.profiles.active=test-in-db \
           -Djwt.secret="${JWT_SECRET}" \
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
