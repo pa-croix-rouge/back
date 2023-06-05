@@ -12,19 +12,15 @@ public class Event extends Entity<ID> {
     private final String description;
     private final ID referrerId;
     private final ID localUnitId;
-    private final ZonedDateTime firstStart;
-    private final ZonedDateTime lastEnd;
     private final List<EventSession> sessions;
     private final int occurrences;
 
-    public Event(ID id, String name, String description, ID referrerId, ID localUnitId, ZonedDateTime firstStart, ZonedDateTime lastEnd, List<EventSession> sessions, int occurrences) {
+    public Event(ID id, String name, String description, ID referrerId, ID localUnitId, List<EventSession> sessions, int occurrences) {
         super(id);
         this.name = name;
         this.description = description;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
-        this.firstStart = firstStart;
-        this.lastEnd = lastEnd;
         this.sessions = sessions;
         this.occurrences = occurrences;
     }
@@ -46,11 +42,11 @@ public class Event extends Entity<ID> {
     }
 
     public ZonedDateTime getFirstStart() {
-        return firstStart;
+        return this.sessions.get(0).getStart();
     }
 
     public ZonedDateTime getLastEnd() {
-        return lastEnd;
+        return this.sessions.get(this.sessions.size() - 1).getEnd();
     }
 
     public List<EventSession> getSessions() {
@@ -66,12 +62,12 @@ public class Event extends Entity<ID> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Event event = (Event) o;
-        return occurrences == event.occurrences && Objects.equals(id, event.id) && Objects.equals(name, event.name) && Objects.equals(description, event.description) && Objects.equals(referrerId, event.referrerId) && Objects.equals(localUnitId, event.localUnitId) && Objects.equals(firstStart, event.firstStart) && Objects.equals(lastEnd, event.lastEnd) && Objects.equals(sessions, event.sessions);
+        return occurrences == event.occurrences && Objects.equals(id, event.id) && Objects.equals(name, event.name) && Objects.equals(description, event.description) && Objects.equals(referrerId, event.referrerId) && Objects.equals(localUnitId, event.localUnitId) && Objects.equals(sessions, event.sessions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, referrerId, localUnitId, firstStart, lastEnd, sessions, occurrences);
+        return Objects.hash(id, name, description, referrerId, localUnitId, sessions, occurrences);
     }
 
     @Override
@@ -82,8 +78,6 @@ public class Event extends Entity<ID> {
                 ", description='" + description + '\'' +
                 ", referrerId='" + referrerId + '\'' +
                 ", localUnitId='" + localUnitId + '\'' +
-                ", firstStart=" + firstStart +
-                ", lastEnd=" + lastEnd +
                 ", sessions=" + sessions +
                 ", occurrences=" + occurrences +
                 '}';

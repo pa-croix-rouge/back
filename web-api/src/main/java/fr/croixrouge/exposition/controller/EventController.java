@@ -77,7 +77,19 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
             YearMonth sessionDate = YearMonth.from(session.getStart());
             return sessionDate.equals(now);
         }).toList());
-        final EventStatsResponse eventStatsResponse = new EventStatsResponse(sessionListOverMonth.size(), sessionListOverMonth.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum), sessionList.size(), sessionList.stream().map(eventSession -> eventSession.getParticipants().size()).reduce(0, Integer::sum));
+        final EventStatsResponse eventStatsResponse = new EventStatsResponse(
+                sessionListOverMonth.size(),
+                sessionListOverMonth.stream().map(
+                        eventSession -> eventSession.getTimeWindows().stream().map(
+                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
+                        ).reduce(0, Integer::sum)
+                ).reduce(0, Integer::sum),
+                sessionList.size(),
+                sessionList.stream().map(
+                        eventSession -> eventSession.getTimeWindows().stream().map(
+                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
+                        ).reduce(0, Integer::sum)
+                ).reduce(0, Integer::sum));
         return ResponseEntity.ok(eventStatsResponse);
     }
 
@@ -85,6 +97,18 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
     public ResponseEntity<List<EventResponse>> getEventsByLocalUnitIdAndMonth(@RequestParam("localUnitId") ID localUnitId, @RequestParam("month") int month, @RequestParam("year") int year) {
         final List<EventResponse> eventResponse = new ArrayList<>();
         final List<Event> events = service.findEventsByLocalUnitIdAndMonth(localUnitId, month, year);
+        for (Event event : events) {
+            for (EventSession session : event.getSessions()) {
+                eventResponse.add(EventResponse.fromEvent(event, session));
+            }
+        }
+        return ResponseEntity.ok(eventResponse);
+    }
+
+    @GetMapping("/trimester")
+    public ResponseEntity<List<EventResponse>> getEventsByLocalUnitIdForTrimester(@RequestParam("localUnitId") ID localUnitId, @RequestParam("month") int month, @RequestParam("year") int year) {
+        final List<EventResponse> eventResponse = new ArrayList<>();
+        final List<Event> events = service.findEventsByLocalUnitIdAndTrimester(localUnitId, month, year);
         for (Event event : events) {
             for (EventSession session : event.getSessions()) {
                 eventResponse.add(EventResponse.fromEvent(event, session));
@@ -114,7 +138,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/sessions/{eventId}/{sessionId}")
     public ResponseEntity<String> updateRecurrentEvent(@PathVariable ID eventId, @PathVariable ID sessionId, @RequestBody SingleEventCreationRequest singleEventCreationRequest) {
-        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent());
+        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent(), singleEventCreationRequest.getEventTimeWindowDuration(), singleEventCreationRequest.getEventTimeWindowOccurrence(), singleEventCreationRequest.getEventTimeWindowMaxParticipants());
         if (!result) {
             return ResponseEntity.notFound().build();
         }
@@ -133,7 +157,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
     @PostMapping("/register")
     public ResponseEntity<String> registerParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
-        boolean isRegistered = service.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getParticipantId()));
+        boolean isRegistered = service.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getTimeWindowId()), new ID(eventRegistrationRequest.getParticipantId()));
         if (!isRegistered) {
             return ResponseEntity.internalServerError().body("Cannot register participant, event session doesn't exist, is full or participant already registered");
         }
