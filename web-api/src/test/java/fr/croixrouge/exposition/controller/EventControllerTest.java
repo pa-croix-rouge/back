@@ -851,7 +851,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[1].name").value(singleEventCreationRequest.getName()))
                 .andExpect(jsonPath("$[1].description").value(singleEventCreationRequest.getDescription()))
                 .andExpect(jsonPath("$[1].start").value(eventStart.plusDays(7).toString()))
-                .andExpect(jsonPath("$[1].end").value(eventEnd.plusDays(7).plusMinutes((long) singleEventCreationRequest.getEventTimeWindowDuration() * singleEventCreationRequest.getEventTimeWindowOccurrence()).toString()))
+                .andExpect(jsonPath("$[1].end").value(eventEnd.plusDays(7).toString()))
                 .andExpect(jsonPath("$[1].referrerId").value(singleEventCreationRequest.getReferrerId()))
                 .andExpect(jsonPath("$[1].localUnitId").value(singleEventCreationRequest.getLocalUnitId()))
                 .andExpect(jsonPath("$[1].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants() * singleEventCreationRequest.getEventTimeWindowOccurrence()))
