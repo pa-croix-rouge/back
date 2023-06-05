@@ -119,6 +119,11 @@ jobs:
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           JWT_HEADER: ${{ secrets.JWT_HEADER }}
           JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          SPRING_DDL_AUTO: ${{ secrets.SPRING_DDL_AUTO }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
         run: |
           mvn test --batch-mode --no-transfer-progress \
           -Dspring.profiles.active=test-in-db \
