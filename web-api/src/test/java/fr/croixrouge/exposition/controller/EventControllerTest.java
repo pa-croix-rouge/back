@@ -805,7 +805,6 @@ public class EventControllerTest {
         final String eventId = "4";
         final String sessionId = "0";
         final ZonedDateTime eventStart = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
-        final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 12, 0), ZoneId.of("Europe/Paris"));
 
         SingleEventCreationRequest singleEventCreationRequest = new SingleEventCreationRequest(
                 "EPIcerie SOciaLe",
@@ -840,8 +839,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants() * singleEventCreationRequest.getEventTimeWindowOccurrence()))
                 .andExpect(jsonPath("$[0].timeWindows").isArray())
                 .andExpect(jsonPath("$[0].timeWindows[0].timeWindowId").value("0"))
-                .andExpect(jsonPath("$[0].timeWindows[0].start").value(eventStart.toString()))
-                .andExpect(jsonPath("$[0].timeWindows[0].end").value(eventEnd.toString()))
+                .andExpect(jsonPath("$[0].timeWindows[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).toString()))
+                .andExpect(jsonPath("$[0].timeWindows[0].end").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusMinutes((long) singleEventCreationRequest.getEventTimeWindowDuration() * singleEventCreationRequest.getEventTimeWindowOccurrence()).toString()))
                 .andExpect(jsonPath("$[0].timeWindows[0].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants()))
                 .andExpect(jsonPath("$[0].timeWindows[0].participants").isArray())
                 .andExpect(jsonPath("$[0].timeWindows[0].participants").isEmpty())
@@ -857,8 +856,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[1].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants() * singleEventCreationRequest.getEventTimeWindowOccurrence()))
                 .andExpect(jsonPath("$[1].timeWindows").isArray())
                 .andExpect(jsonPath("$[1].timeWindows[0].timeWindowId").value("0"))
-                .andExpect(jsonPath("$[1].timeWindows[0].start").value(eventStart.plusDays(7).toString()))
-                .andExpect(jsonPath("$[1].timeWindows[0].end").value(eventEnd.plusDays(7).toString()))
+                .andExpect(jsonPath("$[1].timeWindows[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(7).toString()))
+                .andExpect(jsonPath("$[1].timeWindows[0].end").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(7).plusMinutes((long) singleEventCreationRequest.getEventTimeWindowDuration() * singleEventCreationRequest.getEventTimeWindowOccurrence()).toString()))
                 .andExpect(jsonPath("$[1].timeWindows[0].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants()))
                 .andExpect(jsonPath("$[1].timeWindows[0].participants").isArray())
                 .andExpect(jsonPath("$[1].timeWindows[0].participants").isEmpty())
@@ -874,8 +873,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[2].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants() * singleEventCreationRequest.getEventTimeWindowOccurrence()))
                 .andExpect(jsonPath("$[2].timeWindows").isArray())
                 .andExpect(jsonPath("$[2].timeWindows[0].timeWindowId").value("0"))
-                .andExpect(jsonPath("$[2].timeWindows[0].start").value(eventStart.plusDays(14).toString()))
-                .andExpect(jsonPath("$[2].timeWindows[0].end").value(eventEnd.plusDays(14).toString()))
+                .andExpect(jsonPath("$[2].timeWindows[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(14).toString()))
+                .andExpect(jsonPath("$[2].timeWindows[0].end").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(14).plusMinutes((long) singleEventCreationRequest.getEventTimeWindowDuration() * singleEventCreationRequest.getEventTimeWindowOccurrence()).toString()))
                 .andExpect(jsonPath("$[2].timeWindows[0].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants()))
                 .andExpect(jsonPath("$[2].timeWindows[0].participants").isArray())
                 .andExpect(jsonPath("$[2].timeWindows[0].participants").isEmpty())
@@ -891,8 +890,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[3].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants() * singleEventCreationRequest.getEventTimeWindowOccurrence()))
                 .andExpect(jsonPath("$[3].timeWindows").isArray())
                 .andExpect(jsonPath("$[3].timeWindows[0].timeWindowId").value("0"))
-                .andExpect(jsonPath("$[3].timeWindows[0].start").value(eventStart.plusDays(21).toString()))
-                .andExpect(jsonPath("$[3].timeWindows[0].end").value(eventEnd.plusDays(21).toString()))
+                .andExpect(jsonPath("$[3].timeWindows[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(21).toString()))
+                .andExpect(jsonPath("$[3].timeWindows[0].end").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(21).plusMinutes((long) singleEventCreationRequest.getEventTimeWindowDuration() * singleEventCreationRequest.getEventTimeWindowOccurrence()).toString()))
                 .andExpect(jsonPath("$[3].timeWindows[0].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants()))
                 .andExpect(jsonPath("$[3].timeWindows[0].participants").isArray())
                 .andExpect(jsonPath("$[3].timeWindows[0].participants").isEmpty())
@@ -908,8 +907,8 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[4].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants() * singleEventCreationRequest.getEventTimeWindowOccurrence()))
                 .andExpect(jsonPath("$[4].timeWindows").isArray())
                 .andExpect(jsonPath("$[4].timeWindows[0].timeWindowId").value("0"))
-                .andExpect(jsonPath("$[4].timeWindows[0].start").value(eventStart.plusDays(28).toString()))
-                .andExpect(jsonPath("$[4].timeWindows[0].end").value(eventEnd.plusDays(28).toString()))
+                .andExpect(jsonPath("$[4].timeWindows[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(28).toString()))
+                .andExpect(jsonPath("$[4].timeWindows[0].end").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusDays(28).plusMinutes((long) singleEventCreationRequest.getEventTimeWindowDuration() * singleEventCreationRequest.getEventTimeWindowOccurrence()).toString()))
                 .andExpect(jsonPath("$[4].timeWindows[0].maxParticipants").value(singleEventCreationRequest.getEventTimeWindowMaxParticipants()))
                 .andExpect(jsonPath("$[4].timeWindows[0].participants").isArray())
                 .andExpect(jsonPath("$[4].timeWindows[0].participants").isEmpty())
