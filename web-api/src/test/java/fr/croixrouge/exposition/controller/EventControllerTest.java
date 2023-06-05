@@ -832,7 +832,7 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$[0].sessionId").value(sessionId))
                 .andExpect(jsonPath("$[0].name").value(singleEventCreationRequest.getName()))
                 .andExpect(jsonPath("$[0].description").value(singleEventCreationRequest.getDescription()))
-                .andExpect(jsonPath("$[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusMinutes(1).toString()))
+                .andExpect(jsonPath("$[0].start").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).toString()))
                 .andExpect(jsonPath("$[0].end").value(timestampToLocalDateTime(singleEventCreationRequest.getStart()).plusMinutes((long) singleEventCreationRequest.getEventTimeWindowDuration() * singleEventCreationRequest.getEventTimeWindowOccurrence()).toString()))
                 .andExpect(jsonPath("$[0].referrerId").value(singleEventCreationRequest.getReferrerId()))
                 .andExpect(jsonPath("$[0].localUnitId").value(singleEventCreationRequest.getLocalUnitId()))

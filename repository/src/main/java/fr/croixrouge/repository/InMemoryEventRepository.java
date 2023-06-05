@@ -180,8 +180,14 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
                     return false;
                 }
                 List<EventTimeWindow> updatedTimeWindows = new ArrayList<>();
-                for (EventTimeWindow timeWindow : event.getSessions().get(0).getTimeWindows()) {
-                    updatedTimeWindows.add(new EventTimeWindow(new ID(String.valueOf(updatedTimeWindows.size())), timeWindow.getStart(), timeWindow.getEnd(), timeWindow.getMaxParticipants(), new ArrayList<>()));
+                for (int i = 0; i < eventTimeWindowOccurrence; i++) {
+                    updatedTimeWindows.add(new EventTimeWindow(
+                            new ID(String.valueOf(updatedTimeWindows.size())),
+                            session.getStart().plusMinutes((long) i * eventTimeWindowDuration),
+                            session.getStart().plusMinutes((long) (i + 1) * eventTimeWindowDuration),
+                            eventTimeWindowMaxParticipants,
+                            new ArrayList<>()
+                    ));
                 }
                 List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
                 int currentTimeWindowIndex = 0;
