@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/login")
                 .permitAll()
+                .requestMatchers("/volunteer/register")
+                .permitAll()
                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
                 .requestMatchers("/resources")
                 .hasAuthority("ROLE_ADMIN")

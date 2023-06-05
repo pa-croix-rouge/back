@@ -37,8 +37,14 @@ public class MockRepositoryConfig {
 
     private final PasswordEncoder passwordEncoder;
     private final User managerUser;
+
+    private final User southernManagerUser;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
+
+    private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
     private final LocalUnit localUnit;
+
+    private final LocalUnit southernLocalUnit;
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -49,6 +55,8 @@ public class MockRepositoryConfig {
                 address,
                 managerUser,
                 address.getPostalCode() + "-000");
+        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of("ROLE_ADMIN"));
+        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
     }
 
     @Bean
@@ -62,6 +70,7 @@ public class MockRepositoryConfig {
         users.add(defaultUser);
 
         users.add(managerUser);
+        users.add(southernManagerUser);
 
         return new InMemoryUserRepository(users);
     }
@@ -85,8 +94,16 @@ public class MockRepositoryConfig {
         boolean isValidated2 = false;
         Volunteer volunteer2 = new Volunteer(volunteerId2, managerUser, firstName2, lastName2, phoneNumber2, isValidated2, localUnit.getId());
 
+        ID volunteerId3 = new ID("3");
+        String firstName3 = "southernVolunteer";
+        String lastName3 = "southernVolunteerName";
+        String phoneNumber3 = "+33 6 83 83 83 83";
+        boolean isValidated3 = true;
+        Volunteer volunteer3 = new Volunteer(volunteerId3, southernManagerUser, firstName3, lastName3, phoneNumber3, isValidated3, southernLocalUnit.getId());
+
         volunteers.add(volunteer1);
         volunteers.add(volunteer2);
+        volunteers.add(volunteer3);
 
         return new InMemoryVolunteerRepository(volunteers);
     }
@@ -96,6 +113,7 @@ public class MockRepositoryConfig {
     public LocalUnitRepository localTestUnitRepository() {
         ArrayList<LocalUnit> localUnits = new ArrayList<>();
         localUnits.add(localUnit);
+        localUnits.add(southernLocalUnit);
         return new InMemoryLocalUnitRepository(localUnits);
     }
 
