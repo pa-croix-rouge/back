@@ -162,7 +162,7 @@ public class InDBEventRepository implements EventRepository {
             return Optional.empty();
         }
         return eventDBRepository.findById(eventId.value())
-                .map(eventDB -> toEvent(eventDB, List.of(sessions.map(this::toEventSession).get())));
+                .map(eventDB -> toEvent(eventDB, List.of(sessions.map(this::toEventSession).orElse(null))));
     }
 
     @Override
@@ -270,6 +270,14 @@ public class InDBEventRepository implements EventRepository {
                 updatedSessions.add(session);
             }
         }
+
+        for (EventSession session : eventToUpdate.getSessions()) {
+            EventSessionDB eventSessionDB = toEventSessionDB(session, toEventDB(event));
+            for (EventTimeWindow timeWindow : session.getTimeWindows()) {
+                eventTimeWindowDBRepository.delete(toEventTimeWindowDB(timeWindow, eventSessionDB));
+            }
+        }
+
         Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), updatedSessions, eventToUpdate.getOccurrences());
 
         save(updatedEvent);
@@ -342,6 +350,14 @@ public class InDBEventRepository implements EventRepository {
                 updatedSessions.add(new EventSession(session.getId(), updatedTimeWindows));
             }
         }
+
+        for (EventSession session : eventToUpdate.getSessions()) {
+            EventSessionDB eventSessionDB = toEventSessionDB(session, toEventDB(event));
+            for (EventTimeWindow timeWindow : session.getTimeWindows()) {
+                eventTimeWindowDBRepository.delete(toEventTimeWindowDB(timeWindow, eventSessionDB));
+            }
+        }
+
         Event updatedEvent = new Event(eventId, event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), updatedSessions, eventToUpdate.getOccurrences());
 
         save(updatedEvent);
@@ -350,6 +366,17 @@ public class InDBEventRepository implements EventRepository {
 
     @Override
     public boolean deleteEventSession(ID eventId, ID sessionId) {
+        EventDB eventDB = eventDBRepository.findById(eventId.value()).orElse(null);
+        if (eventDB == null) {
+            return false;
+        }
+        EventSessionDB eventSessionDB = eventSessionDBRepository.findById(sessionId.value()).orElse(null);
+        if (eventSessionDB == null) {
+            return false;
+        }
+        for (EventTimeWindow timeWindow : toEventSession(eventSessionDB).getTimeWindows()) {
+            eventTimeWindowDBRepository.delete(toEventTimeWindowDB(timeWindow, eventSessionDB));
+        }
         eventSessionDBRepository.deleteById(sessionId.value());
         return true;
     }

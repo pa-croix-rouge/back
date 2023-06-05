@@ -9,6 +9,6 @@ public interface EventTimeWindowDBRepository extends CrudRepository<EventTimeWin
     @Query("select e from EventTimeWindowDB e where e.eventSessionDB.id = ?1")
     List<EventTimeWindowDB> findByEventSessionDB_Id(Long id);
 
-
-
+    @Override
+    <S extends EventTimeWindowDB> S save(S entity);
 }

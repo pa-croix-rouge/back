@@ -18,7 +18,7 @@ public class EventTimeWindowDB {
     @Column(name = "start_time", nullable = false)
     private ZonedDateTime start;
 
-    @Column(name = "end")
+    @Column(name = "end", nullable = false)
     private ZonedDateTime end;
 
     @Column(name = "max_participants", nullable = false)

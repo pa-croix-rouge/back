@@ -28,7 +28,7 @@ public class RecurrentEventCreationRequest {
     public RecurrentEventCreationRequest() {
     }
 
-    public RecurrentEventCreationRequest(String name, String description, Long referrerId, Long localUnitId, Timestamp firstStart, Timestamp firstEnd, int duration, int frequency, int eventTimeWindowDuration, int maxParticipants) {
+    public RecurrentEventCreationRequest(String name, String description, Long referrerId, Long localUnitId, Timestamp firstStart, Timestamp firstEnd, int frequency, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
         this.name = name;
         this.description = description;
         this.referrerId = referrerId;
