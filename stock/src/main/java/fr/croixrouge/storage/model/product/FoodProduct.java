@@ -23,6 +23,10 @@ public class FoodProduct extends Product {
         this.price = price;
     }
 
+    public FoodProduct(Product product, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate, float price) {
+        this(product.getId(), product.name, product.quantity, product.limit, foodConservation, expirationDate, optimalConsumptionDate, price);
+    }
+
     public FoodConservation getFoodConservation() {
         return foodConservation;
     }

@@ -11,6 +11,10 @@ public class Quantifier {
         this.unit = unit;
     }
 
+    static Quantifier of(double quantity, MeasurementUnit unit) {
+        return new Quantifier(quantity, unit);
+    }
+
     public double getQuantity() {
         return quantity;
     }
