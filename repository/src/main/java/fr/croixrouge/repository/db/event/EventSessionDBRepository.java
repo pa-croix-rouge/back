@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EventSessionDBRepository extends CrudRepository<EventSessionDB, Long> {
-    @Query("select e from EventSessionDB e where e.eventDB.localUnitDB.localUnitID = ?1 and e.startTime > ?2")
+    @Query("select e from EventSessionDB e where e.eventDB.localUnitDB.localUnitID = ?1 and e.eventDB.startTime > ?2")
     List<EventSessionDB> findByEventDB_LocalUnitDB_LocalUnitIDAndStartTimeAfter(Long localUnitID, ZonedDateTime startTime);
 
     @Query("select e from EventSessionDB e where e.eventDB.id = ?1")

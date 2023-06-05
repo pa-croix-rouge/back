@@ -57,11 +57,13 @@ public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
     private final Role managerRole;
-    private final User managerUser, defaultUser;
+    private final User managerUser, defaultUser, southernManagerUser;
 
-    private final Volunteer volunteer1;
+    private final Volunteer volunteer1, southernVolunteer1;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
-    private final LocalUnit localUnit;
+
+    private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
+    private final LocalUnit localUnit, southernLocalUnit;
 
     public InDBMockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -85,6 +87,12 @@ public class InDBMockRepositoryConfig {
 
         volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
 
+        southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of(managerRole));
+
+        southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
+
+        southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true, southernLocalUnit);
+
     }
 
     @Bean
@@ -92,6 +100,7 @@ public class InDBMockRepositoryConfig {
     public InDBLocalUnitRepository localTestInDBUnitRepository(LocalUnitDBRepository localUnitDBRepository) {
         InDBLocalUnitRepository localUnitRepository = new InDBLocalUnitRepository(localUnitDBRepository);
         localUnitRepository.save(localUnit);
+        localUnitRepository.save(southernLocalUnit);
         return localUnitRepository;
     }
 
@@ -112,6 +121,7 @@ public class InDBMockRepositoryConfig {
 
         inDBUserRepository.save(defaultUser);
         inDBUserRepository.save(managerUser);
+        inDBUserRepository.save(southernManagerUser);
 
         return inDBUserRepository;
     }
@@ -130,6 +140,7 @@ public class InDBMockRepositoryConfig {
 
         volunteerRepository.save(volunteer1);
         volunteerRepository.save(volunteer2);
+        volunteerRepository.save(southernVolunteer1);
 
         return volunteerRepository;
     }

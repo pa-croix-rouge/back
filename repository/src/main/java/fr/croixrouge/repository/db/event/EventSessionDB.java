@@ -1,11 +1,6 @@
 package fr.croixrouge.repository.db.event;
 
-import fr.croixrouge.repository.db.user.UserDB;
 import jakarta.persistence.*;
-
-import java.time.ZonedDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Table(name = "event-session")
 @Entity
@@ -16,7 +11,7 @@ public class EventSessionDB {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_db_id", nullable = false)
     private EventDB eventDB;
 
@@ -35,5 +30,9 @@ public class EventSessionDB {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

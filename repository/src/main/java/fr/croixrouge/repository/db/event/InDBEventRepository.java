@@ -8,14 +8,12 @@ import fr.croixrouge.model.EventTimeWindow;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
-import fr.croixrouge.repository.db.user.UserDB;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -129,7 +127,10 @@ public class InDBEventRepository implements EventRepository {
         object.setId(id);
 
         for (var session : object.getSessions()) {
-            eventSessionDBRepository.save(toEventSessionDB(session, eventDB));
+            var sessionDB = eventSessionDBRepository.save(toEventSessionDB(session, eventDB));
+            for (var timeWindow : session.getTimeWindows()) {
+                eventTimeWindowDBRepository.save(toEventTimeWindowDB(timeWindow, sessionDB));
+            }
         }
 
         return id;
@@ -139,6 +140,11 @@ public class InDBEventRepository implements EventRepository {
     public void delete(Event object) {
         var eventDB = toEventDB(object);
         var sessions = eventSessionDBRepository.findByEventDB_Id(eventDB.getId());
+
+        for (var session : sessions) {
+            eventTimeWindowDBRepository.deleteAll(eventTimeWindowDBRepository.findByEventSessionDB_Id(session.getId()));
+        }
+
         eventSessionDBRepository.deleteAll(sessions);
 
         eventDBRepository.delete(eventDB);

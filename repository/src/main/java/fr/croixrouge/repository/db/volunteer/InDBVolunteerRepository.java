@@ -80,7 +80,7 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public List<Volunteer> findAllByLocalUnitId(ID id) {
-        return null;
+        return volunteerDBRepository.findByLocalUnitDB_LocalUnitID(id.value()).stream().map(this::toVolunteer).toList();
     }
 
     @Override

@@ -30,7 +30,7 @@ public class EventTimeWindowDB {
             inverseJoinColumns = @JoinColumn(name = "userdbs_user_id"))
     private Set<UserDB> userDBs = new LinkedHashSet<>();
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_session_db_id", nullable = false)
     private EventSessionDB eventSessionDB;
 
