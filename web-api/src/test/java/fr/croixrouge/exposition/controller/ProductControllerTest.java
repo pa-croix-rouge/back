@@ -81,7 +81,7 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(createProductDTO)))
                 .andExpect(status().isOk());
 
-        Long id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
+        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value").toString();
 
         mockMvc.perform(get("/product/" + id)
                         .header("Authorization", "Bearer " + jwtToken)

@@ -9,11 +9,21 @@ import fr.croixrouge.repository.db.event.EventSessionDBRepository;
 import fr.croixrouge.repository.db.event.InDBEventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
+import fr.croixrouge.repository.db.product.FoodProductDBRepository;
+import fr.croixrouge.repository.db.product.InDBProductRepository;
+import fr.croixrouge.repository.db.product.ProductDBRepository;
+import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
 import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
+import fr.croixrouge.repository.db.storage.InDBStorageRepository;
+import fr.croixrouge.repository.db.storage.StorageDBRepository;
+import fr.croixrouge.repository.db.storage_product.InDBStorageProductRepository;
+import fr.croixrouge.repository.db.storage_product.StorageProductDBRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
+import fr.croixrouge.repository.db.user_product.InDBUserProductRepository;
+import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
 import fr.croixrouge.storage.model.Storage;
@@ -22,14 +32,8 @@ import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
 import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
-import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageProductRepository;
-import fr.croixrouge.storage.repository.StorageRepository;
 import fr.croixrouge.storage.repository.UserProductRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryStorageProductRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryUserProductRepository;
 import fr.croixrouge.storage.service.StorageProductService;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -196,34 +200,34 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public ProductRepository productTestRepository() {
-        List<Product> products = new ArrayList<>();
+    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, FoodProductDBRepository foodProductDBRepository, ProductLimitDBRepository productLimitDBRepository) {
+        var storageRepository = new InDBProductRepository(productDBRepository, foodProductDBRepository, productLimitDBRepository);
 
-        products.add(new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null));
-        products.add(new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null));
+        storageRepository.save(new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null));
+        storageRepository.save(new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null));
 
-        return new InMemoryProductRepository(products);
+        return storageRepository;
     }
 
     @Bean
     @Primary
-    public StorageRepository storageTestRepository() {
-        List<Storage> storages = new ArrayList<>();
+    public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+        var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
 
-        storages.add(new Storage(new ID(1L), localUnit, address));
-        storages.add(new Storage(new ID(2L), localUnit, address));
+        storageRepository.save(new Storage(new ID(1L), localUnit, address));
+        storageRepository.save(new Storage(new ID(2L), localUnit, address));
 
-        return new InMemoryStorageRepository(storages);
+        return storageRepository;
     }
 
     @Bean
-    public UserProductRepository storageUserProductRepository() {
-        return new InMemoryUserProductRepository();
+    public UserProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBUserRepository userRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+        return new InDBUserProductRepository(userProductDBRepository, userRepository, productRepository, storageRepository);
     }
 
     @Bean
-    public StorageProductRepository storageProductRepository() {
-        return new InMemoryStorageProductRepository();
+    public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+        return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
     }
 
     @Bean
