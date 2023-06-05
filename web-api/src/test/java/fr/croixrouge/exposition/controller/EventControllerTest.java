@@ -450,6 +450,58 @@ public class EventControllerTest {
     }
 
     @Test
+    @DisplayName("Test that the event endpoint for local unit and month returns a list of events when given a correct local unit id for trimester")
+    public void eventsLocalUnitForTrimesterSuccessTest() throws Exception {
+        final String localUnitId = "1";
+        final int month = 7;
+        final int year = 2000;
+
+        EventResponse eventResponse = new EventResponse(
+                "3",
+                "0",
+                "Formation PSC1",
+                "Formation au PSC1",
+                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                "1",
+                "1",
+                30,
+                0,
+                List.of(new TimeWindowResponse(
+                        "0",
+                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        30,
+                        List.of()
+                )),
+                false
+        );
+
+        mockMvc.perform(get("/event/date?localUnitId=" + localUnitId + "&month=" + month + "&year=" + year)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].eventId").value(eventResponse.getEventId()))
+                .andExpect(jsonPath("$[0].sessionId").value(eventResponse.getSessionId()))
+                .andExpect(jsonPath("$[0].name").value(eventResponse.getName()))
+                .andExpect(jsonPath("$[0].description").value(eventResponse.getDescription()))
+                .andExpect(jsonPath("$[0].start").value(eventResponse.getStart()))
+                .andExpect(jsonPath("$[0].end").value(eventResponse.getEnd()))
+                .andExpect(jsonPath("$[0].referrerId").value(eventResponse.getReferrerId()))
+                .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()))
+                .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse.getMaxParticipants()))
+                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
+                .andExpect(jsonPath("$[0].timeWindows").isArray())
+                .andExpect(jsonPath("$[0].timeWindows[0].timeWindowId").value(eventResponse.getTimeWindows().get(0).getTimeWindowId()))
+                .andExpect(jsonPath("$[0].timeWindows[0].start").value(eventResponse.getTimeWindows().get(0).getStart()))
+                .andExpect(jsonPath("$[0].timeWindows[0].end").value(eventResponse.getTimeWindows().get(0).getEnd()))
+                .andExpect(jsonPath("$[0].timeWindows[0].maxParticipants").value(eventResponse.getTimeWindows().get(0).getMaxParticipants()))
+                .andExpect(jsonPath("$[0].timeWindows[0].participants").isArray())
+                .andExpect(jsonPath("$[0].timeWindows[0].participants").isEmpty())
+                .andExpect(jsonPath("$[0].recurring").value(eventResponse.isRecurring()));
+    }
+
+    @Test
     @DisplayName("Test that the event register endpoint adds a user to an event")
     public void eventRegisterSuccessTest() throws Exception {
         String timeWindowId = "0";

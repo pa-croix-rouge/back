@@ -105,6 +105,18 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(eventResponse);
     }
 
+    @GetMapping("/trimester")
+    public ResponseEntity<List<EventResponse>> getEventsByLocalUnitIdForTrimester(@RequestParam("localUnitId") ID localUnitId, @RequestParam("month") int month, @RequestParam("year") int year) {
+        final List<EventResponse> eventResponse = new ArrayList<>();
+        final List<Event> events = service.findEventsByLocalUnitIdAndTrimester(localUnitId, month, year);
+        for (Event event : events) {
+            for (EventSession session : event.getSessions()) {
+                eventResponse.add(EventResponse.fromEvent(event, session));
+            }
+        }
+        return ResponseEntity.ok(eventResponse);
+    }
+
     @GetMapping("/sessions/{eventId}")
     public ResponseEntity<List<EventResponse>> getEventSessionsByEventId(@PathVariable ID eventId) {
         final List<EventResponse> eventResponse = new ArrayList<>();

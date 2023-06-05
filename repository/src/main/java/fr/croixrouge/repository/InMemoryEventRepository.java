@@ -8,6 +8,7 @@ import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.chrono.ChronoZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -56,6 +57,23 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
         List<Event> result = new ArrayList<>();
         for (Event event : localUnitEvents) {
             List<EventSession> sessionsInMonth = event.getSessions().stream().filter(session -> session.getStart().getMonthValue() == month && session.getStart().getYear() == year || session.getEnd().getMonthValue() == month && session.getEnd().getYear() == year).toList();
+            if (!sessionsInMonth.isEmpty()) {
+                result.add(new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), sessionsInMonth, event.getOccurrences()));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Event> findByLocalUnitIdAndTrimester(ID localUnitId, int month, int year) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        List<Event> localUnitEvents = this.objects.stream().filter(event -> event.getLocalUnitId().equals(localUnitId)).toList();
+        List<Event> result = new ArrayList<>();
+        for (Event event : localUnitEvents) {
+            List<EventSession> sessionsInMonth = event.getSessions().stream().filter(session ->
+                    (session.getStart().getMonthValue() == start.getMonthValue() && session.getStart().getYear() == start.getYear()) ||
+                    (session.getStart().getMonthValue() == start.plusMonths(1).getMonthValue() && session.getStart().getYear() == start.plusMonths(1).getYear()) ||
+                    (session.getStart().getMonthValue() == start.plusMonths(2).getMonthValue() && session.getStart().getYear() == start.plusMonths(2).getYear())).toList();
             if (!sessionsInMonth.isEmpty()) {
                 result.add(new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrerId(), event.getLocalUnitId(), sessionsInMonth, event.getOccurrences()));
             }
