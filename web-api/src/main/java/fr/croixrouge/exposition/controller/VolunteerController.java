@@ -49,7 +49,7 @@ public class VolunteerController extends ErrorHandler {
     public ResponseEntity<List<VolunteerResponse>> findAll(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
-        return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getLocalUnitId()).stream().map(this::toDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getLocalUnit().getId()).stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/token")

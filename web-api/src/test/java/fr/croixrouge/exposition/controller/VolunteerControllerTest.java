@@ -80,7 +80,7 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true,
-                "1"
+                1L
         );
 
         mockMvc.perform(get("/volunteer")

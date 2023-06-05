@@ -24,7 +24,7 @@ public class EventRegistrationRequest {
         return sessionId;
     }
 
-    public Ling getTimeWindowId() {
+    public Long getTimeWindowId() {
         return timeWindowId;
     }
 

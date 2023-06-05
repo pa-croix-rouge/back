@@ -5,16 +5,16 @@ import fr.croixrouge.domain.model.ID;
 import java.util.List;
 
 public class TimeWindowResponse {
-    private String timeWindowId;
+    private Long timeWindowId;
     private String start;
     private String end;
     private int maxParticipants;
-    private List<String> participants;
+    private List<Long> participants;
 
     public TimeWindowResponse() {
     }
 
-    public TimeWindowResponse(String timeWindowId, String start, String end, int maxParticipants, List<String> participants) {
+    public TimeWindowResponse(Long timeWindowId, String start, String end, int maxParticipants, List<Long> participants) {
         this.timeWindowId = timeWindowId;
         this.start = start;
         this.end = end;
@@ -32,11 +32,11 @@ public class TimeWindowResponse {
         );
     }
 
-    public String getTimeWindowId() {
+    public Long getTimeWindowId() {
         return timeWindowId;
     }
 
-    public void setTimeWindowId(String timeWindowId) {
+    public void setTimeWindowId(Long timeWindowId) {
         this.timeWindowId = timeWindowId;
     }
 
@@ -64,11 +64,11 @@ public class TimeWindowResponse {
         this.maxParticipants = maxParticipants;
     }
 
-    public List<String> getParticipants() {
+    public List<Long> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<String> participants) {
+    public void setParticipants(List<Long> participants) {
         this.participants = participants;
     }
 }

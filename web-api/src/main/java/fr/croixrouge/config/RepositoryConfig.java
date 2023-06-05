@@ -55,8 +55,6 @@ public class RepositoryConfig {
 
     public RepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-         this.southernManagerUser = new User(new ID(3l), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of("ROLE_ADMIN"));
-        this.southernLocalUnit = new LocalUnit(new ID(2l), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
 
         this.localUnit = new LocalUnit(new ID(1L), "Unite Local du Val d'Orge", address, null, address.getPostalCode() + "-000");
 
@@ -72,6 +70,10 @@ public class RepositoryConfig {
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
 
         volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
+
+        this.southernManagerUser = new User(new ID(3L), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of(managerRole));
+        this.southernLocalUnit = new LocalUnit(new ID(2L), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
+
 
     }
 
@@ -150,9 +152,9 @@ public class RepositoryConfig {
         List<ID> participants2 = new ArrayList<>();
         List<EventTimeWindow> eventTimeWindowList2 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            eventTimeWindowList2.add(new EventTimeWindow(new ID(i), eventStartDate2.plusMinutes(i * 40), eventEndDate2.plusMinutes((i + 1) * 40), maxParticipants2 / 3, participants2));
+            eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 40), eventEndDate2.plusMinutes((i + 1) * 40), maxParticipants2 / 3, participants2));
         }
-        EventSession eventSession2 = new EventSession(new ID(0L), eventTimeWindowList2);
+        EventSession eventSession2 = new EventSession(null, eventTimeWindowList2);
         Event event2 = new Event(eventId2, eventName2, eventDescription2, volunteer1, localUnit, List.of(eventSession2), 1);
         events.add(event2);
 
@@ -186,7 +188,7 @@ public class RepositoryConfig {
                 eventTimeWindowList4.add(new EventTimeWindow(new ID(String.valueOf(i)), sessionTime.plusMinutes(i * 30), sessionTime.plusMinutes((i + 1) * 30), maxParticipants4 / 4, new ArrayList<>()));
             }
             eventSessions4.add(new EventSession(
-                    new ID(sessionCounter.getAndIncrement()),
+                    null,
                     eventTimeWindowList4
             ));
         }
@@ -201,7 +203,7 @@ public class RepositoryConfig {
         ArrayList<Volunteer> volunteers = new ArrayList<>();
         Volunteer volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
         volunteers.add(volunteer1);
-        Volunteer volunteer2 = new Volunteer(new ID("2"), southernManagerUser, "volunteerFirstNameS", "volunteerLastNameS", "+33 6 00 00 00 83", true, southernLocalUnit.getId());
+        Volunteer volunteer2 = new Volunteer(new ID("2"), southernManagerUser, "volunteerFirstNameS", "volunteerLastNameS", "+33 6 00 00 00 83", true, southernLocalUnit);
         volunteers.add(volunteer2);
         return new InMemoryVolunteerRepository(volunteers);
     }

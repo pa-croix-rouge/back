@@ -78,4 +78,19 @@ public class InDBVolunteerRepository implements VolunteerRepository {
         return volunteerDBRepository.findByUserDB_UsernameIgnoreCase(username).map(this::toVolunteer);
     }
 
+    @Override
+    public List<Volunteer> findAllByLocalUnitId(ID id) {
+        return null;
+    }
+
+    @Override
+    public boolean validateVolunteerAccount(Volunteer volunteer) {
+        return false;
+    }
+
+    @Override
+    public boolean invalidateVolunteerAccount(Volunteer volunteer) {
+        return false;
+    }
+
 }

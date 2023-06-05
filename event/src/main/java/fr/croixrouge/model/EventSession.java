@@ -9,7 +9,6 @@ import java.util.List;
 public class EventSession extends Entity<ID> {
     private final List<EventTimeWindow> timeWindows;
 
-
     public EventSession(ID id, List<EventTimeWindow> timeWindows) {
         super(id);
         this.timeWindows = timeWindows;

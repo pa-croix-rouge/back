@@ -159,7 +159,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
         var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
 
-        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent(referrer, localUnit));
+        boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent(referrer, localUnit),  singleEventCreationRequest.getEventTimeWindowDuration(), singleEventCreationRequest.getEventTimeWindowOccurrence(), singleEventCreationRequest.getEventTimeWindowMaxParticipants());
         if (!result) {
             return ResponseEntity.notFound().build();
         }

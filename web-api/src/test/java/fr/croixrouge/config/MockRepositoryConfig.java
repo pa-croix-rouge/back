@@ -70,8 +70,6 @@ public class MockRepositoryConfig {
                 address,
                 null,
                 address.getPostalCode() + "-000");
-        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of("ROLE_ADMIN"));
-        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
 
         managerRole = new Role(new ID(1L),
                 "Val d'Orge default role",
@@ -86,6 +84,10 @@ public class MockRepositoryConfig {
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
 
         volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
+
+        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of(managerRole));
+        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
+
 
     }
 
@@ -125,7 +127,7 @@ public class MockRepositoryConfig {
         String lastName3 = "southernVolunteerName";
         String phoneNumber3 = "+33 6 83 83 83 83";
         boolean isValidated3 = true;
-        Volunteer volunteer3 = new Volunteer(volunteerId3, southernManagerUser, firstName3, lastName3, phoneNumber3, isValidated3, southernLocalUnit.getId());
+        Volunteer volunteer3 = new Volunteer(volunteerId3, southernManagerUser, firstName3, lastName3, phoneNumber3, isValidated3, southernLocalUnit);
 
         volunteers.add(volunteer1);
         volunteers.add(volunteer2);
@@ -173,7 +175,7 @@ public class MockRepositoryConfig {
         List<ID> participants1 = new ArrayList<>();
         EventTimeWindow eventTimeWindow1 = new EventTimeWindow(null, eventStartDate1, eventEndDate1, maxParticipants1, participants1);
         EventSession eventSession1 = new EventSession(null, List.of(eventTimeWindow1));
-        Event event1 = new Event(eventId1, eventName1, eventDescription1, volunteer1, localUnit, List.of(eventSession1), 1);
+        Event event1 = new Event(null, eventName1, eventDescription1, volunteer1, localUnit, List.of(eventSession1), 1);
         eventRepository.save(event1);
 
         String eventName2 = "Distribution alimentaire";
@@ -209,19 +211,19 @@ public class MockRepositoryConfig {
         ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 2, 1, 12, 0), ZoneId.of("Europe/Paris"));
 
         int maxParticipants4 = 32;
+
         List<EventSession> eventSessions4 = new ArrayList<>();
-        AtomicInteger sessionCounter = new AtomicInteger(4);
         for (ZonedDateTime sessionTime = eventStartDate4; sessionTime.isBefore(eventEndDate4); sessionTime = sessionTime.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList4 = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
-                eventTimeWindowList4.add(new EventTimeWindow(new ID(String.valueOf(i)), sessionTime.plusMinutes(i * 30), sessionTime.plusMinutes((i + 1) * 30), maxParticipants4 / 4, new ArrayList<>()));
+                eventTimeWindowList4.add(new EventTimeWindow(null, sessionTime.plusMinutes(i * 30), sessionTime.plusMinutes((i + 1) * 30), maxParticipants4 / 4, new ArrayList<>()));
             }
             eventSessions4.add(new EventSession(
                     null,
                     eventTimeWindowList4
             ));
         }
-        Event event4 = new Event(null, eventName4, eventDescription4, volunteer1, localUnit, sessionCounter.get());
+        Event event4 = new Event(null, eventName4, eventDescription4, volunteer1, localUnit, eventSessions4, eventSessions4.size());
         eventRepository.save(event4);
 
         return eventRepository;
