@@ -1,5 +1,6 @@
-package fr.croixrouge.exposition.dto;
+package fr.croixrouge.exposition.dto.product;
 
+import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.Product;
 
 public class ProductResponse {

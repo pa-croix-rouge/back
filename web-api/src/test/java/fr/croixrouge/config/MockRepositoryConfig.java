@@ -4,11 +4,9 @@ import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
-import fr.croixrouge.domain.repository.VolunteerRepository;
-import fr.croixrouge.model.Event;
-import fr.croixrouge.model.EventSession;
-import fr.croixrouge.model.EventTimeWindow;
-import fr.croixrouge.repository.*;
+import fr.croixrouge.repository.InMemoryLocalUnitRepository;
+import fr.croixrouge.repository.InMemoryRoleRepository;
+import fr.croixrouge.repository.InMemoryUserRepository;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
@@ -16,27 +14,21 @@ import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import fr.croixrouge.storage.repository.ProductRepository;
-import fr.croixrouge.storage.repository.StorageProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
-import fr.croixrouge.storage.repository.UserProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryStorageProductRepository;
 import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryUserProductRepository;
-import fr.croixrouge.storage.service.StorageProductService;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
+import fr.croixrouge.repository.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +56,7 @@ public class MockRepositoryConfig {
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+        mangerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
 
         localUnit = new LocalUnit(new ID(1L),
                 "Unite Local du Val d'Orge",
@@ -238,6 +231,29 @@ public class MockRepositoryConfig {
         products.add(new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null));
 
         return new InMemoryProductRepository(products);
+    }
+
+    @Bean
+    @Primary
+    public FoodProductRepository foodProductTestRepository() {
+        List<FoodProduct> products = new ArrayList<>();
+
+        products.add(new FoodProduct(new ID("1"), "FoodProduct 1",
+                new WeightQuantifier(1, WeightUnit.KILOGRAM),
+                null,
+                FoodConservation.ROOM_TEMPERATURE,
+                LocalDateTime.of(2023, 5, 1, 15, 14, 1, 1),
+                LocalDateTime.of(2023, 4, 10, 15, 14, 1, 1),
+                1));
+        products.add(new FoodProduct(new ID("2"), "FoodProduct 2",
+                new WeightQuantifier(1, WeightUnit.KILOGRAM),
+                null,
+                FoodConservation.ROOM_TEMPERATURE,
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now(),
+                1));
+
+        return new InMemoryFoodProductRepository(products);
     }
 
     @Bean
