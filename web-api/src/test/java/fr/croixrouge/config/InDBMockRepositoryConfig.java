@@ -248,5 +248,4 @@ public class InDBMockRepositoryConfig {
     public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
         return new StorageProductService(storageProductRepository);
     }
-
 }

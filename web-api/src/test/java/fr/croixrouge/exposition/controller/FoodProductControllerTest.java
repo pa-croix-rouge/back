@@ -1,10 +1,9 @@
 package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import fr.croixrouge.config.MockRepositoryConfig;
-import fr.croixrouge.exposition.dto.LoginRequest;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
+import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateFoodProductDTO;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
@@ -72,7 +71,7 @@ class FoodProductControllerTest {
     @Test
     @DisplayName("Test that the endpoint returns a 404 when given a incorrect food product id")
     public void productIdFailedTest() throws Exception {
-        mockMvc.perform(get("/product/food/invalid-product-id")
+        mockMvc.perform(get("/product/food/-1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -93,9 +92,10 @@ class FoodProductControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createProductDTO)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
 
-        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
+        String id = objectMapper.readTree(res).get("value").asText();
 
         mockMvc.perform(get("/product/food/" + id)
                         .header("Authorization", "Bearer " + jwtToken)

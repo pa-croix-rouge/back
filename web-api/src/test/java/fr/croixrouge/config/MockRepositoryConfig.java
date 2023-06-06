@@ -4,35 +4,38 @@ import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.domain.repository.UserRepository;
-import fr.croixrouge.repository.InMemoryLocalUnitRepository;
-import fr.croixrouge.repository.InMemoryRoleRepository;
-import fr.croixrouge.repository.InMemoryUserRepository;
+import fr.croixrouge.domain.repository.VolunteerRepository;
+import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventTimeWindow;
+import fr.croixrouge.repository.*;
 import fr.croixrouge.storage.model.Storage;
+import fr.croixrouge.storage.model.product.FoodConservation;
+import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
 import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
-import fr.croixrouge.storage.repository.ProductRepository;
-import fr.croixrouge.storage.repository.StorageRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryProductRepository;
-import fr.croixrouge.storage.repository.memory.InMemoryStorageRepository;
-import fr.croixrouge.model.Event;
-import fr.croixrouge.model.EventSession;
-import fr.croixrouge.repository.*;
+import fr.croixrouge.storage.repository.*;
+import fr.croixrouge.storage.repository.memory.*;
+import fr.croixrouge.storage.service.StorageProductService;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
@@ -56,7 +59,6 @@ public class MockRepositoryConfig {
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        mangerUser = new User(new ID("2"), "LUManager", passwordEncoder.encode("LUPassword"), List.of("ROLE_ADMIN"));
 
         localUnit = new LocalUnit(new ID(1L),
                 "Unite Local du Val d'Orge",
