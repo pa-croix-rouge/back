@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(MockRepositoryConfig.class)
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 class FoodProductControllerTest {
 
     @Autowired
@@ -52,17 +53,17 @@ class FoodProductControllerTest {
     @Test
     @DisplayName("Test that the endpoint returns a food product when given a correct id")
     public void productIdSuccessTest() throws Exception {
-        mockMvc.perform(get("/product/food/1")
+        mockMvc.perform(get("/product/food/3")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.id").value("3"))
                 .andExpect(jsonPath("$.name").value("FoodProduct 1"))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(1))
                 .andExpect(jsonPath("$.foodConservation").value("ROOM_TEMPERATURE"))
-                .andExpect(jsonPath("$.expirationDate").value(LocalDateTime.of(2023, 5, 1, 15, 14, 1, 1).toString()))
-                .andExpect(jsonPath("$.optimalConsumptionDate").value(LocalDateTime.of(2023, 4, 10, 15, 14, 1, 1).toString()));
+                .andExpect(jsonPath("$.expirationDate").value(LocalDateTime.of(2023, 5, 1, 15, 14, 1).toString()))
+                .andExpect(jsonPath("$.optimalConsumptionDate").value(LocalDateTime.of(2023, 4, 10, 15, 14, 1).toString()));
 
 
     }
@@ -83,8 +84,8 @@ class FoodProductControllerTest {
         CreateFoodProductDTO createProductDTO = new CreateFoodProductDTO("new Product",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.of(2023, 5, 1, 15, 14, 1, 1),
-                LocalDateTime.of(2023, 4, 10, 15, 14, 1, 1),
+                LocalDateTime.of(2023, 5, 1, 15, 14, 1),
+                LocalDateTime.of(2023, 4, 10, 15, 14, 1),
                 1);
 
 
@@ -113,7 +114,7 @@ class FoodProductControllerTest {
     @Test
     @DisplayName("Test that the delete endpoint returns OK when given a correct food product id")
     public void productDeleteSuccessTest() throws Exception {
-        String id = "2";
+        String id = "4";
 
         mockMvc.perform(delete("/product/food/" + id)
                         .header("Authorization", "Bearer " + jwtToken)

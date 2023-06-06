@@ -8,6 +8,7 @@ import fr.croixrouge.repository.db.event.InDBEventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
 import fr.croixrouge.repository.db.product.FoodProductDBRepository;
+import fr.croixrouge.repository.db.product.InDBFoodProductRepository;
 import fr.croixrouge.repository.db.product.InDBProductRepository;
 import fr.croixrouge.repository.db.product.ProductDBRepository;
 import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
@@ -67,11 +68,17 @@ public class RepositoryConfig {
     }
 
 
+    @Bean
+    @Primary
+    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository) {
+        return new InDBProductRepository(productDBRepository);
+    }
 
     @Bean
     @Primary
-    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, FoodProductDBRepository foodProductDBRepository, ProductLimitDBRepository productLimitDBRepository) {
-        return new InDBProductRepository(productDBRepository, foodProductDBRepository, productLimitDBRepository);
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
+
+        return new InDBFoodProductRepository(foodProductDBRepository, productRepository);
     }
 
     @Bean

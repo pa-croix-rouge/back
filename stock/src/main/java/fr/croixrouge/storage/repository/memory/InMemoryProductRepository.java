@@ -21,13 +21,4 @@ public class InMemoryProductRepository extends InMemoryCRUDRepository<ID, Produc
         super(new ArrayList<>(), new TimeStampIDGenerator());
     }
 
-    @Override
-    public Optional<FoodProduct> findByIdFood(ID id) {
-        return findById(id).map( product -> {
-            if (product instanceof FoodProduct) {
-                return (FoodProduct) product;
-            }
-            return null;
-        });
-    }
 }

@@ -9,5 +9,4 @@ import java.util.Optional;
 
 public interface ProductRepository extends CRUDRepository<ID, Product> {
 
-    Optional<FoodProduct> findByIdFood(ID id);
 }
