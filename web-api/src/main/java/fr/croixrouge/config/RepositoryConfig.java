@@ -1,5 +1,12 @@
 package fr.croixrouge.config;
 
+import fr.croixrouge.domain.model.*;
+import fr.croixrouge.domain.repository.*;
+import fr.croixrouge.model.Event;
+import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventTimeWindow;
+import fr.croixrouge.repository.*;
+import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.event.EventDBRepository;
 import fr.croixrouge.repository.db.event.EventSessionDBRepository;

@@ -74,6 +74,7 @@ public class VolunteerController extends ErrorHandler {
         return ResponseEntity.ok(volunteerId);
     }
 
+    //todo : only admin can update volunteer
     @PostMapping("/validate/{id}")
     public ResponseEntity<String> validateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);

@@ -59,6 +59,7 @@ public class AuthenticationService {
         return new LoginResponse(jwtToken);
     }
 
+    //todo : implement
     private void saveUserToken(UserSecurity user, String jwtToken) {
 //        var token = Token.builder()
 //                .user(user)
@@ -70,6 +71,7 @@ public class AuthenticationService {
 //        tokenRepository.save(token);
     }
 
+    //todo : implement
     private void revokeAllUserTokens(UserSecurity user) {
 //        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
 //        if (validUserTokens.isEmpty())

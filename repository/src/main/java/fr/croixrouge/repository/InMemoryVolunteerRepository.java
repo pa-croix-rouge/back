@@ -22,7 +22,7 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
 
     @Override
     public Optional<Volunteer> findByUserId(ID id) {
-        return this.objects.stream().filter(o -> o.getUser().getId().equals(id)).findFirst();
+        return this.findById(id);
     }
 
     @Override

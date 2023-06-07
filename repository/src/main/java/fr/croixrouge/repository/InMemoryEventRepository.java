@@ -38,10 +38,17 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
             return Optional.empty();
         }
         final Optional<EventSession> session = event.get().getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst();
-        if (session.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(new Event(event.get().getId(), event.get().getName(), event.get().getDescription(), event.get().getReferrer(), event.get().getLocalUnit(),  List.of(session.get()), event.get().getOccurrences()));
+        return session.map(eventSession ->
+                new Event(
+                        event.get().getId(),
+                        event.get().getName(),
+                        event.get().getDescription(),
+                        event.get().getReferrer(),
+                        event.get().getLocalUnit(),
+                        List.of(session.get()),
+                        event.get().getOccurrences()
+                )
+        );
     }
 
     @Override
