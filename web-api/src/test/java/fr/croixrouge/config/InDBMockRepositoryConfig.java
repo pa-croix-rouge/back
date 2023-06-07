@@ -256,8 +256,8 @@ public class InDBMockRepositoryConfig {
     public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
 
-        storageRepository.save(new Storage(new ID(1L), localUnit, address));
-        storageRepository.save(new Storage(new ID(2L), localUnit, address));
+        storageRepository.save(new Storage(new ID(1L), "defaultStorage", localUnit, address));
+        storageRepository.save(new Storage(new ID(2L), "secondStorage", localUnit, address));
 
         return storageRepository;
     }

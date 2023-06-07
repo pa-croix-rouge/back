@@ -17,7 +17,7 @@ class StorageProductServiceTest {
 
     private final StorageProductRepository storageProductRepository = new InMemoryStorageProductRepository();
 
-    private final Storage storage = new Storage(new ID(1L), null, null);
+    private final Storage storage = new Storage(new ID(1L), "defaultStorage", null, null);
 
     private final Product product = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
     private final StorageProduct storageProduct = new StorageProduct(storage, product, 1);

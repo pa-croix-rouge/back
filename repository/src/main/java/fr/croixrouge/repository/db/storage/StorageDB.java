@@ -12,6 +12,9 @@ public class StorageDB {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "department")
     private String department;
 
@@ -31,8 +34,9 @@ public class StorageDB {
     public StorageDB() {
     }
 
-    public StorageDB(Long id, String department, String streetNumberAndName, String city, String postalCode, LocalUnitDB localUnitDB) {
+    public StorageDB(Long id, String name, String department, String streetNumberAndName, String city, String postalCode, LocalUnitDB localUnitDB) {
         this.id = id;
+        this.name = name;
         this.department = department;
         this.streetNumberAndName = streetNumberAndName;
         this.city = city;
@@ -46,6 +50,10 @@ public class StorageDB {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getDepartment() {

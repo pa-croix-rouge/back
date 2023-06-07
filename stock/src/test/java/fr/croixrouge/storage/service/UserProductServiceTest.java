@@ -25,7 +25,7 @@ class UserProductServiceTest {
     StorageProductRepository storageProductRepository = new InMemoryStorageProductRepository();
     UserProductRepository userProductRepository = new InMemoryUserProductRepository();
 
-    Storage storage = new Storage(new ID(1L), null, null);
+    Storage storage = new Storage(new ID(1L), "defaultStorage", null, null);
 
     private final StorageProductService storageProductService = new StorageProductService(storageProductRepository);
 

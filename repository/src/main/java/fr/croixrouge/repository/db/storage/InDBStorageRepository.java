@@ -26,6 +26,7 @@ public class InDBStorageRepository implements StorageRepository {
     public Storage toStorage(StorageDB storageDB) {
         return new Storage(
                 new ID(storageDB.getId()),
+                storageDB.getName(),
                 inDBLocalUnitRepository.toLocalUnit(storageDB.getLocalUnitDB()),
                 new Address(
                         Department.getDepartmentFromPostalCode( storageDB.getDepartment()),
@@ -38,6 +39,7 @@ public class InDBStorageRepository implements StorageRepository {
     public StorageDB toStorageDB(Storage storage) {
         return new StorageDB(
                 storage.getId() == null ? null :storage.getId().value(),
+                storage.getName(),
                 storage.getAddress().getDepartment().getCode(),
                 storage.getAddress().getStreetNumberAndName(),
                 storage.getAddress().getCity(),

@@ -71,7 +71,7 @@ class StorageControllerTest {
     @DisplayName("Test that the storage post endpoint returns OK when given a correct storage")
     public void productAddSuccessTest() throws Exception {
         AddressDTO addressDTO = new AddressDTO("91", "91240", "St Michel sur Orge", "76 rue des Liers");
-        CreateStorageDTO createStorageDTO = new CreateStorageDTO(1L, addressDTO);
+        CreateStorageDTO createStorageDTO = new CreateStorageDTO("newStorage", 1L, addressDTO);
 
         var res = mockMvc.perform(post("/storage")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -86,6 +86,7 @@ class StorageControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(createStorageDTO.getName()))
                 .andExpect(jsonPath("$.address.departmentCode").value(addressDTO.getDepartmentCode()))
                 .andExpect(jsonPath("$.address.postalCode").value(addressDTO.getPostalCode()))
                 .andExpect(jsonPath("$.address.city").value(addressDTO.getCity()))
@@ -121,11 +122,13 @@ class StorageControllerTest {
 
         StorageResponse storageResponse1 = new StorageResponse(
                 1L,
+                "defaultStorage",
                 addressDTO,
                 1L);
 
         StorageResponse storageResponse2 = new StorageResponse(
                 3L,
+                "newStorage",
                 addressDTO,
                 1L);
 
@@ -134,12 +137,14 @@ class StorageControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(storageResponse1.getId()))
+                .andExpect(jsonPath("$[0].name").value(storageResponse1.getName()))
                 .andExpect(jsonPath("$[0].address.departmentCode").value(storageResponse1.getAddress().getDepartmentCode()))
                 .andExpect(jsonPath("$[0].address.postalCode").value(storageResponse1.getAddress().getPostalCode()))
                 .andExpect(jsonPath("$[0].address.city").value(storageResponse1.getAddress().getCity()))
                 .andExpect(jsonPath("$[0].address.streetNumberAndName").value(storageResponse1.getAddress().getStreetNumberAndName()))
                 .andExpect(jsonPath("$[0].localUnitId").value(storageResponse1.getLocalUnitId()))
                 .andExpect(jsonPath("$[1].id").value(storageResponse2.getId()))
+                .andExpect(jsonPath("$[1].name").value(storageResponse2.getName()))
                 .andExpect(jsonPath("$[1].address.departmentCode").value(storageResponse2.getAddress().getDepartmentCode()))
                 .andExpect(jsonPath("$[1].address.postalCode").value(storageResponse2.getAddress().getPostalCode()))
                 .andExpect(jsonPath("$[1].address.city").value(storageResponse2.getAddress().getCity()))
