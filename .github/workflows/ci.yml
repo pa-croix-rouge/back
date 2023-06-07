@@ -93,12 +93,22 @@ jobs:
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           JWT_HEADER: ${{ secrets.JWT_HEADER }}
           JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          SPRING_DDL_AUTO: ${{ secrets.SPRING_DDL_AUTO }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
         run: |
           mvn clean compile package -Dmaven.test.skip=true --batch-mode --no-transfer-progress \
           -Djwt.secret="${JWT_SECRET}" \
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
-          -Djwt.token.prefix="${JWT_PREFIX}"
+          -Djwt.token.prefix="${JWT_PREFIX}" \
+          -Dspring.jpa.hibernate.ddl-auto="${SPRING_DDL_AUTO}" \
+          -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
+          -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
+          -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}"
 
   test:
     needs: build
