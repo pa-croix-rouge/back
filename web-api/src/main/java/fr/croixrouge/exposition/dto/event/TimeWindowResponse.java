@@ -2,6 +2,7 @@ package fr.croixrouge.exposition.dto.event;
 
 import fr.croixrouge.domain.model.ID;
 
+import java.time.ZoneId;
 import java.util.List;
 
 public class TimeWindowResponse {
@@ -25,8 +26,8 @@ public class TimeWindowResponse {
     public static TimeWindowResponse fromTimeWindow(fr.croixrouge.model.EventTimeWindow timeWindow) {
         return new TimeWindowResponse(
                 timeWindow.getId().value(),
-                timeWindow.getStart().toString(),
-                timeWindow.getEnd().toString(),
+                timeWindow.getStart().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString(),
+                timeWindow.getEnd().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString(),
                 timeWindow.getMaxParticipants(),
                 timeWindow.getParticipants().stream().map(ID::value).toList()
         );

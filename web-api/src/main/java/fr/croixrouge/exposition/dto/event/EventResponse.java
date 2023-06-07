@@ -3,6 +3,7 @@ package fr.croixrouge.exposition.dto.event;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 
+import java.time.ZoneId;
 import java.util.List;
 
 public class EventResponse {
@@ -43,8 +44,8 @@ public class EventResponse {
                 eventSession.getId().value(),
                 event.getName(),
                 event.getDescription(),
-                eventSession.getStart().toString(),
-                eventSession.getEnd().toString(),
+                eventSession.getStart().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString(),
+                eventSession.getEnd().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString(),
                 event.getReferrer().getId().value(),
                 event.getLocalUnit().getId().value(),
                 eventSession.getMaxParticipants(),
