@@ -67,4 +67,11 @@ public class InDBStorageRepository implements StorageRepository {
                 .map(this::toStorage)
                 .toList();
     }
+
+    @Override
+    public List<Storage> findAllByLocalUnitId(ID localUnitId) {
+        return storageDBRepository.findByLocalUnitDB_LocalUnitID(localUnitId.value()).stream()
+                .map(this::toStorage)
+                .toList();
+    }
 }

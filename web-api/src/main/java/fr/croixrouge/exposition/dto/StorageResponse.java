@@ -1,7 +1,6 @@
 package fr.croixrouge.exposition.dto;
 
 import fr.croixrouge.exposition.dto.core.AddressDTO;
-import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
 import fr.croixrouge.storage.model.Storage;
 
 public class StorageResponse {
@@ -10,12 +9,18 @@ public class StorageResponse {
 
     AddressDTO address;
 
-    LocalUnitResponse localUnit;
+    Long localUnitId;
 
     public StorageResponse(Storage storage) {
         this.id = storage.getId().value();
         this.address = new AddressDTO(storage.getAddress());
-        this.localUnit = LocalUnitResponse.fromLocalUnit(storage.getLocalUnit());
+        this.localUnitId = storage.getLocalUnit().getId().value();
+    }
+
+    public StorageResponse(Long id, AddressDTO address, Long localUnitId) {
+        this.id = id;
+        this.address = address;
+        this.localUnitId = localUnitId;
     }
 
     public Long getId() {
@@ -26,7 +31,7 @@ public class StorageResponse {
         return address;
     }
 
-    public LocalUnitResponse getLocalUnit() {
-        return localUnit;
+    public Long getLocalUnitId() {
+        return localUnitId;
     }
 }

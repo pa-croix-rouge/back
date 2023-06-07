@@ -1,6 +1,7 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.config.JwtTokenConfig;
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.exposition.dto.core.LoginResponse;
 import fr.croixrouge.model.UserSecurity;
@@ -90,5 +91,14 @@ public class AuthenticationService {
         String token = authorizationHeader.substring("Bearer ".length());
 
         return this.jwtTokenConfig.extractUsername(token);
+    }
+
+    public ID getUserLocalUnitIdFromJwtToken(HttpServletRequest request) {
+        String username = this.getUserIdFromJwtToken(request);
+        if (username == null) {
+            return null;
+        }
+
+        return this.userRepository.findByUsername(username).map(user -> user.getLocalUnit().getId()).orElse(null);
     }
 }

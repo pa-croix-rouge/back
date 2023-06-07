@@ -5,6 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.CreateStorageDTO;
+import fr.croixrouge.exposition.dto.StorageResponse;
 import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +70,7 @@ class StorageControllerTest {
     @Test
     @DisplayName("Test that the storage post endpoint returns OK when given a correct storage")
     public void productAddSuccessTest() throws Exception {
-        AddressDTO addressDTO = new AddressDTO("91", "91240", "St Michel sur Orge", "760 rue des Liers");
+        AddressDTO addressDTO = new AddressDTO("91", "91240", "St Michel sur Orge", "76 rue des Liers");
         CreateStorageDTO createStorageDTO = new CreateStorageDTO(1L, addressDTO);
 
         var res = mockMvc.perform(post("/storage")
@@ -89,7 +90,7 @@ class StorageControllerTest {
                 .andExpect(jsonPath("$.address.postalCode").value(addressDTO.getPostalCode()))
                 .andExpect(jsonPath("$.address.city").value(addressDTO.getCity()))
                 .andExpect(jsonPath("$.address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
-                .andExpect(jsonPath("$.localUnit.id").value("1"));
+                .andExpect(jsonPath("$.localUnitId").value("1"));
     }
 
     @Test
@@ -106,5 +107,64 @@ class StorageControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Test that the storage endpoint returns a list of storage matching your local unit id")
+    public void storageAllSuccessTest() throws Exception {
+        AddressDTO addressDTO = new AddressDTO(
+                "91",
+                "91240",
+                "St Michel sur Orge",
+                "76 rue des Liers"
+        );
+
+        StorageResponse storageResponse1 = new StorageResponse(
+                1L,
+                addressDTO,
+                1L);
+
+        StorageResponse storageResponse2 = new StorageResponse(
+                3L,
+                addressDTO,
+                1L);
+
+        mockMvc.perform(get("/storage")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(storageResponse1.getId()))
+                .andExpect(jsonPath("$[0].address.departmentCode").value(storageResponse1.getAddress().getDepartmentCode()))
+                .andExpect(jsonPath("$[0].address.postalCode").value(storageResponse1.getAddress().getPostalCode()))
+                .andExpect(jsonPath("$[0].address.city").value(storageResponse1.getAddress().getCity()))
+                .andExpect(jsonPath("$[0].address.streetNumberAndName").value(storageResponse1.getAddress().getStreetNumberAndName()))
+                .andExpect(jsonPath("$[0].localUnitId").value(storageResponse1.getLocalUnitId()))
+                .andExpect(jsonPath("$[1].id").value(storageResponse2.getId()))
+                .andExpect(jsonPath("$[1].address.departmentCode").value(storageResponse2.getAddress().getDepartmentCode()))
+                .andExpect(jsonPath("$[1].address.postalCode").value(storageResponse2.getAddress().getPostalCode()))
+                .andExpect(jsonPath("$[1].address.city").value(storageResponse2.getAddress().getCity()))
+                .andExpect(jsonPath("$[1].address.streetNumberAndName").value(storageResponse2.getAddress().getStreetNumberAndName()))
+                .andExpect(jsonPath("$[1].localUnitId").value(storageResponse2.getLocalUnitId()));
+    }
+
+    @Test
+    @DisplayName("Test that the storage endpoint returns a list of storage is empty matching your local unit id")
+    public void storageAllEmptySuccessTest() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("SLUManager", "SLUPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        String southernJwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+
+        mockMvc.perform(get("/storage")
+                        .header("Authorization", "Bearer " + southernJwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
     }
 }

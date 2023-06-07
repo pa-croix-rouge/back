@@ -17,4 +17,9 @@ public class InMemoryStorageRepository extends InMemoryCRUDRepository<ID, Storag
     public InMemoryStorageRepository() {
         super(new ArrayList<>(), new TimeStampIDGenerator());
     }
+
+    @Override
+    public List<Storage> findAllByLocalUnitId(ID localUnitId) {
+        return this.objects.stream().filter(storage -> storage.getLocalUnit().getId().equals(localUnitId)).toList();
+    }
 }

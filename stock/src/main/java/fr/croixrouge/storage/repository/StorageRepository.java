@@ -4,6 +4,8 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.CRUDRepository;
 import fr.croixrouge.storage.model.Storage;
 
-public interface StorageRepository extends CRUDRepository<ID, Storage> {
+import java.util.List;
 
+public interface StorageRepository extends CRUDRepository<ID, Storage> {
+    List<Storage> findAllByLocalUnitId(ID localUnitId);
 }
