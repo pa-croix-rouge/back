@@ -24,9 +24,9 @@ public class LocalUnit extends Entity<ID> {
         return address;
     }
 
-    public User getManager() {
-        return manager;
-    }
+//    public User getManager() {
+//        return manager;
+//    }
 
     public String getCode() {
         return code;

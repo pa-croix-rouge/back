@@ -24,7 +24,7 @@ public class InMemoryRoleRepository extends InMemoryCRUDRepository<ID, Role> imp
     public List<Role> findAllByLocalUnitId(ID localUnitId) {
         List<Role> rolesByLocalUnitId = new ArrayList<>();
         this.objects.stream()
-                .filter(role -> role.getLocalUnitId().equals(localUnitId))
+                .filter(role -> role.getLocalUnit().getId().equals(localUnitId))
                 .forEach(rolesByLocalUnitId::add);
         return rolesByLocalUnitId;
     }
@@ -32,9 +32,9 @@ public class InMemoryRoleRepository extends InMemoryCRUDRepository<ID, Role> imp
     @Override
     public List<Role> findAllByUserId(ID userId) {
         List<Role> rolesByUserId = new ArrayList<>();
-        this.objects.stream()
-                .filter(role -> role.getUserIds().contains(userId))
-                .forEach(rolesByUserId::add);
+//        this.objects.stream()
+//                .filter(role -> role.getUserIds().contains(userId))
+//                .forEach(rolesByUserId::add);
         return rolesByUserId;
     }
 }

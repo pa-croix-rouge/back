@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.event;
 
-import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
@@ -15,8 +16,8 @@ import java.util.List;
 public class RecurrentEventCreationRequest {
     private String name;
     private String description;
-    private String referrerId;
-    private String localUnitId;
+    private Long referrerId;
+    private Long localUnitId;
     private Timestamp firstStart;
     private Timestamp firstEnd;
     private int frequency;
@@ -27,7 +28,7 @@ public class RecurrentEventCreationRequest {
     public RecurrentEventCreationRequest() {
     }
 
-    public RecurrentEventCreationRequest(String name, String description, String referrerId, String localUnitId, Timestamp firstStart, Timestamp firstEnd, int frequency, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
+    public RecurrentEventCreationRequest(String name, String description, Long referrerId, Long localUnitId, Timestamp firstStart, Timestamp firstEnd, int frequency, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
         this.name = name;
         this.description = description;
         this.referrerId = referrerId;
@@ -40,7 +41,7 @@ public class RecurrentEventCreationRequest {
         this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 
-    public Event toEvent() {
+    public Event toEvent(Volunteer referrer, LocalUnit localUnit) {
         ZonedDateTime startDateTime = RecurrentEventCreationRequest.toLocalDateTime(firstStart);
         ZonedDateTime endDateTime = RecurrentEventCreationRequest.toLocalDateTime(firstEnd);
 
@@ -70,8 +71,8 @@ public class RecurrentEventCreationRequest {
                 null,
                 name,
                 description,
-                new ID(referrerId),
-                new ID(localUnitId),
+                referrer,
+                localUnit,
                 eventSessions,
                 eventSessions.size());
     }
@@ -96,19 +97,19 @@ public class RecurrentEventCreationRequest {
         this.description = description;
     }
 
-    public String getReferrerId() {
+    public Long getReferrerId() {
         return referrerId;
     }
 
-    public void setReferrerId(String referrerId) {
+    public void setReferrerId(Long referrerId) {
         this.referrerId = referrerId;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 
-    public void setLocalUnitId(String localUnitId) {
+    public void setLocalUnitId(Long localUnitId) {
         this.localUnitId = localUnitId;
     }
 

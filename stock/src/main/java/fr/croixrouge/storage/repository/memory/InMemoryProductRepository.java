@@ -18,5 +18,4 @@ public class InMemoryProductRepository extends InMemoryCRUDRepository<ID, Produc
     public InMemoryProductRepository() {
         super(new ArrayList<>(), new TimeStampIDGenerator());
     }
-
 }

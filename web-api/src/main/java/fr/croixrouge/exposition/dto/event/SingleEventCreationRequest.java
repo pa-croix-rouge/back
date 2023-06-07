@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.event;
 
-import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
@@ -16,8 +17,8 @@ public class SingleEventCreationRequest {
     private String name;
     private String description;
     private Timestamp start;
-    private String referrerId;
-    private String localUnitId;
+    private Long referrerId;
+    private Long localUnitId;
     private int eventTimeWindowDuration;
     private int eventTimeWindowOccurrence;
     private int eventTimeWindowMaxParticipants;
@@ -25,7 +26,7 @@ public class SingleEventCreationRequest {
     public SingleEventCreationRequest() {
     }
 
-    public SingleEventCreationRequest(String name, String description, Timestamp start, String referrerId, String localUnitId, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
+    public SingleEventCreationRequest(String name, String description, Timestamp start, Long referrerId, Long localUnitId, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
         this.name = name;
         this.description = description;
         this.start = start;
@@ -36,7 +37,7 @@ public class SingleEventCreationRequest {
         this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 
-    public Event toEvent() {
+    public Event toEvent(Volunteer referrer, LocalUnit localUnit) {
         List<EventTimeWindow> timeWindows = new ArrayList<>();
         for (int i = 0; i < eventTimeWindowOccurrence; i++) {
             ZonedDateTime startDateTime = SingleEventCreationRequest.toLocalDateTime(start).plusMinutes((long) i * eventTimeWindowDuration);
@@ -53,8 +54,8 @@ public class SingleEventCreationRequest {
                 null,
                 name,
                 description,
-                new ID(referrerId),
-                new ID(localUnitId),
+                referrer,
+                localUnit,
                 List.of(new EventSession(
                         null,
                         timeWindows
@@ -90,19 +91,19 @@ public class SingleEventCreationRequest {
         this.start = start;
     }
 
-    public String getReferrerId() {
+    public Long getReferrerId() {
         return referrerId;
     }
 
-    public void setReferrerId(String referrerId) {
+    public void setReferrerId(Long referrerId) {
         this.referrerId = referrerId;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 
-    public void setLocalUnitId(String localUnitId) {
+    public void setLocalUnitId(Long localUnitId) {
         this.localUnitId = localUnitId;
     }
 

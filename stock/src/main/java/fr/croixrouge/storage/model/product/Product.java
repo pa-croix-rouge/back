@@ -18,6 +18,10 @@ public class Product extends Entity<ID> {
         this.limit = limit;
     }
 
+    public Product(Product product) {
+        this(product.id, product.name, product.quantity, product.limit);
+    }
+
     public ID getId() {
         return id;
     }

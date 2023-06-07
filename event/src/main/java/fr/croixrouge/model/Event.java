@@ -2,6 +2,8 @@ package fr.croixrouge.model;
 
 import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Volunteer;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -10,12 +12,12 @@ import java.util.Objects;
 public class Event extends Entity<ID> {
     private final String name;
     private final String description;
-    private final ID referrerId;
-    private final ID localUnitId;
+    private final Volunteer referrerId;
+    private final LocalUnit localUnitId;
     private final List<EventSession> sessions;
     private final int occurrences;
 
-    public Event(ID id, String name, String description, ID referrerId, ID localUnitId, List<EventSession> sessions, int occurrences) {
+    public Event(ID id, String name, String description, Volunteer referrerId, LocalUnit localUnitId, List<EventSession> sessions, int occurrences) {
         super(id);
         this.name = name;
         this.description = description;
@@ -33,11 +35,11 @@ public class Event extends Entity<ID> {
         return description;
     }
 
-    public ID getReferrerId() {
+    public Volunteer getReferrer() {
         return referrerId;
     }
 
-    public ID getLocalUnitId() {
+    public LocalUnit getLocalUnit() {
         return localUnitId;
     }
 

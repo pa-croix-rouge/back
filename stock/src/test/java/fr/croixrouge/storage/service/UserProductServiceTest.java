@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,18 +26,18 @@ class UserProductServiceTest {
     StorageProductRepository storageProductRepository = new InMemoryStorageProductRepository();
     UserProductRepository userProductRepository = new InMemoryUserProductRepository();
 
-    Storage storage = new Storage(new ID("1"), null, null);
+    Storage storage = new Storage(new ID(1L), null, null);
 
     private final StorageProductService storageProductService = new StorageProductService(storageProductRepository);
 
     private final UserProductService userProductService = new UserProductService(userProductRepository, storageProductService);
 
-    private final User user = new User(new ID("1"), "TEST", "TEST", List.of());
+    private final User user = new User(new ID(1L), "TEST", "TEST", List.of());
 
-    private final ProductLimit limit1KgFor7Days = new ProductLimit(Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM));
-    private final Product productWeight1KgNoLimit = new Product(new ID("1"), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
-    private final Product productWeight1KgLimit1KgFor7Days = new Product(new ID("1"), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), limit1KgFor7Days);
-    private final Product productWeight500gLimit1KgFor7Days = new Product(new ID("1"), "pr", new WeightQuantifier(500, WeightUnit.GRAM), limit1KgFor7Days);
+    private final ProductLimit limit1KgFor7Days = new ProductLimit(new ID(1L), Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM));
+    private final Product productWeight1KgNoLimit = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
+    private final Product productWeight1KgLimit1KgFor7Days = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), limit1KgFor7Days);
+    private final Product productWeight500gLimit1KgFor7Days = new Product(new ID(1L), "pr", new WeightQuantifier(500, WeightUnit.GRAM), limit1KgFor7Days);
 
     @BeforeEach
     void setUp() {
@@ -73,7 +74,7 @@ class UserProductServiceTest {
 
     @Test
     void should_add_product_if_duration() {
-        userProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1, LocalDate.now().minusDays(8));
+        userProductService.addProduct(user, storage, productWeight500gLimit1KgFor7Days, 1, LocalDateTime.now().minusDays(8));
         assertTrue(userProductService.canAddProduct(user, storage, productWeight500gLimit1KgFor7Days, 1));
     }
 }

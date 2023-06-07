@@ -27,10 +27,25 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
     }
 
     public boolean validateVolunteerAccount(Volunteer volunteer) {
-        return this.repository.validateVolunteerAccount(volunteer);
+        Volunteer updatedVolunteer = new Volunteer(volunteer.getId(),
+                volunteer.getUser(),
+                volunteer.getFirstName(),
+                volunteer.getLastName(),
+                volunteer.getPhoneNumber(),
+                true,
+                volunteer.getLocalUnit());
+
+        return this.save(updatedVolunteer) != null;
     }
 
     public boolean invalidateVolunteerAccount(Volunteer volunteer) {
-        return this.repository.invalidateVolunteerAccount(volunteer);
+        Volunteer updatedVolunteer = new Volunteer(volunteer.getId(),
+                volunteer.getUser(),
+                volunteer.getFirstName(),
+                volunteer.getLastName(),
+                volunteer.getPhoneNumber(),
+                false,
+                volunteer.getLocalUnit());
+        return this.save(updatedVolunteer) != null;
     }
 }

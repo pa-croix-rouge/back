@@ -4,16 +4,16 @@ import java.util.List;
 
 public class User extends Entity<ID> {
 
-    private final String username;
-    private final String password;
+    protected final String username;
+    protected final String password;
 
-    private final List<String> authorities;
+    protected final List<Role> roles;
 
-    public User(ID userId, String username, String password, List<String> authorities) {
+    public User(ID userId, String username, String password, List<Role> roles) {
         super(userId);
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
+        this.roles = roles;
     }
 
     public String getUsername() {
@@ -24,7 +24,7 @@ public class User extends Entity<ID> {
         return password;
     }
 
-    public List<String> getAuthorities() {
-        return authorities;
+    public List<Role> getRoles() {
+        return roles;
     }
 }

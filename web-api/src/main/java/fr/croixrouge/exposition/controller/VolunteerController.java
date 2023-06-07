@@ -36,7 +36,7 @@ public class VolunteerController extends ErrorHandler {
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
-        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getLocalUnitId().value());
+        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getLocalUnit().getId().value());
     }
 
     @GetMapping("/{id}")
@@ -49,7 +49,7 @@ public class VolunteerController extends ErrorHandler {
     public ResponseEntity<List<VolunteerResponse>> findAll(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
-        return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getLocalUnitId()).stream().map(this::toDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getLocalUnit().getId()).stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/token")
@@ -70,7 +70,8 @@ public class VolunteerController extends ErrorHandler {
         if (userId == null) {
             return ResponseEntity.internalServerError().build();
         }
-        Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false, localUnit.getId());
+        user.setId(userId);
+        Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false, localUnit);
         ID volunteerId = service.save(volunteer);
         if (volunteerId == null) {
             return ResponseEntity.internalServerError().build();

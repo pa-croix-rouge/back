@@ -2,9 +2,10 @@ package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
-import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.exposition.dto.CreateStorageDTO;
+import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(MockRepositoryConfig.class)
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 class StorageControllerTest {
 
     @Autowired
@@ -59,7 +60,7 @@ class StorageControllerTest {
     @Test
     @DisplayName("Test that the storage endpoint returns a 404 when given a incorrect storage id")
     public void productIdFailedTest() throws Exception {
-        mockMvc.perform(get("/storage/invalid-storage-id")
+        mockMvc.perform(get("/storage/-1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -69,7 +70,7 @@ class StorageControllerTest {
     @DisplayName("Test that the storage post endpoint returns OK when given a correct storage")
     public void productAddSuccessTest() throws Exception {
         AddressDTO addressDTO = new AddressDTO("91", "91240", "St Michel sur Orge", "760 rue des Liers");
-        CreateStorageDTO createStorageDTO = new CreateStorageDTO("1", addressDTO);
+        CreateStorageDTO createStorageDTO = new CreateStorageDTO(1L, addressDTO);
 
         var res = mockMvc.perform(post("/storage")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -77,7 +78,7 @@ class StorageControllerTest {
                         .content(objectMapper.writeValueAsString(createStorageDTO)))
                 .andExpect(status().isOk());
 
-        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
+        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value").toString();
 
         mockMvc.perform(get("/storage/" + id)
                         .header("Authorization", "Bearer " + jwtToken)

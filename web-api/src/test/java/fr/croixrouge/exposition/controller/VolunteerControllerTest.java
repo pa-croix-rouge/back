@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.core.VolunteerCreationRequest;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(MockRepositoryConfig.class)
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 public class VolunteerControllerTest {
 
     @Autowired
@@ -57,7 +58,7 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true,
-                "1"
+                1L
         );
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
@@ -79,7 +80,7 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true,
-                "1"
+                1L
         );
 
         mockMvc.perform(get("/volunteer")
@@ -126,7 +127,7 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true,
-                "1"
+                1L
         );
 
         mockMvc.perform(get("/volunteer/token")
@@ -175,7 +176,7 @@ public class VolunteerControllerTest {
                 "Doe",
                 "+33 6 00 11 00 11",
                 false,
-                "1"
+                1L
         );
 
         mockMvc.perform(get("/volunteer/" + volunteerId)

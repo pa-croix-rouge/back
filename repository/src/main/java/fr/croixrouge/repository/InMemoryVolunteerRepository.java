@@ -32,7 +32,7 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
 
     @Override
     public List<Volunteer> findAllByLocalUnitId(ID id) {
-        return this.objects.stream().filter(o -> o.getLocalUnitId().equals(id)).toList();
+        return this.objects.stream().filter(o -> o.getLocalUnit().getId().equals(id)).toList();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
                 true,
-                volunteer.getLocalUnitId());
+                volunteer.getLocalUnit());
         return this.save(updatedVolunteer) != null;
     }
 
@@ -55,7 +55,7 @@ public class InMemoryVolunteerRepository extends InMemoryCRUDRepository<ID, Volu
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
                 false,
-                volunteer.getLocalUnitId());
+                volunteer.getLocalUnit());
         return this.save(updatedVolunteer) != null;
     }
 }

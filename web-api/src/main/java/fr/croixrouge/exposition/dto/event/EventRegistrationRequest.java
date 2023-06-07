@@ -1,50 +1,50 @@
 package fr.croixrouge.exposition.dto.event;
 
 public class EventRegistrationRequest {
-    private String eventId;
-    private String sessionId;
-    private String timeWindowId;
-    private String participantId;
+    private Long eventId;
+    private Long sessionId;
+    private Long timeWindowId;
+    private Long participantId;
 
     public EventRegistrationRequest() {
     }
 
-    public EventRegistrationRequest(String eventId, String sessionId, String timeWindowId, String participantId) {
+    public EventRegistrationRequest(Long eventId, Long sessionId, Long timeWindowId, Long participantId) {
         this.eventId = eventId;
         this.sessionId = sessionId;
         this.timeWindowId = timeWindowId;
         this.participantId = participantId;
     }
 
-    public String getEventId() {
+    public Long getEventId() {
         return eventId;
     }
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public String getTimeWindowId() {
+    public Long getTimeWindowId() {
         return timeWindowId;
     }
 
-    public String getParticipantId() {
+    public Long getParticipantId() {
         return participantId;
     }
 
-    public void setEventId(String eventId) {
+    public void setEventId(Long eventId) {
         this.eventId = eventId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 
-    public void setTimeWindowId(String timeWindowId) {
+    public void setTimeWindowId(Long timeWindowId) {
         this.timeWindowId = timeWindowId;
     }
 
-    public void setParticipantId(String participantId) {
+    public void setParticipantId(Long participantId) {
         this.participantId = participantId;
     }
 }

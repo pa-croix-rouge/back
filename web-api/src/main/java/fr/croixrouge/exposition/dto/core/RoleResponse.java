@@ -1,6 +1,5 @@
 package fr.croixrouge.exposition.dto.core;
 
-import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Operations;
 import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.domain.model.Role;
@@ -12,12 +11,12 @@ public class RoleResponse {
     private String name;
     private String description;
     private Map<Resources, List<Operations>> authorizations;
-    private List<String> userIds;
+    private List<Long> userIds;
 
     public RoleResponse() {
     }
 
-    public RoleResponse(String name, String description, Map<Resources, List<Operations>> authorizations, List<String> userIds) {
+    public RoleResponse(String name, String description, Map<Resources, List<Operations>> authorizations, List<Long> userIds) {
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
@@ -29,7 +28,7 @@ public class RoleResponse {
                 role.getName(),
                 role.getDescription(),
                 role.getAuthorizations(),
-                role.getUserIds().stream().map(ID::value).toList()
+                List.of()// role.getUserIds().stream().map(ID::value).toList()
         );
     }
 
@@ -45,7 +44,7 @@ public class RoleResponse {
         return authorizations.toString();
     }
 
-    public List<String> getUserIds() {
+    public List<Long> getUserIds() {
         return userIds;
     }
 }

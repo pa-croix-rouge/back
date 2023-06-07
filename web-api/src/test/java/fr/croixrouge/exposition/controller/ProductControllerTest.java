@@ -2,10 +2,11 @@ package fr.croixrouge.exposition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
-import fr.croixrouge.exposition.dto.CreateProductDTO;
-import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
+import fr.croixrouge.exposition.dto.core.LoginRequest;
+import fr.croixrouge.exposition.dto.product.CreateProductDTO;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(MockRepositoryConfig.class)
+@Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 class ProductControllerTest {
 
     @Autowired
@@ -60,10 +61,23 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.quantity.value").value(1));
     }
 
+ /*   @Test
+    @DisplayName("Test that the product endpoint returns a FOOD product when given a correct product id")
+    public void foodProductIdSuccessTest() throws Exception {
+        mockMvc.perform(get("/product/3")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.name").value("Product 1"))
+                .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
+                .andExpect(jsonPath("$.quantity.value").value(1));
+    }*/
+
     @Test
     @DisplayName("Test that the product endpoint returns a 404 when given a incorrect product id")
     public void productIdFailedTest() throws Exception {
-        mockMvc.perform(get("/product/invalid-product-id")
+        mockMvc.perform(get("/product/-1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -80,7 +94,7 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(createProductDTO)))
                 .andExpect(status().isOk());
 
-        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value");
+        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value").toString();
 
         mockMvc.perform(get("/product/" + id)
                         .header("Authorization", "Bearer " + jwtToken)
@@ -109,3 +123,4 @@ class ProductControllerTest {
     }
 
 }
+

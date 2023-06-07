@@ -4,13 +4,13 @@ import fr.croixrouge.domain.model.LocalUnit;
 
 public class LocalUnitResponse {
 
-    private final String Id;
+    private final Long Id;
     private final String name;
     private final AddressDTO address;
     private final String managerName;
     private final String code;
 
-    public LocalUnitResponse(String id, String name, AddressDTO address, String managerName, String code) {
+    public LocalUnitResponse(Long id, String name, AddressDTO address, String managerName, String code) {
         this.Id = id;
         this.name = name;
         this.address = address;
@@ -23,7 +23,7 @@ public class LocalUnitResponse {
                 localUnit.getId().value(),
                 localUnit.getName(),
                 new AddressDTO(localUnit.getAddress()),
-                localUnit.getManager().getUsername(),
+                null, //localUnit.getManager().getUsername(),
                 localUnit.getCode()
         );
     }
@@ -32,7 +32,7 @@ public class LocalUnitResponse {
         return address;
     }
 
-    public String getId() {
+    public Long getId() {
         return Id;
     }
 

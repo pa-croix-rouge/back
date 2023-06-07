@@ -1,10 +1,11 @@
-package fr.croixrouge.exposition.dto;
+package fr.croixrouge.exposition.dto.product;
 
+import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.Product;
 
 public class ProductResponse {
 
-    protected final String id;
+    protected final Long id;
 
     protected final String name;
     protected final QuantifierDTO quantity;
@@ -19,7 +20,7 @@ public class ProductResponse {
         return name;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

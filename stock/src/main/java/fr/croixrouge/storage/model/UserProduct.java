@@ -5,20 +5,23 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.storage.model.product.Product;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public final class UserProduct extends Entity<ID> {
 
     private final User user;
     private final Product product;
-    private final LocalDate date;
+
+    private final Storage storage;
+    private final LocalDateTime date;
     private final int quantity;
 
-    public UserProduct(ID id, User user, Product product, LocalDate date, int quantity) {
+    public UserProduct(ID id, User user, Product product, Storage storage, LocalDateTime date, int quantity) {
         super(id);
         this.user = user;
         this.product = product;
+        this.storage = storage;
         this.date = date;
         this.quantity = quantity;
     }
@@ -31,12 +34,16 @@ public final class UserProduct extends Entity<ID> {
         return product;
     }
 
-    public LocalDate date() {
+    public LocalDateTime date() {
         return date;
     }
 
     public int quantity() {
         return quantity;
+    }
+
+    public Storage getStorage() {
+        return storage;
     }
 
     @Override
