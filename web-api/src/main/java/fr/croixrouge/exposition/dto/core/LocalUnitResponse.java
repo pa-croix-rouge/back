@@ -23,7 +23,7 @@ public class LocalUnitResponse {
                 localUnit.getId().value(),
                 localUnit.getName(),
                 new AddressDTO(localUnit.getAddress()),
-                null, //localUnit.getManager().getUsername(),
+                localUnit.getManagerUsername(),
                 localUnit.getCode()
         );
     }

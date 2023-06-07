@@ -29,10 +29,13 @@ public class LocalUnitDB {
     @Column(name = "code")
     private String code;
 
+    @Column(name = "manager_username", nullable = false)
+    private String managerUsername;
+
     public LocalUnitDB() {
     }
 
-    public LocalUnitDB(Long localUnitID, String name, String code, String department, String streetNumberAndName, String city, String postalCode) {
+    public LocalUnitDB(Long localUnitID, String name, String code, String department, String streetNumberAndName, String city, String postalCode, String managerUsername) {
         this.localUnitID = localUnitID;
         this.department = department;
         this.code = code;
@@ -40,6 +43,7 @@ public class LocalUnitDB {
         this.city = city;
         this.postalCode = postalCode;
         this.name = name;
+        this.managerUsername = managerUsername;
     }
 
     public String getCode() {
@@ -93,5 +97,9 @@ public class LocalUnitDB {
 
     public Long getLocalUnitID() {
         return localUnitID;
+    }
+
+    public String getManagerUsername() {
+        return managerUsername;
     }
 }

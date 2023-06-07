@@ -55,7 +55,7 @@ public class MockRepositoryConfig {
     private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
     private final LocalUnit localUnit;
 
-    private LocalUnit southernLocalUnit;
+    private final LocalUnit southernLocalUnit;
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -80,11 +80,8 @@ public class MockRepositoryConfig {
 
         volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
-        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, null, address2.getPostalCode() + "-000");
+        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
         this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
-        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
-
-
     }
 
     @Bean

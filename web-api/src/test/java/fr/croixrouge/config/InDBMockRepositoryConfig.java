@@ -65,7 +65,7 @@ public class InDBMockRepositoryConfig {
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
 
     private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
-    private LocalUnit localUnit, southernLocalUnit;
+    private final LocalUnit localUnit, southernLocalUnit;
 
     public InDBMockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -73,7 +73,7 @@ public class InDBMockRepositoryConfig {
         localUnit = new LocalUnit(new ID(1L),
                 "Unite Local du Val d'Orge",
                 address,
-                null,
+                "LUManager",
                 address.getPostalCode() + "-000");
 
         managerRole = new Role(new ID(1L),
@@ -89,11 +89,9 @@ public class InDBMockRepositoryConfig {
 
         volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
-        southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, null, address2.getPostalCode() + "-000");
+        southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
 
         southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
-
-        southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
