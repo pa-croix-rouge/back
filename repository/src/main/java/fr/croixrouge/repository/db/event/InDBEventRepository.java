@@ -111,6 +111,8 @@ public class InDBEventRepository implements EventRepository {
     public EventSessionDB toEventSessionDB(EventSession eventSession, EventDB eventDB) {
         return new EventSessionDB(
                 eventSession.getId() == null ? null : eventSession.getId().value(),
+                eventSession.getStart(),
+                eventSession.getEnd(),
                 eventDB
         );
     }
