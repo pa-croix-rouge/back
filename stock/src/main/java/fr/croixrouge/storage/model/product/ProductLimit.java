@@ -7,7 +7,6 @@ import fr.croixrouge.storage.model.quantifier.MeasurementUnit;
 import fr.croixrouge.storage.model.quantifier.Quantifier;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

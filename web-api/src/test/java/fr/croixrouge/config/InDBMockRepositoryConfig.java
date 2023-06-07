@@ -15,7 +15,6 @@ import fr.croixrouge.repository.db.product.FoodProductDBRepository;
 import fr.croixrouge.repository.db.product.InDBFoodProductRepository;
 import fr.croixrouge.repository.db.product.InDBProductRepository;
 import fr.croixrouge.repository.db.product.ProductDBRepository;
-import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
 import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;

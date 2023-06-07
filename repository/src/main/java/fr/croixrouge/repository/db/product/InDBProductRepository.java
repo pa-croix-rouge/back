@@ -2,8 +2,6 @@ package fr.croixrouge.repository.db.product;
 
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.repository.db.product_limit.ProductLimitDB;
-import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
-import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.product.ProductLimit;
 import fr.croixrouge.storage.model.quantifier.MeasurementUnit;
