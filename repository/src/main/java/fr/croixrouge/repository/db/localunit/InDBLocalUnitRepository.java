@@ -27,7 +27,7 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
                         localUnitDB.getPostalCode(),
                         localUnitDB.getCity(),
                         localUnitDB.getStreetNumberAndName()),
-                null,
+                localUnitDB.getManagerUsername(),
                 localUnitDB.getCode()
         );
     }
@@ -40,7 +40,8 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
                 localUnit.getAddress().getDepartment().getCode(),
                 localUnit.getAddress().getStreetNumberAndName(),
                 localUnit.getAddress().getCity(),
-                localUnit.getAddress().getPostalCode()
+                localUnit.getAddress().getPostalCode(),
+                localUnit.getManagerUsername()
         );
     }
 
