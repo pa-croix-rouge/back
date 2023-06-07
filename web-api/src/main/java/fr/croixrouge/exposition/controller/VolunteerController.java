@@ -13,6 +13,7 @@ import fr.croixrouge.service.UserService;
 import fr.croixrouge.service.VolunteerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -41,6 +42,7 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('VOLUNTEER_READ')")
     public ResponseEntity<VolunteerResponse> get(@PathVariable String id) {
         Volunteer volunteer = service.findById(new ID(id));
         return ResponseEntity.ok(this.toDTO(volunteer));
