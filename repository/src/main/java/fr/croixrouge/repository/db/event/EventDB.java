@@ -15,11 +15,11 @@ public class EventDB {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "local_unit_db_localunit_id", nullable = false)
     private LocalUnitDB localUnitDB;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "volunteer_db_id", nullable = false)
     private VolunteerDB volunteerDB;
 

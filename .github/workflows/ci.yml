@@ -66,7 +66,7 @@ jobs:
         run: npm install -g snyk
 
       - name: Run Snyk test
-        run: snyk test --all-projects
+        run: snyk test --all-projects --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: false

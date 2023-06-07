@@ -18,14 +18,8 @@ public class InDBProductRepository implements ProductRepository {
 
     private final ProductDBRepository productDBRepository;
 
-    private final FoodProductDBRepository foodProductDBRepository;
-
-    private final ProductLimitDBRepository productLimitDBRepository;
-
-    public InDBProductRepository(ProductDBRepository productDBRepository, FoodProductDBRepository foodProductDBRepository, ProductLimitDBRepository productLimitDBRepository) {
+    public InDBProductRepository(ProductDBRepository productDBRepository) {
         this.productDBRepository = productDBRepository;
-        this.foodProductDBRepository = foodProductDBRepository;
-        this.productLimitDBRepository = productLimitDBRepository;
     }
 
     public ProductLimit toProductLimit(ProductLimitDB productLimitDB) {
@@ -60,19 +54,6 @@ public class InDBProductRepository implements ProductRepository {
         );
     }
 
-    public FoodProduct toFoodProduct(FoodProductDB foodProductDB) {
-        var product = findById(new ID(foodProductDB.getId())).orElseThrow();
-
-        return new FoodProduct(
-                product,
-                foodProductDB.getFoodConservation(),
-                foodProductDB.getExpirationDate(),
-                foodProductDB.getOptimalConsumptionDate(),
-                foodProductDB.getPrice()
-        );
-
-    }
-
     public ProductDB toProductDB(Product product) {
         return new ProductDB(
                 product.getId() == null ? null : product.getId().value(),
@@ -105,8 +86,4 @@ public class InDBProductRepository implements ProductRepository {
                 .toList();
     }
 
-    @Override
-    public Optional<FoodProduct> findByIdFood(ID id) {
-        return foodProductDBRepository.findById(id.value()).map(this::toFoodProduct);
-    }
 }

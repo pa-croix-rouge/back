@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventTimeWindow;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -16,41 +17,48 @@ public class SingleEventCreationRequest {
     private String name;
     private String description;
     private Timestamp start;
-    private Timestamp end;
     private Long referrerId;
     private Long localUnitId;
-    private int maxParticipants;
+    private int eventTimeWindowDuration;
+    private int eventTimeWindowOccurrence;
+    private int eventTimeWindowMaxParticipants;
 
     public SingleEventCreationRequest() {
     }
 
-    public SingleEventCreationRequest(String name, String description, Timestamp start, Timestamp end, Long referrerId, Long localUnitId, int maxParticipants) {
+    public SingleEventCreationRequest(String name, String description, Timestamp start, Long referrerId, Long localUnitId, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
         this.name = name;
         this.description = description;
         this.start = start;
-        this.end = end;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
-        this.maxParticipants = maxParticipants;
+        this.eventTimeWindowDuration = eventTimeWindowDuration;
+        this.eventTimeWindowOccurrence = eventTimeWindowOccurrence;
+        this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 
     public Event toEvent(Volunteer referrer, LocalUnit localUnit) {
-        ZonedDateTime startDateTime = SingleEventCreationRequest.toLocalDateTime(start);
-        ZonedDateTime endDateTime = SingleEventCreationRequest.toLocalDateTime(end);
+        List<EventTimeWindow> timeWindows = new ArrayList<>();
+        for (int i = 0; i < eventTimeWindowOccurrence; i++) {
+            ZonedDateTime startDateTime = SingleEventCreationRequest.toLocalDateTime(start).plusMinutes((long) i * eventTimeWindowDuration);
+            ZonedDateTime endDateTime = SingleEventCreationRequest.toLocalDateTime(start).plusMinutes((long) (i + 1) * eventTimeWindowDuration);
+            timeWindows.add(new EventTimeWindow(
+                    null,
+                    startDateTime,
+                    endDateTime,
+                    eventTimeWindowMaxParticipants,
+                    new ArrayList<>()
+            ));
+        }
         return new Event(
                 null,
                 name,
                 description,
                 referrer,
                 localUnit,
-                startDateTime,
-                endDateTime,
                 List.of(new EventSession(
                         null,
-                        startDateTime,
-                        endDateTime,
-                        maxParticipants,
-                        new ArrayList<>()
+                        timeWindows
                 )),
                 1);
     }
@@ -83,14 +91,6 @@ public class SingleEventCreationRequest {
         this.start = start;
     }
 
-    public Timestamp getEnd() {
-        return end;
-    }
-
-    public void setEnd(Timestamp end) {
-        this.end = end;
-    }
-
     public Long getReferrerId() {
         return referrerId;
     }
@@ -107,11 +107,27 @@ public class SingleEventCreationRequest {
         this.localUnitId = localUnitId;
     }
 
-    public int getMaxParticipants() {
-        return maxParticipants;
+    public int getEventTimeWindowDuration() {
+        return eventTimeWindowDuration;
     }
 
-    public void setMaxParticipants(int maxParticipants) {
-        this.maxParticipants = maxParticipants;
+    public void setEventTimeWindowDuration(int eventTimeWindowDuration) {
+        this.eventTimeWindowDuration = eventTimeWindowDuration;
+    }
+
+    public int getEventTimeWindowOccurrence() {
+        return eventTimeWindowOccurrence;
+    }
+
+    public void setEventTimeWindowOccurrence(int eventTimeWindowOccurrence) {
+        this.eventTimeWindowOccurrence = eventTimeWindowOccurrence;
+    }
+
+    public int getEventTimeWindowMaxParticipants() {
+        return eventTimeWindowMaxParticipants;
+    }
+
+    public void setEventTimeWindowMaxParticipants(int eventTimeWindowMaxParticipants) {
+        this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 }

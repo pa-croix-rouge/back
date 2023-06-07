@@ -32,44 +32,20 @@ public class EventService extends CRUDService<ID, Event, EventRepository> {
         return repository.findByLocalUnitIdAndMonth(localUnitId, month, year);
     }
 
-    public boolean registerParticipant(ID eventId, ID sessionId, ID participantId) {
-        var event = findById(eventId);
-        var sessions1 = event.getSessions()
-                .stream()
-                .filter(session -> session.getId().equals(sessionId)).toList();
+    public List<Event> findEventsByLocalUnitIdAndTrimester(ID localUnitId, int month, int year) {
+        return repository.findByLocalUnitIdAndTrimester(localUnitId, month, year);
+    }
 
-        var sessions2 = sessions1.stream()
-                .filter(session -> session.getParticipants().size() < session.getMaxParticipants()).toList();
-
-        var sessions3 = sessions2.stream().filter(session -> session.getParticipants().stream().noneMatch(participant -> participant.equals(participantId))).toList();
-
-        var sessions4 = sessions3.stream().findFirst().orElseThrow(() -> new IllegalArgumentException("Cannot register participant, event session doesn't exist, is full or participant already registered"));
-
-        sessions4.getParticipants().add(participantId);
-
-        repository.updateEventSession(sessions4, event);
-
-//        this.findById(eventId).getSessions()
-//                .stream()
-//                .filter(session -> session.getId().equals(sessionId))
-//                .filter(session -> session.getParticipants().size() < session.getMaxParticipants())
-//                .filter(session -> session.getParticipants().stream().noneMatch(participant -> participant.equals(participantId)))
-//                .findFirst()
-//                .ifPresentOrElse(session -> {
-//                    session.getParticipants().add(participantId);
-//                    repository.updateEventSession(session);
-//                }, () -> {
-//                    throw new IllegalArgumentException("Cannot register participant, event session doesn't exist, is full or participant already registered");
-//                });
-        return true;
+    public boolean registerParticipant(ID eventId, ID sessionId, ID timeWindow, ID participantId) {
+        return repository.registerParticipant(eventId, sessionId, timeWindow, participantId);
     }
 
     public boolean updateSingleEvent(ID eventId, ID sessionId, Event event) {
         return repository.updateSingleEvent(eventId, sessionId, event);
     }
 
-    public boolean updateEventSessions(ID eventId, ID sessionId, Event event) {
-        return repository.updateEventSessions(eventId, sessionId, event);
+    public boolean updateEventSessions(ID eventId, ID sessionId, Event event, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
+        return repository.updateEventSessions(eventId, sessionId, event, eventTimeWindowDuration, eventTimeWindowOccurrence, eventTimeWindowMaxParticipants);
     }
 
     public boolean deleteEvent(ID eventId, ID sessionId) {

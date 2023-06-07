@@ -7,17 +7,11 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public class EventSession extends Entity<ID> {
-    private final ZonedDateTime start;
-    private final ZonedDateTime end;
-    private final int maxParticipants;
-    private final List<ID> participants;
+    private final List<EventTimeWindow> timeWindows;
 
-    public EventSession(ID id, ZonedDateTime start, ZonedDateTime end, int maxParticipants, List<ID> participants) {
+    public EventSession(ID id, List<EventTimeWindow> timeWindows) {
         super(id);
-        this.start = start;
-        this.end = end;
-        this.maxParticipants = maxParticipants;
-        this.participants = participants;
+        this.timeWindows = timeWindows;
     }
 
     public ID getId() {
@@ -25,18 +19,22 @@ public class EventSession extends Entity<ID> {
     }
 
     public ZonedDateTime getStart() {
-        return start;
+        return this.timeWindows.get(0).getStart();
     }
 
     public ZonedDateTime getEnd() {
-        return end;
+        return this.timeWindows.get(this.timeWindows.size() - 1).getEnd();
     }
 
     public int getMaxParticipants() {
-        return maxParticipants;
+        return this.timeWindows.stream().map(EventTimeWindow::getMaxParticipants).reduce(0, Integer::sum);
     }
 
-    public List<ID> getParticipants() {
-        return participants;
+    public int getParticipants() {
+        return this.timeWindows.stream().map(eventTimeWindow -> eventTimeWindow.getParticipants().size()).reduce(0, Integer::sum);
+    }
+
+    public List<EventTimeWindow> getTimeWindows() {
+        return timeWindows;
     }
 }

@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventTimeWindow;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -19,23 +20,25 @@ public class RecurrentEventCreationRequest {
     private Long localUnitId;
     private Timestamp firstStart;
     private Timestamp firstEnd;
-    private int duration;
     private int frequency;
-    private int maxParticipants;
+    private int eventTimeWindowDuration;
+    private int eventTimeWindowOccurrence;
+    private int eventTimeWindowMaxParticipants;
 
     public RecurrentEventCreationRequest() {
     }
 
-    public RecurrentEventCreationRequest(String name, String description, Long referrerId, Long localUnitId, Timestamp firstStart, Timestamp firstEnd, int duration, int frequency, int maxParticipants) {
+    public RecurrentEventCreationRequest(String name, String description, Long referrerId, Long localUnitId, Timestamp firstStart, Timestamp firstEnd, int frequency, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
         this.name = name;
         this.description = description;
         this.referrerId = referrerId;
         this.localUnitId = localUnitId;
         this.firstStart = firstStart;
         this.firstEnd = firstEnd;
-        this.duration = duration;
         this.frequency = frequency;
-        this.maxParticipants = maxParticipants;
+        this.eventTimeWindowDuration = eventTimeWindowDuration;
+        this.eventTimeWindowOccurrence = eventTimeWindowOccurrence;
+        this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 
     public Event toEvent(Volunteer referrer, LocalUnit localUnit) {
@@ -43,13 +46,24 @@ public class RecurrentEventCreationRequest {
         ZonedDateTime endDateTime = RecurrentEventCreationRequest.toLocalDateTime(firstEnd);
 
         List<EventSession> eventSessions = new ArrayList<>();
+
         for (ZonedDateTime sessionTime = startDateTime; sessionTime.isBefore(endDateTime); sessionTime = sessionTime.plusDays(frequency)) {
+            List<EventTimeWindow> timeWindows = new ArrayList<>();
+
+            for (int i = 0; i < eventTimeWindowOccurrence; i++) {
+                ZonedDateTime timeWindowStartDateTime = sessionTime.plusMinutes((long) i * eventTimeWindowDuration);
+                ZonedDateTime timeWindowEndDateTime = sessionTime.plusMinutes((long) (i + 1) * eventTimeWindowDuration);
+                timeWindows.add(new EventTimeWindow(
+                        null,
+                        timeWindowStartDateTime,
+                        timeWindowEndDateTime,
+                        eventTimeWindowMaxParticipants,
+                        new ArrayList<>()
+                ));
+            }
             eventSessions.add(new EventSession(
                     null,
-                    sessionTime,
-                    sessionTime.plusMinutes(this.duration),
-                    maxParticipants,
-                    new ArrayList<>()
+                    timeWindows
             ));
         }
 
@@ -59,8 +73,6 @@ public class RecurrentEventCreationRequest {
                 description,
                 referrer,
                 localUnit,
-                startDateTime,
-                endDateTime,
                 eventSessions,
                 eventSessions.size());
     }
@@ -117,14 +129,6 @@ public class RecurrentEventCreationRequest {
         this.firstEnd = firstEnd;
     }
 
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
     public int getFrequency() {
         return frequency;
     }
@@ -133,11 +137,27 @@ public class RecurrentEventCreationRequest {
         this.frequency = frequency;
     }
 
-    public int getMaxParticipants() {
-        return maxParticipants;
+    public int getEventTimeWindowDuration() {
+        return eventTimeWindowDuration;
     }
 
-    public void setMaxParticipants(int maxParticipants) {
-        this.maxParticipants = maxParticipants;
+    public void setEventTimeWindowDuration(int eventTimeWindowDuration) {
+        this.eventTimeWindowDuration = eventTimeWindowDuration;
+    }
+
+    public int getEventTimeWindowOccurrence() {
+        return eventTimeWindowOccurrence;
+    }
+
+    public void setEventTimeWindowOccurrence(int eventTimeWindowOccurrence) {
+        this.eventTimeWindowOccurrence = eventTimeWindowOccurrence;
+    }
+
+    public int getEventTimeWindowMaxParticipants() {
+        return eventTimeWindowMaxParticipants;
+    }
+
+    public void setEventTimeWindowMaxParticipants(int eventTimeWindowMaxParticipants) {
+        this.eventTimeWindowMaxParticipants = eventTimeWindowMaxParticipants;
     }
 }

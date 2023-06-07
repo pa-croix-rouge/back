@@ -72,7 +72,54 @@ public class VolunteerControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the volunteer details endpoint returns volunteer's informations when given the correct id")
+    @DisplayName("Test that the volunteer endpoint returns a list of volunteers based on your local unit")
+    public void volunteerListSuccessTest() throws Exception {
+        VolunteerResponse volunteerResponse = new VolunteerResponse(
+                "LUManager",
+                "volunteerFirstName",
+                "volunteerLastName",
+                "+33 6 00 00 00 00",
+                true,
+                1L
+        );
+
+        mockMvc.perform(get("/volunteer")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].username").value(volunteerResponse.getUsername()))
+                .andExpect(jsonPath("$[0].firstName").value(volunteerResponse.getFirstName()))
+                .andExpect(jsonPath("$[0].lastName").value(volunteerResponse.getLastName()))
+                .andExpect(jsonPath("$[0].phoneNumber").value(volunteerResponse.getPhoneNumber()))
+                .andExpect(jsonPath("$[0].isValidated").value(volunteerResponse.getIsValidated()));
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer endpoint returns an (almost) empty list of volunteers based on your local unit")
+    public void volunteerEmptyListSuccessTest() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("SLUManager", "SLUPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        String southernJwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+
+        mockMvc.perform(get("/volunteer")
+                        .header("Authorization", "Bearer " + southernJwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].username").value("SLUManager"))
+                .andExpect(jsonPath("$[0].firstName").value("southernVolunteer"))
+                .andExpect(jsonPath("$[0].lastName").value("southernVolunteerName"))
+                .andExpect(jsonPath("$[0].phoneNumber").value("+33 6 83 83 83 83"))
+                .andExpect(jsonPath("$[0].isValidated").value(true));
+    }
+
+    @Test
+    @DisplayName("Test that the volunteer details endpoint returns volunteer's informations from his token")
     public void volunteerFromTokenSuccessTest() throws Exception {
         VolunteerResponse volunteerResponse = new VolunteerResponse(
                 "LUManager",
@@ -115,8 +162,7 @@ public class VolunteerControllerTest {
                 "91240-000"
         );
 
-        String result = mockMvc.perform(post("/volunteer")
-                        .header("Authorization", "Bearer " + jwtToken)
+        String result = mockMvc.perform(post("/volunteer/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(volunteerCreationRequest)))
                 .andExpect(status().isOk())
