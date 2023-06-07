@@ -1,15 +1,11 @@
 package fr.croixrouge.repository.db.volunteer;
 
-import fr.croixrouge.repository.db.localunit.LocalUnitDB;
 import fr.croixrouge.repository.db.user.UserDB;
 import jakarta.persistence.*;
 
 @Table(name = "volunteer")
 @Entity
 public class VolunteerDB {
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "local_unit_db_localunit_id", nullable = false)
-    private LocalUnitDB localUnitDB;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,16 +28,7 @@ public class VolunteerDB {
     @Column(name = "validated")
     private Boolean validated;
 
-    public LocalUnitDB getLocalUnitDB() {
-        return localUnitDB;
-    }
-
-    public void setLocalUnitDB(LocalUnitDB localUnitDB) {
-        this.localUnitDB = localUnitDB;
-    }
-
-    public VolunteerDB(Long id, UserDB userDB, String firstname, String lastname, String phonenumber, LocalUnitDB localUnitDB, Boolean validated) {
-        this.localUnitDB = localUnitDB;
+    public VolunteerDB(Long id, UserDB userDB, String firstname, String lastname, String phonenumber, Boolean validated) {
         this.id = id;
         this.firstname = firstname;
         this.phonenumber = phonenumber;

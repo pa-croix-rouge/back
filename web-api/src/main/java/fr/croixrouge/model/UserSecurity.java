@@ -10,12 +10,12 @@ import java.util.*;
 public class UserSecurity extends User implements UserDetails {
 
 
-    public UserSecurity(ID userId, String username, String password, List<Role> roles) {
-        super(userId, username, password, roles);
+    public UserSecurity(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles) {
+        super(userId, username, password, localUnit, roles);
     }
 
     public UserSecurity(User user) {
-        super(user.getId(), user.getUsername(), user.getPassword(), user.getRoles());
+        super(user.getId(), user.getUsername(), user.getPassword(), user.getLocalUnit(), user.getRoles());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package fr.croixrouge.repository.db.user;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.repository.db.localunit.LocalUnitDB;
 import fr.croixrouge.repository.db.role.RoleDB;
 import jakarta.persistence.*;
 
@@ -27,11 +28,15 @@ public class UserDB {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "local_unit_db_localunit_id", nullable = false)
+    private LocalUnitDB localUnitDB;
+
     public Set<RoleDB> getRoleDBs() {
         return roleDBs;
     }
 
-    public UserDB(ID id, String username, String password, Set<RoleDB> roleDBs) {
+    public UserDB(ID id, String username, String password, LocalUnitDB localUnitDB, Set<RoleDB> roleDBs) {
         if (id != null) {
             this.userID = id.value();
         } else {
@@ -39,6 +44,7 @@ public class UserDB {
         }
         this.username = username;
         this.password = password;
+        this.localUnitDB = localUnitDB;
         this.roleDBs = roleDBs;
     }
 
@@ -60,6 +66,10 @@ public class UserDB {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public LocalUnitDB getLocalUnitDB() {
+        return localUnitDB;
     }
 
     public Long getUserID() {

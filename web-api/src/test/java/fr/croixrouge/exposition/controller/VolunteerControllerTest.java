@@ -74,11 +74,19 @@ public class VolunteerControllerTest {
     @Test
     @DisplayName("Test that the volunteer endpoint returns a list of volunteers based on your local unit")
     public void volunteerListSuccessTest() throws Exception {
-        VolunteerResponse volunteerResponse = new VolunteerResponse(
+        VolunteerResponse volunteerResponse1 = new VolunteerResponse(
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
+                true,
+                1L
+        );
+        VolunteerResponse volunteerResponse2 = new VolunteerResponse(
+                "defaultUser",
+                "newVolunteer",
+                "newVolunteerName",
+                "+33 6 00 11 22 33",
                 true,
                 1L
         );
@@ -87,11 +95,16 @@ public class VolunteerControllerTest {
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].username").value(volunteerResponse.getUsername()))
-                .andExpect(jsonPath("$[0].firstName").value(volunteerResponse.getFirstName()))
-                .andExpect(jsonPath("$[0].lastName").value(volunteerResponse.getLastName()))
-                .andExpect(jsonPath("$[0].phoneNumber").value(volunteerResponse.getPhoneNumber()))
-                .andExpect(jsonPath("$[0].isValidated").value(volunteerResponse.getIsValidated()));
+                .andExpect(jsonPath("$[0].username").value(volunteerResponse1.getUsername()))
+                .andExpect(jsonPath("$[0].firstName").value(volunteerResponse1.getFirstName()))
+                .andExpect(jsonPath("$[0].lastName").value(volunteerResponse1.getLastName()))
+                .andExpect(jsonPath("$[0].phoneNumber").value(volunteerResponse1.getPhoneNumber()))
+                .andExpect(jsonPath("$[0].isValidated").value(volunteerResponse1.getIsValidated()))
+                .andExpect(jsonPath("$[1].username").value(volunteerResponse2.getUsername()))
+                .andExpect(jsonPath("$[1].firstName").value(volunteerResponse2.getFirstName()))
+                .andExpect(jsonPath("$[1].lastName").value(volunteerResponse2.getLastName()))
+                .andExpect(jsonPath("$[1].phoneNumber").value(volunteerResponse2.getPhoneNumber()))
+                .andExpect(jsonPath("$[1].isValidated").value(volunteerResponse2.getIsValidated()));
     }
 
     @Test

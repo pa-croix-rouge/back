@@ -3,8 +3,8 @@ package fr.croixrouge.repository.db.volunteer;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.domain.repository.VolunteerRepository;
-import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
+import fr.croixrouge.repository.db.user.UserDBRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,15 +14,15 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     private final VolunteerDBRepository volunteerDBRepository;
 
+    private final UserDBRepository userDBRepository;
+
     private final InDBUserRepository inDBUserRepository;
 
-    private final InDBLocalUnitRepository inDBLocalUnitRepository;
 
-
-    public InDBVolunteerRepository(VolunteerDBRepository volunteerDBRepository, InDBUserRepository inDBUserRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+    public InDBVolunteerRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
         this.volunteerDBRepository = volunteerDBRepository;
+        this.userDBRepository = userDBRepository;
         this.inDBUserRepository = inDBUserRepository;
-        this.inDBLocalUnitRepository = inDBLocalUnitRepository;
     }
 
     public VolunteerDB toVolunteerDB(Volunteer volunteer) {
@@ -31,7 +31,6 @@ public class InDBVolunteerRepository implements VolunteerRepository {
                 volunteer.getFirstName(),
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
-                inDBLocalUnitRepository.toLocalUnitDB(volunteer.getLocalUnit()),
                 volunteer.isValidated()
         );
     }
@@ -43,8 +42,7 @@ public class InDBVolunteerRepository implements VolunteerRepository {
                 volunteerDB.getFirstname(),
                 volunteerDB.getLastname(),
                 volunteerDB.getPhonenumber(),
-                volunteerDB.getValidated(),
-                inDBLocalUnitRepository.toLocalUnit(volunteerDB.getLocalUnitDB())
+                volunteerDB.getValidated()
         );
     }
 
@@ -80,7 +78,7 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public List<Volunteer> findAllByLocalUnitId(ID id) {
-        return volunteerDBRepository.findByLocalUnitDB_LocalUnitID(id.value()).stream().map(this::toVolunteer).toList();
+        return userDBRepository.findByLocalUnitDB_LocalUnitID(id.value()).stream().map(user -> this.findByUserId(ID.of(user.getUserID())).orElseThrow()).toList();
     }
 
     @Override

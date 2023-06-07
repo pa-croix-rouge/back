@@ -7,8 +7,12 @@ import fr.croixrouge.exposition.dto.StorageResponse;
 import fr.croixrouge.service.LocalUnitService;
 import fr.croixrouge.service.StorageService;
 import fr.croixrouge.storage.model.Storage;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/storage")
@@ -30,5 +34,10 @@ public class StorageController extends CRUDController<ID, Storage, StorageServic
     public Storage toModel(CreateStorageDTO dto) {
         LocalUnit localUnit = localUnitService.findById(new ID(dto.getLocalUnitID()));
         return dto.toModel(localUnit);
+    }
+
+    @Override
+    public ResponseEntity<List<StorageResponse>> findAll(HttpServletRequest request) {
+        return super.findAll(request);
     }
 }
