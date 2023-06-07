@@ -25,13 +25,13 @@ class UserProductServiceTest {
     StorageProductRepository storageProductRepository = new InMemoryStorageProductRepository();
     UserProductRepository userProductRepository = new InMemoryUserProductRepository();
 
-    Storage storage = new Storage(new ID(1L), null, null);
+    Storage storage = new Storage(new ID(1L), "defaultStorage", null, null);
 
     private final StorageProductService storageProductService = new StorageProductService(storageProductRepository);
 
     private final UserProductService userProductService = new UserProductService(userProductRepository, storageProductService);
 
-    private final User user = new User(new ID(1L), "TEST", "TEST", List.of());
+    private final User user = new User(new ID(1L), "TEST", "TEST", null, List.of());
 
     private final ProductLimit limit1KgFor7Days = new ProductLimit(new ID(1L), Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM));
     private final Product productWeight1KgNoLimit = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);

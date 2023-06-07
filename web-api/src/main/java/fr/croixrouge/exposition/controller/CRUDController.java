@@ -5,6 +5,7 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.CreationDTO;
 import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.CRUDService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
     }
 
     @GetMapping()
-    public ResponseEntity<List<MODEL_DTO>> findAll() {
+    public ResponseEntity<List<MODEL_DTO>> findAll(HttpServletRequest request) {
         return ResponseEntity.ok(service.findAll().stream().map(this::toDTO).toList());
     }
 

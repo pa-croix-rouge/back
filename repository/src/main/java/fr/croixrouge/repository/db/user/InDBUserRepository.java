@@ -3,6 +3,7 @@ package fr.croixrouge.repository.db.user;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
+import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
 
 import java.util.List;
@@ -16,9 +17,12 @@ public class InDBUserRepository implements UserRepository {
 
     private final InDBRoleRepository roleDBRepository;
 
-    public InDBUserRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository) {
+    private final InDBLocalUnitRepository localUnitDBRepository;
+
+    public InDBUserRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
         this.userDBRepository = userDBRepository;
         this.roleDBRepository = roleDBRepository;
+        this.localUnitDBRepository = localUnitDBRepository;
     }
 
     public User toUser(UserDB userDB) {
@@ -26,6 +30,7 @@ public class InDBUserRepository implements UserRepository {
                 new ID(userDB.getUserID()),
                 userDB.getUsername(),
                 userDB.getPassword(),
+                localUnitDBRepository.toLocalUnit(userDB.getLocalUnitDB()),
                 userDB.getRoleDBs().stream().map(roleDBRepository::toRole).toList()
         );
     }
@@ -35,6 +40,7 @@ public class InDBUserRepository implements UserRepository {
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
+                localUnitDBRepository.toLocalUnitDB(user.getLocalUnit()),
                 user.getRoles().stream().map(roleDBRepository::toRoleDB).collect(Collectors.toSet())
         );
 

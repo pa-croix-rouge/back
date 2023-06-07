@@ -78,12 +78,11 @@ public class VolunteerCreationRequest extends CreationDTO<Volunteer> {
     public Volunteer toModel() {
         return new Volunteer(
                 null,
-                new User(null, this.username, this.password, List.of()),
+                new User(null, this.username, this.password, null, List.of()),
                 this.firstName,
                 this.lastName,
                 this.phoneNumber,
-                false,
-                null
+                false
         );
     }
 }

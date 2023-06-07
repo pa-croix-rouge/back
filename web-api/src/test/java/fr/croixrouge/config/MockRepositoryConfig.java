@@ -55,7 +55,7 @@ public class MockRepositoryConfig {
     private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
     private final LocalUnit localUnit;
 
-    private final LocalUnit southernLocalUnit;
+    private LocalUnit southernLocalUnit;
 
     public MockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -74,13 +74,14 @@ public class MockRepositoryConfig {
                 List.of());
 
 
-        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), List.of());
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of());
 
-        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
+        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
 
-        volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
+        volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
-        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of(managerRole));
+        this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, null, address2.getPostalCode() + "-000");
+        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
         this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
 
 
@@ -108,21 +109,21 @@ public class MockRepositoryConfig {
         String lastName1 = "volunteerLastName";
         String phoneNumber1 = "+33 6 00 00 00 00";
         boolean isValidated1 = true;
-        Volunteer volunteer1 = new Volunteer(volunteerId1, managerUser, firstName1, lastName1, phoneNumber1, isValidated1, localUnit);
+        Volunteer volunteer1 = new Volunteer(volunteerId1, managerUser, firstName1, lastName1, phoneNumber1, isValidated1);
 
         ID volunteerId2 = new ID(2L);
         String firstName2 = "newVolunteer";
         String lastName2 = "newVolunteerName";
         String phoneNumber2 = "+33 6 00 11 22 33";
         boolean isValidated2 = false;
-        Volunteer volunteer2 = new Volunteer(volunteerId2, managerUser, firstName2, lastName2, phoneNumber2, isValidated2, localUnit);
+        Volunteer volunteer2 = new Volunteer(volunteerId2, managerUser, firstName2, lastName2, phoneNumber2, isValidated2);
 
         ID volunteerId3 = new ID("3");
         String firstName3 = "southernVolunteer";
         String lastName3 = "southernVolunteerName";
         String phoneNumber3 = "+33 6 83 83 83 83";
         boolean isValidated3 = true;
-        Volunteer volunteer3 = new Volunteer(volunteerId3, southernManagerUser, firstName3, lastName3, phoneNumber3, isValidated3, southernLocalUnit);
+        Volunteer volunteer3 = new Volunteer(volunteerId3, southernManagerUser, firstName3, lastName3, phoneNumber3, isValidated3);
 
         volunteers.add(volunteer1);
         volunteers.add(volunteer2);
@@ -263,8 +264,8 @@ public class MockRepositoryConfig {
     public StorageRepository storageTestRepository() {
         List<Storage> storages = new ArrayList<>();
 
-        storages.add(new Storage(new ID(1L), localUnit, address));
-        storages.add(new Storage(new ID(2L), localUnit, address));
+        storages.add(new Storage(new ID(1L), "defaultStorage", localUnit, address));
+        storages.add(new Storage(new ID(2L), "secondStorage", localUnit, address));
 
         return new InMemoryStorageRepository(storages);
     }

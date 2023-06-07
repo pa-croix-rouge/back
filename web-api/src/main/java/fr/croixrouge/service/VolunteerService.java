@@ -32,8 +32,7 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
                 volunteer.getFirstName(),
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
-                true,
-                volunteer.getLocalUnit());
+                true);
 
         return this.save(updatedVolunteer) != null;
     }
@@ -44,8 +43,7 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
                 volunteer.getFirstName(),
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
-                false,
-                volunteer.getLocalUnit());
+                false);
         return this.save(updatedVolunteer) != null;
     }
 }

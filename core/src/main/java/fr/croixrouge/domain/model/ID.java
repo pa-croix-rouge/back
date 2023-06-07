@@ -8,6 +8,10 @@ public record ID(Long value) {
         Objects.requireNonNull(value);
     }
 
+    public static ID of(Long value) {
+        return new ID(value);
+    }
+
     public ID(String value) {
         this(Long.valueOf(value));
     }

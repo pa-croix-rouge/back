@@ -65,7 +65,7 @@ public class InDBMockRepositoryConfig {
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
 
     private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
-    private final LocalUnit localUnit, southernLocalUnit;
+    private LocalUnit localUnit, southernLocalUnit;
 
     public InDBMockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -83,17 +83,19 @@ public class InDBMockRepositoryConfig {
                 localUnit,
                 List.of());
 
-        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), List.of());
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of());
 
-        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), List.of(managerRole));
+        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
 
-        volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true, localUnit);
+        volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
-        southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), List.of(managerRole));
+        southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, null, address2.getPostalCode() + "-000");
+
+        southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
 
         southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
 
-        southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true, southernLocalUnit);
+        southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
     }
 
@@ -118,8 +120,8 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBUserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository) {
-        InDBUserRepository inDBUserRepository = new InDBUserRepository(userDBRepository, roleDBRepository);
+    public InDBUserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
+        InDBUserRepository inDBUserRepository = new InDBUserRepository(userDBRepository, roleDBRepository, localUnitDBRepository);
 
         inDBUserRepository.save(defaultUser);
         inDBUserRepository.save(managerUser);
@@ -130,15 +132,15 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, InDBUserRepository inDBUserRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
-        var volunteerRepository = new InDBVolunteerRepository(volunteerDBRepository, inDBUserRepository, inDBLocalUnitRepository);
+    public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        var volunteerRepository = new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
 
         ID volunteerId2 = new ID(2L);
         String firstName2 = "newVolunteer";
         String lastName2 = "newVolunteerName";
         String phoneNumber2 = "+33 6 00 11 22 33";
         boolean isValidated2 = false;
-        Volunteer volunteer2 = new Volunteer(volunteerId2, defaultUser, firstName2, lastName2, phoneNumber2, isValidated2, localUnit);
+        Volunteer volunteer2 = new Volunteer(volunteerId2, defaultUser, firstName2, lastName2, phoneNumber2, isValidated2);
 
         volunteerRepository.save(volunteer1);
         volunteerRepository.save(volunteer2);
@@ -254,8 +256,8 @@ public class InDBMockRepositoryConfig {
     public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
 
-        storageRepository.save(new Storage(new ID(1L), localUnit, address));
-        storageRepository.save(new Storage(new ID(2L), localUnit, address));
+        storageRepository.save(new Storage(new ID(1L), "defaultStorage", localUnit, address));
+        storageRepository.save(new Storage(new ID(2L), "secondStorage", localUnit, address));
 
         return storageRepository;
     }

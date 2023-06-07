@@ -7,14 +7,20 @@ import fr.croixrouge.domain.model.LocalUnit;
 
 public class Storage extends Entity<ID> {
 
+    private final String name;
     private final LocalUnit localUnit;
     private final Address address;
 
 
-    public Storage(ID id, LocalUnit localUnit, Address address) {
+    public Storage(ID id, String name, LocalUnit localUnit, Address address) {
         super(id);
+        this.name = name;
         this.localUnit = localUnit;
         this.address = address;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public LocalUnit getLocalUnit() {

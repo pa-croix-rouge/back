@@ -50,14 +50,14 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBUserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository) {
-        return new InDBUserRepository(userDBRepository, roleDBRepository);
+    public InDBUserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+        return new InDBUserRepository(userDBRepository, roleDBRepository, inDBLocalUnitRepository);
     }
 
     @Bean
     @Primary
-    public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, InDBUserRepository inDBUserRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
-        return new InDBVolunteerRepository(volunteerDBRepository, inDBUserRepository, inDBLocalUnitRepository);
+    public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        return new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
     }
 
     @Bean

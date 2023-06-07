@@ -6,13 +6,20 @@ import fr.croixrouge.storage.model.Storage;
 
 public class CreateStorageDTO extends CreationDTO<Storage> {
 
+    private final String name;
+
     private final Long localUnitID;
 
     private final AddressDTO address;
 
-    public CreateStorageDTO(Long localUnitID, AddressDTO address) {
+    public CreateStorageDTO(String name, Long localUnitID, AddressDTO address) {
+        this.name = name;
         this.localUnitID = localUnitID;
         this.address = address;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Long getLocalUnitID() {
@@ -24,7 +31,7 @@ public class CreateStorageDTO extends CreationDTO<Storage> {
     }
 
     public Storage toModel(LocalUnit localUnit) {
-        return new Storage(null, localUnit, address.toModel());
+        return new Storage(null, name, localUnit, address.toModel());
     }
 
     @Override

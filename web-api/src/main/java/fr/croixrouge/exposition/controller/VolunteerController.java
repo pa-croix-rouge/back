@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class VolunteerController extends ErrorHandler {
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
-        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getLocalUnit().getId().value());
+        return new VolunteerResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getUser().getLocalUnit().getId().value());
     }
 
     @GetMapping("/{id}")
@@ -49,7 +50,7 @@ public class VolunteerController extends ErrorHandler {
     public ResponseEntity<List<VolunteerResponse>> findAll(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
-        return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getLocalUnit().getId()).stream().map(this::toDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId()).stream().map(this::toDTO).sorted(Comparator.comparing(v -> v.username)).collect(Collectors.toList()));
     }
 
     @GetMapping("/token")
@@ -65,13 +66,13 @@ public class VolunteerController extends ErrorHandler {
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, model.getUsername(), model.getPassword(), List.of());
+        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
         ID userId = this.userService.save(user);
         if (userId == null) {
             return ResponseEntity.internalServerError().build();
         }
         user.setId(userId);
-        Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false, localUnit);
+        Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false);
         ID volunteerId = service.save(volunteer);
         if (volunteerId == null) {
             return ResponseEntity.internalServerError().build();
