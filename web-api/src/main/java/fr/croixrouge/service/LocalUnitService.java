@@ -19,4 +19,8 @@ public class LocalUnitService extends CRUDService<ID, LocalUnit, LocalUnitReposi
     public LocalUnit getLocalUnitByCode(String code) {
         return repository.findByCode(code).orElseThrow();
     }
+
+    public String regenerateSecret(ID localUnitId) {
+        return repository.regenerateSecret(localUnitId);
+    }
 }

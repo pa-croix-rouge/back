@@ -5,10 +5,9 @@ import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
+import fr.croixrouge.exposition.dto.core.LocalUnitUpdateSecretRequest;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LocalUnitControllerTest {
 
     @Autowired
@@ -37,7 +37,7 @@ public class LocalUnitControllerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+        LoginRequest loginRequest = new LoginRequest("LUManager", "LUPassword");
 
         String result = mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -49,6 +49,7 @@ public class LocalUnitControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test that the localunit endpoint returns a local unit when given a correct postal code")
     public void localUnitPostalCodeSuccessTest() throws Exception {
         String localUnitPostCode = "91240";
@@ -81,6 +82,7 @@ public class LocalUnitControllerTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong postal code")
     public void localUnitPostalCodeFailedTest() throws Exception {
         String localUnitPostCode ="00100";
@@ -91,6 +93,7 @@ public class LocalUnitControllerTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Test that the localunit endpoint returns a local unit when given a correct id")
     public void localUnitIdSuccessTest() throws Exception {
         String localUnitId = "1";
@@ -123,12 +126,80 @@ public class LocalUnitControllerTest {
     }
 
     @Test
+    @Order(4)
     @DisplayName("Test that the localunit endpoint returns a 404 when given a wrong id")
     public void localUnitIdFailedTest() throws Exception {
         String localUnitId ="-1";
 
         mockMvc.perform(get("/localunit/" + localUnitId)
                         .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Test the the localunit endpoint regenerate the secret code when requested by manager")
+    public void localUnitRegenerateSecretSuccessTest() throws Exception {
+        Long localUnitId = 1L;
+
+        LocalUnitUpdateSecretRequest localUnitUpdateSecretRequest = new LocalUnitUpdateSecretRequest(localUnitId);
+
+        mockMvc.perform(get("/localunit/" + localUnitId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value("91240-000"));
+
+        String newSecret = mockMvc.perform(post("/localunit/secret")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(localUnitUpdateSecretRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isString())
+                .andReturn().getResponse().getContentAsString();
+
+        mockMvc.perform(get("/localunit/" + localUnitId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value(newSecret));
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Test the the localunit endpoint does not regenerate the secret code when requested by a non manager")
+    public void localUnitRegenerateSecretFailTest() throws Exception {
+        Long localUnitId = 1L;
+
+        LocalUnitUpdateSecretRequest localUnitUpdateSecretRequest = new LocalUnitUpdateSecretRequest(localUnitId);
+
+        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+
+        mockMvc.perform(post("/localunit/secret")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(localUnitUpdateSecretRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Test the the localunit endpoint does not regenerate the secret code when given a wrong localunit id")
+    public void localUnitRegenerateSecretNotFoundTest() throws Exception {
+        Long localUnitId = -1L;
+
+        LocalUnitUpdateSecretRequest localUnitUpdateSecretRequest = new LocalUnitUpdateSecretRequest(localUnitId);
+
+        mockMvc.perform(post("/localunit/secret")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(localUnitUpdateSecretRequest)))
                 .andExpect(status().isNotFound());
     }
 }
