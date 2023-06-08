@@ -59,6 +59,7 @@ public class InDBVolunteerRepository implements VolunteerRepository {
     @Override
     public void delete(Volunteer object) {
         volunteerDBRepository.delete(toVolunteerDB(object));
+        userDBRepository.delete(toVolunteerDB(object).getUserDB());
     }
 
     @Override

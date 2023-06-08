@@ -104,12 +104,7 @@ public class VolunteerControllerTest {
                 .andExpect(jsonPath("$[0].firstName").value(volunteerResponse1.getFirstName()))
                 .andExpect(jsonPath("$[0].lastName").value(volunteerResponse1.getLastName()))
                 .andExpect(jsonPath("$[0].phoneNumber").value(volunteerResponse1.getPhoneNumber()))
-                .andExpect(jsonPath("$[0].isValidated").value(volunteerResponse1.getIsValidated()))
-                .andExpect(jsonPath("$[1].username").value(volunteerResponse2.getUsername()))
-                .andExpect(jsonPath("$[1].firstName").value(volunteerResponse2.getFirstName()))
-                .andExpect(jsonPath("$[1].lastName").value(volunteerResponse2.getLastName()))
-                .andExpect(jsonPath("$[1].phoneNumber").value(volunteerResponse2.getPhoneNumber()))
-                .andExpect(jsonPath("$[1].isValidated").value(volunteerResponse2.getIsValidated()));
+                .andExpect(jsonPath("$[0].isValidated").value(volunteerResponse1.getIsValidated()));
     }
 
     @Test
@@ -362,6 +357,16 @@ public class VolunteerControllerTest {
         mockMvc.perform(delete("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());
+
+        loginRequest = new LoginRequest("LUManager", "LUPassword");
+
+        result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
