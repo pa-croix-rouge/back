@@ -50,9 +50,10 @@ public class VolunteerControllerTest {
     @Order(1)
     @DisplayName("Test that the volunteer details endpoint returns volunteer's informations when given the correct id")
     public void volunteerIdSuccessTest() throws Exception {
-        String volunteerId = "1";
+        Long volunteerId = 1L;
 
         VolunteerResponse volunteerResponse = new VolunteerResponse(
+                volunteerId,
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
@@ -76,6 +77,7 @@ public class VolunteerControllerTest {
     @DisplayName("Test that the volunteer endpoint returns a list of volunteers based on your local unit")
     public void volunteerListSuccessTest() throws Exception {
         VolunteerResponse volunteerResponse1 = new VolunteerResponse(
+                1L,
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
@@ -84,6 +86,7 @@ public class VolunteerControllerTest {
                 1L
         );
         VolunteerResponse volunteerResponse2 = new VolunteerResponse(
+                2L,
                 "defaultUser",
                 "newVolunteer",
                 "newVolunteerName",
@@ -138,6 +141,7 @@ public class VolunteerControllerTest {
     @DisplayName("Test that the volunteer details endpoint returns volunteer's informations from his token")
     public void volunteerFromTokenSuccessTest() throws Exception {
         VolunteerResponse volunteerResponse = new VolunteerResponse(
+                1L,
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
@@ -189,6 +193,7 @@ public class VolunteerControllerTest {
         String volunteerId = objectMapper.readTree(result).get("value").asText();
 
         VolunteerResponse volunteerResponse = new VolunteerResponse(
+                Long.parseLong(volunteerId),
                 "newvolunteer@croix-rouge.fr",
                 "John",
                 "Doe",
