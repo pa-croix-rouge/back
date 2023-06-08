@@ -43,9 +43,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
@@ -53,7 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
-    private final Role managerRole;
+    private final Role managerRole, defaultRole;
     private final User managerUser, defaultUser, southernManagerUser, volunteerUser;
 
     private final Volunteer volunteer1, southernVolunteer1;
@@ -73,14 +71,29 @@ public class InDBMockRepositoryConfig {
                 "LUManager",
                 address.getPostalCode() + "-000");
 
+
+        HashMap<Resources, Set<Operations>> roleResources = new HashMap<>();
+        for (var ressource : Resources.values()) {
+            roleResources.put(ressource, Set.of(Operations.values()));
+        }
+
         managerRole = new Role(new ID(1L),
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
-                Map.of(Resources.RESOURCE, List.of(Operations.READ)),
+                roleResources,
+                localUnit,
+                List.of());
+        HashMap<Resources, Set<Operations>> defaultRoleResources = new HashMap<>(roleResources);
+        defaultRoleResources.remove(Resources.RESOURCE);
+
+        defaultRole = new Role(null,
+                "default role",
+                "default role",
+                defaultRoleResources,
                 localUnit,
                 List.of());
 
-        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of());
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of(defaultRole));
 
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
 
@@ -119,6 +132,7 @@ public class InDBMockRepositoryConfig {
         InDBRoleRepository inDBRoleRepository = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
 
         inDBRoleRepository.save(managerRole);
+        inDBRoleRepository.save(defaultRole);
 
         return inDBRoleRepository;
     }
