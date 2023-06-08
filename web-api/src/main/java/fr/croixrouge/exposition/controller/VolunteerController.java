@@ -13,6 +13,7 @@ import fr.croixrouge.service.UserService;
 import fr.croixrouge.service.VolunteerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -29,11 +30,14 @@ public class VolunteerController extends ErrorHandler {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService, AuthenticationService authenticationService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService, AuthenticationService authenticationService, PasswordEncoder passwordEncoder) {
         this.service = service;
         this.localUnitService = localUnitService;
         this.userService = userService;
         this.authenticationService = authenticationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
@@ -66,7 +70,7 @@ public class VolunteerController extends ErrorHandler {
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
+        User user = new User(null, model.getUsername(), passwordEncoder.encode(model.getPassword()), localUnit, List.of());
         ID userId = this.userService.save(user);
         if (userId == null) {
             return ResponseEntity.internalServerError().build();
