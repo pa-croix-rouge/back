@@ -81,10 +81,15 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @PostMapping("/validate/{id}")
-    public ResponseEntity<String> validateVolunteer(@PathVariable ID id) {
+    public ResponseEntity<String> validateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
+        }
+        String username = authenticationService.getUserIdFromJwtToken(request);
+        LocalUnit localUnit = volunteer.getUser().getLocalUnit();
+        if (!localUnit.getManagerUsername().equals(username)) {
+            return ResponseEntity.status(403).build();
         }
         boolean success = service.validateVolunteerAccount(volunteer);
         if (!success) {
@@ -94,10 +99,15 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @PostMapping("/invalidate/{id}")
-    public ResponseEntity<String> invalidateVolunteer(@PathVariable ID id) {
+    public ResponseEntity<String> invalidateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
+        }
+        String username = authenticationService.getUserIdFromJwtToken(request);
+        LocalUnit localUnit = volunteer.getUser().getLocalUnit();
+        if (!localUnit.getManagerUsername().equals(username)) {
+            return ResponseEntity.status(403).build();
         }
         boolean success = service.invalidateVolunteerAccount(volunteer);
         if (!success) {
