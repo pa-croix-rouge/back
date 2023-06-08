@@ -115,4 +115,19 @@ public class VolunteerController extends ErrorHandler {
         }
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id, HttpServletRequest request) {
+        Volunteer volunteer = service.findById(new ID(id));
+        if (volunteer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String username = authenticationService.getUserIdFromJwtToken(request);
+        LocalUnit localUnit = volunteer.getUser().getLocalUnit();
+        if (!localUnit.getManagerUsername().equals(username) && !volunteer.getUser().getUsername().equals(username)) {
+            return ResponseEntity.status(403).build();
+        }
+        this.service.delete(volunteer);
+        return ResponseEntity.ok().build();
+    }
 }

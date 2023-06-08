@@ -46,4 +46,8 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
                 false);
         return this.save(updatedVolunteer) != null;
     }
+
+    public void deleteVolunteerAccount(Volunteer volunteer) {
+        this.delete(volunteer);
+    }
 }
