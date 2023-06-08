@@ -32,10 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @TestConfiguration
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
@@ -69,7 +66,7 @@ public class MockRepositoryConfig {
         managerRole = new Role(new ID(1L),
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
-                Map.of(Resources.RESOURCE, List.of(Operations.READ)),
+                Map.of(Resources.RESOURCE, Set.of(Operations.READ)),
                 localUnit,
                 List.of());
 
@@ -145,7 +142,7 @@ public class MockRepositoryConfig {
         ID roleId = new ID(1L);
         String roleName = "Val d'Orge default role";
         String roleDescription = "Default role for Val d'Orge";
-        Map<Resources, List<Operations>> resources = Map.of(Resources.RESOURCE, List.of(Operations.READ));
+        Map<Resources, Set<Operations>> resources = Map.of(Resources.RESOURCE, Set.of(Operations.READ));
 
         List<ID> userIds = Collections.singletonList(new ID(2L));
         Role role = new Role(roleId, roleName, roleDescription, resources, localUnit, userIds);

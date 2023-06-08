@@ -6,17 +6,18 @@ import fr.croixrouge.domain.model.Role;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RoleResponse {
     private String name;
     private String description;
-    private Map<Resources, List<Operations>> authorizations;
+    private Map<Resources, Set<Operations>> authorizations;
     private List<Long> userIds;
 
     public RoleResponse() {
     }
 
-    public RoleResponse(String name, String description, Map<Resources, List<Operations>> authorizations, List<Long> userIds) {
+    public RoleResponse(String name, String description, Map<Resources, Set<Operations>> authorizations, List<Long> userIds) {
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;

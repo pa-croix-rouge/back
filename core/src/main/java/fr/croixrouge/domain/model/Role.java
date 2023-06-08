@@ -3,16 +3,17 @@ package fr.croixrouge.domain.model;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class Role extends Entity<ID> {
     private final String name;
     private final String description;
-    private final Map<Resources, List<Operations>> authorizations;
+    private final Map<Resources, Set<Operations>> authorizations;
 
     private final LocalUnit localUnit;
     private final List<ID> userIds;
 
-    public Role(ID id, String name, String description, Map<Resources, List<Operations>> authorizations, LocalUnit localUnit, List<ID> userIds) {
+    public Role(ID id, String name, String description, Map<Resources, Set<Operations>> authorizations, LocalUnit localUnit, List<ID> userIds) {
         super(id);
         this.name = name;
         this.description = description;
@@ -33,7 +34,7 @@ public class Role extends Entity<ID> {
         return authorizations.get(resource).contains(operation);
     }
 
-    public Map<Resources, List<Operations>> getAuthorizations() {
+    public Map<Resources, Set<Operations>> getAuthorizations() {
         return authorizations;
     }
 
