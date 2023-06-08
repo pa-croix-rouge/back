@@ -85,7 +85,11 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
         }
         LocalUnit localUnit = toLocalUnit(localUnitDB);
         Random random = new Random();
-        String newCode = String.format("%s-%03d", localUnit.getAddress().getPostalCode(), random.nextInt(1000));
+        int randomInt = random.nextInt(1000);
+        if (randomInt == Integer.parseInt(localUnit.getCode().split("-")[1])) {
+            randomInt += 123;
+        }
+        String newCode = String.format("%s-%03d", localUnit.getAddress().getPostalCode(), randomInt % 1000);
         LocalUnit updatedLocalUnit = new LocalUnit(localUnit.getId(), localUnit.getName(), localUnit.getAddress(), localUnit.getManagerUsername(), newCode);
         localUnitDBRepository.save(toLocalUnitDB(updatedLocalUnit));
         return newCode;
