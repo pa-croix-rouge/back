@@ -59,7 +59,7 @@ public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
     private final Role managerRole;
-    private final User managerUser, defaultUser, southernManagerUser;
+    private final User managerUser, defaultUser, southernManagerUser, volunteerUser;
 
     private final Volunteer volunteer1, southernVolunteer1;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
@@ -95,6 +95,7 @@ public class InDBMockRepositoryConfig {
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
+        volunteerUser = new User(new ID(4L), "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of());
     }
 
     @Bean
@@ -124,6 +125,7 @@ public class InDBMockRepositoryConfig {
         inDBUserRepository.save(defaultUser);
         inDBUserRepository.save(managerUser);
         inDBUserRepository.save(southernManagerUser);
+        inDBUserRepository.save(volunteerUser);
 
         return inDBUserRepository;
     }
@@ -137,11 +139,19 @@ public class InDBMockRepositoryConfig {
         String firstName2 = "newVolunteer";
         String lastName2 = "newVolunteerName";
         String phoneNumber2 = "+33 6 00 11 22 33";
-        boolean isValidated2 = false;
+        boolean isValidated2 = true;
         Volunteer volunteer2 = new Volunteer(volunteerId2, defaultUser, firstName2, lastName2, phoneNumber2, isValidated2);
+
+        ID volunteerId3 = new ID(3L);
+        String firstName3 = "newVolunteer2";
+        String lastName3 = "newVolunteerName2";
+        String phoneNumber3 = "+33 6 00 11 22 34";
+        boolean isValidated3 = false;
+        Volunteer volunteer3 = new Volunteer(volunteerId3, volunteerUser, firstName3, lastName3, phoneNumber3, isValidated3);
 
         volunteerRepository.save(volunteer1);
         volunteerRepository.save(volunteer2);
+        volunteerRepository.save(volunteer3);
         volunteerRepository.save(southernVolunteer1);
 
         return volunteerRepository;

@@ -223,7 +223,7 @@ public class VolunteerControllerTest {
     @Order(8)
     @DisplayName("Test that the volunteer validate endpoint returns a 403 when non manager tries to validate an account")
     public void volunteerValidateAccountFailedTest() throws Exception {
-        String volunteerId = "2";
+        String volunteerId = "3";
 
         LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
 
@@ -244,7 +244,7 @@ public class VolunteerControllerTest {
     @Order(9)
     @DisplayName("Test that the volunteer validate endpoint validate the volunteer account of an existing account")
     public void volunteerValidateAccountSuccessTest() throws Exception {
-        String volunteerId = "2";
+        String volunteerId = "3";
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -276,7 +276,7 @@ public class VolunteerControllerTest {
     @Order(11)
     @DisplayName("Test that the volunteer invalidate endpoint returns a 403 when non manager tries to invalidate an account")
     public void volunteerInvalidateAccountFailedTest() throws Exception {
-        String volunteerId = "2";
+        String volunteerId = "3";
 
         LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
 
@@ -297,7 +297,7 @@ public class VolunteerControllerTest {
     @Order(12)
     @DisplayName("Test that the volunteer invalidate endpoint invalidate the volunteer account of an existing account")
     public void volunteerInvalidateAccountSuccessTest() throws Exception {
-        String volunteerId = "2";
+        String volunteerId = "3";
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -377,7 +377,7 @@ public class VolunteerControllerTest {
     @Order(15)
     @DisplayName("Test that the volunteer endpoint deletes volunteer when requested by manager")
     public void volunteerManagerDeleteSuccessTest() throws Exception {
-        String volunteerId = "4";
+        String volunteerId = "5";
         mockMvc.perform(delete("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());
