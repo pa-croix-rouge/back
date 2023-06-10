@@ -53,7 +53,7 @@ class FoodProductControllerTest {
     @Test
     @DisplayName("Test that the endpoint returns a food product when given a correct id")
     public void productIdSuccessTest() throws Exception {
-        mockMvc.perform(get("/product/food/3")
+        mockMvc.perform(get("/product/food/4")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

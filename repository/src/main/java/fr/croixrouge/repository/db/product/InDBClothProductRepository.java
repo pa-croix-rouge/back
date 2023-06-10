@@ -26,7 +26,7 @@ public class InDBClothProductRepository implements ClothProductRepository {
 
     public ClothProductDB toClothProductDB(ClothProduct clothProduct) {
         return new ClothProductDB(
-                clothProduct.getId() == null ? null : clothProduct.getId().value(),
+                inDBProductRepository.toProductDB(inDBProductRepository.findById(clothProduct.getId()).orElseThrow()),
                 clothProduct.getSize()
         );
     }

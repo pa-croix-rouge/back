@@ -31,7 +31,7 @@ public class InDBFoodProductRepository implements FoodProductRepository {
 
     public FoodProductDB toFoodProductDB(FoodProduct foodProduct) {
         return new FoodProductDB(
-                foodProduct.getId() == null ? null : foodProduct.getId().value(),
+                inDBProductRepository.toProductDB(inDBProductRepository.findById(foodProduct.getId()).orElseThrow()),
                 (float)foodProduct.getPrice(),
                 foodProduct.getFoodConservation(),
                 foodProduct.getExpirationDate(),
@@ -48,7 +48,8 @@ public class InDBFoodProductRepository implements FoodProductRepository {
     public ID save(FoodProduct object) {
         var id = inDBProductRepository.save(object);
         object.setId(id);
-        return new ID( foodProductDBRepository.save(toFoodProductDB(object)).getId() );
+        foodProductDBRepository.save(toFoodProductDB(object));
+        return id;
     }
 
     @Override

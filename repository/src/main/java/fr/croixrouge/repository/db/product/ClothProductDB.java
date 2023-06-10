@@ -5,11 +5,7 @@ import jakarta.persistence.*;
 
 @Table(name = "cloth-product")
 @Entity
-public class ClothProductDB {
-
-    @Id
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class ClothProductDB extends ProductDB {
 
     @Enumerated
     @Column(name = "size")
@@ -18,17 +14,9 @@ public class ClothProductDB {
     public ClothProductDB() {
     }
 
-    public ClothProductDB(Long id, ClothSize size) {
-        this.id = id;
+    public ClothProductDB(ProductDB productDB, ClothSize size) {
+        super(productDB.getId(), productDB.getName(), productDB.getQuantity(), productDB.getUnit(), productDB.getProductLimitDB());
         this.size = size;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public ClothSize getSize() {

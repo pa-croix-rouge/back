@@ -36,6 +36,10 @@ public abstract class MeasurementUnit {
             return VolumeUnit.MILLILITER;
         } else if (name.equals(VolumeUnit.DECILITER.getName())) {
             return VolumeUnit.DECILITER;
+        } else if (name.equals(NumberedUnit.NUMBER.getName())) {
+            return NumberedUnit.NUMBER;
+        } else if (name.equals(NumberedUnit.UNKNOWN.getName())) {
+            return NumberedUnit.UNKNOWN;
         } else {
             throw new IllegalArgumentException("Unknown measurement unit: " + name);
         }

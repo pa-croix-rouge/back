@@ -5,10 +5,11 @@ import jakarta.persistence.*;
 
 @Table(name = "product")
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class ProductDB {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

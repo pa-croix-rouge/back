@@ -7,12 +7,7 @@ import java.time.LocalDateTime;
 
 @Table(name = "food-product")
 @Entity
-public class FoodProductDB {
-
-    @Id
-    @Column(name = "id", nullable = false)
-    private Long id;
-
+public class FoodProductDB extends ProductDB {
 
     @Column(name = "price")
     private Float price;
@@ -38,8 +33,8 @@ public class FoodProductDB {
     public FoodProductDB() {
     }
 
-    public FoodProductDB(Long id, Float price, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate) {
-        this.id = id;
+    public FoodProductDB(ProductDB productDB, Float price, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate) {
+        super(productDB.getId(), productDB.getName(), productDB.getQuantity(), productDB.getUnit(), productDB.getProductLimitDB());
         this.price = price;
         this.foodConservation = foodConservation;
         this.expirationDate = expirationDate;
@@ -68,13 +63,5 @@ public class FoodProductDB {
 
     public void setFoodConservation(FoodConservation foodConservation) {
         this.foodConservation = foodConservation;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
