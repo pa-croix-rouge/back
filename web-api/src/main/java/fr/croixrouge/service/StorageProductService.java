@@ -2,10 +2,13 @@ package fr.croixrouge.service;
 
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.Storage;
+import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class StorageProductService {
@@ -33,6 +36,12 @@ public class StorageProductService {
         Product product = productRepository.findById(productId).orElseThrow();
 
         storageProductService.removeProduct(storage, product, quantity);
+    }
+
+    public List<StorageProduct> getProductsByStorage(ID storageId) {
+        Storage storage = storageRepository.findById(storageId).orElseThrow();
+
+        return storageProductService.getProductsByStorage(storage);
     }
 
     public Integer getProductQuantity(ID storageId, ID productId) {

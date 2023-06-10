@@ -72,4 +72,9 @@ public class InDBStorageProductRepository implements StorageProductRepository {
         return  storageProductDBRepository.findByProductDB_IdAndStorageDB_Id(storage.getId().value(), product.getId().value())
                 .map(this::toStorageProduct);
     }
+
+    @Override
+    public List<StorageProduct> findAllByStorage(Storage storage) {
+        return this.storageProductDBRepository.findAllByStorageDB_Id(storage.getId().value()).stream().map(this::toStorageProduct).toList();
+    }
 }

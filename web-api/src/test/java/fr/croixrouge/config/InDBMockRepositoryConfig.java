@@ -29,6 +29,7 @@ import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
 import fr.croixrouge.storage.model.Storage;
+import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
@@ -267,6 +268,10 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+        StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
+
+        storageProductRepository.save(new StorageProduct(new ID(1L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(1L)).get(), 10));
+
         return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
     }
 

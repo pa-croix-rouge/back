@@ -5,6 +5,8 @@ import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.repository.StorageProductRepository;
 
+import java.util.List;
+
 public class StorageProductService {
 
     private final StorageProductRepository storageProductRepository;
@@ -23,6 +25,10 @@ public class StorageProductService {
         return storageProductRepository.findById(storage, product)
                 .map(StorageProduct::getQuantity)
                 .orElse(0);
+    }
+
+    public List<StorageProduct> getProductsByStorage(Storage storage) {
+        return storageProductRepository.findAllByStorage(storage);
     }
 
     public void removeProduct(Storage storage, Product product, int quantity) {
