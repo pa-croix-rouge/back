@@ -7,11 +7,14 @@ import java.time.LocalDateTime;
 
 public class FoodProductResponse extends ProductResponse {
 
-    private final FoodConservation foodConservation;
+    private FoodConservation foodConservation;
 
-    private final LocalDateTime expirationDate;
+    private LocalDateTime expirationDate;
 
-    private final LocalDateTime optimalConsumptionDate;
+    private LocalDateTime optimalConsumptionDate;
+
+    public FoodProductResponse() {
+    }
 
     public FoodProductResponse(FoodProduct product) {
         super(product);

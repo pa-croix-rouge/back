@@ -13,6 +13,10 @@ public class ClothProduct extends Product {
         this.size = size;
     }
 
+    public ClothProduct(Product product, ClothSize size) {
+        this(product.getId(), product.name, product.quantity, product.limit, size);
+    }
+
     public ClothSize getSize() {
         return size;
     }

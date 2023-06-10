@@ -12,4 +12,7 @@ public interface StorageProductDBRepository extends CrudRepository<StorageProduc
     
     @Query("select s from StorageProductDB s where s.storageDB.id = ?1")
     List<StorageProductDB> findAllByStorageDB_Id(Long id);
+
+    @Query("select s from StorageProductDB s where s.storageDB.localUnitDB.localUnitID = ?1")
+    List<StorageProductDB> findAllByStorageDB_LocalUnitDB_Id(Long id);
 }

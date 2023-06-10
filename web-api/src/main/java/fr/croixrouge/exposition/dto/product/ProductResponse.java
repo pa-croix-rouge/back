@@ -5,10 +5,13 @@ import fr.croixrouge.storage.model.product.Product;
 
 public class ProductResponse {
 
-    protected final Long id;
+    protected Long id;
 
-    protected final String name;
-    protected final QuantifierDTO quantity;
+    protected String name;
+    protected QuantifierDTO quantity;
+
+    public ProductResponse() {
+    }
 
     public ProductResponse(Product product) {
         this.id = product.getId().value();

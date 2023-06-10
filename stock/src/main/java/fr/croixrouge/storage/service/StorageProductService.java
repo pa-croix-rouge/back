@@ -1,5 +1,6 @@
 package fr.croixrouge.storage.service;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
@@ -29,6 +30,10 @@ public class StorageProductService {
 
     public List<StorageProduct> getProductsByStorage(Storage storage) {
         return storageProductRepository.findAllByStorage(storage);
+    }
+
+    public List<StorageProduct> getProductsByLocalUnit(ID localUnitId) {
+        return storageProductRepository.findAllByLocalUnit(localUnitId);
     }
 
     public void removeProduct(Storage storage, Product product, int quantity) {
