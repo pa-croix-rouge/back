@@ -14,7 +14,7 @@ public class FoodProductDB {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     private ProductDB productDB;
 
     @Column(name = "price")

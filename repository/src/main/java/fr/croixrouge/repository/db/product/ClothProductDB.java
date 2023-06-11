@@ -16,7 +16,7 @@ public class ClothProductDB {
     @Column(name = "size")
     private ClothSize size;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     private ProductDB productDB;
 
     public ClothProductDB() {

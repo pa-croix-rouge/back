@@ -5,7 +5,7 @@ import fr.croixrouge.storage.model.product.Product;
 
 public class ProductResponse {
 
-    protected Long id;
+    protected Long productId;
 
     protected String name;
     protected QuantifierDTO quantity;
@@ -14,7 +14,7 @@ public class ProductResponse {
     }
 
     public ProductResponse(Product product) {
-        this.id = product.getId().value();
+        this.productId = product.getId().value();
         this.name = product.getName();
         this.quantity = QuantifierDTO.fromQuantifier(product.getQuantity());
     }
@@ -23,8 +23,8 @@ public class ProductResponse {
         return name;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
     public QuantifierDTO getQuantity() {

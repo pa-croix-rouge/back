@@ -22,7 +22,7 @@ public class InDBFoodProductRepository implements FoodProductRepository {
     public FoodProduct toFoodProduct(FoodProductDB foodProductDB) {
         return new FoodProduct(
                 ID.of(foodProductDB.getId()),
-                inDBProductRepository.findById(new ID(foodProductDB.getId())).orElseThrow(),
+                inDBProductRepository.findById(new ID(foodProductDB.getProductDB().getId())).orElseThrow(),
                 foodProductDB.getFoodConservation(),
                 foodProductDB.getExpirationDate(),
                 foodProductDB.getOptimalConsumptionDate(),

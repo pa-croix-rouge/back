@@ -55,7 +55,7 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.productId").value("1"))
                 .andExpect(jsonPath("$.name").value("Product 1"))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(1));
@@ -100,7 +100,7 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.productId").value(id))
                 .andExpect(jsonPath("$.name").value(createProductDTO.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(createProductDTO.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(createProductDTO.getQuantity().getValue()));

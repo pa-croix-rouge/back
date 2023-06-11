@@ -20,7 +20,7 @@ public class InDBClothProductRepository implements ClothProductRepository {
     public ClothProduct toClothProduct(ClothProductDB clothProductDB) {
         return new ClothProduct(
                 ID.of(clothProductDB.getId()),
-                inDBProductRepository.findById(new ID(clothProductDB.getId())).orElseThrow(),
+                inDBProductRepository.findById(new ID(clothProductDB.getProductDB().getId())).orElseThrow(),
                 clothProductDB.getSize()
         );
     }

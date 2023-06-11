@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 public class FoodProductResponse extends ProductResponse {
 
+    private Long id;
+
     private FoodConservation foodConservation;
 
     private LocalDateTime expirationDate;
@@ -18,9 +20,14 @@ public class FoodProductResponse extends ProductResponse {
 
     public FoodProductResponse(FoodProduct product) {
         super(product.getProduct());
+        this.id = product.getId().value();
         this.foodConservation = product.getFoodConservation();
         this.expirationDate = product.getExpirationDate();
         this.optimalConsumptionDate = product.getOptimalConsumptionDate();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public FoodConservation getFoodConservation() {

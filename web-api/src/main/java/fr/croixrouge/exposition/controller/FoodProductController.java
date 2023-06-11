@@ -35,6 +35,17 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
         return new FoodProductResponse(model);
     }
 
+    @Override
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<FoodProductResponse> getByID(@PathVariable ID id) {
+        FoodProduct foodProduct = service.findById(id);
+        if (foodProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(toDTO(foodProduct));
+    }
+
+    @Override
     @PostMapping()
     public ResponseEntity<ID> post(@RequestBody CreateFoodProductDTO model) {
         Product product = model.toModel().getProduct();
@@ -74,8 +85,8 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
             storageProductService.delete(storageProduct);
         }
 
+        service.delete(foodProduct);
         productService.delete(product);
-//        service.delete(foodProduct); // somehow it works without this line, but I am convinced it shouldn't work
         return ResponseEntity.ok().build();
     }
 }
