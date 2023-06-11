@@ -53,6 +53,7 @@ public class VolunteerControllerTest {
         String volunteerId = "1";
 
         VolunteerResponse volunteerResponse = new VolunteerResponse(
+                1L,
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
@@ -64,6 +65,7 @@ public class VolunteerControllerTest {
         mockMvc.perform(get("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(volunteerResponse.getId()))
                 .andExpect(jsonPath("$.username").value(volunteerResponse.getUsername()))
                 .andExpect(jsonPath("$.firstName").value(volunteerResponse.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(volunteerResponse.getLastName()))
@@ -75,6 +77,7 @@ public class VolunteerControllerTest {
     @DisplayName("Test that the volunteer endpoint returns a list of volunteers based on your local unit")
     public void volunteerListSuccessTest() throws Exception {
         VolunteerResponse volunteerResponse1 = new VolunteerResponse(
+                1L,
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
@@ -83,6 +86,7 @@ public class VolunteerControllerTest {
                 1L
         );
         VolunteerResponse volunteerResponse2 = new VolunteerResponse(
+                2L,
                 "defaultUser",
                 "newVolunteer",
                 "newVolunteerName",
@@ -95,11 +99,13 @@ public class VolunteerControllerTest {
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(volunteerResponse1.getId()))
                 .andExpect(jsonPath("$[0].username").value(volunteerResponse1.getUsername()))
                 .andExpect(jsonPath("$[0].firstName").value(volunteerResponse1.getFirstName()))
                 .andExpect(jsonPath("$[0].lastName").value(volunteerResponse1.getLastName()))
                 .andExpect(jsonPath("$[0].phoneNumber").value(volunteerResponse1.getPhoneNumber()))
                 .andExpect(jsonPath("$[0].isValidated").value(volunteerResponse1.getIsValidated()))
+                .andExpect(jsonPath("$[1].id").value(volunteerResponse2.getId()))
                 .andExpect(jsonPath("$[1].username").value(volunteerResponse2.getUsername()))
                 .andExpect(jsonPath("$[1].firstName").value(volunteerResponse2.getFirstName()))
                 .andExpect(jsonPath("$[1].lastName").value(volunteerResponse2.getLastName()))
@@ -135,6 +141,7 @@ public class VolunteerControllerTest {
     @DisplayName("Test that the volunteer details endpoint returns volunteer's informations from his token")
     public void volunteerFromTokenSuccessTest() throws Exception {
         VolunteerResponse volunteerResponse = new VolunteerResponse(
+                1L,
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
@@ -146,6 +153,7 @@ public class VolunteerControllerTest {
         mockMvc.perform(get("/volunteer/token")
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(volunteerResponse.getId()))
                 .andExpect(jsonPath("$.username").value(volunteerResponse.getUsername()))
                 .andExpect(jsonPath("$.firstName").value(volunteerResponse.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(volunteerResponse.getLastName()))
@@ -184,6 +192,7 @@ public class VolunteerControllerTest {
         String volunteerId = objectMapper.readTree(result).get("value").asText();
 
         VolunteerResponse volunteerResponse = new VolunteerResponse(
+                Long.parseLong(volunteerId),
                 "newvolunteer@croix-rouge.fr",
                 "John",
                 "Doe",
@@ -195,6 +204,7 @@ public class VolunteerControllerTest {
         mockMvc.perform(get("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(volunteerResponse.getId()))
                 .andExpect(jsonPath("$.username").value(volunteerResponse.getUsername()))
                 .andExpect(jsonPath("$.firstName").value(volunteerResponse.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(volunteerResponse.getLastName()))
