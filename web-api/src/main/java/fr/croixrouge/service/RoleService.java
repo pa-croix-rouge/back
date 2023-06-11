@@ -1,9 +1,6 @@
 package fr.croixrouge.service;
 
-import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.domain.model.Operations;
-import fr.croixrouge.domain.model.Resources;
-import fr.croixrouge.domain.model.Role;
+import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import fr.croixrouge.model.UserSecurity;
@@ -53,4 +50,17 @@ public class RoleService extends CRUDService<ID, Role, RoleRepository> {
 
         save(newRole);
     }
+
+    public void removeRole(ID roleId,ID userId) {
+        userService.removeRole(userId, findById(roleId) );
+    }
+
+    public void addRole(ID roleId,ID userId) {
+        userService.addRole(userId, findById(roleId) );
+    }
+
+    public List<Role> getUserRole(ID userId) {
+        return userService.findById(userId).getRoles();
+    }
+
 }

@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -281,6 +282,47 @@ public class RoleControllerTest {
                 .andExpect(status().isForbidden());
 
     }
+
+
+    @Test
+    @DisplayName("Test that the role assign endpoint returns a 200")
+    public void addRoleToUser() throws Exception {
+
+        String userID = "2";
+        mockMvc.perform(post("/role/2/user/" + userID)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/role/user/" + userID)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name").value("Val d'Orge default role"))
+                .andExpect(jsonPath("$[1].name").value("default role"));
+    }
+
+    @Test
+    @DisplayName("Test that the role unassign endpoint returns a 200")
+    public void deleteRoleToUser() throws Exception {
+
+        String userID = "2";
+        mockMvc.perform(delete("/role/2/user/" + userID)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/role/user/" + userID)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name").value("Val d'Orge default role"));
+    }
+
 
 
 }
