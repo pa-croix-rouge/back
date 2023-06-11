@@ -28,22 +28,26 @@ public class UserService extends CRUDService<ID, User, UserRepository> {
         return super.save(object.setPassword(passwordEncoder.encode(object.getPassword())));
     }
 
+    public void update(User object) {
+        super.save(object);
+    }
+
     public void removeRoleFromAllUsers(Role role) {
         var users = repository.findAll();
 
         for (User user : users) {
-            save(user.removeRole(role));
+            update(user.removeRole(role));
         }
     }
 
     public void removeRole(ID id, Role role) {
         User user = findById(id);
-        save(user.removeRole(role));
+        update(user.removeRole(role));
     }
 
     public void addRole(ID id, Role role) {
         User user = findById(id);
-        save(user.addRole(role));
+        update(user.addRole(role));
     }
 
 }

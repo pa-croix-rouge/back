@@ -12,6 +12,7 @@ import fr.croixrouge.exposition.dto.core.RoleResponse;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -285,6 +286,7 @@ public class RoleControllerTest {
 
 
     @Test
+    @Order(1)
     @DisplayName("Test that the role assign endpoint returns a 200")
     public void addRoleToUser() throws Exception {
 
@@ -300,11 +302,12 @@ public class RoleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name").value("Val d'Orge default role"))
-                .andExpect(jsonPath("$[1].name").value("default role"));
+                .andExpect(jsonPath("$[0].name").value("default role"))
+                .andExpect(jsonPath("$[1].name").value("Test role 2"));
     }
 
     @Test
+    @Order(2)
     @DisplayName("Test that the role unassign endpoint returns a 200")
     public void deleteRoleToUser() throws Exception {
 
@@ -320,7 +323,7 @@ public class RoleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value("Val d'Orge default role"));
+                .andExpect(jsonPath("$[0].name").value("Test role 2"));
     }
 
 
