@@ -47,4 +47,7 @@ public class User extends Entity<ID> {
         return new User(id, username, password, newRoles);
     }
 
+    public User setPassword(String encode) {
+        return new User(id, username, encode, roles);
+    }
 }
