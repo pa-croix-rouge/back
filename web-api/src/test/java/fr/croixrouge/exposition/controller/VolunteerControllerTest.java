@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
+@TestMethodOrder(org.junit.jupiter.api.MethodOrderer.OrderAnnotation.class)
 public class VolunteerControllerTest {
 
     @Autowired
@@ -48,12 +49,13 @@ public class VolunteerControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test that the volunteer details endpoint returns volunteer's informations when given the correct id")
     public void volunteerIdSuccessTest() throws Exception {
-        String volunteerId = "1";
+        Long volunteerId = 1L;
 
         VolunteerResponse volunteerResponse = new VolunteerResponse(
-                1L,
+                volunteerId,
                 "LUManager",
                 "volunteerFirstName",
                 "volunteerLastName",
@@ -74,6 +76,7 @@ public class VolunteerControllerTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Test that the volunteer endpoint returns a list of volunteers based on your local unit")
     public void volunteerListSuccessTest() throws Exception {
         VolunteerResponse volunteerResponse1 = new VolunteerResponse(
@@ -91,7 +94,7 @@ public class VolunteerControllerTest {
                 "newVolunteer",
                 "newVolunteerName",
                 "+33 6 00 11 22 33",
-                true,
+                false,
                 1L
         );
 
@@ -114,6 +117,7 @@ public class VolunteerControllerTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Test that the volunteer endpoint returns an (almost) empty list of volunteers based on your local unit")
     public void volunteerEmptyListSuccessTest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("SLUManager", "SLUPassword");
@@ -138,6 +142,7 @@ public class VolunteerControllerTest {
     }
 
     @Test
+    @Order(4)
     @DisplayName("Test that the volunteer details endpoint returns volunteer's informations from his token")
     public void volunteerFromTokenSuccessTest() throws Exception {
         VolunteerResponse volunteerResponse = new VolunteerResponse(
@@ -162,6 +167,7 @@ public class VolunteerControllerTest {
     }
 
     @Test
+    @Order(5)
     @DisplayName("Test that the volunteer details endpoint returns a 404 when given incorrect id")
     public void volunteerIdFailingTest() throws Exception {
         String volunteerId = "-1";
@@ -172,6 +178,7 @@ public class VolunteerControllerTest {
     }
 
     @Test
+    @Order(6)
     @DisplayName("Test that the volunteer endpoint register a new volunteer when given the correct parameters")
     public void volunteerCreateSuccessTest() throws Exception {
         VolunteerCreationRequest volunteerCreationRequest = new VolunteerCreationRequest(
@@ -213,9 +220,42 @@ public class VolunteerControllerTest {
     }
 
     @Test
+    @Order(7)
+    @DisplayName("Test that the volunteer validate endpoint returns a 404 when given incorrect account")
+    public void volunteerValidateAccountNotFoundTest() throws Exception {
+        String volunteerId = "-1";
+
+        mockMvc.perform(post("/volunteer/validate/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("Test that the volunteer validate endpoint returns a 403 when non manager tries to validate an account")
+    public void volunteerValidateAccountFailedTest() throws Exception {
+        String volunteerId = "3";
+
+        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+
+        mockMvc.perform(post("/volunteer/validate/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Order(9)
     @DisplayName("Test that the volunteer validate endpoint validate the volunteer account of an existing account")
     public void volunteerValidateAccountSuccessTest() throws Exception {
-        String volunteerId = "2";
+        String volunteerId = "3";
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -233,19 +273,42 @@ public class VolunteerControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the volunteer validate endpoint returns a 404 when given incorrect account")
-    public void volunteerValidateAccountFailedTest() throws Exception {
+    @Order(10)
+    @DisplayName("Test that the volunteer invalidate endpoint returns a 404 when given incorrect account")
+    public void volunteerInvalidateAccountNotFoundTest() throws Exception {
         String volunteerId = "-1";
 
-        mockMvc.perform(post("/volunteer/validate/" + volunteerId)
+        mockMvc.perform(post("/volunteer/invalidate/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @Order(11)
+    @DisplayName("Test that the volunteer invalidate endpoint returns a 403 when non manager tries to invalidate an account")
+    public void volunteerInvalidateAccountFailedTest() throws Exception {
+        String volunteerId = "3";
+
+        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+
+        mockMvc.perform(post("/volunteer/invalidate/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Order(12)
     @DisplayName("Test that the volunteer invalidate endpoint invalidate the volunteer account of an existing account")
     public void volunteerInvalidateAccountSuccessTest() throws Exception {
-        String volunteerId = "2";
+        String volunteerId = "3";
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -263,11 +326,84 @@ public class VolunteerControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the volunteer invalidate endpoint returns a 404 when given incorrect account")
-    public void volunteerInvalidateAccountFailedTest() throws Exception {
-        String volunteerId = "-1";
+    @Order(13)
+    @DisplayName("Test that the volunteer endpoint can't deletes another volunteer")
+    public void volunteerDeleteFailSuccessTest() throws Exception {
+        String volunteerId = "4";
 
-        mockMvc.perform(post("/volunteer/validate/" + volunteerId)
+        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+        mockMvc.perform(delete("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("Test that the volunteer endpoint deletes volunteer")
+    public void volunteerDeleteSuccessTest() throws Exception {
+        String volunteerId = "2";
+
+        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+
+        String result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+
+        mockMvc.perform(delete("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+
+        loginRequest = new LoginRequest("LUManager", "LUPassword");
+
+        result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("Test that the volunteer endpoint deletes volunteer when requested by manager")
+    public void volunteerManagerDeleteSuccessTest() throws Exception {
+        String volunteerId = "5";
+        mockMvc.perform(delete("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/volunteer/" + volunteerId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("Test that the volunteer endpoint can't deletes non existing volunteer when requested by manager")
+    public void volunteerManagerDeleteNotFoundSuccessTest() throws Exception {
+        String volunteerId = "-1";
+        mockMvc.perform(delete("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }

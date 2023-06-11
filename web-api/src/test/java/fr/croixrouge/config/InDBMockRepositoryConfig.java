@@ -11,9 +11,10 @@ import fr.croixrouge.repository.db.event.EventTimeWindowDBRepository;
 import fr.croixrouge.repository.db.event.InDBEventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
-import fr.croixrouge.repository.db.product.*;
-import fr.croixrouge.repository.db.product_limit.InDBProductLimitRepository;
-import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
+import fr.croixrouge.repository.db.product.FoodProductDBRepository;
+import fr.croixrouge.repository.db.product.InDBFoodProductRepository;
+import fr.croixrouge.repository.db.product.InDBProductRepository;
+import fr.croixrouge.repository.db.product.ProductDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
 import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
@@ -28,9 +29,13 @@ import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
 import fr.croixrouge.storage.model.Storage;
-import fr.croixrouge.storage.model.StorageProduct;
-import fr.croixrouge.storage.model.product.*;
-import fr.croixrouge.storage.model.quantifier.*;
+import fr.croixrouge.storage.model.product.FoodConservation;
+import fr.croixrouge.storage.model.product.FoodProduct;
+import fr.croixrouge.storage.model.product.Product;
+import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
+import fr.croixrouge.storage.model.quantifier.VolumeUnit;
+import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
+import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import fr.croixrouge.storage.repository.StorageProductRepository;
 import fr.croixrouge.storage.repository.UserProductRepository;
 import fr.croixrouge.storage.service.StorageProductService;
@@ -54,7 +59,7 @@ public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
     private final Role managerRole;
-    private final User managerUser, defaultUser, southernManagerUser;
+    private final User managerUser, defaultUser, southernManagerUser, volunteerUser;
 
     private final Volunteer volunteer1, southernVolunteer1;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
@@ -92,6 +97,7 @@ public class InDBMockRepositoryConfig {
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
+        volunteerUser = new User(new ID(4L), "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of());
         product1 = new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
         product2 = new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null);
         cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
@@ -130,6 +136,7 @@ public class InDBMockRepositoryConfig {
         inDBUserRepository.save(defaultUser);
         inDBUserRepository.save(managerUser);
         inDBUserRepository.save(southernManagerUser);
+        inDBUserRepository.save(volunteerUser);
 
         return inDBUserRepository;
     }
@@ -143,11 +150,19 @@ public class InDBMockRepositoryConfig {
         String firstName2 = "newVolunteer";
         String lastName2 = "newVolunteerName";
         String phoneNumber2 = "+33 6 00 11 22 33";
-        boolean isValidated2 = false;
+        boolean isValidated2 = true;
         Volunteer volunteer2 = new Volunteer(volunteerId2, defaultUser, firstName2, lastName2, phoneNumber2, isValidated2);
+
+        ID volunteerId3 = new ID(3L);
+        String firstName3 = "newVolunteer2";
+        String lastName3 = "newVolunteerName2";
+        String phoneNumber3 = "+33 6 00 11 22 34";
+        boolean isValidated3 = false;
+        Volunteer volunteer3 = new Volunteer(volunteerId3, volunteerUser, firstName3, lastName3, phoneNumber3, isValidated3);
 
         volunteerRepository.save(volunteer1);
         volunteerRepository.save(volunteer2);
+        volunteerRepository.save(volunteer3);
         volunteerRepository.save(southernVolunteer1);
 
         return volunteerRepository;
@@ -276,7 +291,6 @@ public class InDBMockRepositoryConfig {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now(),
                 1));
-
 
         return repository;
     }

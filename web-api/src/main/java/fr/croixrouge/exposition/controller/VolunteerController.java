@@ -13,6 +13,7 @@ import fr.croixrouge.service.UserService;
 import fr.croixrouge.service.VolunteerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -29,11 +30,14 @@ public class VolunteerController extends ErrorHandler {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService, AuthenticationService authenticationService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService, AuthenticationService authenticationService, PasswordEncoder passwordEncoder) {
         this.service = service;
         this.localUnitService = localUnitService;
         this.userService = userService;
         this.authenticationService = authenticationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
@@ -66,7 +70,7 @@ public class VolunteerController extends ErrorHandler {
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
+        User user = new User(null, model.getUsername(), passwordEncoder.encode(model.getPassword()), localUnit, List.of());
         ID userId = this.userService.save(user);
         if (userId == null) {
             return ResponseEntity.internalServerError().build();
@@ -81,10 +85,15 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @PostMapping("/validate/{id}")
-    public ResponseEntity<String> validateVolunteer(@PathVariable ID id) {
+    public ResponseEntity<String> validateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
+        }
+        String username = authenticationService.getUserIdFromJwtToken(request);
+        LocalUnit localUnit = volunteer.getUser().getLocalUnit();
+        if (!localUnit.getManagerUsername().equals(username)) {
+            return ResponseEntity.status(403).build();
         }
         boolean success = service.validateVolunteerAccount(volunteer);
         if (!success) {
@@ -94,15 +103,35 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @PostMapping("/invalidate/{id}")
-    public ResponseEntity<String> invalidateVolunteer(@PathVariable ID id) {
+    public ResponseEntity<String> invalidateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
+        }
+        String username = authenticationService.getUserIdFromJwtToken(request);
+        LocalUnit localUnit = volunteer.getUser().getLocalUnit();
+        if (!localUnit.getManagerUsername().equals(username)) {
+            return ResponseEntity.status(403).build();
         }
         boolean success = service.invalidateVolunteerAccount(volunteer);
         if (!success) {
             return ResponseEntity.internalServerError().build();
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id, HttpServletRequest request) {
+        Volunteer volunteer = service.findById(new ID(id));
+        if (volunteer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String username = authenticationService.getUserIdFromJwtToken(request);
+        LocalUnit localUnit = volunteer.getUser().getLocalUnit();
+        if (!localUnit.getManagerUsername().equals(username) && !volunteer.getUser().getUsername().equals(username)) {
+            return ResponseEntity.status(403).build();
+        }
+        this.service.delete(volunteer);
         return ResponseEntity.ok().build();
     }
 }
