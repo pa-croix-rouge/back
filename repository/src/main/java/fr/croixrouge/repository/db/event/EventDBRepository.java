@@ -10,7 +10,7 @@ public interface EventDBRepository extends CrudRepository<EventDB, Long> {
     @Query("select e from EventDB e where e.localUnitDB.localUnitID = ?1")
     List<EventDB> findByLocalUnitDB_LocalUnitID(Long localUnitID);
 
-    @Query("select e from EventDB e where e.localUnitDB.localUnitID = ?1 and e.startTime >= ?2 and e.endTime < ?3")
+    @Query("select e from EventDB e where e.localUnitDB.localUnitID = ?1 and e.startTime >= ?2 and e.endTime <= ?3")
     List<EventDB> findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(Long localUnitID, ZonedDateTime startTime, ZonedDateTime endTime);
 
 }

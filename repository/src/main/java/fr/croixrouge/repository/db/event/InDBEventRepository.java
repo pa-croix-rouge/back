@@ -14,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -184,9 +185,12 @@ public class InDBEventRepository implements EventRepository {
         ZonedDateTime start = ZonedDateTime.of(year, month, 1, 0, 0, 0, 0, ZonedDateTime.now().getZone());
         ZonedDateTime end = start.plusMonths(1);
 
-        return eventDBRepository
-                .findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end)
-                .stream().map(this::toEvent).toList();
+        List<EventSessionDB> eventSessions = eventSessionDBRepository.findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end);
+
+        Set<ID> eventIds = eventSessions.stream().map(eventSessionDB -> ID.of(eventSessionDB.getEventDB().getId())).collect(Collectors.toSet());
+
+        List<Event> events = eventIds.stream().map(id -> eventDBRepository.findById(id.value()).map(this::toEvent).get()).toList();
+        return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
     }
 
     @Override
@@ -197,11 +201,14 @@ public class InDBEventRepository implements EventRepository {
     @Override
     public List<Event> findByLocalUnitIdAndTrimester(ID localUnitId, int month, int year) {
         ZonedDateTime start = ZonedDateTime.of(year, month, 1, 0, 0, 0, 0, ZonedDateTime.now().getZone());
-        ZonedDateTime end = start.plusMonths(1);
+        ZonedDateTime end = start.plusMonths(3);
 
-        return eventDBRepository
-                .findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end)
-                .stream().map(this::toEvent).toList();
+        List<EventSessionDB> eventSessions = eventSessionDBRepository.findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end);
+
+        Set<ID> eventIds = eventSessions.stream().map(eventSession -> ID.of(eventSession.getEventDB().getId())).collect(Collectors.toSet());
+
+        List<Event> events = eventIds.stream().map(id -> eventDBRepository.findById(id.value()).map(this::toEvent).get()).toList();
+        return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
     }
 
     @Override
