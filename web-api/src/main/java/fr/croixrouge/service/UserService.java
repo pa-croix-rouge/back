@@ -25,4 +25,15 @@ public class UserService extends CRUDService<ID, User, UserRepository> {
             save(user.removeRole(role));
         }
     }
+
+    public void removeRole(ID id, Role role) {
+        User user = findById(id);
+        save(user.removeRole(role));
+    }
+
+    public void addRole(ID id, Role role) {
+        User user = findById(id);
+        save(user.addRole(role));
+    }
+
 }
