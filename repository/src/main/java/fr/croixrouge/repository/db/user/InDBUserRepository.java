@@ -54,6 +54,7 @@ public class InDBUserRepository implements UserRepository {
     @Override
     public ID save(User user) {
         UserDB userDB = userDBRepository.save(toUserDB(user));
+        user.setId(new ID(userDB.getUserID()));
         return new ID(userDB.getUserID());
     }
 

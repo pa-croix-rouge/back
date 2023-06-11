@@ -53,7 +53,10 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public ID save(Volunteer object) {
-        return new ID(volunteerDBRepository.save(toVolunteerDB(object)).getId());
+        inDBUserRepository.save(object.getUser());
+        var volunteerDB = volunteerDBRepository.save(toVolunteerDB(object));
+        object.setId(new ID(volunteerDB.getId()));
+        return new ID(volunteerDB.getId());
     }
 
     @Override
@@ -78,7 +81,16 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public List<Volunteer> findAllByLocalUnitId(ID id) {
-        return userDBRepository.findByLocalUnitDB_LocalUnitID(id.value()).stream().map(user -> this.findByUserId(ID.of(user.getUserID())).orElseThrow()).toList();
+        var test = userDBRepository.findByLocalUnitDB_LocalUnitID( id.value());
+        var test3 = volunteerDBRepository.findByUserDB_UserID(id.value());
+        var test2 = test.stream()
+                .map(user -> volunteerDBRepository.findByUserDB_UserID(user.getUserID()).map(this::toVolunteer)).toList();
+
+        return userDBRepository.findByLocalUnitDB_LocalUnitID( id.value())
+                .stream()
+                .map(user -> volunteerDBRepository.findByUserDB_UserID(user.getUserID()).map(this::toVolunteer) )
+                .flatMap(Optional::stream)
+                .toList();
     }
 
     @Override

@@ -54,6 +54,7 @@ public class VolunteerController extends ErrorHandler {
     public ResponseEntity<List<VolunteerResponse>> findAll(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
+        var test = service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId());
         return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId()).stream().map(this::toDTO).sorted(Comparator.comparing(v -> v.username)).collect(Collectors.toList()));
     }
 
