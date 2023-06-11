@@ -55,6 +55,6 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
 
     @Override
     public FoodProduct toModel() {
-        return new FoodProduct(null, name, quantity.toQuantifier(), null, foodConservation, expirationDate, optimalConsumptionDate, price);
+        return new FoodProduct(null, null, name, quantity.toQuantifier(), null, foodConservation, expirationDate, optimalConsumptionDate, price);
     }
 }

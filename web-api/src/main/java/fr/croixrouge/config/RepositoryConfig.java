@@ -8,6 +8,8 @@ import fr.croixrouge.repository.db.event.InDBEventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
 import fr.croixrouge.repository.db.product.*;
+import fr.croixrouge.repository.db.product_limit.InDBProductLimitRepository;
+import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
 import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
@@ -68,6 +70,12 @@ public class RepositoryConfig {
     @Primary
     public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository) {
         return new InDBProductRepository(productDBRepository);
+    }
+
+    @Bean
+    @Primary
+    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
+        return new InDBProductLimitRepository(productLimitDBRepository);
     }
 
     @Bean

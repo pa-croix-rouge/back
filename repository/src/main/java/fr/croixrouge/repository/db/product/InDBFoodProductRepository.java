@@ -21,6 +21,7 @@ public class InDBFoodProductRepository implements FoodProductRepository {
 
     public FoodProduct toFoodProduct(FoodProductDB foodProductDB) {
         return new FoodProduct(
+                ID.of(foodProductDB.getId()),
                 inDBProductRepository.findById(new ID(foodProductDB.getId())).orElseThrow(),
                 foodProductDB.getFoodConservation(),
                 foodProductDB.getExpirationDate(),
@@ -31,7 +32,8 @@ public class InDBFoodProductRepository implements FoodProductRepository {
 
     public FoodProductDB toFoodProductDB(FoodProduct foodProduct) {
         return new FoodProductDB(
-                inDBProductRepository.toProductDB(inDBProductRepository.findById(foodProduct.getId()).orElseThrow()),
+                foodProduct.getId() == null ? null : foodProduct.getId().value(),
+                inDBProductRepository.toProductDB(foodProduct.getProduct()),
                 (float)foodProduct.getPrice(),
                 foodProduct.getFoodConservation(),
                 foodProduct.getExpirationDate(),
@@ -46,16 +48,12 @@ public class InDBFoodProductRepository implements FoodProductRepository {
 
     @Override
     public ID save(FoodProduct object) {
-        var id = inDBProductRepository.save(object);
-        object.setId(id);
-        foodProductDBRepository.save(toFoodProductDB(object));
-        return id;
+        return new ID(foodProductDBRepository.save(toFoodProductDB(object)).getId());
     }
 
     @Override
     public void delete(FoodProduct object) {
         foodProductDBRepository.delete(toFoodProductDB(object));
-        inDBProductRepository.delete(object);
     }
 
     @Override

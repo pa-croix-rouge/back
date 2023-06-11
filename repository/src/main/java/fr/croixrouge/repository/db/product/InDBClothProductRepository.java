@@ -19,6 +19,7 @@ public class InDBClothProductRepository implements ClothProductRepository {
 
     public ClothProduct toClothProduct(ClothProductDB clothProductDB) {
         return new ClothProduct(
+                ID.of(clothProductDB.getId()),
                 inDBProductRepository.findById(new ID(clothProductDB.getId())).orElseThrow(),
                 clothProductDB.getSize()
         );
@@ -26,7 +27,8 @@ public class InDBClothProductRepository implements ClothProductRepository {
 
     public ClothProductDB toClothProductDB(ClothProduct clothProduct) {
         return new ClothProductDB(
-                inDBProductRepository.toProductDB(inDBProductRepository.findById(clothProduct.getId()).orElseThrow()),
+                clothProduct.getId() == null ? null : clothProduct.getId().value(),
+                inDBProductRepository.toProductDB(inDBProductRepository.findById(clothProduct.getProduct().getId()).orElseThrow()),
                 clothProduct.getSize()
         );
     }
@@ -38,15 +40,12 @@ public class InDBClothProductRepository implements ClothProductRepository {
 
     @Override
     public ID save(ClothProduct object) {
-        var id = inDBProductRepository.save(object);
-        object.setId(id);
         return new ID( clothProductDBRepository.save(toClothProductDB(object)).getId() );
     }
 
     @Override
     public void delete(ClothProduct object) {
         clothProductDBRepository.delete(toClothProductDB(object));
-        inDBProductRepository.delete(object);
     }
 
     @Override

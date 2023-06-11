@@ -11,7 +11,7 @@ public class ClothProductResponse extends ProductResponse {
     }
 
     public ClothProductResponse(ClothProduct product) {
-        super(product);
+        super(product.getProduct());
         this.size = product.getSize();
     }
 

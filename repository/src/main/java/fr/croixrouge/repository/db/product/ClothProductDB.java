@@ -5,18 +5,35 @@ import jakarta.persistence.*;
 
 @Table(name = "cloth-product")
 @Entity
-public class ClothProductDB extends ProductDB {
+public class ClothProductDB {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Enumerated
     @Column(name = "size")
     private ClothSize size;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private ProductDB productDB;
+
     public ClothProductDB() {
     }
 
-    public ClothProductDB(ProductDB productDB, ClothSize size) {
-        super(productDB.getId(), productDB.getName(), productDB.getQuantity(), productDB.getUnit(), productDB.getProductLimitDB());
+    public ClothProductDB(Long id, ProductDB productDB, ClothSize size) {
+        this.id = id;
+        this.productDB = productDB;
         this.size = size;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public ClothSize getSize() {
@@ -25,5 +42,13 @@ public class ClothProductDB extends ProductDB {
 
     public void setSize(ClothSize size) {
         this.size = size;
+    }
+
+    public ProductDB getProductDB() {
+        return productDB;
+    }
+
+    public void setProductDB(ProductDB productDB) {
+        this.productDB = productDB;
     }
 }

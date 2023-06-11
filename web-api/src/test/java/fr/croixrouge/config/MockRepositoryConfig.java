@@ -238,14 +238,14 @@ public class MockRepositoryConfig {
     public FoodProductRepository foodProductTestRepository() {
         List<FoodProduct> products = new ArrayList<>();
 
-        products.add(new FoodProduct(new ID("1"), "FoodProduct 1",
+        products.add(new FoodProduct(new ID("1"), new ID(3L), "FoodProduct 1",
                 new WeightQuantifier(1, WeightUnit.KILOGRAM),
                 null,
                 FoodConservation.ROOM_TEMPERATURE,
                 LocalDateTime.of(2023, 5, 1, 15, 14, 1, 1),
                 LocalDateTime.of(2023, 4, 10, 15, 14, 1, 1),
                 1));
-        products.add(new FoodProduct(new ID("2"), "FoodProduct 2",
+        products.add(new FoodProduct(new ID("2"), new ID(4L), "FoodProduct 2",
                 new WeightQuantifier(1, WeightUnit.KILOGRAM),
                 null,
                 FoodConservation.ROOM_TEMPERATURE,

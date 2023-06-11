@@ -7,7 +7,15 @@ import java.time.LocalDateTime;
 
 @Table(name = "food-product")
 @Entity
-public class FoodProductDB extends ProductDB {
+public class FoodProductDB {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private ProductDB productDB;
 
     @Column(name = "price")
     private Float price;
@@ -22,6 +30,26 @@ public class FoodProductDB extends ProductDB {
     @Column(name = "optimal_consumption_date")
     private LocalDateTime optimalConsumptionDate;
 
+    public FoodProductDB() {
+    }
+
+    public FoodProductDB(Long id, ProductDB productDB, Float price, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate) {
+        this.id = id;
+        this.productDB = productDB;
+        this.price = price;
+        this.foodConservation = foodConservation;
+        this.expirationDate = expirationDate;
+        this.optimalConsumptionDate = optimalConsumptionDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Float getPrice() {
         return price;
     }
@@ -30,23 +58,20 @@ public class FoodProductDB extends ProductDB {
         this.price = price;
     }
 
-    public FoodProductDB() {
+    public ProductDB getProductDB() {
+        return productDB;
     }
 
-    public FoodProductDB(ProductDB productDB, Float price, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate) {
-        super(productDB.getId(), productDB.getName(), productDB.getQuantity(), productDB.getUnit(), productDB.getProductLimitDB());
-        this.price = price;
+    public void setProductDB(ProductDB productDB) {
+        this.productDB = productDB;
+    }
+
+    public FoodConservation getFoodConservation() {
+        return foodConservation;
+    }
+
+    public void setFoodConservation(FoodConservation foodConservation) {
         this.foodConservation = foodConservation;
-        this.expirationDate = expirationDate;
-        this.optimalConsumptionDate = optimalConsumptionDate;
-    }
-
-    public LocalDateTime getOptimalConsumptionDate() {
-        return optimalConsumptionDate;
-    }
-
-    public void setOptimalConsumptionDate(LocalDateTime optimalConsumptionDate) {
-        this.optimalConsumptionDate = optimalConsumptionDate;
     }
 
     public LocalDateTime getExpirationDate() {
@@ -57,11 +82,11 @@ public class FoodProductDB extends ProductDB {
         this.expirationDate = expirationDate;
     }
 
-    public FoodConservation getFoodConservation() {
-        return foodConservation;
+    public LocalDateTime getOptimalConsumptionDate() {
+        return optimalConsumptionDate;
     }
 
-    public void setFoodConservation(FoodConservation foodConservation) {
-        this.foodConservation = foodConservation;
+    public void setOptimalConsumptionDate(LocalDateTime optimalConsumptionDate) {
+        this.optimalConsumptionDate = optimalConsumptionDate;
     }
 }

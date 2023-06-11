@@ -17,7 +17,7 @@ public class FoodProductResponse extends ProductResponse {
     }
 
     public FoodProductResponse(FoodProduct product) {
-        super(product);
+        super(product.getProduct());
         this.foodConservation = product.getFoodConservation();
         this.expirationDate = product.getExpirationDate();
         this.optimalConsumptionDate = product.getOptimalConsumptionDate();

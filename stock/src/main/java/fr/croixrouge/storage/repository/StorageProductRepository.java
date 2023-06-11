@@ -13,6 +13,8 @@ public interface StorageProductRepository extends CRUDRepository<ID, StorageProd
 
     Optional<StorageProduct> findById(Storage storage, Product product);
 
+    Optional<StorageProduct> findByProduct(Product product);
+
     List<StorageProduct> findAllByStorage(Storage storage);
 
     List<StorageProduct> findAllByLocalUnit(ID localUnitId);

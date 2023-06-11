@@ -16,6 +16,10 @@ public class StorageProductService {
         this.storageProductRepository = storageProductRepository;
     }
 
+    public StorageProduct findByProduct(Product product) {
+        return storageProductRepository.findByProduct(product).orElse(null);
+    }
+
     public void addProduct(Storage storage, Product product, int quantity) {
         storageProductRepository.findById(storage, product)
                 .ifPresentOrElse(storageProduct -> storageProductRepository.save(new StorageProduct(storageProduct.getId(), storage, product, storageProduct.getQuantity() + quantity)),
@@ -38,5 +42,9 @@ public class StorageProductService {
 
     public void removeProduct(Storage storage, Product product, int quantity) {
         addProduct(storage, product, -quantity);
+    }
+
+    public void delete(StorageProduct storageProduct) {
+        storageProductRepository.delete(storageProduct);
     }
 }

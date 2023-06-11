@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 @Table(name = "product")
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public class ProductDB {
 
     @Id
@@ -25,6 +24,7 @@ public class ProductDB {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_limit_db_id")
     private ProductLimitDB productLimitDB;
+
     public ProductDB() {
     }
 

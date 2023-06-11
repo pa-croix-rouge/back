@@ -33,6 +33,10 @@ public class StorageProductService {
         this.storageProductService = storageProductService;
     }
 
+    public StorageProduct findByProduct(Product product) {
+        return storageProductService.findByProduct(product);
+    }
+
     public void addProduct(ID storageId, ID productId, int quantity) {
         Storage storage = storageRepository.findById(storageId).orElseThrow();
         Product product = productRepository.findById(productId).orElseThrow();
@@ -69,5 +73,9 @@ public class StorageProductService {
         Product product = productRepository.findById(productId).orElseThrow();
 
         return storageProductService.getProductQuantity(storage, product);
+    }
+
+    public void delete(StorageProduct storageProduct) {
+        storageProductService.delete(storageProduct);
     }
 }
