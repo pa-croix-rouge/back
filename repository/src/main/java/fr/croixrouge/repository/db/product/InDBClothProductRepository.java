@@ -54,4 +54,9 @@ public class InDBClothProductRepository implements ClothProductRepository {
                 .map(this::toClothProduct)
                 .toList();
     }
+
+    @Override
+    public Optional<ClothProduct> findByProductId(ID productId) {
+        return clothProductDBRepository.findByProductId(productId.value()).map(this::toClothProduct);
+    }
 }

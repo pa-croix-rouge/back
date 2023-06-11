@@ -1,7 +1,7 @@
 package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.exposition.dto.product.StorageProductResponse;
+import fr.croixrouge.exposition.dto.product.ProductListResponse;
 import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.StorageProductService;
 import fr.croixrouge.storage.model.product.ProductList;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/storage/product")
@@ -24,14 +22,17 @@ public class StorageProductController extends ErrorHandler {
     }
 
     @GetMapping("/{storageId}")
-    public ResponseEntity<List<StorageProductResponse>> getProductsByStorage(@PathVariable ID storageId) {
-        return ResponseEntity.ok(service.getProductsByStorage(storageId).stream().map(StorageProductResponse::fromStorageProduct).toList());
+    public ResponseEntity<ProductListResponse> getProductsByStorage(@PathVariable ID storageId) {
+        ProductList productList = service.getProductsByStorage(storageId);
+        ProductListResponse productListResponse = ProductListResponse.fromProductList(productList);
+        return ResponseEntity.ok(productListResponse);
     }
 
     @GetMapping(value = "/localunit/{id}")
-    public ResponseEntity<List<StorageProductResponse>> getProductsByLocalUnit(@PathVariable ID id) {
+    public ResponseEntity<ProductListResponse> getProductsByLocalUnit(@PathVariable ID id) {
         ProductList productList = service.getProductsByLocalUnit(id);
-        return ResponseEntity.ok().build();
+        ProductListResponse productListResponse = ProductListResponse.fromProductList(productList);
+        return ResponseEntity.ok(productListResponse);
     }
 
     @GetMapping(value = "/{storageId}/{id}/quantity")

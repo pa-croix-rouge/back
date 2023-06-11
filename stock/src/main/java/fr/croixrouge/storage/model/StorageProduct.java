@@ -4,6 +4,8 @@ import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.product.Product;
 
+import java.util.Objects;
+
 public class StorageProduct extends Entity<ID> {
 
     private final Storage storage;
@@ -36,5 +38,27 @@ public class StorageProduct extends Entity<ID> {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StorageProduct that = (StorageProduct) o;
+        return quantity == that.quantity && Objects.equals(storage, that.storage) && Objects.equals(product, that.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(storage, product, quantity);
+    }
+
+    @Override
+    public String toString() {
+        return "StorageProduct{" +
+                "storage=" + storage +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
     }
 }

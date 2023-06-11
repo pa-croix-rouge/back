@@ -5,6 +5,7 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.quantifier.Quantifier;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class FoodProduct extends Entity<ID> {
 
@@ -49,5 +50,29 @@ public class FoodProduct extends Entity<ID> {
 
     public double getPrice() {
         return price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FoodProduct that = (FoodProduct) o;
+        return Double.compare(that.price, price) == 0 && Objects.equals(product, that.product) && foodConservation == that.foodConservation && Objects.equals(expirationDate, that.expirationDate) && Objects.equals(optimalConsumptionDate, that.optimalConsumptionDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, foodConservation, expirationDate, optimalConsumptionDate, price);
+    }
+
+    @Override
+    public String toString() {
+        return "FoodProduct{" +
+                "product=" + product +
+                ", foodConservation=" + foodConservation +
+                ", expirationDate=" + expirationDate +
+                ", optimalConsumptionDate=" + optimalConsumptionDate +
+                ", price=" + price +
+                '}';
     }
 }

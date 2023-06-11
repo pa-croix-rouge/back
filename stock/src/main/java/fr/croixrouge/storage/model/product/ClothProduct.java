@@ -5,6 +5,8 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.quantifier.NumberedUnit;
 import fr.croixrouge.storage.model.quantifier.Quantifier;
 
+import java.util.Objects;
+
 public class ClothProduct extends Entity<ID> {
 
     private final Product product;
@@ -26,5 +28,26 @@ public class ClothProduct extends Entity<ID> {
 
     public ClothSize getSize() {
         return size;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClothProduct that = (ClothProduct) o;
+        return Objects.equals(product, that.product) && size == that.size;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, size);
+    }
+
+    @Override
+    public String toString() {
+        return "ClothProduct{" +
+                "product=" + product +
+                ", size=" + size +
+                '}';
     }
 }

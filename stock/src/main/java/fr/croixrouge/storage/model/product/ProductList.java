@@ -1,21 +1,23 @@
 package fr.croixrouge.storage.model.product;
 
-import java.util.List;
+import fr.croixrouge.storage.model.StorageProduct;
+
+import java.util.Map;
 
 public class ProductList {
-    protected final List<ClothProduct> clothProducts;
-    protected final List<FoodProduct> foodProducts;
+    protected final Map<StorageProduct, ClothProduct> clothProducts;
+    protected final Map<StorageProduct, FoodProduct> foodProducts;
 
-    public ProductList(List<ClothProduct> clothProducts, List<FoodProduct> foodProducts) {
+    public ProductList(Map<StorageProduct, ClothProduct> clothProducts, Map<StorageProduct, FoodProduct> foodProducts) {
         this.clothProducts = clothProducts;
         this.foodProducts = foodProducts;
     }
 
-    public List<ClothProduct> getClothProducts() {
+    public Map<StorageProduct, ClothProduct> getClothProducts() {
         return clothProducts;
     }
 
-    public List<FoodProduct> getFoodProducts() {
+    public Map<StorageProduct, FoodProduct> getFoodProducts() {
         return foodProducts;
     }
 }

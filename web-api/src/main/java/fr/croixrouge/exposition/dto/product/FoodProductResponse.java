@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.dto.product;
 
+import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 
@@ -24,6 +25,18 @@ public class FoodProductResponse extends ProductResponse {
         this.foodConservation = product.getFoodConservation();
         this.expirationDate = product.getExpirationDate();
         this.optimalConsumptionDate = product.getOptimalConsumptionDate();
+    }
+
+    public FoodProductResponse(Long id, Long productId, String name, QuantifierDTO quantifierDTO, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate) {
+        super(productId, name, quantifierDTO);
+        this.id = id;
+        this.foodConservation = foodConservation;
+        this.expirationDate = expirationDate;
+        this.optimalConsumptionDate = optimalConsumptionDate;
+    }
+
+    public static FoodProductResponse fromFoodProduct(FoodProduct product) {
+        return new FoodProductResponse(product);
     }
 
     public Long getId() {

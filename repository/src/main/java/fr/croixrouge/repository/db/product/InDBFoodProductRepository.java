@@ -62,4 +62,9 @@ public class InDBFoodProductRepository implements FoodProductRepository {
                 .map(this::toFoodProduct)
                 .toList();
     }
+
+    @Override
+    public Optional<FoodProduct> findByProductId(ID productId) {
+        return foodProductDBRepository.findByProductId(productId.value()).map(this::toFoodProduct);
+    }
 }

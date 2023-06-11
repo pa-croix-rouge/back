@@ -311,7 +311,7 @@ public class InDBMockRepositoryConfig {
         storageProductRepository.save(new StorageProduct(new ID(7L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(7L)).get(), 10));
 
         storageProductRepository.save(new StorageProduct(new ID(8L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(8L)).get(), 10));
-        storageProductRepository.save(new StorageProduct(new ID(8L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(9L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(9L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(9L)).get(), 10));
 
         return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
     }

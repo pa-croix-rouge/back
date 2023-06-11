@@ -13,8 +13,9 @@ import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.storage.repository.StorageRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StorageProductService {
@@ -31,6 +32,16 @@ public class StorageProductService {
         this.clothProductRepository = clothProductRepository;
         this.foodProductRepository = foodProductRepository;
         this.storageProductService = storageProductService;
+    }
+
+    private ProductList storageProductListToProductList(List<StorageProduct> storageProducts) {
+        Map<StorageProduct, ClothProduct> clothProducts = new HashMap<>();
+        Map<StorageProduct, FoodProduct> foodProducts = new HashMap<>();
+        for (StorageProduct storageProduct : storageProducts) {
+            clothProductRepository.findByProductId(storageProduct.getProduct().getId()).ifPresent(clothProduct -> clothProducts.put(storageProduct, clothProduct));
+            foodProductRepository.findByProductId(storageProduct.getProduct().getId()).ifPresent(foodProduct -> foodProducts.put(storageProduct, foodProduct));
+        }
+        return new ProductList(clothProducts, foodProducts);
     }
 
     public StorageProduct findByProduct(Product product) {
@@ -51,21 +62,15 @@ public class StorageProductService {
         storageProductService.removeProduct(storage, product, quantity);
     }
 
-    public List<StorageProduct> getProductsByStorage(ID storageId) {
+    public ProductList getProductsByStorage(ID storageId) {
         Storage storage = storageRepository.findById(storageId).orElseThrow();
-
-        return storageProductService.getProductsByStorage(storage);
+        List<StorageProduct> products = storageProductService.getProductsByStorage(storage);
+        return storageProductListToProductList(products);
     }
 
     public ProductList getProductsByLocalUnit(ID localUnitId) {
         List<StorageProduct> products = storageProductService.getProductsByLocalUnit(localUnitId);
-        List<ClothProduct> clothProducts = new ArrayList<>();
-        List<FoodProduct> foodProducts = new ArrayList<>();
-        for (StorageProduct product : products) {
-            foodProductRepository.findById(product.getProduct().getId()).ifPresent(foodProducts::add);
-            clothProductRepository.findById(product.getProduct().getId()).ifPresent(clothProducts::add);
-        }
-        return new ProductList(clothProducts, foodProducts);
+        return storageProductListToProductList(products);
     }
 
     public Integer getProductQuantity(ID storageId, ID productId) {

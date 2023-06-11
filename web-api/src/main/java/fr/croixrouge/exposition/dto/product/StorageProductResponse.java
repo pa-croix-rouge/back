@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.product;
 
 import fr.croixrouge.storage.model.StorageProduct;
+import fr.croixrouge.storage.model.product.Product;
 
 import java.math.BigDecimal;
 
@@ -24,6 +25,16 @@ public class StorageProductResponse {
         this.quantity = quantity;
         this.quantifierQuantity = quantifierQuantity;
         this.quantifierName = quantifierName;
+    }
+
+    public StorageProductResponse(Product product, StorageProduct storageProduct) {
+        this.storageProductId = storageProduct.getId().value();
+        this.productId = product.getId().value();
+        this.storageId = storageProduct.getStorage().getId().value();
+        this.productName = product.getName();
+        this.quantity = storageProduct.getQuantity();
+        this.quantifierQuantity = BigDecimal.valueOf(product.getQuantity().getQuantity()).toString();
+        this.quantifierName = product.getQuantity().getUnit().getName();
     }
 
     public static StorageProductResponse fromStorageProduct(StorageProduct storageProduct) {
