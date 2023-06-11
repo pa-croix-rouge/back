@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class ProductDB {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -24,6 +24,7 @@ public class ProductDB {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_limit_db_id")
     private ProductLimitDB productLimitDB;
+
     public ProductDB() {
     }
 

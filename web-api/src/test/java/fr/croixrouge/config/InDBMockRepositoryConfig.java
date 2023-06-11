@@ -11,10 +11,9 @@ import fr.croixrouge.repository.db.event.EventTimeWindowDBRepository;
 import fr.croixrouge.repository.db.event.InDBEventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
-import fr.croixrouge.repository.db.product.FoodProductDBRepository;
-import fr.croixrouge.repository.db.product.InDBFoodProductRepository;
-import fr.croixrouge.repository.db.product.InDBProductRepository;
-import fr.croixrouge.repository.db.product.ProductDBRepository;
+import fr.croixrouge.repository.db.product.*;
+import fr.croixrouge.repository.db.product_limit.InDBProductLimitRepository;
+import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
 import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
@@ -29,13 +28,9 @@ import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
 import fr.croixrouge.storage.model.Storage;
-import fr.croixrouge.storage.model.product.FoodConservation;
-import fr.croixrouge.storage.model.product.FoodProduct;
-import fr.croixrouge.storage.model.product.Product;
-import fr.croixrouge.storage.model.quantifier.VolumeQuantifier;
-import fr.croixrouge.storage.model.quantifier.VolumeUnit;
-import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
-import fr.croixrouge.storage.model.quantifier.WeightUnit;
+import fr.croixrouge.storage.model.StorageProduct;
+import fr.croixrouge.storage.model.product.*;
+import fr.croixrouge.storage.model.quantifier.*;
 import fr.croixrouge.storage.repository.StorageProductRepository;
 import fr.croixrouge.storage.repository.UserProductRepository;
 import fr.croixrouge.storage.service.StorageProductService;
@@ -67,6 +62,8 @@ public class InDBMockRepositoryConfig {
     private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
     private final LocalUnit localUnit, southernLocalUnit;
 
+    private final Product product1, product2, cloth1, cloth2, cloth3, cloth4, cloth5, food1, food2;
+
     public InDBMockRepositoryConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
 
@@ -95,6 +92,15 @@ public class InDBMockRepositoryConfig {
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
+        product1 = new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
+        product2 = new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null);
+        cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
+        cloth2 = new Product(new ID(4L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
+        cloth3 = new Product(new ID(5L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
+        cloth4 = new Product(new ID(6L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
+        cloth5 = new Product(new ID(7L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
+        food1 = new Product(new ID(8L), "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
+        food2 = new Product(new ID(9L), "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
     }
 
     @Bean
@@ -216,13 +222,40 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
+    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
+        return new InDBProductLimitRepository(productLimitDBRepository);
+    }
+
+    @Bean
+    @Primary
     public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository) {
         var storageRepository = new InDBProductRepository(productDBRepository);
 
-        storageRepository.save(new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null));
-        storageRepository.save(new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null));
+        storageRepository.save(product1);
+        storageRepository.save(product2);
+        storageRepository.save(cloth1);
+        storageRepository.save(cloth2);
+        storageRepository.save(cloth3);
+        storageRepository.save(cloth4);
+        storageRepository.save(cloth5);
+        storageRepository.save(food1);
+        storageRepository.save(food2);
 
         return storageRepository;
+    }
+
+    @Bean
+    @Primary
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
+        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
+
+        repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S));
+        repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M));
+        repository.save(new ClothProduct(new ID(3L), cloth3, ClothSize.L));
+        repository.save(new ClothProduct(new ID(4L), cloth4, ClothSize.XL));
+        repository.save(new ClothProduct(new ID(5L), cloth5, ClothSize.XXL));
+
+        return repository;
     }
 
     @Bean
@@ -230,21 +263,20 @@ public class InDBMockRepositoryConfig {
     public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
         var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository);
 
-        repository.save(new FoodProduct(null, "FoodProduct 1",
-                new WeightQuantifier(1, WeightUnit.KILOGRAM),
-                null,
+        repository.save(new FoodProduct(new ID(1L),
+                food1,
                 FoodConservation.ROOM_TEMPERATURE,
                 LocalDateTime.of(2023, 5, 1, 15, 14, 1),
                 LocalDateTime.of(2023, 4, 10, 15, 14, 1),
                 1));
 
-        repository.save(new FoodProduct(null, "FoodProduct 2",
-                new WeightQuantifier(1, WeightUnit.KILOGRAM),
-                null,
+        repository.save(new FoodProduct(new ID(2L),
+                food2,
                 FoodConservation.ROOM_TEMPERATURE,
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now(),
                 1));
+
 
         return repository;
     }
@@ -267,6 +299,20 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+        StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
+
+        storageProductRepository.save(new StorageProduct(new ID(1L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(1L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(2L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(2L)).get(), 10));
+
+        storageProductRepository.save(new StorageProduct(new ID(3L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(3L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(4L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(4L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(5L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(5L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(6L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(6L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(7L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(7L)).get(), 10));
+
+        storageProductRepository.save(new StorageProduct(new ID(8L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(8L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(9L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(9L)).get(), 10));
+
         return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
     }
 

@@ -5,26 +5,47 @@ import fr.croixrouge.storage.model.product.Product;
 
 public class ProductResponse {
 
-    protected final Long id;
+    private Long productId;
 
-    protected final String name;
-    protected final QuantifierDTO quantity;
+    private String name;
+    private QuantifierDTO quantity;
+
+    public ProductResponse() {
+    }
 
     public ProductResponse(Product product) {
-        this.id = product.getId().value();
+        this.productId = product.getId().value();
         this.name = product.getName();
         this.quantity = QuantifierDTO.fromQuantifier(product.getQuantity());
+    }
+
+    public ProductResponse(Long productId, String name, QuantifierDTO quantity) {
+        this.productId = productId;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getName() {
         return name;
     }
 
-    public Long getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public QuantifierDTO getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(QuantifierDTO quantity) {
+        this.quantity = quantity;
     }
 }

@@ -14,13 +14,13 @@ public class ProductLimitDB {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "duration", nullable = false)
+    @Column(name = "duration", nullable = true)
     private Duration duration;
 
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity", nullable = true)
     private Double quantity;
 
-    @Column(name = "unit", nullable = false)
+    @Column(name = "unit", nullable = true)
     private String unit;
 
     public ProductLimitDB() {

@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class FoodProductControllerTest {
 
     @Autowired
@@ -53,21 +55,18 @@ class FoodProductControllerTest {
     @Test
     @DisplayName("Test that the endpoint returns a food product when given a correct id")
     public void productIdSuccessTest() throws Exception {
-        mockMvc.perform(get("/product/food/3")
+        mockMvc.perform(get("/product/food/1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("3"))
-                .andExpect(jsonPath("$.name").value("FoodProduct 1"))
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.name").value("Pommes"))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(1))
                 .andExpect(jsonPath("$.foodConservation").value("ROOM_TEMPERATURE"))
                 .andExpect(jsonPath("$.expirationDate").value(LocalDateTime.of(2023, 5, 1, 15, 14, 1).toString()))
                 .andExpect(jsonPath("$.optimalConsumptionDate").value(LocalDateTime.of(2023, 4, 10, 15, 14, 1).toString()));
-
-
     }
-
 
     @Test
     @DisplayName("Test that the endpoint returns a 404 when given a incorrect food product id")
@@ -87,7 +86,6 @@ class FoodProductControllerTest {
                 LocalDateTime.of(2023, 5, 1, 15, 14, 1),
                 LocalDateTime.of(2023, 4, 10, 15, 14, 1),
                 1);
-
 
         var res = mockMvc.perform(post("/product/food")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -114,7 +112,7 @@ class FoodProductControllerTest {
     @Test
     @DisplayName("Test that the delete endpoint returns OK when given a correct food product id")
     public void productDeleteSuccessTest() throws Exception {
-        String id = "4";
+        String id = "2";
 
         mockMvc.perform(delete("/product/food/" + id)
                         .header("Authorization", "Bearer " + jwtToken)

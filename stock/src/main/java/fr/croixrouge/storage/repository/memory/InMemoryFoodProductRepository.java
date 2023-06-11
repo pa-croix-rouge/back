@@ -8,6 +8,7 @@ import fr.croixrouge.storage.repository.FoodProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class InMemoryFoodProductRepository extends InMemoryCRUDRepository<ID, FoodProduct> implements FoodProductRepository {
 
@@ -17,5 +18,10 @@ public class InMemoryFoodProductRepository extends InMemoryCRUDRepository<ID, Fo
 
     public InMemoryFoodProductRepository() {
         this(new ArrayList<FoodProduct>());
+    }
+
+    @Override
+    public Optional<FoodProduct> findByProductId(ID productId) {
+        return findAll().stream().filter(foodProduct -> foodProduct.getProduct().getId().equals(productId)).findFirst();
     }
 }

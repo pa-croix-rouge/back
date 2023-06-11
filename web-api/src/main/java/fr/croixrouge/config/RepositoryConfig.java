@@ -7,10 +7,9 @@ import fr.croixrouge.repository.db.event.EventTimeWindowDBRepository;
 import fr.croixrouge.repository.db.event.InDBEventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
-import fr.croixrouge.repository.db.product.FoodProductDBRepository;
-import fr.croixrouge.repository.db.product.InDBFoodProductRepository;
-import fr.croixrouge.repository.db.product.InDBProductRepository;
-import fr.croixrouge.repository.db.product.ProductDBRepository;
+import fr.croixrouge.repository.db.product.*;
+import fr.croixrouge.repository.db.product_limit.InDBProductLimitRepository;
+import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
 import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
@@ -75,8 +74,19 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
+    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
+        return new InDBProductLimitRepository(productLimitDBRepository);
+    }
 
+    @Bean
+    @Primary
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
+        return new InDBClothProductRepository(clothProductDBRepository, productRepository);
+    }
+
+    @Bean
+    @Primary
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
         return new InDBFoodProductRepository(foodProductDBRepository, productRepository);
     }
 

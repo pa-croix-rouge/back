@@ -153,7 +153,7 @@ class StorageControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the storage endpoint returns a list of storage is empty matching your local unit id")
+    @DisplayName("Test that the storage endpoint returns a list of storage which is empty matching your local unit id")
     public void storageAllEmptySuccessTest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("SLUManager", "SLUPassword");
 

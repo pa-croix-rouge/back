@@ -19,6 +19,7 @@ public abstract class ErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handle(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+        ex.printStackTrace();
         if (ex instanceof NullPointerException) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

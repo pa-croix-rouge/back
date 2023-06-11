@@ -1,9 +1,12 @@
 package fr.croixrouge.storage.service;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.repository.StorageProductRepository;
+
+import java.util.List;
 
 public class StorageProductService {
 
@@ -11,6 +14,10 @@ public class StorageProductService {
 
     public StorageProductService(StorageProductRepository storageProductRepository) {
         this.storageProductRepository = storageProductRepository;
+    }
+
+    public StorageProduct findByProduct(Product product) {
+        return storageProductRepository.findByProduct(product).orElse(null);
     }
 
     public void addProduct(Storage storage, Product product, int quantity) {
@@ -25,7 +32,19 @@ public class StorageProductService {
                 .orElse(0);
     }
 
+    public List<StorageProduct> getProductsByStorage(Storage storage) {
+        return storageProductRepository.findAllByStorage(storage);
+    }
+
+    public List<StorageProduct> getProductsByLocalUnit(ID localUnitId) {
+        return storageProductRepository.findAllByLocalUnit(localUnitId);
+    }
+
     public void removeProduct(Storage storage, Product product, int quantity) {
         addProduct(storage, product, -quantity);
+    }
+
+    public void delete(StorageProduct storageProduct) {
+        storageProductRepository.delete(storageProduct);
     }
 }

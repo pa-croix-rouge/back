@@ -25,4 +25,19 @@ public class InMemoryStorageProductRepository extends InMemoryCRUDRepository<ID,
     public Optional<StorageProduct> findById(Storage storage, Product product) {
         return objects.stream().filter(object -> object.getStorage().equals(storage) && object.getProduct().equals(product)).findFirst();
     }
+
+    @Override
+    public Optional<StorageProduct> findByProduct(Product product) {
+        return objects.stream().filter(object -> object.getProduct().equals(product)).findFirst();
+    }
+
+    @Override
+    public List<StorageProduct> findAllByStorage(Storage storage) {
+        return objects.stream().filter(object -> object.getStorage().equals(storage)).toList();
+    }
+
+    @Override
+    public List<StorageProduct> findAllByLocalUnit(ID localUnitId) {
+        return objects.stream().filter(object -> object.getStorage().getLocalUnit().getId().equals(localUnitId)).toList();
+    }
 }

@@ -21,7 +21,8 @@ public class InDBFoodProductRepository implements FoodProductRepository {
 
     public FoodProduct toFoodProduct(FoodProductDB foodProductDB) {
         return new FoodProduct(
-                inDBProductRepository.findById(new ID(foodProductDB.getId())).orElseThrow(),
+                ID.of(foodProductDB.getId()),
+                inDBProductRepository.findById(new ID(foodProductDB.getProductDB().getId())).orElseThrow(),
                 foodProductDB.getFoodConservation(),
                 foodProductDB.getExpirationDate(),
                 foodProductDB.getOptimalConsumptionDate(),
@@ -32,6 +33,7 @@ public class InDBFoodProductRepository implements FoodProductRepository {
     public FoodProductDB toFoodProductDB(FoodProduct foodProduct) {
         return new FoodProductDB(
                 foodProduct.getId() == null ? null : foodProduct.getId().value(),
+                inDBProductRepository.toProductDB(foodProduct.getProduct()),
                 (float)foodProduct.getPrice(),
                 foodProduct.getFoodConservation(),
                 foodProduct.getExpirationDate(),
@@ -46,15 +48,12 @@ public class InDBFoodProductRepository implements FoodProductRepository {
 
     @Override
     public ID save(FoodProduct object) {
-        var id = inDBProductRepository.save(object);
-        object.setId(id);
-        return new ID( foodProductDBRepository.save(toFoodProductDB(object)).getId() );
+        return new ID(foodProductDBRepository.save(toFoodProductDB(object)).getId());
     }
 
     @Override
     public void delete(FoodProduct object) {
         foodProductDBRepository.delete(toFoodProductDB(object));
-        inDBProductRepository.delete(object);
     }
 
     @Override
@@ -62,5 +61,10 @@ public class InDBFoodProductRepository implements FoodProductRepository {
         return StreamSupport.stream(foodProductDBRepository.findAll().spliterator(), false)
                 .map(this::toFoodProduct)
                 .toList();
+    }
+
+    @Override
+    public Optional<FoodProduct> findByProductId(ID productId) {
+        return foodProductDBRepository.findByProductId(productId.value()).map(this::toFoodProduct);
     }
 }
