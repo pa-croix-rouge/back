@@ -39,7 +39,8 @@ public class SecurityConfig {
         List<RequestMatcher> excludedFilterUrl = List.of(
                 new AntPathRequestMatcher("/login"),
                 new AntPathRequestMatcher("/volunteer/register"),
-                new AntPathRequestMatcher("/volunteer/token"));
+                new AntPathRequestMatcher("/volunteer/token"),
+                new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name()) );
 
         http
             .csrf(AbstractHttpConfigurer::disable)
