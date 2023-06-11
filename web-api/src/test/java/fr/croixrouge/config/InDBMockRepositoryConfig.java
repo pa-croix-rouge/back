@@ -100,7 +100,7 @@ public class InDBMockRepositoryConfig {
                 localUnit,
                 List.of());
 
-        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), List.of(defaultRole));
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of(defaultRole));
 
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
 
@@ -111,8 +111,6 @@ public class InDBMockRepositoryConfig {
         userForAuthTest = new User(new ID(4L), "userForAuthTest", passwordEncoder.encode("userForAuthTestPassword"), localUnit, List.of(roleForAuthTest));
 
         southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
-
-        southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
 
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);

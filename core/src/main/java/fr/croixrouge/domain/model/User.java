@@ -35,7 +35,7 @@ public class User extends Entity<ID> {
     }
 
     public User removeRole(Role role) {
-        return new User(id, username, password, roles.stream().filter(r -> !r.equals(role)).toList());
+        return new User(id, username, password, localUnit, roles.stream().filter(r -> !r.equals(role)).toList());
     }
 
     public User addRole(Role role) {
@@ -44,10 +44,10 @@ public class User extends Entity<ID> {
         }
         var newRoles = new ArrayList<>(roles);
         newRoles.add(role);
-        return new User(id, username, password, newRoles);
+        return new User(id, username, password, localUnit, newRoles);
     }
 
     public User setPassword(String encode) {
-        return new User(id, username, encode, roles);
+        return new User(id, username, encode, localUnit, roles);
     }
 }
