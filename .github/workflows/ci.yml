@@ -31,30 +31,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Archive Maven dependencies
-        run: tar czvf maven_dependencies.tgz -C ~/.m2 repository .
-
   sca_testing:
     needs: archive_dependencies
     runs-on: self-hosted
     steps:
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
-
-      - name: Extract Maven dependencies
-        run: tar xvf maven_dependencies.tgz
-
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -75,12 +55,6 @@ jobs:
     needs: sca_testing
     runs-on: self-hosted
     steps:
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
-
-      - name: Extract Maven dependencies
-        run: tar xvf maven_dependencies.tgz
-
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -98,6 +72,7 @@ jobs:
           SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
+          SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
         run: |
           mvn clean compile package -Dmaven.test.skip=true --batch-mode --no-transfer-progress \
           -Djwt.secret="${JWT_SECRET}" \
@@ -108,7 +83,8 @@ jobs:
           -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
           -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
           -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
-          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}"
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}"
 
   test:
     needs: build
@@ -119,9 +95,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
 
       - name: Run tests
         env:
@@ -134,6 +107,7 @@ jobs:
           SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
+          SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
         run: |
           echo "${SPRING_DDL_AUTO};${SPRING_DATASOURCE_URL};${SPRING_DATASOURCE_USERNAME};${SPRING_DATASOURCE_PASSWORD};${SPRING_DATASOURCE_DRIVER}"; \
           mvn test --batch-mode --no-transfer-progress \
@@ -146,7 +120,8 @@ jobs:
           -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
           -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
           -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
-          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}"
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}"
 
   deploy:
     needs: test
