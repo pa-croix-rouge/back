@@ -32,4 +32,8 @@ public class User extends Entity<ID> {
     public List<Role> getRoles() {
         return roles;
     }
+
+    public User removeRole(Role role) {
+        return new User(id, username, password, roles.stream().filter(r -> !r.equals(role)).toList());
+    }
 }

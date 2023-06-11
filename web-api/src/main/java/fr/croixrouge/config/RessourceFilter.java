@@ -12,6 +12,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RessourceFilter extends OncePerRequestFilter {
 
@@ -43,11 +46,12 @@ public class RessourceFilter extends OncePerRequestFilter {
 
         UserSecurity userSecurity = (UserSecurity) auth.getPrincipal();
 
-        userSecurity.currentRoles = userSecurity.currentRoles.stream()
-                .filter(role -> role.getAuthorizations().containsKey(resource))
-                .toList();
+        userSecurity.allAuthorizations = userSecurity.allAuthorizations.entrySet().stream()
+                .filter(entry -> entry.getKey().equals(resource))
+                .map( entry -> Map.entry( resource, entry.getValue()))
+                .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ));
 
-        if (userSecurity.currentRoles.isEmpty()) {
+        if (userSecurity.allAuthorizations.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }

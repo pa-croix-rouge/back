@@ -1,6 +1,7 @@
 package fr.croixrouge.config;
 
 import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.model.UserSecurity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,7 +12,11 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class OperationFilter extends OncePerRequestFilter {
 
@@ -45,12 +50,12 @@ public class OperationFilter extends OncePerRequestFilter {
 
         UserSecurity userSecurity = (UserSecurity) auth.getPrincipal();
 
-        userSecurity.currentRoles = userSecurity.currentRoles.stream()
-                .filter(role -> role.getAuthorizations().entrySet().stream()
-                        .anyMatch(entry -> entry.getValue().contains(operation)) )
-                .toList();
+        userSecurity.allAuthorizations = userSecurity.allAuthorizations.entrySet().stream()
+                .filter(entry -> entry.getValue().contains(operation))
+                .map( entry -> Map.entry( entry.getKey(), Set.of(operation)))
+                .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ));
 
-        if (userSecurity.currentRoles.isEmpty()) {
+        if (userSecurity.allAuthorizations.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }

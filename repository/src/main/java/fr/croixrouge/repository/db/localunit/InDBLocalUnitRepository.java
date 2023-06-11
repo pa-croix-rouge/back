@@ -19,6 +19,9 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
     }
 
     public LocalUnit toLocalUnit(LocalUnitDB localUnitDB) {
+        if(localUnitDB == null)
+            return null;
+
         return new LocalUnit(
                 new ID(localUnitDB.getLocalUnitID()),
                 localUnitDB.getName(),
@@ -33,6 +36,9 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
     }
 
     public LocalUnitDB toLocalUnitDB(LocalUnit localUnit) {
+        if(localUnit == null)
+            return null;
+
         return new LocalUnitDB(
                 localUnit.getId().value(),
                 localUnit.getName(),

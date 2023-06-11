@@ -11,6 +11,7 @@ public class Role extends Entity<ID> {
     private final Map<Resources, Set<Operations>> authorizations;
 
     private final LocalUnit localUnit;
+
     private final List<ID> userIds;
 
     public Role(ID id, String name, String description, Map<Resources, Set<Operations>> authorizations, LocalUnit localUnit, List<ID> userIds) {
@@ -42,9 +43,9 @@ public class Role extends Entity<ID> {
         return localUnit;
     }
 
-//    public List<ID> getUserIds() {
-//        return userIds;
-//    }
+    public List<ID> getUserIds() {
+        return userIds;
+    }
 
     @Override
     public boolean equals(Object o) {

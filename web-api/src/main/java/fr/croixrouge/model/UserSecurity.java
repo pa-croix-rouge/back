@@ -9,11 +9,11 @@ import java.util.*;
 
 public class UserSecurity extends User implements UserDetails {
 
-    public List<Role> currentRoles;
+    public Map<Resources, Set<Operations>> allAuthorizations;
 
     public UserSecurity(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles) {
         super(userId, username, password, localUnit, roles);
-        currentRoles = roles;
+        allAuthorizations = roles.stream().flatMap(r -> r.getAuthorizations().entrySet().stream()).collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), HashMap::putAll);
     }
 
     public UserSecurity(User user) {
