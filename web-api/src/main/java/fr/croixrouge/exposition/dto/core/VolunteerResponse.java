@@ -46,8 +46,4 @@ public class VolunteerResponse {
     public boolean getIsValidated() {
         return isValidated;
     }
-
-    public boolean isValidated() {
-        return isValidated;
-    }
 }

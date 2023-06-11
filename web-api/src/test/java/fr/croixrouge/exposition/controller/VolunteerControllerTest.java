@@ -6,9 +6,7 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.core.VolunteerCreationRequest;
 import fr.croixrouge.exposition.dto.core.VolunteerResponse;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -94,6 +93,15 @@ public class VolunteerControllerTest {
                 "newVolunteer",
                 "newVolunteerName",
                 "+33 6 00 11 22 33",
+                true,
+                1L
+        );
+        VolunteerResponse volunteerResponse3 = new VolunteerResponse(
+                3L,
+                "volunteerUser",
+                "newVolunteer2",
+                "newVolunteerName2",
+                "+33 6 00 11 22 34",
                 false,
                 1L
         );
@@ -113,7 +121,13 @@ public class VolunteerControllerTest {
                 .andExpect(jsonPath("$[1].firstName").value(volunteerResponse2.getFirstName()))
                 .andExpect(jsonPath("$[1].lastName").value(volunteerResponse2.getLastName()))
                 .andExpect(jsonPath("$[1].phoneNumber").value(volunteerResponse2.getPhoneNumber()))
-                .andExpect(jsonPath("$[1].isValidated").value(volunteerResponse2.getIsValidated()));
+                .andExpect(jsonPath("$[1].isValidated").value(volunteerResponse2.getIsValidated()))
+                .andExpect(jsonPath("$[2].id").value(volunteerResponse3.getId()))
+                .andExpect(jsonPath("$[2].username").value(volunteerResponse3.getUsername()))
+                .andExpect(jsonPath("$[2].firstName").value(volunteerResponse3.getFirstName()))
+                .andExpect(jsonPath("$[2].lastName").value(volunteerResponse3.getLastName()))
+                .andExpect(jsonPath("$[2].phoneNumber").value(volunteerResponse3.getPhoneNumber()))
+                .andExpect(jsonPath("$[2].isValidated").value(volunteerResponse3.getIsValidated()));
     }
 
     @Test
