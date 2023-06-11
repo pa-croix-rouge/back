@@ -38,7 +38,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         List<RequestMatcher> excludedFilterUrl = List.of(
                 new AntPathRequestMatcher("/login"),
-                new AntPathRequestMatcher("/volunteer/register"));
+                new AntPathRequestMatcher("/volunteer/register"),
+                new AntPathRequestMatcher("/volunteer/token"));
 
         http
             .csrf(AbstractHttpConfigurer::disable)
