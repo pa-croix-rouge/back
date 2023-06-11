@@ -51,8 +51,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
-    private final Role managerRole, defaultRole;
-    private final User managerUser, defaultUser, southernManagerUser, volunteerUser;
+    private final Role managerRole, defaultRole, roleForAuthTest;
+    private final User managerUser, defaultUser, volunteerUser, southernManagerUser;
 
     private final Volunteer volunteer1, southernVolunteer1;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
@@ -93,7 +93,14 @@ public class InDBMockRepositoryConfig {
                 localUnit,
                 List.of());
 
-        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of(defaultRole));
+        roleForAuthTest = new Role(new ID(3L),
+                "roleForAuthTest",
+                "roleForAuthTest",
+                defaultRoleResources,
+                localUnit,
+                List.of());
+
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), List.of(defaultRole));
 
         managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
 
@@ -101,7 +108,12 @@ public class InDBMockRepositoryConfig {
 
         southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
 
+        userForAuthTest = new User(new ID(4L), "userForAuthTest", passwordEncoder.encode("userForAuthTestPassword"), localUnit, List.of(roleForAuthTest));
+
         southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
+
+        southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, southernManagerUser, address2.getPostalCode() + "-000");
+
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
@@ -133,6 +145,7 @@ public class InDBMockRepositoryConfig {
 
         inDBRoleRepository.save(managerRole);
         inDBRoleRepository.save(defaultRole);
+        inDBRoleRepository.save(roleForAuthTest);
 
         return inDBRoleRepository;
     }
@@ -145,6 +158,7 @@ public class InDBMockRepositoryConfig {
         inDBUserRepository.save(defaultUser);
         inDBUserRepository.save(managerUser);
         inDBUserRepository.save(southernManagerUser);
+        inDBUserRepository.save(userForAuthTest);
         inDBUserRepository.save(volunteerUser);
 
         return inDBUserRepository;

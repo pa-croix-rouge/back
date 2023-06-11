@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "user")
 @Entity
 public class UserDB {
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "user_roledbs",
             joinColumns = @JoinColumn(name = "userdb_user_id"),
             inverseJoinColumns = @JoinColumn(name = "roledbs_role_id"))

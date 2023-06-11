@@ -6,10 +6,7 @@ import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import fr.croixrouge.exposition.dto.core.RoleResponse;
 import fr.croixrouge.service.RoleService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +21,7 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
 
     @Override
     public RoleResponse toDTO(Role model) {
-        return null;
+        return new RoleResponse(model.getName(), model.getDescription(), model.getAuthorizations(), List.of());
     }
 
     @GetMapping("/localunit/{id}")
@@ -34,5 +31,11 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(roleResponse);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateRole(@PathVariable ID id, @RequestBody RoleCreationRequest roleCreationRequest) {
+        service.updateRole(id, roleCreationRequest);
+        return ResponseEntity.ok().build();
     }
 }
