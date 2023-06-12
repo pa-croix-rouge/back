@@ -22,7 +22,7 @@ class UserServiceTest {
     @Test
     void should_get_user_by_id() {
         assertDoesNotThrow(() -> {
-            userService.findById(new ID(1L));
+            userService.findById(new ID(2L));
         });
     }
 

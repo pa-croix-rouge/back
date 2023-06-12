@@ -14,6 +14,7 @@ public abstract class ErrorHandler {
 
     @ExceptionHandler(value = {NoSuchElementException.class})
     public ResponseEntity<?> manageSimpleServiceException(final NoSuchElementException simpleServiceException) {
+        simpleServiceException.printStackTrace();
         return ResponseEntity.notFound().build();
     }
 
