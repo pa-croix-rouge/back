@@ -5,6 +5,7 @@ import fr.croixrouge.model.EventSession;
 
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 
 public class EventResponse {
     private Long eventId;
@@ -149,5 +150,36 @@ public class EventResponse {
 
     public void setRecurring(boolean recurring) {
         isRecurring = recurring;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EventResponse that = (EventResponse) o;
+        return maxParticipants == that.maxParticipants && numberOfParticipants == that.numberOfParticipants && isRecurring == that.isRecurring && Objects.equals(eventId, that.eventId) && Objects.equals(sessionId, that.sessionId) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(referrerId, that.referrerId) && Objects.equals(localUnitId, that.localUnitId) && Objects.equals(timeWindows, that.timeWindows);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventId, sessionId, name, description, start, end, referrerId, localUnitId, maxParticipants, numberOfParticipants, timeWindows, isRecurring);
+    }
+
+    @Override
+    public String toString() {
+        return "EventResponse{" +
+                "eventId=" + eventId +
+                ", sessionId=" + sessionId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
+                ", referrerId=" + referrerId +
+                ", localUnitId=" + localUnitId +
+                ", maxParticipants=" + maxParticipants +
+                ", numberOfParticipants=" + numberOfParticipants +
+                ", timeWindows=" + timeWindows +
+                ", isRecurring=" + isRecurring +
+                '}';
     }
 }
