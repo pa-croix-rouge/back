@@ -209,7 +209,6 @@ public class StorageProductControllerTest {
     @Test
     @DisplayName("Test that the storage product endpoint returns a list of products based on local unit id")
     public void testGetProductsByLocalUnitSuccess() throws Exception {
-        String localUnitId = "1";
         ClothStorageProductResponse chemise1 = new ClothStorageProductResponse(
                 1L,
                 3L,
@@ -285,7 +284,7 @@ public class StorageProductControllerTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now());
 
-        mockMvc.perform(get("/storage/product/localunit/" + localUnitId)
+        mockMvc.perform(get("/storage/product/localunit")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
