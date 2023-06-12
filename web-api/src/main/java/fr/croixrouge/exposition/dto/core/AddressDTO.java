@@ -3,13 +3,17 @@ package fr.croixrouge.exposition.dto.core;
 import fr.croixrouge.domain.model.Address;
 import fr.croixrouge.domain.model.Department;
 
+import java.util.Objects;
+
 public class AddressDTO {
 
-    private final String departmentCode;
-    private final String postalCode;
-    private final String city;
-    private final String streetNumberAndName;
+    private String departmentCode;
+    private String postalCode;
+    private String city;
+    private String streetNumberAndName;
 
+    public AddressDTO() {
+    }
 
     public AddressDTO(Address address) {
         this.departmentCode = address.getDepartment().getCode();
@@ -46,4 +50,16 @@ public class AddressDTO {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AddressDTO that = (AddressDTO) o;
+        return Objects.equals(departmentCode, that.departmentCode) && Objects.equals(postalCode, that.postalCode) && Objects.equals(city, that.city) && Objects.equals(streetNumberAndName, that.streetNumberAndName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(departmentCode, postalCode, city, streetNumberAndName);
+    }
 }

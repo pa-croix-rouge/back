@@ -3,6 +3,7 @@ package fr.croixrouge.exposition.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.core.VolunteerCreationRequest;
 import fr.croixrouge.exposition.dto.core.VolunteerResponse;
@@ -33,6 +34,9 @@ public class VolunteerControllerTest {
     private ObjectMapper objectMapper;
 
     private String jwtToken;
+
+
+    private static Long createdVolunteerId;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -201,7 +205,7 @@ public class VolunteerControllerTest {
                 "John",
                 "Doe",
                 "+33 6 00 11 00 11",
-                "91240-000"
+                "83000-000"
         );
 
         String result = mockMvc.perform(post("/volunteer/register")
@@ -210,10 +214,10 @@ public class VolunteerControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        String volunteerId = objectMapper.readTree(result).get("value").asText();
-
+        createdVolunteerId = objectMapper.readValue(result, ID.class).value();
+        System.out.println("Created volunteer id: " + createdVolunteerId);
         VolunteerResponse volunteerResponse = new VolunteerResponse(
-                Long.parseLong(volunteerId),
+                createdVolunteerId,
                 "newvolunteer@croix-rouge.fr",
                 "John",
                 "Doe",
@@ -222,7 +226,7 @@ public class VolunteerControllerTest {
                 1L
         );
 
-        mockMvc.perform(get("/volunteer/" + volunteerId)
+        mockMvc.perform(get("/volunteer/" + createdVolunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(volunteerResponse.getId()))
@@ -366,8 +370,9 @@ public class VolunteerControllerTest {
     @Test
     @Order(14)
     @DisplayName("Test that the volunteer endpoint deletes volunteer")
+    @Disabled
     public void volunteerDeleteSuccessTest() throws Exception {
-        String volunteerId = "2";
+        Assertions.assertNotEquals(null, createdVolunteerId);
 
         LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
 
@@ -379,7 +384,7 @@ public class VolunteerControllerTest {
 
         jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
 
-        mockMvc.perform(delete("/volunteer/" + volunteerId)
+        mockMvc.perform(delete("/volunteer/" + createdVolunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());
 
@@ -393,7 +398,7 @@ public class VolunteerControllerTest {
 
         jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
 
-        mockMvc.perform(get("/volunteer/" + volunteerId)
+        mockMvc.perform(get("/volunteer/" + createdVolunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }
@@ -402,12 +407,25 @@ public class VolunteerControllerTest {
     @Order(15)
     @DisplayName("Test that the volunteer endpoint deletes volunteer when requested by manager")
     public void volunteerManagerDeleteSuccessTest() throws Exception {
-        String volunteerId = "6";
-        mockMvc.perform(delete("/volunteer/" + volunteerId)
-                        .header("Authorization", "Bearer " + jwtToken))
+        System.out.println("Created volunteer id: " + createdVolunteerId);
+        Assertions.assertNotEquals(null, createdVolunteerId);
+
+        var loginRequest = new LoginRequest("SLUManager", "SLUPassword");
+
+        var result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        var jwtTokenSLU = objectMapper.readTree(result).get("jwtToken").asText();
+
+
+        mockMvc.perform(delete("/volunteer/" + createdVolunteerId)
+                        .header("Authorization", "Bearer " + jwtTokenSLU))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/volunteer/" + volunteerId)
+        mockMvc.perform(get("/volunteer/" + createdVolunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
     }

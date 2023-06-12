@@ -5,6 +5,8 @@ import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.repository.LocalUnitRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class LocalUnitService extends CRUDService<ID, LocalUnit, LocalUnitRepository> {
 
@@ -13,11 +15,11 @@ public class LocalUnitService extends CRUDService<ID, LocalUnit, LocalUnitReposi
     }
 
     public LocalUnit getLocalUnitByPostalCode(String postalCode) {
-        return repository.findByPostalCode(postalCode).orElseThrow();
+        return repository.findByPostalCode(postalCode).orElseThrow( () -> new NoSuchElementException("LocalUnit with postal code "+postalCode ));
     }
 
     public LocalUnit getLocalUnitByCode(String code) {
-        return repository.findByCode(code).orElseThrow();
+        return repository.findByCode(code).orElseThrow(() -> new NoSuchElementException("LocalUnit with code "+code ));
     }
 
     public String regenerateSecret(ID localUnitId) {

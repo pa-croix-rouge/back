@@ -68,20 +68,12 @@ public class VolunteerController extends ErrorHandler {
     @PostMapping("/register")
     public ResponseEntity<ID> post(@RequestBody VolunteerCreationRequest model) {
         LocalUnit localUnit = this.localUnitService.getLocalUnitByCode(model.getLocalUnitCode());
-        if (localUnit == null) {
-            return ResponseEntity.notFound().build();
-        }
+
         User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
-        ID userId = this.userService.save(user);
-        if (userId == null) {
-            return ResponseEntity.internalServerError().build();
-        }
-        user.setId(userId);
         Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false);
+
         ID volunteerId = service.save(volunteer);
-        if (volunteerId == null) {
-            return ResponseEntity.internalServerError().build();
-        }
+
         return ResponseEntity.ok(volunteerId);
     }
 
@@ -129,7 +121,9 @@ public class VolunteerController extends ErrorHandler {
         }
         String username = authenticationService.getUserIdFromJwtToken(request);
         LocalUnit localUnit = volunteer.getUser().getLocalUnit();
-        if (!localUnit.getManagerUsername().equals(username) && !volunteer.getUser().getUsername().equals(username)) {
+        if (!localUnit.getManagerUsername().equals(username)
+                && !volunteer.getUser().getUsername().equals(username)) {
+            System.out.println("username: " + username + " manager: " + localUnit.getManagerUsername() + " volunteer: " + volunteer.getUser().getUsername());
             return ResponseEntity.status(403).build();
         }
         this.service.delete(volunteer);
