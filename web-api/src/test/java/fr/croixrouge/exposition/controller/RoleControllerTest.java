@@ -1,5 +1,7 @@
 package fr.croixrouge.exposition.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import fr.croixrouge.config.InDBMockRepositoryConfig;
@@ -10,10 +12,7 @@ import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import fr.croixrouge.exposition.dto.core.RoleResponse;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
@@ -142,6 +142,13 @@ public class RoleControllerTest {
                 1L
         );
 
+        RoleResponse roleResponse = new RoleResponse(
+                roleCreationRequest.getName(),
+                roleCreationRequest.getDescription(),
+                roleCreationRequest.getAuthorizations(),
+                List.of()
+        );
+
         var res = mockMvc.perform(post("/role")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -150,13 +157,14 @@ public class RoleControllerTest {
 
         String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value").toString();
 
-        mockMvc.perform(get("/role/" + id)
+        var resGet = mockMvc.perform(get("/role/" + id)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(roleCreationRequest.getName()))
-                .andExpect(jsonPath("$.description").value(roleCreationRequest.getDescription()))
-                .andExpect(jsonPath("$.authorizations").value("{"+Resources.RESOURCE.name()+"=["+Operations.READ.name()+"]}") )     ;
+                .andReturn().getResponse().getContentAsString();
+
+        var role = objectMapper.reader().readValue(resGet, RoleResponse.class);
+        Assertions.assertEquals(roleResponse, role);
     }
 
     @Test
@@ -255,6 +263,7 @@ public class RoleControllerTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Test that the role delete endpoint returns a 403 when you user is not allowed to delete any role")
     public void deleteRoleForbidden() throws Exception {
 
@@ -296,14 +305,17 @@ public class RoleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/role/user/" + userID)
+        var res = mockMvc.perform(get("/role/user/" + userID)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name").value("default role"))
-                .andExpect(jsonPath("$[1].name").value("Test role 2"));
+                .andReturn().getResponse().getContentAsString();
+
+        var roles = List.of(objectMapper.reader().readValue(res, RoleResponse[].class));
+        Assertions.assertEquals(2, roles.stream()
+                .filter(role -> role.getName().equals("roleForAuthTest") || role.getName().equals("default role"))
+                .count());
     }
 
     @Test
@@ -323,7 +335,7 @@ public class RoleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value("Test role 2"));
+                .andExpect(jsonPath("$[0].name").value("roleForAuthTest"));
     }
 
 

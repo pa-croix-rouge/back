@@ -6,6 +6,7 @@ import fr.croixrouge.domain.model.Role;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class RoleResponse {
@@ -41,11 +42,24 @@ public class RoleResponse {
         return description;
     }
 
-    public String getAuthorizations() {
-        return authorizations.toString();
+    public Map<Resources, Set<Operations>> getAuthorizations() {
+        return authorizations;
     }
 
     public List<Long> getUserIds() {
         return userIds;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoleResponse that = (RoleResponse) o;
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(authorizations, that.authorizations) && Objects.equals(userIds, that.userIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, authorizations, userIds);
     }
 }
