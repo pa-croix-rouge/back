@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,7 +118,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
                 eventResponse.add(EventResponse.fromEvent(event, session));
             }
         }
-        return ResponseEntity.ok(eventResponse);
+        return ResponseEntity.ok(eventResponse.stream().sorted(Comparator.comparing(EventResponse::getStart)).toList());
     }
 
     @GetMapping("/trimester")
@@ -129,7 +130,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
                 eventResponse.add(EventResponse.fromEvent(event, session));
             }
         }
-        return ResponseEntity.ok(eventResponse);
+        return ResponseEntity.ok(eventResponse.stream().sorted(Comparator.comparing(EventResponse::getStart)).toList());
     }
 
     @GetMapping("/sessions/{eventId}")
