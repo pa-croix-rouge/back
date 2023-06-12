@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.controller;
 
+import fr.croixrouge.config.RessourceFilter;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.model.User;
@@ -13,7 +14,8 @@ import fr.croixrouge.service.UserService;
 import fr.croixrouge.service.VolunteerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -30,14 +32,11 @@ public class VolunteerController extends ErrorHandler {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService, AuthenticationService authenticationService, PasswordEncoder passwordEncoder) {
+    public VolunteerController(VolunteerService service, LocalUnitService localUnitService, UserService userService, AuthenticationService authenticationService) {
         this.service = service;
         this.localUnitService = localUnitService;
         this.userService = userService;
         this.authenticationService = authenticationService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
@@ -45,6 +44,7 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @GetMapping("/{id}")
+//    @PreAuthorize("hasAuthority('VOLUNTEER_READ')")
     public ResponseEntity<VolunteerResponse> get(@PathVariable String id) {
         Volunteer volunteer = service.findById(new ID(id));
         return ResponseEntity.ok(this.toDTO(volunteer));
@@ -54,6 +54,7 @@ public class VolunteerController extends ErrorHandler {
     public ResponseEntity<List<VolunteerResponse>> findAll(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
+        var test = service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId());
         return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId()).stream().map(this::toDTO).sorted(Comparator.comparing(v -> v.username)).collect(Collectors.toList()));
     }
 
@@ -70,7 +71,7 @@ public class VolunteerController extends ErrorHandler {
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, model.getUsername(), passwordEncoder.encode(model.getPassword()), localUnit, List.of());
+        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
         ID userId = this.userService.save(user);
         if (userId == null) {
             return ResponseEntity.internalServerError().build();

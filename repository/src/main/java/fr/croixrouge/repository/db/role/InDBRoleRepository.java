@@ -1,14 +1,13 @@
 package fr.croixrouge.repository.db.role;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -27,11 +26,21 @@ public class InDBRoleRepository implements RoleRepository {
     }
 
     public Role toRole(RoleDB roleDB) {
+
+        Map<Resources, Set<Operations>> resourcesSetMap = new HashMap<>();
+        for (var roleResourceDB : roleDB.getRoleResourceDBs()) {
+
+            if(!resourcesSetMap.containsKey(roleResourceDB.getResources()))
+                resourcesSetMap.put(roleResourceDB.getResources(), new HashSet<>());
+
+            resourcesSetMap.get(roleResourceDB.getResources()).add(roleResourceDB.getOperations());
+        }
+
         return new Role(
                 new ID(roleDB.getRoleID()),
                 roleDB.getName(),
                 roleDB.getDescription(),
-                roleDB.getRoleResourceDBs().stream().collect(Collectors.groupingBy(RoleResourceDB::getResources, Collectors.mapping(RoleResourceDB::getOperations, Collectors.toList()))),
+                resourcesSetMap,
                 inDBLocalUnitRepository.toLocalUnit(roleDB.getLocalUnitDB()),
                 null
         );
@@ -46,7 +55,7 @@ public class InDBRoleRepository implements RoleRepository {
         }
 
         return new RoleDB(
-                role.getId().value(),
+                role.getId() == null ? null : role.getId().value(),
                 role.getName(),
                 role.getDescription(),
                 inDBLocalUnitRepository.toLocalUnitDB(role.getLocalUnit()),
@@ -63,6 +72,7 @@ public class InDBRoleRepository implements RoleRepository {
     @Override
     public ID save(Role object) {
         RoleDB roleDB = roleDBRepository.save(toRoleDB(object));
+        object.setId(new ID(roleDB.getRoleID()));
         return new ID(roleDB.getRoleID());
     }
 

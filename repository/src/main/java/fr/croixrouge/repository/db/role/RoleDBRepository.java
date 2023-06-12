@@ -4,10 +4,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.Nullable;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface RoleDBRepository extends CrudRepository<RoleDB, Long> {
     @Query("select r from RoleDB r where r.localUnitDB.localUnitID = ?1")
-    Optional<RoleDB> findByLocalUnitDB_LocalUnitID(@Nullable Long localUnitID);
+    List<RoleDB> findByLocalUnitDB_LocalUnitID(@Nullable Long localUnitID);
 
 }

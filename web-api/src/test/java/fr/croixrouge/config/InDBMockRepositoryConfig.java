@@ -43,9 +43,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
@@ -53,8 +51,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
-    private final Role managerRole;
-    private final User managerUser, defaultUser, southernManagerUser, volunteerUser;
+    private final Role managerRole, defaultRole, roleForAuthTest;
+    private final User managerUser, defaultUser, volunteerUser, southernManagerUser, userForAuthTest;
 
     private final Volunteer volunteer1, southernVolunteer1;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
@@ -73,26 +71,50 @@ public class InDBMockRepositoryConfig {
                 "LUManager",
                 address.getPostalCode() + "-000");
 
-        managerRole = new Role(new ID(1L),
+
+        HashMap<Resources, Set<Operations>> roleResources = new HashMap<>();
+        for (var ressource : Resources.values()) {
+            roleResources.put(ressource, Set.of(Operations.values()));
+        }
+
+        managerRole = new Role(null,
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
-                Map.of(Resources.RESOURCE, List.of(Operations.READ)),
+                roleResources,
+                localUnit,
+                List.of());
+        HashMap<Resources, Set<Operations>> defaultRoleResources = new HashMap<>(roleResources);
+        defaultRoleResources.remove(Resources.RESOURCE);
+
+        defaultRole = new Role(null,
+                "default role",
+                "default role",
+                defaultRoleResources,
                 localUnit,
                 List.of());
 
-        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of());
+        roleForAuthTest = new Role(null,
+                "roleForAuthTest",
+                "roleForAuthTest",
+                defaultRoleResources,
+                localUnit,
+                List.of());
 
-        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
+        defaultUser = new User(null, "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of(defaultRole));
 
-        volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
+        managerUser = new User(null, "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
+
+        volunteer1 = new Volunteer(null, managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
         southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
 
-        southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
+        userForAuthTest = new User(null, "userForAuthTest", passwordEncoder.encode("userForAuthTestPassword"), southernLocalUnit, List.of(roleForAuthTest));
+
+        southernManagerUser = new User(null, "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
-        volunteerUser = new User(new ID(4L), "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of());
+        volunteerUser = new User(null, "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of());
         product1 = new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
         product2 = new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null);
         cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
@@ -119,6 +141,8 @@ public class InDBMockRepositoryConfig {
         InDBRoleRepository inDBRoleRepository = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
 
         inDBRoleRepository.save(managerRole);
+        inDBRoleRepository.save(defaultRole);
+        inDBRoleRepository.save(roleForAuthTest);
 
         return inDBRoleRepository;
     }
@@ -129,8 +153,9 @@ public class InDBMockRepositoryConfig {
         InDBUserRepository inDBUserRepository = new InDBUserRepository(userDBRepository, roleDBRepository, localUnitDBRepository);
 
         inDBUserRepository.save(defaultUser);
-        inDBUserRepository.save(managerUser);
-        inDBUserRepository.save(southernManagerUser);
+//        inDBUserRepository.save(managerUser);
+//        inDBUserRepository.save(southernManagerUser);
+        inDBUserRepository.save(userForAuthTest);
         inDBUserRepository.save(volunteerUser);
 
         return inDBUserRepository;
@@ -141,24 +166,24 @@ public class InDBMockRepositoryConfig {
     public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
         var volunteerRepository = new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
 
-        ID volunteerId2 = new ID(2L);
         String firstName2 = "newVolunteer";
         String lastName2 = "newVolunteerName";
         String phoneNumber2 = "+33 6 00 11 22 33";
         boolean isValidated2 = true;
-        Volunteer volunteer2 = new Volunteer(volunteerId2, defaultUser, firstName2, lastName2, phoneNumber2, isValidated2);
+        Volunteer volunteer2 = new Volunteer(null, defaultUser, firstName2, lastName2, phoneNumber2, isValidated2);
 
-        ID volunteerId3 = new ID(3L);
         String firstName3 = "newVolunteer2";
         String lastName3 = "newVolunteerName2";
         String phoneNumber3 = "+33 6 00 11 22 34";
         boolean isValidated3 = false;
-        Volunteer volunteer3 = new Volunteer(volunteerId3, volunteerUser, firstName3, lastName3, phoneNumber3, isValidated3);
+        Volunteer volunteer3 = new Volunteer(null, volunteerUser, firstName3, lastName3, phoneNumber3, isValidated3);
 
         volunteerRepository.save(volunteer1);
         volunteerRepository.save(volunteer2);
         volunteerRepository.save(volunteer3);
         volunteerRepository.save(southernVolunteer1);
+
+        volunteerRepository.save( new Volunteer(null, userForAuthTest, "userForAuthTest", "userForAuthTest", "+33 6 83 83 83 83", true));
 
         return volunteerRepository;
     }

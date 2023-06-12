@@ -1,5 +1,6 @@
 package fr.croixrouge.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User extends Entity<ID> {
@@ -31,5 +32,22 @@ public class User extends Entity<ID> {
 
     public List<Role> getRoles() {
         return roles;
+    }
+
+    public User removeRole(Role role) {
+        return new User(id, username, password, localUnit, roles.stream().filter(r -> !r.equals(role)).toList());
+    }
+
+    public User addRole(Role role) {
+        if (roles.contains(role)) {
+            return this;
+        }
+        var newRoles = new ArrayList<>(roles);
+        newRoles.add(role);
+        return new User(id, username, password, localUnit, newRoles);
+    }
+
+    public User setPassword(String encode) {
+        return new User(id, username, encode, localUnit, roles);
     }
 }

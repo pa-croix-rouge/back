@@ -73,6 +73,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
           SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
+          SPRING_HIBERNATE_DIALECT: ${{ secrets.SPRING_HIBERNATE_DIALECT }}
         run: |
           mvn clean compile package -Dmaven.test.skip=true --batch-mode --no-transfer-progress \
           -Djwt.secret="${JWT_SECRET}" \
@@ -84,7 +85,8 @@ jobs:
           -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
           -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
           -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
-          -Dspring.profiles.active="${SPRING_TEST_PROFILE}"
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
+          -Dspring.jpa.properties.hibernatedialect="${SPRING_HIBERNATE_DIALECT}"
 
   test:
     needs: build
@@ -108,6 +110,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
           SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
+          SPRING_HIBERNATE_DIALECT: ${{ secrets.SPRING_HIBERNATE_DIALECT }}
         run: |
           echo "${SPRING_DDL_AUTO};${SPRING_DATASOURCE_URL};${SPRING_DATASOURCE_USERNAME};${SPRING_DATASOURCE_PASSWORD};${SPRING_DATASOURCE_DRIVER}"; \
           mvn test --batch-mode --no-transfer-progress \
@@ -121,7 +124,8 @@ jobs:
           -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
           -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
           -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
-          -Dspring.profiles.active="${SPRING_TEST_PROFILE}"
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
+          -Dspring.jpa.properties.hibernatedialect="${SPRING_HIBERNATE_DIALECT}"
 
   deploy:
     needs: test

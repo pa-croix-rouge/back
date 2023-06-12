@@ -9,20 +9,22 @@ import java.util.*;
 
 public class UserSecurity extends User implements UserDetails {
 
+    public Map<Resources, Set<Operations>> allAuthorizations;
 
     public UserSecurity(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles) {
         super(userId, username, password, localUnit, roles);
+        allAuthorizations = roles.stream().flatMap(r -> r.getAuthorizations().entrySet().stream()).collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), HashMap::putAll);
     }
 
     public UserSecurity(User user) {
-        super(user.getId(), user.getUsername(), user.getPassword(), user.getLocalUnit(), user.getRoles());
+        this(user.getId(), user.getUsername(), user.getPassword(), user.getLocalUnit(), user.getRoles());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {
-            for (Map.Entry<Resources, List<Operations>> entry : role.getAuthorizations().entrySet()) {
+            for (Map.Entry<Resources, Set<Operations>> entry : role.getAuthorizations().entrySet()) {
                 Resources resource = entry.getKey();
                 for (Operations operation : entry.getValue()) {
                     authorities.add(new SimpleGrantedAuthority(resource.name() + "_" + operation.name()));
@@ -30,16 +32,6 @@ public class UserSecurity extends User implements UserDetails {
             }
         }
         return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override
