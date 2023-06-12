@@ -62,7 +62,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.S);
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
@@ -72,7 +72,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.M);
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
@@ -82,7 +82,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.L);
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
@@ -92,7 +92,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XL);
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
@@ -102,7 +102,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XXL);
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
@@ -217,7 +217,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.S);
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
@@ -227,7 +227,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.M);
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
@@ -237,7 +237,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.L);
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
@@ -247,7 +247,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XL);
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
@@ -257,7 +257,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XXL);
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
