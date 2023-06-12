@@ -402,7 +402,7 @@ public class VolunteerControllerTest {
     @Order(15)
     @DisplayName("Test that the volunteer endpoint deletes volunteer when requested by manager")
     public void volunteerManagerDeleteSuccessTest() throws Exception {
-        String volunteerId = "5";
+        String volunteerId = "6";
         mockMvc.perform(delete("/volunteer/" + volunteerId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());

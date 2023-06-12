@@ -1,7 +1,5 @@
 package fr.croixrouge.exposition.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import fr.croixrouge.config.InDBMockRepositoryConfig;
@@ -11,7 +9,6 @@ import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import fr.croixrouge.exposition.dto.core.RoleResponse;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
