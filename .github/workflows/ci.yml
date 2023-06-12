@@ -86,7 +86,7 @@ jobs:
           -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
           -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
           -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
-          -Dspring.jpa.properties.hibernatedialect="${SPRING_HIBERNATE_DIALECT}"
+          -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
 
   test:
     needs: build
@@ -125,7 +125,7 @@ jobs:
           -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
           -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
           -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
-          -Dspring.jpa.properties.hibernatedialect="${SPRING_HIBERNATE_DIALECT}"
+          -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
 
   deploy:
     needs: test
