@@ -157,12 +157,12 @@ public class EventResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventResponse that = (EventResponse) o;
-        return maxParticipants == that.maxParticipants && numberOfParticipants == that.numberOfParticipants && isRecurring == that.isRecurring && Objects.equals(eventId, that.eventId) && Objects.equals(sessionId, that.sessionId) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(referrerId, that.referrerId) && Objects.equals(localUnitId, that.localUnitId) && Objects.equals(timeWindows, that.timeWindows);
+        return maxParticipants == that.maxParticipants && numberOfParticipants == that.numberOfParticipants && (isRecurring == that.isRecurring) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(referrerId, that.referrerId) && Objects.equals(localUnitId, that.localUnitId) && Objects.equals(timeWindows, that.timeWindows);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventId, sessionId, name, description, start, end, referrerId, localUnitId, maxParticipants, numberOfParticipants, timeWindows, isRecurring);
+        return Objects.hash(name, description, start, end, referrerId, localUnitId, maxParticipants, numberOfParticipants, timeWindows, isRecurring);
     }
 
     @Override

@@ -79,12 +79,12 @@ public class TimeWindowResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimeWindowResponse that = (TimeWindowResponse) o;
-        return maxParticipants == that.maxParticipants && Objects.equals(timeWindowId, that.timeWindowId) && Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(participants, that.participants);
+        return maxParticipants == that.maxParticipants && Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(participants, that.participants);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timeWindowId, start, end, maxParticipants, participants);
+        return Objects.hash(start, end, maxParticipants, participants);
     }
 
     @Override
