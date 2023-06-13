@@ -8,9 +8,7 @@ import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 class ProductControllerTest {
 
@@ -34,6 +33,8 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
 
     private String jwtToken;
+
+    private static String createdProductId;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -84,6 +85,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test that the product post endpoint returns OK when given a correct product")
     public void productAddSuccessTest() throws Exception {
         CreateProductDTO createProductDTO = new CreateProductDTO("new Product", new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1));
@@ -94,29 +96,29 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(createProductDTO)))
                 .andExpect(status().isOk());
 
-        String id = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value").toString();
+        createdProductId = JsonPath.read(res.andReturn().getResponse().getContentAsString(), "$.value").toString();
 
-        mockMvc.perform(get("/product/" + id)
+        mockMvc.perform(get("/product/" + createdProductId)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productId").value(id))
+                .andExpect(jsonPath("$.productId").value(createdProductId))
                 .andExpect(jsonPath("$.name").value(createProductDTO.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(createProductDTO.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(createProductDTO.getQuantity().getValue()));
     }
 
     @Test
+    @Order(2)
     @DisplayName("Test that the product delete endpoint returns OK when given a correct product")
     public void productDeleteSuccessTest() throws Exception {
-        String id = "2";
 
-        mockMvc.perform(delete("/product/" + id)
+        mockMvc.perform(delete("/product/" + createdProductId)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/product/" + id)
+        mockMvc.perform(get("/product/" + createdProductId)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

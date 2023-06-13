@@ -5,6 +5,7 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.CRUDRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class CRUDService<K extends ID, V extends Entity<K>, R extends CRUDRepository<K, V>> {
 
@@ -15,7 +16,7 @@ public class CRUDService<K extends ID, V extends Entity<K>, R extends CRUDReposi
     }
 
     public V findById(K id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id).orElseThrow(() -> new NoSuchElementException("Entity with id " + id + " not found"));
     }
 
     public K save(V object) {

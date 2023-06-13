@@ -8,9 +8,7 @@ import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateFoodProductDTO;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +23,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class FoodProductControllerTest {
 
     @Autowired
@@ -38,6 +37,8 @@ class FoodProductControllerTest {
     private ObjectMapper objectMapper;
 
     private String jwtToken;
+
+    private static String createdFoodProductId;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -78,6 +79,7 @@ class FoodProductControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test that the post endpoint returns OK when given a correct food product")
     public void productAddSuccessTest() throws Exception {
         CreateFoodProductDTO createProductDTO = new CreateFoodProductDTO("new Product",
@@ -94,13 +96,13 @@ class FoodProductControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        String id = objectMapper.readTree(res).get("value").asText();
+        createdFoodProductId = objectMapper.readTree(res).get("value").asText();
 
-        mockMvc.perform(get("/product/food/" + id)
+        mockMvc.perform(get("/product/food/" + createdFoodProductId)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.id").value(createdFoodProductId))
                 .andExpect(jsonPath("$.name").value(createProductDTO.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(createProductDTO.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(createProductDTO.getQuantity().getValue()))
@@ -110,16 +112,15 @@ class FoodProductControllerTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Test that the delete endpoint returns OK when given a correct food product id")
     public void productDeleteSuccessTest() throws Exception {
-        String id = "2";
-
-        mockMvc.perform(delete("/product/food/" + id)
+        mockMvc.perform(delete("/product/food/" + createdFoodProductId)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/product/food/" + id)
+        mockMvc.perform(get("/product/food/" + createdFoodProductId)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
