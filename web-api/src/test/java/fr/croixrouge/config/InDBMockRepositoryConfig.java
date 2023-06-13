@@ -39,6 +39,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -133,6 +134,15 @@ public class InDBMockRepositoryConfig {
         localUnitRepository.save(localUnit);
         localUnitRepository.save(southernLocalUnit);
         return localUnitRepository;
+    }
+
+    @Bean
+    @Primary
+    CharacterEncodingFilter characterEncodingFilter() {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        return filter;
     }
 
     @Bean

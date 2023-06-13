@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.ID;
 
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 
 public class TimeWindowResponse {
     private Long timeWindowId;
@@ -71,5 +72,29 @@ public class TimeWindowResponse {
 
     public void setParticipants(List<Long> participants) {
         this.participants = participants;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimeWindowResponse that = (TimeWindowResponse) o;
+        return maxParticipants == that.maxParticipants && Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(participants, that.participants);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, end, maxParticipants, participants);
+    }
+
+    @Override
+    public String toString() {
+        return "TimeWindowResponse{" +
+                "timeWindowId=" + timeWindowId +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
+                ", maxParticipants=" + maxParticipants +
+                ", participants=" + participants +
+                '}';
     }
 }

@@ -6,6 +6,7 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.ClothStorageProductResponse;
 import fr.croixrouge.exposition.dto.product.FoodStorageProductResponse;
+import fr.croixrouge.exposition.dto.product.StorageProductStatsResponse;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +63,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.S);
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
@@ -72,7 +73,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.M);
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
@@ -82,7 +83,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.L);
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
@@ -92,7 +93,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XL);
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
@@ -102,7 +103,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XXL);
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
@@ -217,7 +218,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.S);
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
@@ -227,7 +228,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.M);
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
@@ -237,7 +238,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.L);
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
@@ -247,7 +248,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XL);
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
@@ -257,7 +258,7 @@ public class StorageProductControllerTest {
                 "Chemises blanches",
                 10,
                 "20.0",
-                "NUMBER",
+                "pièce(s)",
                 ClothSize.XXL);
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
@@ -359,5 +360,18 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.foodProducts[1].foodConservation").value(food2.getFoodConservation().toString()))
                 .andExpect(jsonPath("$.foodProducts[1].expirationDate").exists())
                 .andExpect(jsonPath("$.foodProducts[1].optimalConsumptionDate").exists());
+    }
+
+    @Test
+    @DisplayName("Test that the storage stats endpoints returns the correct stats")
+    public void testGetStatsSuccess() throws Exception {
+        StorageProductStatsResponse statsResponse = new StorageProductStatsResponse(20, 50);
+
+        mockMvc.perform(get("/storage/product/stats")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalFoodQuantity").value(statsResponse.getTotalFoodQuantity()))
+                .andExpect(jsonPath("$.totalClothesQuantity").value(statsResponse.getTotalClothesQuantity()));
     }
 }

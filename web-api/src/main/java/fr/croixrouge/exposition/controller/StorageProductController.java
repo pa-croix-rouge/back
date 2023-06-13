@@ -2,6 +2,7 @@ package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.product.ProductListResponse;
+import fr.croixrouge.exposition.dto.product.StorageProductStatsResponse;
 import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.StorageProductService;
@@ -33,7 +34,7 @@ public class StorageProductController extends ErrorHandler {
         return ResponseEntity.ok(productListResponse);
     }
 
-    @GetMapping(value = "/localunit")
+    @GetMapping("/localunit")
     public ResponseEntity<ProductListResponse> getProductsByLocalUnit(HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
         ProductList productList = service.getProductsByLocalUnit(localUnitId);
@@ -41,8 +42,16 @@ public class StorageProductController extends ErrorHandler {
         return ResponseEntity.ok(productListResponse);
     }
 
-    @GetMapping(value = "/{storageId}/{id}/quantity")
+    @GetMapping("/{storageId}/{id}/quantity")
     public ResponseEntity<Integer> getProductQuantity(@PathVariable ID storageId, @PathVariable ID id) {
         return ResponseEntity.ok(service.getProductQuantity(storageId, id));
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<StorageProductStatsResponse> getProductStats(HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        ProductList productList = service.getProductsByLocalUnit(localUnitId);
+        StorageProductStatsResponse response = StorageProductStatsResponse.fromProductList(productList);
+        return ResponseEntity.ok(response);
     }
 }

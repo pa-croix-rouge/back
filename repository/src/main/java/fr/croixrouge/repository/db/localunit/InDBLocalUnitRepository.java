@@ -41,7 +41,7 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
             return null;
 
         return new LocalUnitDB(
-                localUnit.getId().value(),
+                localUnit.getId() == null ? null : localUnit.getId().value(),
                 localUnit.getName(),
                 localUnit.getCode(),
                 localUnit.getAddress().getDepartment().getCode(),

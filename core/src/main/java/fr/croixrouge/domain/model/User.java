@@ -47,6 +47,17 @@ public class User extends Entity<ID> {
         return new User(id, username, password, localUnit, newRoles);
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", localUnit=" + localUnit +
+                ", roles=" + roles +
+                ", id=" + id +
+                '}';
+    }
+
     public User setPassword(String encode) {
         return new User(id, username, encode, localUnit, roles);
     }

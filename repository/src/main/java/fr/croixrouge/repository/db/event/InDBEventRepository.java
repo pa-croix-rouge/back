@@ -11,10 +11,7 @@ import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -189,7 +186,7 @@ public class InDBEventRepository implements EventRepository {
 
         Set<ID> eventIds = eventSessions.stream().map(eventSessionDB -> ID.of(eventSessionDB.getEventDB().getId())).collect(Collectors.toSet());
 
-        List<Event> events = eventIds.stream().map(id -> eventDBRepository.findById(id.value()).map(this::toEvent).get()).toList();
+        List<Event> events = eventIds.stream().map(id -> toEvent(eventSessions.stream().filter(eventSessionDB -> Objects.equals(eventSessionDB.getEventDB().getId(), id.value())).findFirst().get().getEventDB())).toList();
         return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
     }
 
@@ -207,7 +204,7 @@ public class InDBEventRepository implements EventRepository {
 
         Set<ID> eventIds = eventSessions.stream().map(eventSession -> ID.of(eventSession.getEventDB().getId())).collect(Collectors.toSet());
 
-        List<Event> events = eventIds.stream().map(id -> eventDBRepository.findById(id.value()).map(this::toEvent).get()).toList();
+        List<Event> events = eventIds.stream().map(id -> toEvent(eventSessions.stream().filter(eventSessionDB -> Objects.equals(eventSessionDB.getEventDB().getId(), id.value())).findFirst().get().getEventDB())).toList();
         return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
     }
 

@@ -3,10 +3,8 @@ package fr.croixrouge.exposition.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.croixrouge.config.InDBMockRepositoryConfig;
 import fr.croixrouge.config.MockRepositoryConfig;
-import fr.croixrouge.exposition.dto.core.AddressDTO;
-import fr.croixrouge.exposition.dto.core.LocalUnitResponse;
-import fr.croixrouge.exposition.dto.core.LocalUnitUpdateSecretRequest;
-import fr.croixrouge.exposition.dto.core.LoginRequest;
+import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.exposition.dto.core.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class LocalUnitControllerTest {
 
     @Autowired
@@ -35,6 +33,8 @@ public class LocalUnitControllerTest {
     private  ObjectMapper objectMapper;
 
     private String jwtToken;
+
+    private Long createdLocalUnitId;
 
 
     @BeforeEach
@@ -92,6 +92,55 @@ public class LocalUnitControllerTest {
         mockMvc.perform(get("/localunit/postcode/" + localUnitPostCode)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Test that the localunit post endpoint returns a 200")
+    public void createLocalUnit() throws Exception {
+        LocalUnitCreationRequest localUnitCreationRequest = new LocalUnitCreationRequest(
+                "temp local unit ",
+                 new AddressDTO(
+                        "75",
+                        "75012",
+                        "Paris",
+                        "oui"),
+                "defaultUser",
+                "75012-000"
+        );
+
+        LocalUnitResponse localUnitResponse = new LocalUnitResponse(
+                75012L,
+                "temp local unit ",
+                new AddressDTO(
+                        "75",
+                        "75012",
+                        "Paris",
+                        "oui"),
+                "defaultUser",
+                "75012-000"
+        );
+
+        var res = mockMvc.perform(post("/localunit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .content(objectMapper.writeValueAsString(localUnitCreationRequest)))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsString();
+
+        createdLocalUnitId = objectMapper.readValue(res, ID.class).value();
+
+        var resLocalUnit = mockMvc.perform(get("/localunit/" + createdLocalUnitId)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        var localUnit = objectMapper.readValue(resLocalUnit, LocalUnitResponse.class);
+
+        Assertions.assertEquals(localUnitResponse.getName(), localUnit.getName());
+        Assertions.assertEquals(localUnitResponse.getAddress(), localUnit.getAddress());
+        Assertions.assertEquals(localUnitResponse.getManagerName(), localUnit.getManagerName());
+        Assertions.assertEquals(localUnitResponse.getCode(), localUnit.getCode());
     }
 
     @Test

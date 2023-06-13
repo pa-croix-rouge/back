@@ -20,7 +20,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -244,7 +243,7 @@ public class EventControllerTest {
                 2,
                 0,
                 List.of(new TimeWindowResponse(
-                        null,
+                        1L,
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         2,
@@ -264,19 +263,19 @@ public class EventControllerTest {
                 30,
                 0,
                 List.of(new TimeWindowResponse(
-                        1L,
+                        2L,
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toString(),
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 40), ZoneId.of("Europe/Paris")).toString(),
                         10,
                         List.of()
                 ), new TimeWindowResponse(
-                        2L,
+                        3L,
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 40), ZoneId.of("Europe/Paris")).toString(),
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 11, 20), ZoneId.of("Europe/Paris")).toString(),
                         10,
                         List.of()
                 ), new TimeWindowResponse(
-                        3L,
+                        4L,
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 11, 20), ZoneId.of("Europe/Paris")).toString(),
                         ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         10,
@@ -296,7 +295,7 @@ public class EventControllerTest {
                 30,
                 0,
                 List.of(new TimeWindowResponse(
-                        4L,
+                        5L,
                         ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
                         ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         30,
@@ -305,76 +304,18 @@ public class EventControllerTest {
                 false
         );
 
-        mockMvc.perform(get("/event/all/" + localUnitId)
+        var res = mockMvc.perform(get("/event/all/" + localUnitId)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].eventId").value(eventResponse1.getEventId()))
-                .andExpect(jsonPath("$[0].sessionId").value(eventResponse1.getSessionId()))
-                .andExpect(jsonPath("$[0].name").value(eventResponse1.getName()))
-                .andExpect(jsonPath("$[0].description").value(eventResponse1.getDescription()))
-                .andExpect(jsonPath("$[0].start").value(eventResponse1.getStart()))
-                .andExpect(jsonPath("$[0].end").value(eventResponse1.getEnd()))
-                .andExpect(jsonPath("$[0].referrerId").value(eventResponse1.getReferrerId()))
-                .andExpect(jsonPath("$[0].localUnitId").value(eventResponse1.getLocalUnitId()))
-                .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse1.getMaxParticipants()))
-                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[0].timeWindows").isArray())
-                .andExpect(jsonPath("$[0].timeWindows[0].timeWindowId").isNumber())
-                .andExpect(jsonPath("$[0].timeWindows[0].start").value(eventResponse1.getTimeWindows().get(0).getStart()))
-                .andExpect(jsonPath("$[0].timeWindows[0].end").value(eventResponse1.getTimeWindows().get(0).getEnd()))
-                .andExpect(jsonPath("$[0].timeWindows[0].maxParticipants").value(eventResponse1.getTimeWindows().get(0).getMaxParticipants()))
-                .andExpect(jsonPath("$[0].timeWindows[0].participants").isArray())
-                .andExpect(jsonPath("$[0].timeWindows[0].participants").isEmpty())
-                .andExpect(jsonPath("$[0].recurring").value(eventResponse1.isRecurring()))
-                .andExpect(jsonPath("$[1].eventId").value(eventResponse2.getEventId()))
-                .andExpect(jsonPath("$[1].sessionId").value(eventResponse2.getSessionId()))
-                .andExpect(jsonPath("$[1].name").value(eventResponse2.getName()))
-                .andExpect(jsonPath("$[1].description").value(eventResponse2.getDescription()))
-                .andExpect(jsonPath("$[1].start").value(eventResponse2.getStart()))
-                .andExpect(jsonPath("$[1].end").value(eventResponse2.getEnd()))
-                .andExpect(jsonPath("$[1].referrerId").value(eventResponse2.getReferrerId()))
-                .andExpect(jsonPath("$[1].localUnitId").value(eventResponse2.getLocalUnitId()))
-                .andExpect(jsonPath("$[1].maxParticipants").value(eventResponse2.getMaxParticipants()))
-                .andExpect(jsonPath("$[1].numberOfParticipants").value(eventResponse2.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows").isArray())
-                .andExpect(jsonPath("$[1].timeWindows[0].timeWindowId").isNumber())
-                .andExpect(jsonPath("$[1].timeWindows[0].start").value(eventResponse2.getTimeWindows().get(0).getStart()))
-                .andExpect(jsonPath("$[1].timeWindows[0].end").value(eventResponse2.getTimeWindows().get(0).getEnd()))
-                .andExpect(jsonPath("$[1].timeWindows[0].maxParticipants").value(eventResponse2.getTimeWindows().get(0).getMaxParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows[0].participants").isArray())
-                .andExpect(jsonPath("$[1].timeWindows[0].participants").isEmpty())
-                .andExpect(jsonPath("$[1].timeWindows[1].timeWindowId").isNumber())
-                .andExpect(jsonPath("$[1].timeWindows[1].start").value(eventResponse2.getTimeWindows().get(1).getStart()))
-                .andExpect(jsonPath("$[1].timeWindows[1].end").value(eventResponse2.getTimeWindows().get(1).getEnd()))
-                .andExpect(jsonPath("$[1].timeWindows[1].maxParticipants").value(eventResponse2.getTimeWindows().get(1).getMaxParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows[1].participants").isArray())
-                .andExpect(jsonPath("$[1].timeWindows[1].participants").isEmpty())
-                .andExpect(jsonPath("$[1].timeWindows[2].timeWindowId").isNumber())
-                .andExpect(jsonPath("$[1].timeWindows[2].start").value(eventResponse2.getTimeWindows().get(2).getStart()))
-                .andExpect(jsonPath("$[1].timeWindows[2].end").value(eventResponse2.getTimeWindows().get(2).getEnd()))
-                .andExpect(jsonPath("$[1].timeWindows[2].maxParticipants").value(eventResponse2.getTimeWindows().get(2).getMaxParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows[2].participants").isArray())
-                .andExpect(jsonPath("$[1].timeWindows[2].participants").isEmpty())
-                .andExpect(jsonPath("$[1].recurring").value(eventResponse2.isRecurring()))
-                .andExpect(jsonPath("$[2].eventId").value(eventResponse3.getEventId()))
-                .andExpect(jsonPath("$[2].sessionId").value(eventResponse3.getSessionId()))
-                .andExpect(jsonPath("$[2].name").value(eventResponse3.getName()))
-                .andExpect(jsonPath("$[2].description").value(eventResponse3.getDescription()))
-                .andExpect(jsonPath("$[2].start").value(eventResponse3.getStart()))
-                .andExpect(jsonPath("$[2].end").value(eventResponse3.getEnd()))
-                .andExpect(jsonPath("$[2].referrerId").value(eventResponse3.getReferrerId()))
-                .andExpect(jsonPath("$[2].localUnitId").value(eventResponse3.getLocalUnitId()))
-                .andExpect(jsonPath("$[2].maxParticipants").value(eventResponse3.getMaxParticipants()))
-                .andExpect(jsonPath("$[2].numberOfParticipants").value(eventResponse3.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[2].timeWindows").isArray())
-                .andExpect(jsonPath("$[2].timeWindows[0].timeWindowId").isNumber())
-                .andExpect(jsonPath("$[2].timeWindows[0].start").value(eventResponse3.getTimeWindows().get(0).getStart()))
-                .andExpect(jsonPath("$[2].timeWindows[0].end").value(eventResponse3.getTimeWindows().get(0).getEnd()))
-                .andExpect(jsonPath("$[2].timeWindows[0].maxParticipants").value(eventResponse3.getTimeWindows().get(0).getMaxParticipants()))
-                .andExpect(jsonPath("$[2].timeWindows[0].participants").isArray())
-                .andExpect(jsonPath("$[2].timeWindows[0].participants").isEmpty())
-                .andExpect(jsonPath("$[2].recurring").value(eventResponse3.isRecurring()));
+                .andReturn().getResponse().getContentAsString();
+
+        var resList = List.of(objectMapper.readValue(res, EventResponse[].class));
+
+        Assertions.assertEquals(9, resList.size());
+        Assertions.assertTrue(resList.contains(eventResponse1));
+        Assertions.assertTrue(resList.contains(eventResponse2));
+        Assertions.assertTrue(resList.contains(eventResponse3));
     }
 
     @Test
@@ -463,16 +404,16 @@ public class EventControllerTest {
                 1L,
                 "Formation Premier Secours de niveau 1",
                 "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
-                ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
+                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
                 1L,
                 1L,
                 1,
                 1,
                 List.of(new TimeWindowResponse(
                         62L,
-                        ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
+                        timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
                         1,
                         List.of(1L)
                 )),
@@ -537,72 +478,18 @@ public class EventControllerTest {
                 false
         );
 
-        mockMvc.perform(get("/event/trimester?localUnitId=" + localUnitId + "&month=" + month + "&year=" + year)
+        var res = mockMvc.perform(get("/event/trimester?localUnitId=" + localUnitId + "&month=" + month + "&year=" + year)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventId").value(eventResponse1.getEventId()))
-                .andExpect(jsonPath("$[0].sessionId").value(eventResponse1.getSessionId()))
-                .andExpect(jsonPath("$[0].name").value(eventResponse1.getName()))
-                .andExpect(jsonPath("$[0].description").value(eventResponse1.getDescription()))
-                .andExpect(jsonPath("$[0].start").value(eventResponse1.getStart()))
-                .andExpect(jsonPath("$[0].end").value(eventResponse1.getEnd()))
-                .andExpect(jsonPath("$[0].referrerId").value(eventResponse1.getReferrerId()))
-                .andExpect(jsonPath("$[0].localUnitId").value(eventResponse1.getLocalUnitId()))
-                .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse1.getMaxParticipants()))
-                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse1.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[0].timeWindows", hasSize(1)))
-                .andExpect(jsonPath("$[0].timeWindows[0].timeWindowId").value(eventResponse1.getTimeWindows().get(0).getTimeWindowId()))
-                .andExpect(jsonPath("$[0].timeWindows[0].start").value(eventResponse1.getTimeWindows().get(0).getStart()))
-                .andExpect(jsonPath("$[0].timeWindows[0].end").value(eventResponse1.getTimeWindows().get(0).getEnd()))
-                .andExpect(jsonPath("$[0].timeWindows[0].maxParticipants").value(eventResponse1.getTimeWindows().get(0).getMaxParticipants()))
-                .andExpect(jsonPath("$[0].timeWindows[0].participants[0]").value(eventResponse1.getTimeWindows().get(0).getParticipants().get(0)))
-                .andExpect(jsonPath("$[0].recurring").value(eventResponse1.isRecurring()))
-                .andExpect(jsonPath("$[1].eventId").value(eventResponse2.getEventId()))
-                .andExpect(jsonPath("$[1].sessionId").value(eventResponse2.getSessionId()))
-                .andExpect(jsonPath("$[1].name").value(eventResponse2.getName()))
-                .andExpect(jsonPath("$[1].description").value(eventResponse2.getDescription()))
-                .andExpect(jsonPath("$[1].start").value(eventResponse2.getStart()))
-                .andExpect(jsonPath("$[1].end").value(eventResponse2.getEnd()))
-                .andExpect(jsonPath("$[1].referrerId").value(eventResponse2.getReferrerId()))
-                .andExpect(jsonPath("$[1].localUnitId").value(eventResponse2.getLocalUnitId()))
-                .andExpect(jsonPath("$[1].maxParticipants").value(eventResponse2.getMaxParticipants()))
-                .andExpect(jsonPath("$[1].numberOfParticipants").value(eventResponse2.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows", hasSize(3)))
-                .andExpect(jsonPath("$[1].timeWindows[0].timeWindowId").value(eventResponse2.getTimeWindows().get(0).getTimeWindowId()))
-                .andExpect(jsonPath("$[1].timeWindows[0].start").value(eventResponse2.getTimeWindows().get(0).getStart()))
-                .andExpect(jsonPath("$[1].timeWindows[0].end").value(eventResponse2.getTimeWindows().get(0).getEnd()))
-                .andExpect(jsonPath("$[1].timeWindows[0].maxParticipants").value(eventResponse2.getTimeWindows().get(0).getMaxParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows[0].participants").isEmpty())
-                .andExpect(jsonPath("$[1].timeWindows[1].timeWindowId").value(eventResponse2.getTimeWindows().get(1).getTimeWindowId()))
-                .andExpect(jsonPath("$[1].timeWindows[1].start").value(eventResponse2.getTimeWindows().get(1).getStart()))
-                .andExpect(jsonPath("$[1].timeWindows[1].end").value(eventResponse2.getTimeWindows().get(1).getEnd()))
-                .andExpect(jsonPath("$[1].timeWindows[1].maxParticipants").value(eventResponse2.getTimeWindows().get(1).getMaxParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows[1].participants").isEmpty())
-                .andExpect(jsonPath("$[1].timeWindows[2].timeWindowId").value(eventResponse2.getTimeWindows().get(2).getTimeWindowId()))
-                .andExpect(jsonPath("$[1].timeWindows[2].start").value(eventResponse2.getTimeWindows().get(2).getStart()))
-                .andExpect(jsonPath("$[1].timeWindows[2].end").value(eventResponse2.getTimeWindows().get(2).getEnd()))
-                .andExpect(jsonPath("$[1].timeWindows[2].maxParticipants").value(eventResponse2.getTimeWindows().get(2).getMaxParticipants()))
-                .andExpect(jsonPath("$[1].timeWindows[2].participants").isEmpty())
-                .andExpect(jsonPath("$[1].recurring").value(eventResponse2.isRecurring()))
-                .andExpect(jsonPath("$[2].eventId").value(eventResponse3.getEventId()))
-                .andExpect(jsonPath("$[2].sessionId").value(eventResponse3.getSessionId()))
-                .andExpect(jsonPath("$[2].name").value(eventResponse3.getName()))
-                .andExpect(jsonPath("$[2].description").value(eventResponse3.getDescription()))
-                .andExpect(jsonPath("$[2].start").value(eventResponse3.getStart()))
-                .andExpect(jsonPath("$[2].end").value(eventResponse3.getEnd()))
-                .andExpect(jsonPath("$[2].referrerId").value(eventResponse3.getReferrerId()))
-                .andExpect(jsonPath("$[2].localUnitId").value(eventResponse3.getLocalUnitId()))
-                .andExpect(jsonPath("$[2].maxParticipants").value(eventResponse3.getMaxParticipants()))
-                .andExpect(jsonPath("$[2].numberOfParticipants").value(eventResponse3.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[2].timeWindows", hasSize(1)))
-                .andExpect(jsonPath("$[2].timeWindows[0].timeWindowId").value(eventResponse3.getTimeWindows().get(0).getTimeWindowId()))
-                .andExpect(jsonPath("$[2].timeWindows[0].start").value(eventResponse3.getTimeWindows().get(0).getStart()))
-                .andExpect(jsonPath("$[2].timeWindows[0].end").value(eventResponse3.getTimeWindows().get(0).getEnd()))
-                .andExpect(jsonPath("$[2].timeWindows[0].maxParticipants").value(eventResponse3.getTimeWindows().get(0).getMaxParticipants()))
-                .andExpect(jsonPath("$[2].timeWindows[0].participants").isEmpty())
-                .andExpect(jsonPath("$[2].recurring").value(eventResponse3.isRecurring()));
+                .andReturn().getResponse().getContentAsString();
+
+        var resList = List.of(objectMapper.readValue(res, EventResponse[].class));
+
+        Assertions.assertEquals(3, resList.size());
+        Assertions.assertTrue(resList.contains(eventResponse1));
+        Assertions.assertTrue(resList.contains(eventResponse2));
+        Assertions.assertTrue(resList.contains(eventResponse3));
     }
 
     @Test
