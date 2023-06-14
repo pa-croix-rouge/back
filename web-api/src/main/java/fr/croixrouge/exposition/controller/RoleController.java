@@ -2,8 +2,10 @@ package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Role;
+import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import fr.croixrouge.exposition.dto.core.RoleResponse;
+import fr.croixrouge.exposition.dto.core.ShortVolunteerResponse;
 import fr.croixrouge.service.LocalUnitService;
 import fr.croixrouge.service.RoleService;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 public class RoleController extends CRUDController<ID, Role, RoleService, RoleResponse, RoleCreationRequest> {
 
     private final LocalUnitService localUnitService;
+
+
 
     public RoleController(RoleService roleService, LocalUnitService localUnitService) {
         super(roleService);
@@ -60,6 +64,11 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
     public ResponseEntity<Void> removeRoleToUser(@PathVariable ID roleId, @PathVariable ID userId) {
         service.removeRole(roleId, userId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("{id}/users")
+    public ResponseEntity<List<Long>> getAllByRole(@PathVariable ID id) {
+        return ResponseEntity.ok( service.getAllByRole(id).stream().map(user -> user.getId().value()).toList());
     }
 
     @GetMapping("user/{userId}")

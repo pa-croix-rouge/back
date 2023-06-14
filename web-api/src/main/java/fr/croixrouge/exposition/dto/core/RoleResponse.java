@@ -15,7 +15,7 @@ public class RoleResponse {
     private String name;
     private String description;
     private Map<Resources, Set<Operations>> authorizations;
-    private List<Long> userIds;
+    private List<Long> userIDs;
 
     public RoleResponse() {
     }
@@ -25,7 +25,7 @@ public class RoleResponse {
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
-        this.userIds = userIds;
+        this.userIDs = userIds;
     }
 
     public static RoleResponse fromRole(Role role) {
@@ -54,8 +54,8 @@ public class RoleResponse {
         return authorizations;
     }
 
-    public List<Long> getUserIds() {
-        return userIds;
+    public List<Long> getUserIDs() {
+        return userIDs;
     }
 
     @Override
@@ -63,11 +63,11 @@ public class RoleResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoleResponse that = (RoleResponse) o;
-        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(authorizations, that.authorizations) && Objects.equals(userIds, that.userIds);
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(authorizations, that.authorizations) && Objects.equals(userIDs, that.userIDs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, authorizations, userIds);
+        return Objects.hash(name, description, authorizations, userIDs);
     }
 }

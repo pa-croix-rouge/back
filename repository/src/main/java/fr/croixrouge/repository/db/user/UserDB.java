@@ -4,8 +4,10 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.repository.db.localunit.LocalUnitDB;
 import fr.croixrouge.repository.db.role.RoleDB;
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Table(name = "user")
@@ -74,5 +76,18 @@ public class UserDB {
 
     public Long getUserID() {
         return userID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        UserDB userDB = (UserDB) o;
+        return getUserID() != null && Objects.equals(getUserID(), userDB.getUserID());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

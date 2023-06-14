@@ -1,12 +1,14 @@
 package fr.croixrouge.repository;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.InMemoryCRUDRepository;
 import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 import fr.croixrouge.domain.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class InMemoryUserRepository extends InMemoryCRUDRepository<ID, User> implements UserRepository {
@@ -24,5 +26,10 @@ public class InMemoryUserRepository extends InMemoryCRUDRepository<ID, User> imp
         return objects.stream()
                 .filter(user -> user.getUsername().equals(username))
                 .findFirst();
+    }
+
+    @Override
+    public List<User> findAllByRole(Role role) {
+        return null;
     }
 }
