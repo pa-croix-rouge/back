@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class RoleResponse {
+
+    private Long id;
     private String name;
     private String description;
     private Map<Resources, Set<Operations>> authorizations;
@@ -18,7 +20,8 @@ public class RoleResponse {
     public RoleResponse() {
     }
 
-    public RoleResponse(String name, String description, Map<Resources, Set<Operations>> authorizations, List<Long> userIds) {
+    public RoleResponse(Long id, String name, String description, Map<Resources, Set<Operations>> authorizations, List<Long> userIds) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
@@ -27,11 +30,16 @@ public class RoleResponse {
 
     public static RoleResponse fromRole(Role role) {
         return new RoleResponse(
+                role.getId().value(),
                 role.getName(),
                 role.getDescription(),
                 role.getAuthorizations(),
                 List.of()// role.getUserIds().stream().map(ID::value).toList()
         );
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
