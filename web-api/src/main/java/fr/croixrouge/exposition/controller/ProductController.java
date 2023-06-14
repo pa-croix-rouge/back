@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.exposition.dto.product.ConservationResponse;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
 import fr.croixrouge.exposition.dto.product.ProductResponse;
 import fr.croixrouge.exposition.dto.product.UnitResponse;
@@ -53,7 +54,12 @@ public class ProductController extends CRUDController<ID, Product, ProductServic
     }
 
     @GetMapping("/units")
-    public ResponseEntity<?> getUnits() {
+    public ResponseEntity<UnitResponse> getUnits() {
         return ResponseEntity.ok(UnitResponse.fromMeasurementUnits());
+    }
+
+    @GetMapping("/conservations")
+    public ResponseEntity<ConservationResponse> getConservations() {
+        return ResponseEntity.ok(ConservationResponse.fromFoodConservations());
     }
 }

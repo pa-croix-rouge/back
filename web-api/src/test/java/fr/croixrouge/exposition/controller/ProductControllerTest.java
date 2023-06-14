@@ -7,6 +7,7 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
+import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.quantifier.NumberedUnit;
 import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
@@ -143,6 +144,21 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.units.decilitre").value(VolumeUnit.DECILITER.getLabel()))
                 .andExpect(jsonPath("$.units.pièce").value(NumberedUnit.NUMBER.getLabel()));
 //                .andExpect(jsonPath("$.units").value(NumberedUnit.UNKNOWN.getLabel()));
+    }
+
+    @Test
+    @Order('3')
+    @DisplayName("Test that the product conservation endpoint returns the list of units")
+    public void productReturnsListOfConservations() throws Exception {
+        mockMvc.perform(get("/product/conservations")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.conservations").isArray())
+                .andExpect(jsonPath("$.conservations").isNotEmpty())
+                .andExpect(jsonPath("$.conservations[0]").value(FoodConservation.FROZEN.getLabel()))
+                .andExpect(jsonPath("$.conservations[1]").value(FoodConservation.REFRIGERATED.getLabel()))
+                .andExpect(jsonPath("$.conservations[2]").value(FoodConservation.ROOM_TEMPERATURE.getLabel()));
     }
 }
 
