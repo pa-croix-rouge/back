@@ -3,6 +3,7 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.model.User;
+import fr.croixrouge.exposition.dto.core.RoleAuthResponse;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import fr.croixrouge.exposition.dto.core.RoleResponse;
 import fr.croixrouge.exposition.dto.core.ShortVolunteerResponse;
@@ -25,6 +26,11 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
     public RoleController(RoleService roleService, LocalUnitService localUnitService) {
         super(roleService);
         this.localUnitService = localUnitService;
+    }
+
+    @GetMapping("auth")
+    public ResponseEntity<RoleAuthResponse> getAuths(){
+        return ResponseEntity.ok(new RoleAuthResponse());
     }
 
     @Override
@@ -75,4 +81,5 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
     public ResponseEntity<List<RoleResponse>> getUserRole( @PathVariable ID userId) {
         return ResponseEntity.ok(service.getUserRole( userId).stream().map(RoleResponse::fromRole).toList());
     }
+
 }
