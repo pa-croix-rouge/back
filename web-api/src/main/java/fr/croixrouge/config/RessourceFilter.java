@@ -40,6 +40,8 @@ public class RessourceFilter extends OncePerRequestFilter {
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null) {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -52,9 +54,12 @@ public class RessourceFilter extends OncePerRequestFilter {
                 .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ));
 
         if (userSecurity.allAuthorizations.isEmpty()) {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
+
 
         filterChain.doFilter(request, response);
     }
