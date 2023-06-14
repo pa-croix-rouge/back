@@ -3,10 +3,8 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.product.CreateFoodProductDTO;
 import fr.croixrouge.exposition.dto.product.FoodProductResponse;
-import fr.croixrouge.service.FoodProductService;
-import fr.croixrouge.service.ProductLimitService;
-import fr.croixrouge.service.ProductService;
-import fr.croixrouge.service.StorageProductService;
+import fr.croixrouge.service.*;
+import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
@@ -23,11 +21,14 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
 
     private final StorageProductService storageProductService;
 
-    public FoodProductController(FoodProductService service, ProductService productService, ProductLimitService productLimitService, StorageProductService storageProductService) {
+    private final StorageService storageService;
+
+    public FoodProductController(FoodProductService service, ProductService productService, ProductLimitService productLimitService, StorageProductService storageProductService, StorageService storageService) {
         super(service);
         this.productService = productService;
         this.productLimitService = productLimitService;
         this.storageProductService = storageProductService;
+        this.storageService = storageService;
     }
 
     @Override
@@ -48,6 +49,11 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
     @Override
     @PostMapping()
     public ResponseEntity<ID> post(@RequestBody CreateFoodProductDTO model) {
+        Storage storage = storageService.findById(new ID(model.getStorageId()));
+        if (storage == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         Product product = model.toModel().getProduct();
         ID productId = productService.save(product);
         if (productId == null) {
@@ -58,6 +64,11 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
         FoodProduct foodProduct = new FoodProduct(null, productPersisted, model.getFoodConservation(), model.getExpirationDate(), model.getOptimalConsumptionDate(), model.getPrice());
         ID foodProductId = service.save(foodProduct);
         if (foodProductId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        StorageProduct storageProduct = new StorageProduct(storage, productPersisted, model.getAmount());
+        ID storageProductId = storageProductService.save(storageProduct);
+        if (storageProductId == null) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(foodProductId);

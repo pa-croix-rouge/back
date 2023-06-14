@@ -48,6 +48,10 @@ public class StorageProductService {
         return storageProductService.findByProduct(product);
     }
 
+    public ID save(StorageProduct storageProduct) {
+        return storageProductService.save(storageProduct);
+    }
+
     public void addProduct(ID storageId, ID productId, int quantity) {
         Storage storage = storageRepository.findById(storageId).orElseThrow();
         Product product = productRepository.findById(productId).orElseThrow();

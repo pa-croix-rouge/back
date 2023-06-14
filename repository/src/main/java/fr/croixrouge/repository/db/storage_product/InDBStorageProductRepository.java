@@ -38,7 +38,7 @@ public class InDBStorageProductRepository implements StorageProductRepository {
 
     public StorageProductDB toStorageProductDB(StorageProduct storageProduct) {
         return new StorageProductDB(
-                storageProduct.getId().value(),
+                storageProduct.getId() == null ? null : storageProduct.getId().value(),
                 productRepository.toProductDB(storageProduct.getProduct()),
                 storageRepository.toStorageDB(storageProduct.getStorage()),
                 storageProduct.getQuantity()

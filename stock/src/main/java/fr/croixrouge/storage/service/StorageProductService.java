@@ -20,6 +20,10 @@ public class StorageProductService {
         return storageProductRepository.findByProduct(product).orElse(null);
     }
 
+    public ID save(StorageProduct storageProduct) {
+        return storageProductRepository.save(storageProduct);
+    }
+
     public void addProduct(Storage storage, Product product, int quantity) {
         storageProductRepository.findById(storage, product)
                 .ifPresentOrElse(storageProduct -> storageProductRepository.save(new StorageProduct(storageProduct.getId(), storage, product, storageProduct.getQuantity() + quantity)),

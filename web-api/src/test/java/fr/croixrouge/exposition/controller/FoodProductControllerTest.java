@@ -86,7 +86,9 @@ class FoodProductControllerTest {
                 FoodConservation.ROOM_TEMPERATURE,
                 LocalDateTime.of(2023, 5, 1, 15, 14, 1),
                 LocalDateTime.of(2023, 4, 10, 15, 14, 1),
-                1);
+                1,
+                "1",
+                10);
 
         var res = mockMvc.perform(post("/product/food")
                         .header("Authorization", "Bearer " + jwtToken)

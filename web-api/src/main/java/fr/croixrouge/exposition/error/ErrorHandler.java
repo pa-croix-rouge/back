@@ -1,6 +1,5 @@
 package fr.croixrouge.exposition.error;
 
-import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -25,7 +24,7 @@ public abstract class ErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handle(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-//        ex.printStackTrace();
+        ex.printStackTrace();
         if (ex instanceof NullPointerException) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
