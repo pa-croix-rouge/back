@@ -16,7 +16,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,6 +42,10 @@ class FoodProductControllerTest {
     private String jwtToken;
 
     private static String createdFoodProductId;
+
+    private ZonedDateTime timestampToLocalDateTime(Timestamp timestamp) {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.getTime()), ZoneId.of("Europe/Paris"));
+    }
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -63,9 +71,9 @@ class FoodProductControllerTest {
                 .andExpect(jsonPath("$.name").value("Pommes"))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(1))
-                .andExpect(jsonPath("$.foodConservation").value("ROOM_TEMPERATURE"))
-                .andExpect(jsonPath("$.expirationDate").value(LocalDateTime.of(2023, 5, 1, 15, 14, 1).toString()))
-                .andExpect(jsonPath("$.optimalConsumptionDate").value(LocalDateTime.of(2023, 4, 10, 15, 14, 1).toString()));
+                .andExpect(jsonPath("$.foodConservation").value("température ambiante"))
+                .andExpect(jsonPath("$.expirationDate").value(timestampToLocalDateTime(Timestamp.valueOf(LocalDateTime.of(2023, 5, 1, 15, 14, 1))).toString()))
+                .andExpect(jsonPath("$.optimalConsumptionDate").value(timestampToLocalDateTime(Timestamp.valueOf(LocalDateTime.of(2023, 4, 10, 15, 14, 1))).toString()));
     }
 
     @Test
@@ -83,9 +91,9 @@ class FoodProductControllerTest {
     public void productAddSuccessTest() throws Exception {
         CreateFoodProductDTO createProductDTO = new CreateFoodProductDTO("new Product",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
-                FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.of(2023, 5, 1, 15, 14, 1),
-                LocalDateTime.of(2023, 4, 10, 15, 14, 1),
+                FoodConservation.ROOM_TEMPERATURE.getLabel(),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 1,
                 "1",
                 10);
@@ -107,9 +115,9 @@ class FoodProductControllerTest {
                 .andExpect(jsonPath("$.name").value(createProductDTO.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(createProductDTO.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(createProductDTO.getQuantity().getValue()))
-                .andExpect(jsonPath("$.foodConservation").value(createProductDTO.getFoodConservation().toString()))
-                .andExpect(jsonPath("$.expirationDate").value(createProductDTO.getExpirationDate().toString()))
-                .andExpect(jsonPath("$.optimalConsumptionDate").value(createProductDTO.getOptimalConsumptionDate().toString()));
+                .andExpect(jsonPath("$.foodConservation").value(createProductDTO.getFoodConservation()))
+                .andExpect(jsonPath("$.expirationDate").value(timestampToLocalDateTime(Timestamp.valueOf(createProductDTO.getExpirationDate().toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$.optimalConsumptionDate").value(timestampToLocalDateTime(Timestamp.valueOf(createProductDTO.getOptimalConsumptionDate().toLocalDateTime())).toString()));
     }
 
     @Test

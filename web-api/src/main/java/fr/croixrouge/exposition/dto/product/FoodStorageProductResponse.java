@@ -4,16 +4,17 @@ import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class FoodStorageProductResponse extends StorageProductResponse {
     private Long id;
 
-    private FoodConservation foodConservation;
+    private String foodConservation;
 
-    private LocalDateTime expirationDate;
+    private String expirationDate;
 
-    private LocalDateTime optimalConsumptionDate;
+    private String optimalConsumptionDate;
 
     public FoodStorageProductResponse() {
     }
@@ -21,17 +22,17 @@ public class FoodStorageProductResponse extends StorageProductResponse {
     public FoodStorageProductResponse(FoodProduct product, StorageProduct storageProduct) {
         super(product.getProduct(), storageProduct);
         this.id = product.getId().value();
-        this.foodConservation = product.getFoodConservation();
-        this.expirationDate = product.getExpirationDate();
-        this.optimalConsumptionDate = product.getOptimalConsumptionDate();
+        this.foodConservation = product.getFoodConservation().getLabel();
+        this.expirationDate = product.getExpirationDate().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
+        this.optimalConsumptionDate = product.getOptimalConsumptionDate().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
     }
 
-    public FoodStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate) {
+    public FoodStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate) {
         super(productId, storageProductId, storageId, productName, quantity, quantifierQuantity, quantifierName);
         this.id = id;
-        this.foodConservation = foodConservation;
-        this.expirationDate = expirationDate;
-        this.optimalConsumptionDate = optimalConsumptionDate;
+        this.foodConservation = foodConservation.getLabel();
+        this.expirationDate = expirationDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
+        this.optimalConsumptionDate = optimalConsumptionDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
     }
 
     public static FoodStorageProductResponse fromFoodProduct(FoodProduct product, StorageProduct storageProduct) {
@@ -46,27 +47,27 @@ public class FoodStorageProductResponse extends StorageProductResponse {
         this.id = id;
     }
 
-    public FoodConservation getFoodConservation() {
+    public String getFoodConservation() {
         return foodConservation;
     }
 
     public void setFoodConservation(FoodConservation foodConservation) {
-        this.foodConservation = foodConservation;
+        this.foodConservation = foodConservation.getLabel();
     }
 
-    public LocalDateTime getExpirationDate() {
+    public String getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setExpirationDate(ZonedDateTime expirationDate) {
+        this.expirationDate = expirationDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
     }
 
-    public LocalDateTime getOptimalConsumptionDate() {
+    public String getOptimalConsumptionDate() {
         return optimalConsumptionDate;
     }
 
-    public void setOptimalConsumptionDate(LocalDateTime optimalConsumptionDate) {
-        this.optimalConsumptionDate = optimalConsumptionDate;
+    public void setOptimalConsumptionDate(ZonedDateTime optimalConsumptionDate) {
+        this.optimalConsumptionDate = optimalConsumptionDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
     }
 }

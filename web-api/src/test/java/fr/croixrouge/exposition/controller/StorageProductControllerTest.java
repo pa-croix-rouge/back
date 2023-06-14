@@ -19,7 +19,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,6 +42,10 @@ public class StorageProductControllerTest {
     private ObjectMapper objectMapper;
 
     private String jwtToken;
+
+    private ZonedDateTime timestampToLocalDateTime(Timestamp timestamp) {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.getTime()), ZoneId.of("Europe/Paris"));
+    }
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -115,8 +123,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.of(2023, 5, 1, 15, 14, 1),
-                LocalDateTime.of(2023, 4, 10, 15, 14, 1));
+                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")));
         FoodStorageProductResponse food2 = new FoodStorageProductResponse(
                 2L,
                 9L,
@@ -127,8 +135,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now());
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0), ZoneId.of("Europe/Paris")));
 
         mockMvc.perform(get("/storage/product/" + chemise1.getStorageId())
                         .header("Authorization", "Bearer " + jwtToken)
@@ -191,9 +199,9 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.foodProducts[0].quantity").value(food1.getQuantity()))
                 .andExpect(jsonPath("$.foodProducts[0].quantifierQuantity").value(food1.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.foodProducts[0].quantifierName").value(food1.getQuantifierName()))
-                .andExpect(jsonPath("$.foodProducts[0].foodConservation").value(food1.getFoodConservation().toString()))
-                .andExpect(jsonPath("$.foodProducts[0].expirationDate").value(food1.getExpirationDate().toString()))
-                .andExpect(jsonPath("$.foodProducts[0].optimalConsumptionDate").value(food1.getOptimalConsumptionDate().toString()))
+                .andExpect(jsonPath("$.foodProducts[0].foodConservation").value(food1.getFoodConservation()))
+                .andExpect(jsonPath("$.foodProducts[0].expirationDate").value(food1.getExpirationDate()))
+                .andExpect(jsonPath("$.foodProducts[0].optimalConsumptionDate").value(food1.getOptimalConsumptionDate()))
                 .andExpect(jsonPath("$.foodProducts[1].id").value(food2.getId()))
                 .andExpect(jsonPath("$.foodProducts[1].productId").value(food2.getProductId()))
                 .andExpect(jsonPath("$.foodProducts[1].storageProductId").value(food2.getStorageProductId()))
@@ -202,9 +210,9 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.foodProducts[1].quantity").value(food2.getQuantity()))
                 .andExpect(jsonPath("$.foodProducts[1].quantifierQuantity").value(food2.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.foodProducts[1].quantifierName").value(food2.getQuantifierName()))
-                .andExpect(jsonPath("$.foodProducts[1].foodConservation").value(food2.getFoodConservation().toString()))
-                .andExpect(jsonPath("$.foodProducts[1].expirationDate").exists())
-                .andExpect(jsonPath("$.foodProducts[1].optimalConsumptionDate").exists());
+                .andExpect(jsonPath("$.foodProducts[1].foodConservation").value(food2.getFoodConservation()))
+                .andExpect(jsonPath("$.foodProducts[1].expirationDate").value(food2.getExpirationDate()))
+                .andExpect(jsonPath("$.foodProducts[1].optimalConsumptionDate").value(food2.getOptimalConsumptionDate()));
     }
 
     @Test
@@ -270,8 +278,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.of(2023, 5, 1, 15, 14, 1),
-                LocalDateTime.of(2023, 4, 10, 15, 14, 1));
+                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")));
         FoodStorageProductResponse food2 = new FoodStorageProductResponse(
                 2L,
                 9L,
@@ -282,8 +290,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now());
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0), ZoneId.of("Europe/Paris")));
 
         mockMvc.perform(get("/storage/product/localunit")
                         .header("Authorization", "Bearer " + jwtToken)
@@ -347,8 +355,8 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.foodProducts[0].quantifierQuantity").value(food1.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.foodProducts[0].quantifierName").value(food1.getQuantifierName()))
                 .andExpect(jsonPath("$.foodProducts[0].foodConservation").value(food1.getFoodConservation().toString()))
-                .andExpect(jsonPath("$.foodProducts[0].expirationDate").value(food1.getExpirationDate().toString()))
-                .andExpect(jsonPath("$.foodProducts[0].optimalConsumptionDate").value(food1.getOptimalConsumptionDate().toString()))
+                .andExpect(jsonPath("$.foodProducts[0].expirationDate").value(food1.getExpirationDate()))
+                .andExpect(jsonPath("$.foodProducts[0].optimalConsumptionDate").value(food1.getOptimalConsumptionDate()))
                 .andExpect(jsonPath("$.foodProducts[1].id").value(food2.getId()))
                 .andExpect(jsonPath("$.foodProducts[1].productId").value(food2.getProductId()))
                 .andExpect(jsonPath("$.foodProducts[1].storageProductId").value(food2.getStorageProductId()))
@@ -357,9 +365,9 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.foodProducts[1].quantity").value(food2.getQuantity()))
                 .andExpect(jsonPath("$.foodProducts[1].quantifierQuantity").value(food2.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.foodProducts[1].quantifierName").value(food2.getQuantifierName()))
-                .andExpect(jsonPath("$.foodProducts[1].foodConservation").value(food2.getFoodConservation().toString()))
-                .andExpect(jsonPath("$.foodProducts[1].expirationDate").exists())
-                .andExpect(jsonPath("$.foodProducts[1].optimalConsumptionDate").exists());
+                .andExpect(jsonPath("$.foodProducts[1].foodConservation").value(food2.getFoodConservation()))
+                .andExpect(jsonPath("$.foodProducts[1].expirationDate").value(food2.getExpirationDate()))
+                .andExpect(jsonPath("$.foodProducts[1].optimalConsumptionDate").value(food2.getOptimalConsumptionDate()));
     }
 
     @Test

@@ -5,18 +5,21 @@ import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
 
     private final String name;
     private final QuantifierDTO quantity;
 
-    private final FoodConservation foodConservation;
+    private final String foodConservation;
 
-    private final LocalDateTime expirationDate;
+    private final Timestamp expirationDate;
 
-    private final LocalDateTime optimalConsumptionDate;
+    private final Timestamp optimalConsumptionDate;
 
     private final double price;
 
@@ -24,7 +27,7 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
 
     private final int amount;
 
-    public CreateFoodProductDTO(String name, QuantifierDTO quantity, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate, double price, String storageId, int amount) {
+    public CreateFoodProductDTO(String name, QuantifierDTO quantity, String foodConservation, Timestamp expirationDate, Timestamp optimalConsumptionDate, double price, String storageId, int amount) {
         this.name = name;
         this.quantity = quantity;
         this.foodConservation = foodConservation;
@@ -35,6 +38,10 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
         this.amount = amount;
     }
 
+    public static ZonedDateTime toLocalDateTime(Timestamp timestamp) {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.getTime()), ZoneId.of("Europe/Paris"));
+    }
+
     public String getName() {
         return name;
     }
@@ -43,15 +50,15 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
         return quantity;
     }
 
-    public FoodConservation getFoodConservation() {
+    public String getFoodConservation() {
         return foodConservation;
     }
 
-    public LocalDateTime getExpirationDate() {
+    public Timestamp getExpirationDate() {
         return expirationDate;
     }
 
-    public LocalDateTime getOptimalConsumptionDate() {
+    public Timestamp getOptimalConsumptionDate() {
         return optimalConsumptionDate;
     }
 
@@ -69,6 +76,6 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
 
     @Override
     public FoodProduct toModel() {
-        return new FoodProduct(null, null, name, quantity.toQuantifier(), null, foodConservation, expirationDate, optimalConsumptionDate, price);
+        return new FoodProduct(null, null, name, quantity.toQuantifier(), null, FoodConservation.fromLabel(foodConservation), toLocalDateTime(expirationDate), toLocalDateTime(optimalConsumptionDate), price);
     }
 }

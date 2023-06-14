@@ -6,6 +6,7 @@ import fr.croixrouge.exposition.dto.product.FoodProductResponse;
 import fr.croixrouge.service.*;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
+import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +62,7 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
         }
 
         Product productPersisted = productService.findById(productId);
-        FoodProduct foodProduct = new FoodProduct(null, productPersisted, model.getFoodConservation(), model.getExpirationDate(), model.getOptimalConsumptionDate(), model.getPrice());
+        FoodProduct foodProduct = new FoodProduct(null, productPersisted, FoodConservation.fromLabel(model.getFoodConservation()), CreateFoodProductDTO.toLocalDateTime(model.getExpirationDate()), CreateFoodProductDTO.toLocalDateTime(model.getOptimalConsumptionDate()), model.getPrice());
         ID foodProductId = service.save(foodProduct);
         if (foodProductId == null) {
             return ResponseEntity.badRequest().build();
