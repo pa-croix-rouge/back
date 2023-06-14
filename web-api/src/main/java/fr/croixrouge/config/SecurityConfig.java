@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.crypto.SecretKey;
 import java.util.List;
@@ -40,7 +41,8 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/login"),
                 new AntPathRequestMatcher("/volunteer/register"),
                 new AntPathRequestMatcher("/volunteer/token"),
-                new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name()) );
+                new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name())
+        );
 
         http
             .csrf(AbstractHttpConfigurer::disable)

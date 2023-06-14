@@ -73,6 +73,7 @@ public class RoleControllerTest {
         }
 
         RoleResponse roleResponse = new RoleResponse(
+                null,
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
                 roleResources,
@@ -140,6 +141,7 @@ public class RoleControllerTest {
         );
 
         RoleResponse roleResponse = new RoleResponse(
+                null,
                 roleCreationRequest.getName(),
                 roleCreationRequest.getDescription(),
                 roleCreationRequest.getAuthorizations(),

@@ -63,4 +63,8 @@ public class RoleService extends CRUDService<ID, Role, RoleRepository> {
         return userService.findById(userId).getRoles();
     }
 
+    public List<User> getAllByRole(ID roleID) {
+        return userService.findByRole(findById(roleID));
+    }
+
 }
