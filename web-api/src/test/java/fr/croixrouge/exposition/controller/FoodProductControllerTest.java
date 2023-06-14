@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -80,7 +79,7 @@ class FoodProductControllerTest {
 
     @Test
     @Order(1)
-    @DisplayName("Test that the post endpoint returns OK when given a correct food product")
+    @DisplayName("Test that the post endpoint, used to create a new food product, returns OK when given a correct food product")
     public void productAddSuccessTest() throws Exception {
         CreateFoodProductDTO createProductDTO = new CreateFoodProductDTO("new Product",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),

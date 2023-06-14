@@ -7,6 +7,8 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
+import fr.croixrouge.storage.model.quantifier.NumberedUnit;
+import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,5 +126,23 @@ class ProductControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @Order(3)
+    @DisplayName("Test that the product units endpoint returns the list of units")
+    public void productReturnsListOfUnits() throws Exception {
+        mockMvc.perform(get("/product/units")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.units").isMap())
+                .andExpect(jsonPath("$.units").isNotEmpty())
+                .andExpect(jsonPath("$.units.kilogram").value(WeightUnit.KILOGRAM.getLabel()))
+                .andExpect(jsonPath("$.units.gram").value(WeightUnit.GRAM.getLabel()))
+                .andExpect(jsonPath("$.units.litre").value(VolumeUnit.LITER.getLabel()))
+                .andExpect(jsonPath("$.units.millilitre").value(VolumeUnit.MILLILITER.getLabel()))
+                .andExpect(jsonPath("$.units.decilitre").value(VolumeUnit.DECILITER.getLabel()))
+                .andExpect(jsonPath("$.units.pièce").value(NumberedUnit.NUMBER.getLabel()));
+//                .andExpect(jsonPath("$.units").value(NumberedUnit.UNKNOWN.getLabel()));
+    }
 }
 

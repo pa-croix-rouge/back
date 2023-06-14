@@ -3,16 +3,14 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
 import fr.croixrouge.exposition.dto.product.ProductResponse;
+import fr.croixrouge.exposition.dto.product.UnitResponse;
 import fr.croixrouge.service.ProductLimitService;
 import fr.croixrouge.service.ProductService;
 import fr.croixrouge.service.StorageProductService;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
@@ -52,5 +50,10 @@ public class ProductController extends CRUDController<ID, Product, ProductServic
 
         service.delete(product);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/units")
+    public ResponseEntity<?> getUnits() {
+        return ResponseEntity.ok(UnitResponse.fromMeasurementUnits());
     }
 }
