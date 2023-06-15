@@ -72,8 +72,8 @@ class FoodProductControllerTest {
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(1))
                 .andExpect(jsonPath("$.foodConservation").value("température ambiante"))
-                .andExpect(jsonPath("$.expirationDate").value(timestampToLocalDateTime(Timestamp.valueOf(LocalDateTime.of(2023, 5, 1, 15, 14, 1))).toString()))
-                .andExpect(jsonPath("$.optimalConsumptionDate").value(timestampToLocalDateTime(Timestamp.valueOf(LocalDateTime.of(2023, 4, 10, 15, 14, 1))).toString()));
+                .andExpect(jsonPath("$.expirationDate").value(timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$.optimalConsumptionDate").value(timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString()));
     }
 
     @Test
