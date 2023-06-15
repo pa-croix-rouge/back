@@ -7,6 +7,7 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
+import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.quantifier.NumberedUnit;
 import fr.croixrouge.storage.model.quantifier.VolumeUnit;
@@ -159,6 +160,27 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.conservations[0]").value(FoodConservation.FROZEN.getLabel()))
                 .andExpect(jsonPath("$.conservations[1]").value(FoodConservation.REFRIGERATED.getLabel()))
                 .andExpect(jsonPath("$.conservations[2]").value(FoodConservation.ROOM_TEMPERATURE.getLabel()));
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test that the product sizes endpoint returns the list of sizes")
+    public void productReturnsListOfClothSizes() throws Exception {
+        mockMvc.perform(get("/product/sizes")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$[0]").value(ClothSize.UNKNOWN.getLabel()))
+                .andExpect(jsonPath("$[1]").value(ClothSize.CHILD.getLabel()))
+                .andExpect(jsonPath("$[2]").value(ClothSize.XS.getLabel()))
+                .andExpect(jsonPath("$[3]").value(ClothSize.S.getLabel()))
+                .andExpect(jsonPath("$[4]").value(ClothSize.M.getLabel()))
+                .andExpect(jsonPath("$[5]").value(ClothSize.L.getLabel()))
+                .andExpect(jsonPath("$[6]").value(ClothSize.XL.getLabel()))
+                .andExpect(jsonPath("$[7]").value(ClothSize.XXL.getLabel()))
+                .andExpect(jsonPath("$[8]").value(ClothSize.XXXL.getLabel()));
     }
 }
 

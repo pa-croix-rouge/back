@@ -1,6 +1,5 @@
 package fr.croixrouge.service;
 
-
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.repository.FoodProductRepository;
