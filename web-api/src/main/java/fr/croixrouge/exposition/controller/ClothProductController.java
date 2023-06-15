@@ -30,12 +30,15 @@ public class ClothProductController extends ErrorHandler {
 
     private final StorageProductService storageProductService;
 
-    public ClothProductController(ClothProductService service, AuthenticationService authenticationService, StorageService storageService, ProductService productService, StorageProductService storageProductService) {
+    private final ProductLimitService productLimitService;
+
+    public ClothProductController(ClothProductService service, AuthenticationService authenticationService, StorageService storageService, ProductService productService, StorageProductService storageProductService, ProductLimitService productLimitService) {
         this.service = service;
         this.authenticationService = authenticationService;
         this.storageService = storageService;
         this.productService = productService;
         this.storageProductService = storageProductService;
+        this.productLimitService = productLimitService;
     }
 
     public ClothProductResponse toDTO(ClothProduct model) {
@@ -102,5 +105,31 @@ public class ClothProductController extends ErrorHandler {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(clothProductUpdatedId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable ID id, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        ClothProduct clothProduct = service.findByLocalUnitIdAndId(localUnitId, id);
+        if (clothProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Product product = productService.findById(clothProduct.getProduct().getId());
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if(product.getLimit() != null) {
+            productLimitService.delete(product.getLimit());
+        }
+
+        StorageProduct storageProduct = storageProductService.findByProduct(product);
+        if (storageProduct != null) {
+            storageProductService.delete(storageProduct);
+        }
+
+        service.delete(clothProduct);
+        productService.delete(product);
+        return ResponseEntity.ok().build();
     }
 }

@@ -9,9 +9,7 @@ import fr.croixrouge.exposition.dto.product.ClothProductResponse;
 import fr.croixrouge.exposition.dto.product.CreateClothProductDTO;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.quantifier.NumberedUnit;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,14 +17,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClothProductControllerTest {
 
     @Autowired
@@ -50,6 +48,7 @@ public class ClothProductControllerTest {
         jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
     }
 
+    @Order(1)
     @Test
     @DisplayName("Test that the id endpoint returns a cloth product when given a valid id")
     public void testGetClothByIdSuccessTest() throws Exception {
@@ -57,7 +56,7 @@ public class ClothProductControllerTest {
                 1L,
                 3L,
                 "Chemises blanches",
-                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 50),
+                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
                 ClothSize.S);
         mockMvc.perform(get("/product/cloth/" + clothProductResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,6 +70,7 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.size").value(clothProductResponse.getSize().toString()));
     }
 
+    @Order(2)
     @Test
     @DisplayName("Test that the id endpoint returns a cloth product when given a valid id")
     public void testGetClothByIdFailTest() throws Exception {
@@ -80,6 +80,7 @@ public class ClothProductControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Order(3)
     @Test
     @DisplayName("Test that the id endpoint returns a cloth product when given a valid id")
     public void testGetAllClothSuccessTest() throws Exception {
@@ -87,7 +88,7 @@ public class ClothProductControllerTest {
                 1L,
                 3L,
                 "Chemises blanches",
-                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 50),
+                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
                 ClothSize.S);
         ClothProductResponse clothProductResponse2 = new ClothProductResponse(
                 2L,
@@ -150,6 +151,7 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$[4].size").value(clothProductResponse5.getSize().toString()));
     }
 
+    @Order(4)
     @Test
     @DisplayName("Test that the post endpoint creates a cloth product when given valid data")
     public void testCreateClothSuccessTest() throws Exception {
@@ -181,6 +183,7 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()));
     }
 
+    @Order(5)
     @Test
     @DisplayName("Test that the id endpoint updates a cloth product when given a valid id and data")
     public void testUpdateClothByIdSuccessTest() throws Exception {
@@ -226,5 +229,26 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductRequest.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(50))
                 .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()));
+    }
+
+    @Order(6)
+    @Test
+    @DisplayName("Test that the id endpoint deletes a cloth product when given a valid id")
+    public void testDeleteClothByIdSuccessTest() throws Exception {
+        String id = "1";
+        mockMvc.perform(get("/product/cloth/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/product/cloth/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/product/cloth/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
     }
 }
