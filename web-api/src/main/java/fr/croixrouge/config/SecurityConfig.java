@@ -38,7 +38,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         List<RequestMatcher> excludedFilterUrl = List.of(
-                new AntPathRequestMatcher("/login"),
+                new AntPathRequestMatcher("/login/**"),
                 new AntPathRequestMatcher("/volunteer/register"),
                 new AntPathRequestMatcher("/volunteer/token"),
                 new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name())
@@ -48,7 +48,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests( auth -> {
                 auth
-                    .requestMatchers("/login").permitAll()
+                    .requestMatchers("/login/**").permitAll()
                     .requestMatchers("/volunteer/register").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
                     .anyRequest().authenticated();
@@ -63,6 +63,7 @@ public class SecurityConfig {
             .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/storage/**"), excludedFilterUrl, Resources.STORAGE), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/role/**"), excludedFilterUrl, Resources.ROLE), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/localunit/**"), excludedFilterUrl, Resources.LOCAL_UNIT), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/beneficiary/**"), excludedFilterUrl, Resources.LOCAL_UNIT), UsernamePasswordAuthenticationFilter.class)
 
             .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.GET.name()), excludedFilterUrl, Operations.READ), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.DELETE.name()), excludedFilterUrl, Operations.DELETE), UsernamePasswordAuthenticationFilter.class)

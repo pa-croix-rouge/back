@@ -10,6 +10,6 @@ public class FamilyMemberCreationRequest {
     public ZonedDateTime birthDate;
 
     public FamilyMember toModel() {
-        return new FamilyMember(firstName, lastName, birthDate);
+        return new FamilyMember(null, firstName, lastName, birthDate);
     }
 }

@@ -25,7 +25,7 @@ public class LoginController extends ErrorHandler {
         this.service = service;
     }
 
-    @PostMapping("/volunteer")
+    @PostMapping("volunteer")
     public ResponseEntity<LoginResponse> volunteerLogin(@RequestBody LoginRequest loginRequest) {
         try { // TODO Controller Exception handling
             return ResponseEntity.ok(service.authenticateVolunteer(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -34,7 +34,7 @@ public class LoginController extends ErrorHandler {
         }
     }
 
-    @PostMapping("/beneficiary")
+    @PostMapping("beneficiary")
     public ResponseEntity<LoginResponse> beneficiaryLogin(@RequestBody LoginRequest loginRequest) {
         try { // TODO Controller Exception handling
             return ResponseEntity.ok(service.authenticateBeneficiary(loginRequest.getUsername(), loginRequest.getPassword()));

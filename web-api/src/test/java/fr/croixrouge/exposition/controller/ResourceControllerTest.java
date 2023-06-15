@@ -41,7 +41,7 @@ public class ResourceControllerTest {
     private String loginUserToGetJWTToken(String username, String password) throws Exception {
         LoginRequest loginRequest = new LoginRequest(username, password);
 
-        String result = mockMvc.perform(post("/login")
+        String result = mockMvc.perform(post("/login/volunteer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())

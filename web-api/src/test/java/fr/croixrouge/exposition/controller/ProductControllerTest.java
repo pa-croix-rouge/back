@@ -40,7 +40,7 @@ class ProductControllerTest {
     public void setUp() throws Exception {
         LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
 
-        String result = mockMvc.perform(post("/login")
+        String result = mockMvc.perform(post("/login/volunteer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())

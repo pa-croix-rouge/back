@@ -1,14 +1,9 @@
 package fr.croixrouge.config;
 
-import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.*;
-import fr.croixrouge.model.Event;
-import fr.croixrouge.model.EventSession;
-import fr.croixrouge.model.EventTimeWindow;
-import fr.croixrouge.repository.*;
 import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
+import fr.croixrouge.repository.db.beneficiary.FamilyMemberDBRepository;
 import fr.croixrouge.repository.db.beneficiary.InDBBeneficiaryRepository;
-import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.event.EventDBRepository;
 import fr.croixrouge.repository.db.event.EventSessionDBRepository;
@@ -101,8 +96,8 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public BeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        return new InDBBeneficiaryRepository(beneficiaryDBRepository, userDBRepository, inDBUserRepository);
+    public BeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        return new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
     }
 
     @Bean

@@ -5,6 +5,8 @@ import fr.croixrouge.repository.db.user.UserDB;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Table(name = "beneficiary")
 @Entity
@@ -36,15 +38,19 @@ public class BeneficiaryDB {
     @Column(name = "socialworkernumber")
     private String socialWorkerNumber;
 
-    public BeneficiaryDB(Long id, UserDB userDB, String firstname, String lastname, String phonenumber, Boolean validated, ZonedDateTime birthdate, String socialWorkerNumber) {
+    public BeneficiaryDB(Long id, String firstname, String lastname, String phonenumber, UserDB userDB, Boolean validated, ZonedDateTime birthdate, String socialWorkerNumber) {
         this.id = id;
         this.firstname = firstname;
+        this.lastname = lastname;
         this.phonenumber = phonenumber;
         this.userDB = userDB;
-        this.lastname = lastname;
         this.validated = validated;
         this.birthdate = birthdate;
         this.socialWorkerNumber = socialWorkerNumber;
+    }
+
+    public BeneficiaryDB() {
+
     }
 
     public Long getId() {
@@ -78,6 +84,4 @@ public class BeneficiaryDB {
     public String getSocialWorkerNumber() {
         return socialWorkerNumber;
     }
-
-    //todo faire les family members
 }

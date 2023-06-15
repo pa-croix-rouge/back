@@ -1,6 +1,7 @@
 package fr.croixrouge.repository.db.beneficiary;
 
 import fr.croixrouge.domain.model.Beneficiary;
+import fr.croixrouge.domain.model.FamilyMember;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
@@ -18,25 +19,37 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
 
     private final BeneficiaryDBRepository beneficiaryDBRepository;
 
+    private final FamilyMemberDBRepository familyMemberDBRepository;
+
     private final UserDBRepository userDBRepository;
 
     private final InDBUserRepository inDBUserRepository;
 
-    public InDBBeneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+    public InDBBeneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
         this.beneficiaryDBRepository = beneficiaryDBRepository;
+        this.familyMemberDBRepository = familyMemberDBRepository;
         this.userDBRepository = userDBRepository;
         this.inDBUserRepository = inDBUserRepository;
     }
 
     private BeneficiaryDB toBeneficiaryDB(Beneficiary beneficiary) {
         return new BeneficiaryDB(beneficiary.getId() == null ? null : beneficiary.getId().value(),
-                inDBUserRepository.toUserDB(beneficiary.getUser()),
                 beneficiary.getFirstName(),
                 beneficiary.getLastName(),
                 beneficiary.getPhoneNumber(),
+                inDBUserRepository.toUserDB(beneficiary.getUser()),
                 beneficiary.isValidated(),
                 beneficiary.getBirthDate(),
                 beneficiary.getSocialWorkerNumber()
+        );
+    }
+
+    private FamilyMemberDB toFamilyMemberDB(FamilyMember familyMember, BeneficiaryDB beneficiaryDB) {
+        return new FamilyMemberDB(familyMember.getId() == null ? null : familyMember.getId().value(),
+                familyMember.getFirstName(),
+                familyMember.getLastName(),
+                familyMember.getBirthDate(),
+                beneficiaryDB
         );
     }
 
@@ -50,11 +63,9 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
                 beneficiaryDB.getValidated(),
                 beneficiaryDB.getBirthdate(),
                 beneficiaryDB.getSocialWorkerNumber(),
-                //faire les membres de la famille
-                List.of()
+                StreamSupport.stream(familyMemberDBRepository.findByBeneficiaryDB_Id(beneficiaryDB.getId()).spliterator(), false).map(familyMemberDB -> new FamilyMember(new ID(familyMemberDB.getId()), familyMemberDB.getFirstname(), familyMemberDB.getLastname(), familyMemberDB.getBirthdate())).toList()
         );
     }
-
 
     @Override
     public Optional<Beneficiary> findByUserId(ID id) {
@@ -90,6 +101,9 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
         var beneficiaryDB = beneficiaryDBRepository.save(toBeneficiaryDB(object));
         logger.info("InDBBeneficiaryRepository.save " + beneficiaryDB.getId());
         object.setId(new ID(beneficiaryDB.getId()));
+        object.getFamilyMembers().forEach(familyMember -> {
+            familyMemberDBRepository.save(toFamilyMemberDB(familyMember, beneficiaryDB));
+        });
         return new ID(beneficiaryDB.getId());
     }
 

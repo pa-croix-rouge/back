@@ -6,6 +6,7 @@ import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
+import fr.croixrouge.repository.db.beneficiary.FamilyMemberDBRepository;
 import fr.croixrouge.repository.db.beneficiary.InDBBeneficiaryRepository;
 import fr.croixrouge.repository.db.event.EventDBRepository;
 import fr.croixrouge.repository.db.event.EventSessionDBRepository;
@@ -206,8 +207,8 @@ public class InDBMockRepositoryConfig {
     }
 
     @Bean
-    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        var beneficiaryRepository = new InDBBeneficiaryRepository(beneficiaryDBRepository, userDBRepository, inDBUserRepository);
+    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        var beneficiaryRepository = new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
 
         beneficiaryRepository.save(beneficiary1);
 
