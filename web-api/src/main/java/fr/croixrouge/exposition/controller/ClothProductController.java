@@ -81,4 +81,26 @@ public class ClothProductController extends ErrorHandler {
         }
         return ResponseEntity.ok(clothProductId);
     }
+
+    @PostMapping("/{clothProductId}")
+    public ResponseEntity<ID> update(@PathVariable ID clothProductId, @RequestBody CreateClothProductDTO createClothProductDTO, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        ClothProduct clothProduct = service.findByLocalUnitIdAndId(localUnitId, clothProductId);
+        if (clothProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Product product = new Product(clothProduct.getProduct().getId(), createClothProductDTO.toModel().getProduct().getName(), createClothProductDTO.toModel().getProduct().getQuantity(), createClothProductDTO.toModel().getProduct().getLimit());
+        ID productId = productService.save(product);
+        if (productId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Product productPersisted = productService.findById(productId);
+        ClothProduct clothProductUpdated = new ClothProduct(clothProductId, productPersisted, ClothSize.fromLabel(createClothProductDTO.getSize()));
+        ID clothProductUpdatedId = service.save(clothProductUpdated);
+        if (clothProductUpdatedId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(clothProductUpdatedId);
+    }
 }

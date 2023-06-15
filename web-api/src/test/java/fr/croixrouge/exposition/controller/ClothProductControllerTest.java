@@ -57,7 +57,7 @@ public class ClothProductControllerTest {
                 1L,
                 3L,
                 "Chemises blanches",
-                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
+                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 50),
                 ClothSize.S);
         mockMvc.perform(get("/product/cloth/" + clothProductResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +87,7 @@ public class ClothProductControllerTest {
                 1L,
                 3L,
                 "Chemises blanches",
-                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
+                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 50),
                 ClothSize.S);
         ClothProductResponse clothProductResponse2 = new ClothProductResponse(
                 2L,
@@ -178,6 +178,53 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.name").value(clothProductRequest.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductRequest.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(clothProductRequest.getQuantity().getValue()))
+                .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()));
+    }
+
+    @Test
+    @DisplayName("Test that the id endpoint updates a cloth product when given a valid id and data")
+    public void testUpdateClothByIdSuccessTest() throws Exception {
+        ClothProductResponse clothProductResponse = new ClothProductResponse(
+                1L,
+                3L,
+                "Chemises blanches",
+                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
+                ClothSize.S);
+        mockMvc.perform(get("/product/cloth/" + clothProductResponse.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(clothProductResponse.getId().toString()))
+                .andExpect(jsonPath("$.productId").value(clothProductResponse.getProductId().toString()))
+                .andExpect(jsonPath("$.name").value(clothProductResponse.getName()))
+                .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductResponse.getQuantity().getMeasurementUnit()))
+                .andExpect(jsonPath("$.quantity.value").value(clothProductResponse.getQuantity().getValue()))
+                .andExpect(jsonPath("$.size").value(clothProductResponse.getSize().toString()));
+
+
+        CreateClothProductDTO clothProductRequest = new CreateClothProductDTO(
+                "Chemises blanches",
+                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 50),
+                ClothSize.S.getLabel(),
+                "1",
+                1);
+
+        mockMvc.perform(post("/product/cloth/" + clothProductResponse.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .content(objectMapper.writeValueAsString(clothProductRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        mockMvc.perform(get("/product/cloth/" + clothProductResponse.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(clothProductResponse.getId()))
+                .andExpect(jsonPath("$.productId").value(clothProductResponse.getProductId()))
+                .andExpect(jsonPath("$.name").value(clothProductRequest.getName()))
+                .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductRequest.getQuantity().getMeasurementUnit()))
+                .andExpect(jsonPath("$.quantity.value").value(50))
                 .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()));
     }
 }
