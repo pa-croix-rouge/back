@@ -1,6 +1,5 @@
 package fr.croixrouge.exposition.controller;
 
-import fr.croixrouge.config.RessourceFilter;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.model.User;
@@ -65,18 +64,22 @@ public class VolunteerController extends ErrorHandler {
     @PostMapping("/register")
     public ResponseEntity<ID> post(@RequestBody VolunteerCreationRequest model) {
         LocalUnit localUnit = this.localUnitService.getLocalUnitByCode(model.getLocalUnitCode());
-
+        if (localUnit == null) {
+            return ResponseEntity.notFound().build();
+        }
         User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
         Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false);
 
         ID volunteerId = service.save(volunteer);
-
+        if (volunteerId == null) {
+            return ResponseEntity.internalServerError().build();
+        }
         return ResponseEntity.ok(volunteerId);
     }
 
     //todo : only admin can update volunteer
     @PostMapping("/validate/{id}")
-    public ResponseEntity<String> validateVolunteer(@PathVariable ID id, HttpServletRequest request) {
+    public ResponseEntity<Void> validateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
@@ -94,7 +97,7 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @PostMapping("/invalidate/{id}")
-    public ResponseEntity<String> invalidateVolunteer(@PathVariable ID id, HttpServletRequest request) {
+    public ResponseEntity<Void> invalidateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
