@@ -21,22 +21,23 @@ public class LoginController extends ErrorHandler {
 
     private final AuthenticationService service;
 
-    private final VolunteerService volunteerService;
-
     public LoginController(AuthenticationService service, VolunteerService volunteerService) {
         this.service = service;
-        this.volunteerService = volunteerService;
     }
 
-    @PostMapping
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            String username = loginRequest.getUsername();
-            Volunteer volunteer = volunteerService.findByUsername(username);
-            if (volunteer != null && !volunteer.isValidated()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-            return ResponseEntity.ok(service.authenticate(username, loginRequest.getPassword()));
+    @PostMapping("/volunteer")
+    public ResponseEntity<LoginResponse> volunteerLogin(@RequestBody LoginRequest loginRequest) {
+        try { // TODO Controller Exception handling
+            return ResponseEntity.ok(service.authenticateVolunteer(loginRequest.getUsername(), loginRequest.getPassword()));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @PostMapping("/beneficiary")
+    public ResponseEntity<LoginResponse> beneficiaryLogin(@RequestBody LoginRequest loginRequest) {
+        try { // TODO Controller Exception handling
+            return ResponseEntity.ok(service.authenticateBeneficiary(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

@@ -1,20 +1,22 @@
 package fr.croixrouge.exposition.dto.core;
 
+import fr.croixrouge.domain.model.ID;
+
 public class BeneficiaryResponse {
     public String username;
     public String firstName;
     public String lastName;
     public String phoneNumber;
     public boolean isValidated;
-    public String localUnitId;
+    public Long localUnitId;
 
-    public BeneficiaryResponse(String username, String firstName, String lastName, String phoneNumber, boolean isValidated, String localUnitId) {
+    public BeneficiaryResponse(String username, String firstName, String lastName, String phoneNumber, boolean isValidated, ID localUnitId) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.isValidated = isValidated;
-        this.localUnitId = localUnitId;
+        this.localUnitId = localUnitId.value();
     }
 
     public String getUsername() {
@@ -37,7 +39,7 @@ public class BeneficiaryResponse {
         return isValidated;
     }
 
-    public String getLocalUnitId() {
+    public Long getLocalUnitId() {
         return localUnitId;
     }
 }

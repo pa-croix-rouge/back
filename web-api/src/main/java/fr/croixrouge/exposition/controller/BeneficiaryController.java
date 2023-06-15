@@ -22,6 +22,13 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
 
     @Override
     public BeneficiaryResponse toDTO(Beneficiary model) {
-        return new BeneficiaryResponse(model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getLocalUnitId().value());
+        return new BeneficiaryResponse(
+                model.getUser().getUsername(),
+                model.getFirstName(),
+                model.getLastName(),
+                model.getPhoneNumber(),
+                model.isValidated(),
+                model.getLocalUnitId()
+        );
     }
 }
