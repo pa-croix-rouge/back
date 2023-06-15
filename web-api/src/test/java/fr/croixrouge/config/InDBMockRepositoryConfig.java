@@ -291,8 +291,8 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
-        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
+        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository, storageProductRepository);
 
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S));
         repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M));
