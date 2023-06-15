@@ -28,7 +28,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 model.getLastName(),
                 model.getPhoneNumber(),
                 model.isValidated(),
-                model.getLocalUnitId()
+                model.getUser().getLocalUnit().getId()
         );
     }
 }

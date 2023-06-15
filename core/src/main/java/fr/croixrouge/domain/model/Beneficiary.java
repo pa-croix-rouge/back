@@ -11,11 +11,10 @@ public class Beneficiary extends Entity<ID>{
     private final String phoneNumber;
     private final boolean isValidated;
     private final ZonedDateTime birthDate;
-    private final ID localUnitId;
     private final String socialWorkerNumber;
     private final List<FamilyMember> familyMembers;
 
-    public Beneficiary(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, ZonedDateTime birthDate, ID localUnitId, String socialWorkerNumber, List<FamilyMember> familyMembers) {
+    public Beneficiary(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, ZonedDateTime birthDate, String socialWorkerNumber, List<FamilyMember> familyMembers) {
         super(id);
         this.user = user;
         this.firstName = firstName;
@@ -23,7 +22,6 @@ public class Beneficiary extends Entity<ID>{
         this.phoneNumber = phoneNumber;
         this.isValidated = isValidated;
         this.birthDate = birthDate;
-        this.localUnitId = localUnitId;
         this.socialWorkerNumber = socialWorkerNumber;
         this.familyMembers = familyMembers;
     }
@@ -50,10 +48,6 @@ public class Beneficiary extends Entity<ID>{
 
     public ZonedDateTime getBirthDate() {
         return birthDate;
-    }
-
-    public ID getLocalUnitId() {
-        return localUnitId;
     }
 
     public String getSocialWorkerNumber() {

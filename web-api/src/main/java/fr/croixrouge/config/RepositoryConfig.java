@@ -6,6 +6,8 @@ import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
 import fr.croixrouge.repository.*;
+import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
+import fr.croixrouge.repository.db.beneficiary.InDBBeneficiaryRepository;
 import fr.croixrouge.storage.repository.ProductRepository;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.event.EventDBRepository;
@@ -99,6 +101,12 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
+    public BeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        return new InDBBeneficiaryRepository(beneficiaryDBRepository, userDBRepository, inDBUserRepository);
+    }
+
+    @Bean
+    @Primary
     public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         return new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
     }
@@ -117,4 +125,5 @@ public class RepositoryConfig {
     public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
         return new StorageProductService(storageProductRepository);
     }
+
 }
