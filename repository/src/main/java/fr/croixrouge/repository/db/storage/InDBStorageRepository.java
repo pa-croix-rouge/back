@@ -54,6 +54,11 @@ public class InDBStorageRepository implements StorageRepository {
     }
 
     @Override
+    public Optional<Storage> findByLocalUnitIdAndId(ID localUnitId, ID id) {
+        return Optional.ofNullable(toStorage(storageDBRepository.findByLocalUnitDB_LocalUnitIDAndId(localUnitId.value(), id.value())));
+    }
+
+    @Override
     public ID save(Storage object) {
         return new ID(storageDBRepository.save(toStorageDB(object)).getId());
     }

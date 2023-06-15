@@ -6,6 +6,7 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.ClothProductResponse;
+import fr.croixrouge.exposition.dto.product.CreateClothProductDTO;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.quantifier.NumberedUnit;
 import org.junit.jupiter.api.BeforeEach;
@@ -147,5 +148,36 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$[4].quantity.measurementUnit").value(clothProductResponse5.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$[4].quantity.value").value(clothProductResponse5.getQuantity().getValue()))
                 .andExpect(jsonPath("$[4].size").value(clothProductResponse5.getSize().toString()));
+    }
+
+    @Test
+    @DisplayName("Test that the post endpoint creates a cloth product when given valid data")
+    public void testCreateClothSuccessTest() throws Exception {
+        CreateClothProductDTO clothProductRequest = new CreateClothProductDTO(
+                "T-shirt blanc",
+                new QuantifierDTO(NumberedUnit.NUMBER.getName(), 100),
+                ClothSize.L.getLabel(),
+                "1",
+                1);
+
+        String result = mockMvc.perform(post("/product/cloth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .content(objectMapper.writeValueAsString(clothProductRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        String id = objectMapper.readTree(result).get("value").asText();
+
+        mockMvc.perform(get("/product/cloth/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.productId").isNumber())
+                .andExpect(jsonPath("$.name").value(clothProductRequest.getName()))
+                .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductRequest.getQuantity().getMeasurementUnit()))
+                .andExpect(jsonPath("$.quantity.value").value(clothProductRequest.getQuantity().getValue()))
+                .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()));
     }
 }

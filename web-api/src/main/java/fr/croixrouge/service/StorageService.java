@@ -16,4 +16,8 @@ public class StorageService extends CRUDService<ID, Storage, StorageRepository> 
     public List<Storage> findAllByLocalUnitId(ID localUnitId) {
         return repository.findAllByLocalUnitId(localUnitId);
     }
+
+    public Storage findByLocalUnitIdAndId(ID localUnitId, ID id) {
+        return repository.findByLocalUnitIdAndId(localUnitId, id).orElse(null);
+    }
 }
