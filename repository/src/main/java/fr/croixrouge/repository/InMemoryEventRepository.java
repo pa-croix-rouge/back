@@ -160,6 +160,11 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
+    public boolean removeParticipant(ID eventId, ID sessionId, ID timeWindowId, ID participantId) {
+        return false;
+    }
+
+    @Override
     public void updateEventSession(EventSession event) {
 
     }

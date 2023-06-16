@@ -185,4 +185,13 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         }
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/unregister")
+    public ResponseEntity<String> deleteParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
+        boolean isRegistered = service.removeParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getTimeWindowId()), new ID(eventRegistrationRequest.getParticipantId()));
+        if (!isRegistered) {
+            return ResponseEntity.internalServerError().body("Cannot register participant, event session doesn't exist, is full or participant already registered");
+        }
+        return ResponseEntity.ok().build();
+    }
 }
