@@ -24,4 +24,14 @@ public class InMemoryFoodProductRepository extends InMemoryCRUDRepository<ID, Fo
     public Optional<FoodProduct> findByProductId(ID productId) {
         return findAll().stream().filter(foodProduct -> foodProduct.getProduct().getId().equals(productId)).findFirst();
     }
+
+    @Override
+    public Optional<FoodProduct> findByLocalUnitIdAndId(ID localUnitId, ID id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<FoodProduct> findAllByLocalUnitId(ID localUnitId) {
+        return List.of();
+    }
 }

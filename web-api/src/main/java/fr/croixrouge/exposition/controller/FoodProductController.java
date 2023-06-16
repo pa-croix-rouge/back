@@ -3,19 +3,24 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.product.CreateFoodProductDTO;
 import fr.croixrouge.exposition.dto.product.FoodProductResponse;
+import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.*;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/product/food")
-public class FoodProductController extends CRUDController<ID, FoodProduct, FoodProductService, FoodProductResponse, CreateFoodProductDTO> {
+public class FoodProductController extends ErrorHandler {
 
+    private final FoodProductService service;
     private final ProductService productService;
 
     private final ProductLimitService productLimitService;
@@ -24,33 +29,38 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
 
     private final StorageService storageService;
 
-    public FoodProductController(FoodProductService service, ProductService productService, ProductLimitService productLimitService, StorageProductService storageProductService, StorageService storageService) {
-        super(service);
+    private final AuthenticationService authenticationService;
+
+    public FoodProductController(FoodProductService service, ProductService productService, ProductLimitService productLimitService, StorageProductService storageProductService, StorageService storageService, AuthenticationService authenticationService) {
+        this.service = service;
         this.productService = productService;
         this.productLimitService = productLimitService;
         this.storageProductService = storageProductService;
         this.storageService = storageService;
+        this.authenticationService = authenticationService;
     }
 
-    @Override
     public FoodProductResponse toDTO(FoodProduct model) {
         return new FoodProductResponse(model);
     }
 
-    @Override
     @GetMapping(value = "/{id}")
-    public ResponseEntity<FoodProductResponse> getByID(@PathVariable ID id) {
-        FoodProduct foodProduct = service.findById(id);
-        if (foodProduct == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<FoodProductResponse> getByID(@PathVariable ID id, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        FoodProduct foodProduct = service.findByLocalUnitIdAndId(localUnitId, id);
         return ResponseEntity.ok(toDTO(foodProduct));
     }
 
-    @Override
+    @GetMapping()
+    public ResponseEntity<List<FoodProductResponse>> getAll(HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        return ResponseEntity.ok(service.findAllByLocalUnitId(localUnitId).stream().map(this::toDTO).toList());
+    }
+
     @PostMapping()
-    public ResponseEntity<ID> post(@RequestBody CreateFoodProductDTO model) {
-        Storage storage = storageService.findById(new ID(model.getStorageId()));
+    public ResponseEntity<ID> post(@RequestBody CreateFoodProductDTO model, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        Storage storage = storageService.findByLocalUnitIdAndId(localUnitId, new ID(model.getStorageId()));
         if (storage == null) {
             return ResponseEntity.notFound().build();
         }
@@ -75,7 +85,28 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
         return ResponseEntity.ok(foodProductId);
     }
 
-    @Override
+    @PostMapping("/{id}")
+    public ResponseEntity<ID> update(@PathVariable ID id, @RequestBody CreateFoodProductDTO model, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        FoodProduct foodProduct = service.findByLocalUnitIdAndId(localUnitId, id);
+        if (foodProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), model.toModel().getProduct().getLimit());
+        ID productId = productService.save(product);
+        if (productId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Product productPersisted = productService.findById(productId);
+        FoodProduct foodProductUpdated = new FoodProduct(id, productPersisted, model.toModel().getFoodConservation(), model.toModel().getExpirationDate(), model.toModel().getOptimalConsumptionDate(), model.getPrice());
+        ID foodProductUpdatedId = service.save(foodProductUpdated);
+        if (foodProductUpdatedId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(foodProductUpdatedId);
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable ID id) {
         FoodProduct foodProduct = service.findById(id);

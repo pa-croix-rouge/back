@@ -17,6 +17,8 @@ public class FoodProductResponse extends ProductResponse {
 
     private String optimalConsumptionDate;
 
+    private Long price;
+
     public FoodProductResponse() {
     }
 
@@ -26,14 +28,16 @@ public class FoodProductResponse extends ProductResponse {
         this.foodConservation = product.getFoodConservation().getLabel();
         this.expirationDate = product.getExpirationDate().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
         this.optimalConsumptionDate = product.getOptimalConsumptionDate().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
+        this.price = (long) product.getPrice();
     }
 
-    public FoodProductResponse(Long id, Long productId, String name, QuantifierDTO quantifierDTO, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate) {
+    public FoodProductResponse(Long id, Long productId, String name, QuantifierDTO quantifierDTO, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate, Long price) {
         super(productId, name, quantifierDTO);
         this.id = id;
         this.foodConservation = foodConservation.getLabel();
         this.expirationDate = expirationDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
         this.optimalConsumptionDate = optimalConsumptionDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
+        this.price = price;
     }
 
     public static FoodProductResponse fromFoodProduct(FoodProduct product) {
@@ -54,5 +58,9 @@ public class FoodProductResponse extends ProductResponse {
 
     public String getOptimalConsumptionDate() {
         return optimalConsumptionDate;
+    }
+
+    public Long getPrice() {
+        return price;
     }
 }

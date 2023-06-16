@@ -82,7 +82,7 @@ public class ClothProductControllerTest {
 
     @Order(3)
     @Test
-    @DisplayName("Test that the id endpoint returns a cloth product when given a valid id")
+    @DisplayName("Test that the get endpoint returns a list of cloths product")
     public void testGetAllClothSuccessTest() throws Exception {
         ClothProductResponse clothProductResponse1 = new ClothProductResponse(
                 1L,

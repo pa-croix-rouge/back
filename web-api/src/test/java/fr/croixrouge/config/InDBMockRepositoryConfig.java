@@ -44,7 +44,10 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
@@ -305,8 +308,8 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
-        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository);
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
+        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository, storageProductRepository);
 
         repository.save(new FoodProduct(new ID(1L),
                 food1,

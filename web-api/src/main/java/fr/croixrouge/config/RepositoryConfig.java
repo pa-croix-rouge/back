@@ -86,8 +86,8 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
-        return new InDBFoodProductRepository(foodProductDBRepository, productRepository);
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
+        return new InDBFoodProductRepository(foodProductDBRepository, productRepository, storageProductRepository);
     }
 
     @Bean
