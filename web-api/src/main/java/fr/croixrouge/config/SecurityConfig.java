@@ -41,6 +41,8 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/login/**"),
                 new AntPathRequestMatcher("/volunteer/register"),
                 new AntPathRequestMatcher("/volunteer/token"),
+                new AntPathRequestMatcher("/beneficiary/register"),
+                new AntPathRequestMatcher("/beneficiary/token"),
                 new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name())
         );
 
@@ -50,6 +52,7 @@ public class SecurityConfig {
                 auth
                     .requestMatchers("/login/**").permitAll()
                     .requestMatchers("/volunteer/register").permitAll()
+                    .requestMatchers("/beneficiary/register").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
                     .anyRequest().authenticated();
             })

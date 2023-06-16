@@ -37,7 +37,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok(this.toDTO(beneficiary));
     }
 
-    //todo : only admin can update volunteer
+    //todo : only admin can update beneficiary
     @PostMapping("/validate/{id}")
     public ResponseEntity<BeneficiaryResponse> validateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
         Beneficiary beneficiary = service.findByUserId(id);
@@ -56,7 +56,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok().build();
     }
 
-    //todo : only admin can update volunteer
+    //todo : only admin can update beneficiary
     @PostMapping("/invalidate/{id}")
     public ResponseEntity<BeneficiaryResponse> invalidateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
         Beneficiary beneficiary = service.findByUserId(id);
