@@ -1,13 +1,16 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.config.JwtTokenConfig;
+import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.UserRepository;
+import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.exposition.dto.core.LoginResponse;
 import fr.croixrouge.model.UserSecurity;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +21,16 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenConfig jwtTokenConfig;
     private final AuthenticationManager authenticationManager;
+    private final VolunteerRepository volunteerRepository;
+    private final BeneficiaryRepository beneficiaryRepository;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenConfig jwtTokenConfig, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenConfig jwtTokenConfig, AuthenticationManager authenticationManager, VolunteerRepository volunteerRepository, BeneficiaryRepository beneficiaryRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenConfig = jwtTokenConfig;
         this.authenticationManager = authenticationManager;
+        this.volunteerRepository = volunteerRepository;
+        this.beneficiaryRepository = beneficiaryRepository;
     }
 
     public void register() {
@@ -42,7 +49,7 @@ public class AuthenticationService {
                 .build();*/
     }
 
-    public LoginResponse authenticate(String userName, String password) {
+    public LoginResponse authenticateVolunteer(String userName, String password) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userName,
@@ -52,6 +59,10 @@ public class AuthenticationService {
 
         var user = userRepository.findByUsername(userName).map(UserSecurity::new)
                 .orElseThrow();
+
+        if (volunteerRepository.findByUsername(user.getUsername()).isEmpty()) {
+            throw new UsernameNotFoundException("User " + user.getUsername() + " is not a volunteer.");
+        }
         var jwtToken = jwtTokenConfig.generateToken(user);
 
         revokeAllUserTokens(user);
@@ -59,6 +70,27 @@ public class AuthenticationService {
         return new LoginResponse(jwtToken);
     }
 
+    public LoginResponse authenticateBeneficiary(String userName, String password) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userName,
+                        password
+                )
+        );
+
+        var user = userRepository.findByUsername(userName).map(UserSecurity::new)
+                .orElseThrow();
+        if (beneficiaryRepository.findByUsername(user.getUsername()).isEmpty()) {
+            throw new UsernameNotFoundException("User " + user.getUsername() + " is not a beneficiary.");
+        }
+        var jwtToken = jwtTokenConfig.generateToken(user);
+
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+        return new LoginResponse(jwtToken);
+    }
+
+    //todo : implement
     private void saveUserToken(UserSecurity user, String jwtToken) {
 //        var token = Token.builder()
 //                .user(user)
@@ -70,6 +102,7 @@ public class AuthenticationService {
 //        tokenRepository.save(token);
     }
 
+    //todo : implement
     private void revokeAllUserTokens(UserSecurity user) {
 //        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
 //        if (validUserTokens.isEmpty())

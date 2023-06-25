@@ -1,5 +1,9 @@
 package fr.croixrouge.config;
 
+import fr.croixrouge.domain.repository.*;
+import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
+import fr.croixrouge.repository.db.beneficiary.FamilyMemberDBRepository;
+import fr.croixrouge.repository.db.beneficiary.InDBBeneficiaryRepository;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.event.EventDBRepository;
 import fr.croixrouge.repository.db.event.EventSessionDBRepository;
@@ -92,6 +96,12 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
+    public BeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        return new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
+    }
+
+    @Bean
+    @Primary
     public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         return new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
     }
@@ -110,4 +120,5 @@ public class RepositoryConfig {
     public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
         return new StorageProductService(storageProductRepository);
     }
+
 }
