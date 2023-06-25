@@ -12,12 +12,11 @@ import fr.croixrouge.service.BeneficiaryService;
 import fr.croixrouge.service.LocalUnitService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/beneficiaries")
 public class BeneficiaryController extends CRUDController<ID, Beneficiary, BeneficiaryService, BeneficiaryResponse, BeneficiaryCreationRequest> {
 
