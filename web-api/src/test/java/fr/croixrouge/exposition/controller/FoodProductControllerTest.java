@@ -222,8 +222,8 @@ class FoodProductControllerTest {
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.GRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(950))
                 .andExpect(jsonPath("$.foodConservation").value(foodProductResponse.getFoodConservation()))
-                .andExpect(jsonPath("$.expirationDate").value(foodProductResponse.getExpirationDate()))
-                .andExpect(jsonPath("$.optimalConsumptionDate").value(foodProductResponse.getOptimalConsumptionDate()));
+                .andExpect(jsonPath("$.expirationDate").value(timestampToLocalDateTime(createProductDTO.getExpirationDate()).toString()))
+                .andExpect(jsonPath("$.optimalConsumptionDate").value(timestampToLocalDateTime(createProductDTO.getOptimalConsumptionDate()).toString()));
     }
 
     @Test
