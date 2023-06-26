@@ -41,7 +41,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return eventResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/details")
+    @PostMapping(value = "/details", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> createSingleEvent(@RequestBody SingleEventCreationRequest singleEventCreationRequest) {
         var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
         var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
@@ -50,7 +50,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(String.valueOf(eventId));
     }
 
-    @PostMapping("/details/{eventId}/{sessionId}")
+    @PostMapping(value = "/details/{eventId}/{sessionId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> updateSingleEvent(@PathVariable ID eventId, @PathVariable ID sessionId, @RequestBody SingleEventCreationRequest singleEventCreationRequest) {
         var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
         var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
@@ -146,7 +146,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(eventResponse);
     }
 
-    @PostMapping("/sessions")
+    @PostMapping(value = "/sessions",consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> createRecurrentEvent(@RequestBody RecurrentEventCreationRequest recurrentEventCreationRequest) {
         var referrer = volunteerService.findById(new ID(recurrentEventCreationRequest.getReferrerId()));
         var localUnit = localUnitService.findById(new ID(recurrentEventCreationRequest.getLocalUnitId()));
@@ -155,7 +155,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(String.valueOf(eventId));
     }
 
-    @PostMapping("/sessions/{eventId}/{sessionId}")
+    @PostMapping(value = "/sessions/{eventId}/{sessionId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> updateRecurrentEvent(@PathVariable ID eventId, @PathVariable ID sessionId, @RequestBody SingleEventCreationRequest singleEventCreationRequest) {
         var referrer = volunteerService.findById(new ID(singleEventCreationRequest.getReferrerId()));
         var localUnit = localUnitService.findById(new ID(singleEventCreationRequest.getLocalUnitId()));
@@ -177,7 +177,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> registerParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
         boolean isRegistered = service.registerParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getTimeWindowId()), new ID(eventRegistrationRequest.getParticipantId()));
         if (!isRegistered) {
@@ -186,7 +186,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/unregister")
+    @DeleteMapping(value = "/unregister", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> deleteParticipant(@RequestBody EventRegistrationRequest eventRegistrationRequest) {
         boolean isRegistered = service.removeParticipant(new ID(eventRegistrationRequest.getEventId()), new ID(eventRegistrationRequest.getSessionId()), new ID(eventRegistrationRequest.getTimeWindowId()), new ID(eventRegistrationRequest.getParticipantId()));
         if (!isRegistered) {

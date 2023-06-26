@@ -35,7 +35,7 @@ public abstract class CRUDController<K extends ID, V extends Entity<K>, S extend
         return ResponseEntity.ok(service.findAll().stream().map(this::toDTO).toList());
     }
 
-    @PostMapping()
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<K> post(@RequestBody CREATION_DTO model) {
         return ResponseEntity.ok(service.save(toModel(model)));
     }

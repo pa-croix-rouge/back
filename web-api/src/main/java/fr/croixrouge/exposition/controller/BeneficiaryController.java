@@ -74,7 +74,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity<BeneficiaryResponse> register(@RequestBody BeneficiaryCreationRequest creationRequest) {
         LocalUnit localUnit = this.localUnitService.getLocalUnitByCode(creationRequest.getLocalUnitCode());
         if (localUnit == null) {

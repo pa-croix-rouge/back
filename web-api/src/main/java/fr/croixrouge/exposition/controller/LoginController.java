@@ -1,7 +1,6 @@
 package fr.croixrouge.exposition.controller;
 
 
-import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.core.LoginResponse;
 import fr.croixrouge.exposition.error.ErrorHandler;
@@ -25,7 +24,7 @@ public class LoginController extends ErrorHandler {
         this.service = service;
     }
 
-    @PostMapping("/volunteer")
+    @PostMapping(value = "/volunteer", consumes = "application/json", produces = "application/json")
     public ResponseEntity<LoginResponse> volunteerLogin(@RequestBody LoginRequest loginRequest) {
         System.out.println("volunteerLogin");
         try { // TODO Controller Exception handling
@@ -35,7 +34,7 @@ public class LoginController extends ErrorHandler {
         }
     }
 
-    @PostMapping("/beneficiary")
+    @PostMapping(value = "/beneficiary", consumes = "application/json", produces = "application/json")
     public ResponseEntity<LoginResponse> beneficiaryLogin(@RequestBody LoginRequest loginRequest) {
         try { // TODO Controller Exception handling
             return ResponseEntity.ok(service.authenticateBeneficiary(loginRequest.getUsername(), loginRequest.getPassword()));
