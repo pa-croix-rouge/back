@@ -16,6 +16,8 @@ public class FoodStorageProductResponse extends StorageProductResponse {
 
     private String optimalConsumptionDate;
 
+    private Long price;
+
     public FoodStorageProductResponse() {
     }
 
@@ -25,14 +27,16 @@ public class FoodStorageProductResponse extends StorageProductResponse {
         this.foodConservation = product.getFoodConservation().getLabel();
         this.expirationDate = product.getExpirationDate().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
         this.optimalConsumptionDate = product.getOptimalConsumptionDate().withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
+        this.price = (long) product.getPrice();
     }
 
-    public FoodStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate) {
+    public FoodStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate, Long price) {
         super(productId, storageProductId, storageId, productName, quantity, quantifierQuantity, quantifierName);
         this.id = id;
         this.foodConservation = foodConservation.getLabel();
         this.expirationDate = expirationDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
         this.optimalConsumptionDate = optimalConsumptionDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
+        this.price = price;
     }
 
     public static FoodStorageProductResponse fromFoodProduct(FoodProduct product, StorageProduct storageProduct) {
@@ -69,5 +73,13 @@ public class FoodStorageProductResponse extends StorageProductResponse {
 
     public void setOptimalConsumptionDate(ZonedDateTime optimalConsumptionDate) {
         this.optimalConsumptionDate = optimalConsumptionDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
     }
 }
