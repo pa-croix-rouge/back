@@ -40,7 +40,7 @@ public class VolunteerController extends ErrorHandler {
         return new VolunteerResponse(model.getId().value(), model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getUser().getLocalUnit().getId().value());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<VolunteerResponse> get(@PathVariable String id) {
         Volunteer volunteer = service.findById(new ID(id));
         return ResponseEntity.ok(this.toDTO(volunteer));
@@ -54,14 +54,14 @@ public class VolunteerController extends ErrorHandler {
         return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId()).stream().map(this::toDTO).sorted(Comparator.comparing(v -> v.username)).collect(Collectors.toList()));
     }
 
-    @GetMapping("/token")
+    @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<VolunteerResponse> get(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
         return ResponseEntity.ok(this.toDTO(volunteer));
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ID> post(@RequestBody VolunteerCreationRequest model) {
         LocalUnit localUnit = this.localUnitService.getLocalUnitByCode(model.getLocalUnitCode());
         if (localUnit == null) {

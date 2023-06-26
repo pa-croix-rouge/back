@@ -46,7 +46,7 @@ public class FoodProductController extends CRUDController<ID, FoodProduct, FoodP
     }
 
     @Override
-    @PostMapping()
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<ID> post(@RequestBody CreateFoodProductDTO model) {
         Product product = model.toModel().getProduct();
         ID productId = productService.save(product);

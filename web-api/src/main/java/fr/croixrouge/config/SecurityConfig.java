@@ -38,7 +38,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         List<RequestMatcher> excludedFilterUrl = List.of(
-                new AntPathRequestMatcher("/login/**"),
+                new AntPathRequestMatcher("/login/volunteer"),
                 new AntPathRequestMatcher("/volunteer/register"),
                 new AntPathRequestMatcher("/volunteer/token"),
                 new AntPathRequestMatcher("/beneficiary/register"),
