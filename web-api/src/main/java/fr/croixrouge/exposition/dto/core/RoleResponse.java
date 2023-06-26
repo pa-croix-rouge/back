@@ -10,28 +10,36 @@ import java.util.Objects;
 import java.util.Set;
 
 public class RoleResponse {
+
+    private Long id;
     private String name;
     private String description;
     private Map<Resources, Set<Operations>> authorizations;
-    private List<Long> userIds;
+    private List<Long> userIDs;
 
     public RoleResponse() {
     }
 
-    public RoleResponse(String name, String description, Map<Resources, Set<Operations>> authorizations, List<Long> userIds) {
+    public RoleResponse(Long id, String name, String description, Map<Resources, Set<Operations>> authorizations, List<Long> userIds) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
-        this.userIds = userIds;
+        this.userIDs = userIds;
     }
 
     public static RoleResponse fromRole(Role role) {
         return new RoleResponse(
+                role.getId().value(),
                 role.getName(),
                 role.getDescription(),
                 role.getAuthorizations(),
                 List.of()// role.getUserIds().stream().map(ID::value).toList()
         );
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -46,8 +54,8 @@ public class RoleResponse {
         return authorizations;
     }
 
-    public List<Long> getUserIds() {
-        return userIds;
+    public List<Long> getUserIDs() {
+        return userIDs;
     }
 
     @Override
@@ -55,11 +63,11 @@ public class RoleResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoleResponse that = (RoleResponse) o;
-        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(authorizations, that.authorizations) && Objects.equals(userIds, that.userIds);
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(authorizations, that.authorizations) && Objects.equals(userIDs, that.userIDs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, authorizations, userIds);
+        return Objects.hash(name, description, authorizations, userIDs);
     }
 }

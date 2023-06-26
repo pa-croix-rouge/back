@@ -2,6 +2,8 @@ package fr.croixrouge.domain.model;
 
 public enum Resources {
 
+    BENEFICIARY(),
+
     RESOURCE(),
 
     EVENT(),

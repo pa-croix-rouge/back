@@ -33,7 +33,7 @@ public class LoginControllerTest {
     public void loginSuccessTest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
 
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post("/login/volunteer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -45,7 +45,7 @@ public class LoginControllerTest {
     public void loginFailedTest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("defaultUser", "wrongPassword");
 
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post("/login/volunteer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isUnauthorized());

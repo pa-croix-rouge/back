@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableMethodSecurity
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
@@ -14,8 +13,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**") // Apply CORS to all endpoints
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(false)
-                .maxAge(3600);
+                .exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Headers", "Access-Control-Allow-Methods")
+//                .allowedHeaders("*")
+                ;
+
     }
 }

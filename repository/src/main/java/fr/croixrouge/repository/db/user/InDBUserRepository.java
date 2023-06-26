@@ -1,6 +1,7 @@
 package fr.croixrouge.repository.db.user;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
@@ -78,5 +79,10 @@ public class InDBUserRepository implements UserRepository {
     @Override
     public Optional<User> findByUsername(String username) {
         return userDBRepository.findByUsername(username).map(this::toUser);
+    }
+
+    @Override
+    public List<User> findAllByRole(Role role) {
+        return userDBRepository.findByRoleDBs_RoleID(role.getId().value()).stream().map(this::toUser).toList();
     }
 }

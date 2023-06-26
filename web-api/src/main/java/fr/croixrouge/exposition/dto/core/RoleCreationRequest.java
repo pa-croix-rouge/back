@@ -42,4 +42,7 @@ public class RoleCreationRequest extends CreationDTO<Role> {
     public Role toModel() {
         return new Role(null, name, description, authorizations, null, null);
     }
+    public Role toModel(LocalUnit localUnit) {
+        return new Role(null, name, description, authorizations, localUnit, null);
+    }
 }

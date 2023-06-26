@@ -5,6 +5,9 @@ import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
 import fr.croixrouge.repository.EventRepository;
+import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
+import fr.croixrouge.repository.db.beneficiary.FamilyMemberDBRepository;
+import fr.croixrouge.repository.db.beneficiary.InDBBeneficiaryRepository;
 import fr.croixrouge.repository.db.event.EventDBRepository;
 import fr.croixrouge.repository.db.event.EventSessionDBRepository;
 import fr.croixrouge.repository.db.event.EventTimeWindowDBRepository;
@@ -56,9 +59,10 @@ public class InDBMockRepositoryConfig {
     private final PasswordEncoder passwordEncoder;
 
     private final Role managerRole, defaultRole, roleForAuthTest;
-    private final User managerUser, defaultUser, volunteerUser, southernManagerUser, userForAuthTest;
+    private final User managerUser, defaultUser, volunteerUser, southernManagerUser, userForAuthTest, beneficiaryUser;
 
     private final Volunteer volunteer1, southernVolunteer1;
+    private final Beneficiary beneficiary1;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
 
     private final Address address2 = new Address(Department.getDepartmentFromPostalCode("83"), "83000", "Toulon", "62 Boulevard de Strasbourg");
@@ -108,9 +112,13 @@ public class InDBMockRepositoryConfig {
 
         managerUser = new User(null, "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
 
+        beneficiaryUser = new User(null, "benefUser", passwordEncoder.encode("benefPassword"), localUnit, List.of(defaultRole));
+
         volunteer1 = new Volunteer(null, managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
         southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
+
+        beneficiary1 = new Beneficiary(null, beneficiaryUser, "beneficiaryFirstName", "beneficiaryLastName", "+33 6 00 00 00 00", true, ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")), "1223", List.of());
 
         userForAuthTest = new User(null, "userForAuthTest", passwordEncoder.encode("userForAuthTestPassword"), southernLocalUnit, List.of(roleForAuthTest));
 
@@ -199,6 +207,15 @@ public class InDBMockRepositoryConfig {
         volunteerRepository.save( new Volunteer(null, userForAuthTest, "userForAuthTest", "userForAuthTest", "+33 6 83 83 83 83", true));
 
         return volunteerRepository;
+    }
+
+    @Bean
+    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        var beneficiaryRepository = new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
+
+        beneficiaryRepository.save(beneficiary1);
+
+        return beneficiaryRepository;
     }
 
     @Bean

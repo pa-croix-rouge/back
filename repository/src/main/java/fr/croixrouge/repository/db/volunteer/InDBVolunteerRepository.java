@@ -103,12 +103,13 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public boolean validateVolunteerAccount(Volunteer volunteer) {
+        //todo
         return false;
     }
 
     @Override
     public boolean invalidateVolunteerAccount(Volunteer volunteer) {
+        //todo
         return false;
     }
-
 }

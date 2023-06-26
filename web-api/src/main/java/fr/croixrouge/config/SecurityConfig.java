@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.crypto.SecretKey;
 import java.util.List;
@@ -37,17 +38,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         List<RequestMatcher> excludedFilterUrl = List.of(
-                new AntPathRequestMatcher("/login"),
+                new AntPathRequestMatcher("/login/volunteer"),
                 new AntPathRequestMatcher("/volunteer/register"),
                 new AntPathRequestMatcher("/volunteer/token"),
-                new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name()) );
+                new AntPathRequestMatcher("/beneficiary/register"),
+                new AntPathRequestMatcher("/beneficiary/token"),
+                new AntPathRequestMatcher("/v3/api-docs"),
+                new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name())
+        );
 
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests( auth -> {
                 auth
-                    .requestMatchers("/login").permitAll()
+                    .requestMatchers("/login/**").permitAll()
                     .requestMatchers("/volunteer/register").permitAll()
+                    .requestMatchers("/v3/api-docs").permitAll()
+                    .requestMatchers("/beneficiary/register").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
                     .anyRequest().authenticated();
             })
@@ -61,6 +68,7 @@ public class SecurityConfig {
             .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/storage/**"), excludedFilterUrl, Resources.STORAGE), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/role/**"), excludedFilterUrl, Resources.ROLE), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/localunit/**"), excludedFilterUrl, Resources.LOCAL_UNIT), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new RessourceFilter( new AntPathRequestMatcher("/beneficiary/**"), excludedFilterUrl, Resources.BENEFICIARY), UsernamePasswordAuthenticationFilter.class)
 
             .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.GET.name()), excludedFilterUrl, Operations.READ), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.DELETE.name()), excludedFilterUrl, Operations.DELETE), UsernamePasswordAuthenticationFilter.class)

@@ -7,13 +7,15 @@ import fr.croixrouge.domain.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService extends CRUDService<ID, User, UserRepository> {
 
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         super(userRepository);
         this.passwordEncoder = passwordEncoder;
     }
@@ -48,6 +50,10 @@ public class UserService extends CRUDService<ID, User, UserRepository> {
     public void addRole(ID id, Role role) {
         User user = findById(id);
         update(user.addRole(role));
+    }
+
+    public List<User> findByRole(Role role) {
+        return repository.findAllByRole(role);
     }
 
 }

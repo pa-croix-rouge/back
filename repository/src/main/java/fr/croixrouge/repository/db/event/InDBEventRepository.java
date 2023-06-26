@@ -235,6 +235,30 @@ public class InDBEventRepository implements EventRepository {
     }
 
     @Override
+    public boolean removeParticipant(ID eventId, ID sessionId, ID timeWindowId, ID participantId) {
+        Event event = this.findById(eventId).orElse(null);
+        if (event == null) {
+            return false;
+        }
+        EventSession session = event.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+        if (session == null) {
+            return false;
+        }
+        EventTimeWindow timeWindow = session.getTimeWindows().stream().filter(t -> t.getId().equals(timeWindowId)).findFirst().orElse(null);
+        if (timeWindow == null) {
+            return false;
+        }
+
+        if (!timeWindow.getParticipants().contains(participantId)) {
+            return false;
+        }
+        timeWindow.getParticipants().remove(participantId);
+
+        eventTimeWindowDBRepository.save(toEventTimeWindowDB(timeWindow, toEventSessionDB(session, toEventDB(event))));
+        return true;
+    }
+
+    @Override
     public void updateEventSession(EventSession event) {
 
     }

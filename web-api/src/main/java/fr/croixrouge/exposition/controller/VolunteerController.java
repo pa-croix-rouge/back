@@ -1,6 +1,5 @@
 package fr.croixrouge.exposition.controller;
 
-import fr.croixrouge.config.RessourceFilter;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.LocalUnit;
 import fr.croixrouge.domain.model.User;
@@ -14,8 +13,6 @@ import fr.croixrouge.service.UserService;
 import fr.croixrouge.service.VolunteerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -43,8 +40,7 @@ public class VolunteerController extends ErrorHandler {
         return new VolunteerResponse(model.getId().value(), model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getUser().getLocalUnit().getId().value());
     }
 
-    @GetMapping("/{id}")
-//    @PreAuthorize("hasAuthority('VOLUNTEER_READ')")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<VolunteerResponse> get(@PathVariable String id) {
         Volunteer volunteer = service.findById(new ID(id));
         return ResponseEntity.ok(this.toDTO(volunteer));
@@ -58,27 +54,32 @@ public class VolunteerController extends ErrorHandler {
         return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId()).stream().map(this::toDTO).sorted(Comparator.comparing(v -> v.username)).collect(Collectors.toList()));
     }
 
-    @GetMapping("/token")
+    @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<VolunteerResponse> get(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
         return ResponseEntity.ok(this.toDTO(volunteer));
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ID> post(@RequestBody VolunteerCreationRequest model) {
         LocalUnit localUnit = this.localUnitService.getLocalUnitByCode(model.getLocalUnitCode());
-
+        if (localUnit == null) {
+            return ResponseEntity.notFound().build();
+        }
         User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
         Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false);
 
         ID volunteerId = service.save(volunteer);
-
+        if (volunteerId == null) {
+            return ResponseEntity.internalServerError().build();
+        }
         return ResponseEntity.ok(volunteerId);
     }
 
+    //todo : only admin can update volunteer
     @PostMapping("/validate/{id}")
-    public ResponseEntity<String> validateVolunteer(@PathVariable ID id, HttpServletRequest request) {
+    public ResponseEntity<Void> validateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
@@ -96,7 +97,7 @@ public class VolunteerController extends ErrorHandler {
     }
 
     @PostMapping("/invalidate/{id}")
-    public ResponseEntity<String> invalidateVolunteer(@PathVariable ID id, HttpServletRequest request) {
+    public ResponseEntity<Void> invalidateVolunteer(@PathVariable ID id, HttpServletRequest request) {
         Volunteer volunteer = service.findById(id);
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
