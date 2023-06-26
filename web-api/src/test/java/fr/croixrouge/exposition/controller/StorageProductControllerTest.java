@@ -202,8 +202,8 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.foodProducts[0].quantifierQuantity").value(food1.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.foodProducts[0].quantifierName").value(food1.getQuantifierName()))
                 .andExpect(jsonPath("$.foodProducts[0].foodConservation").value(food1.getFoodConservation()))
-                .andExpect(jsonPath("$.foodProducts[0].expirationDate").value(food1.getExpirationDate()))
-                .andExpect(jsonPath("$.foodProducts[0].optimalConsumptionDate").value(food1.getOptimalConsumptionDate()))
+                .andExpect(jsonPath("$.foodProducts[0].expirationDate").value(timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$.foodProducts[0].optimalConsumptionDate").value(timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString()))
                 .andExpect(jsonPath("$.foodProducts[0].price").value(food1.getPrice()))
                 .andExpect(jsonPath("$.foodProducts[1].id").value(food2.getId()))
                 .andExpect(jsonPath("$.foodProducts[1].productId").value(food2.getProductId()))
@@ -214,8 +214,8 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.foodProducts[1].quantifierQuantity").value(food2.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.foodProducts[1].quantifierName").value(food2.getQuantifierName()))
                 .andExpect(jsonPath("$.foodProducts[1].foodConservation").value(food2.getFoodConservation()))
-                .andExpect(jsonPath("$.foodProducts[1].expirationDate").value(food2.getExpirationDate()))
-                .andExpect(jsonPath("$.foodProducts[1].optimalConsumptionDate").value(food2.getOptimalConsumptionDate()))
+                .andExpect(jsonPath("$.foodProducts[1].expirationDate").value(timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString()))
+                .andExpect(jsonPath("$.foodProducts[1].optimalConsumptionDate").value(timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString()))
                 .andExpect(jsonPath("$.foodProducts[1].price").value(food2.getPrice()));
     }
 
