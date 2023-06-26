@@ -97,8 +97,8 @@ class FoodProductControllerTest {
                 "Pommes",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE,
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())),
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())),
+                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")),
                 1L
         );
         FoodProductResponse foodProductResponse2 = new FoodProductResponse(
@@ -107,8 +107,8 @@ class FoodProductControllerTest {
                 "Pates",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE,
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())),
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())),
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0, 0), ZoneId.of("Europe/Paris")),
                 1L
         );
 
@@ -179,8 +179,8 @@ class FoodProductControllerTest {
                 "Pommes",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE,
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())),
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime())),
+                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")),
                 1L
         );
         mockMvc.perform(get("/product/food/" + foodProductResponse.getId())
