@@ -35,7 +35,6 @@ public abstract class ErrorHandler {
 
     @ExceptionHandler(value = {HttpMediaTypeNotSupportedException.class})
     public ResponseEntity<?> manageSimpleServiceException(final HttpMediaTypeNotSupportedException simpleServiceException) {
-        simpleServiceException.printStackTrace();
         logger.info("HttpMediaTypeNotSupportedException: " + simpleServiceException.getMessage());
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
     }
