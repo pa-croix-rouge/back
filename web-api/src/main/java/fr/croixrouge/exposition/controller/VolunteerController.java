@@ -40,7 +40,7 @@ public class VolunteerController extends ErrorHandler {
         return new VolunteerResponse(model.getId().value(), model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getUser().getLocalUnit().getId().value());
     }
 
-    @GetMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<VolunteerResponse> get(@PathVariable String id) {
         Volunteer volunteer = service.findById(new ID(id));
         return ResponseEntity.ok(this.toDTO(volunteer));
