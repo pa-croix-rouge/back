@@ -37,9 +37,9 @@ public class ClothProductControllerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+        LoginRequest loginRequest = new LoginRequest("LUManager", "LUPassword");
 
-        String result = mockMvc.perform(post("/login")
+        String result = mockMvc.perform(post("/login/volunteer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -72,7 +72,7 @@ public class ClothProductControllerTest {
 
     @Order(2)
     @Test
-    @DisplayName("Test that the id endpoint returns a cloth product when given a valid id")
+    @DisplayName("Test that the id endpoint returns not found product when given an invalid id")
     public void testGetClothByIdFailTest() throws Exception {
         mockMvc.perform(get("/product/cloth/" + "-1")
                         .contentType(MediaType.APPLICATION_JSON)
