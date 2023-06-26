@@ -2,9 +2,8 @@ package fr.croixrouge.domain.repository;
 
 import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.domain.model.Volunteer;
-import jdk.jfr.Registered;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -17,4 +16,6 @@ public interface BeneficiaryRepository extends CRUDRepository<ID, Beneficiary>{
     boolean validateBeneficiaryAccount(Beneficiary beneficiary);
 
     boolean invalidateBeneficiaryAccount(Beneficiary beneficiary);
+
+    List<Beneficiary> findAllByLocalUnitId(ID id);
 }

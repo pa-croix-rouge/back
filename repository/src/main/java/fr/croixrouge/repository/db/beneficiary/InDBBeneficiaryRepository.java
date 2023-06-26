@@ -101,9 +101,7 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
         var beneficiaryDB = beneficiaryDBRepository.save(toBeneficiaryDB(object));
         logger.info("InDBBeneficiaryRepository.save " + beneficiaryDB.getId());
         object.setId(new ID(beneficiaryDB.getId()));
-        object.getFamilyMembers().forEach(familyMember -> {
-            familyMemberDBRepository.save(toFamilyMemberDB(familyMember, beneficiaryDB));
-        });
+        object.getFamilyMembers().forEach(familyMember -> familyMemberDBRepository.save(toFamilyMemberDB(familyMember, beneficiaryDB)));
         return new ID(beneficiaryDB.getId());
     }
 
@@ -117,5 +115,10 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
     @Override
     public List<Beneficiary> findAll() {
         return StreamSupport.stream(beneficiaryDBRepository.findAll().spliterator(), false).map(this::toBeneficiary).toList();
+    }
+
+    @Override
+    public List<Beneficiary> findAllByLocalUnitId(ID id) {
+        return beneficiaryDBRepository.findByLocalUnitDB_Id(id.value()).stream().map(this::toBeneficiary).toList();
     }
 }
