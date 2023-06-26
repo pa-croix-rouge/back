@@ -1,15 +1,12 @@
 package fr.croixrouge.storage.model.quantifier;
 
 public class VolumeUnit extends MeasurementUnit {
+    public static final VolumeUnit LITER = new VolumeUnit("volume", "litre", 1);
+    public static final VolumeUnit MILLILITER = new VolumeUnit("volume", "millilitre", 0.001f);
+    public static final VolumeUnit DECILITER = new VolumeUnit("volume", "decilitre", 0.01f);
 
-    public static final String label = "volume";
-
-    public static final VolumeUnit LITER = new VolumeUnit("LITER", 1);
-    public static final VolumeUnit MILLILITER = new VolumeUnit("MILLILITER", 0.001f);
-    public static final VolumeUnit DECILITER = new VolumeUnit("DECILITER", 0.01f);
-
-    private VolumeUnit(String name, float value) {
-        super(name, value);
+    private VolumeUnit(String label, String name, float value) {
+        super(label, name, value);
     }
 
     @Override

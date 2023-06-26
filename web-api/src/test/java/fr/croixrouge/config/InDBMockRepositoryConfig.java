@@ -47,7 +47,10 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @TestConfiguration
@@ -308,8 +311,8 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
-        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
+        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository, storageProductRepository);
 
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S));
         repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M));
@@ -322,21 +325,21 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
-        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository);
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
+        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository, storageProductRepository);
 
         repository.save(new FoodProduct(new ID(1L),
                 food1,
                 FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.of(2023, 5, 1, 15, 14, 1),
-                LocalDateTime.of(2023, 4, 10, 15, 14, 1),
+                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")),
                 1));
 
         repository.save(new FoodProduct(new ID(2L),
                 food2,
                 FoodConservation.ROOM_TEMPERATURE,
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now(),
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0), ZoneId.of("Europe/Paris")),
                 1));
 
         return repository;

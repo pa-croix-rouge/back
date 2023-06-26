@@ -4,7 +4,7 @@ import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.quantifier.Quantifier;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class FoodProduct extends Entity<ID> {
@@ -13,13 +13,13 @@ public class FoodProduct extends Entity<ID> {
 
     private final FoodConservation foodConservation;
 
-    private final LocalDateTime expirationDate;
+    private final ZonedDateTime expirationDate;
 
-    private final LocalDateTime optimalConsumptionDate;
+    private final ZonedDateTime optimalConsumptionDate;
 
     private final double price;
 
-    public FoodProduct(ID id, ID productId, String name, Quantifier quantity, ProductLimit limit, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate, double price) {
+    public FoodProduct(ID id, ID productId, String name, Quantifier quantity, ProductLimit limit, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate, double price) {
         super(id);
         this.product = new Product(productId, name, quantity, limit);
         this.foodConservation = foodConservation;
@@ -28,7 +28,7 @@ public class FoodProduct extends Entity<ID> {
         this.price = price;
     }
 
-    public FoodProduct(ID id, Product product, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate, double price) {
+    public FoodProduct(ID id, Product product, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate, double price) {
         this(id, product.getId(), product.name, product.quantity, product.limit, foodConservation, expirationDate, optimalConsumptionDate, price);
     }
 
@@ -40,11 +40,11 @@ public class FoodProduct extends Entity<ID> {
         return foodConservation;
     }
 
-    public LocalDateTime getExpirationDate() {
+    public ZonedDateTime getExpirationDate() {
         return expirationDate;
     }
 
-    public LocalDateTime getOptimalConsumptionDate() {
+    public ZonedDateTime getOptimalConsumptionDate() {
         return optimalConsumptionDate;
     }
 

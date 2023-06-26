@@ -7,6 +7,10 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
+import fr.croixrouge.storage.model.product.ClothSize;
+import fr.croixrouge.storage.model.product.FoodConservation;
+import fr.croixrouge.storage.model.quantifier.NumberedUnit;
+import fr.croixrouge.storage.model.quantifier.VolumeUnit;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,5 +128,59 @@ class ProductControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @Order(3)
+    @DisplayName("Test that the product units endpoint returns the list of units")
+    public void productReturnsListOfUnits() throws Exception {
+        mockMvc.perform(get("/product/units")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.units").isMap())
+                .andExpect(jsonPath("$.units").isNotEmpty())
+                .andExpect(jsonPath("$.units.kilogram").value(WeightUnit.KILOGRAM.getLabel()))
+                .andExpect(jsonPath("$.units.gram").value(WeightUnit.GRAM.getLabel()))
+                .andExpect(jsonPath("$.units.litre").value(VolumeUnit.LITER.getLabel()))
+                .andExpect(jsonPath("$.units.millilitre").value(VolumeUnit.MILLILITER.getLabel()))
+                .andExpect(jsonPath("$.units.decilitre").value(VolumeUnit.DECILITER.getLabel()))
+                .andExpect(jsonPath("$.units.pièce").value(NumberedUnit.NUMBER.getLabel()));
+//                .andExpect(jsonPath("$.units").value(NumberedUnit.UNKNOWN.getLabel()));
+    }
+
+    @Test
+    @Order('3')
+    @DisplayName("Test that the product conservation endpoint returns the list of units")
+    public void productReturnsListOfConservations() throws Exception {
+        mockMvc.perform(get("/product/conservations")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.conservations").isArray())
+                .andExpect(jsonPath("$.conservations").isNotEmpty())
+                .andExpect(jsonPath("$.conservations[0]").value(FoodConservation.FROZEN.getLabel()))
+                .andExpect(jsonPath("$.conservations[1]").value(FoodConservation.REFRIGERATED.getLabel()))
+                .andExpect(jsonPath("$.conservations[2]").value(FoodConservation.ROOM_TEMPERATURE.getLabel()));
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test that the product sizes endpoint returns the list of sizes")
+    public void productReturnsListOfClothSizes() throws Exception {
+        mockMvc.perform(get("/product/sizes")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$[0]").value(ClothSize.UNKNOWN.getLabel()))
+                .andExpect(jsonPath("$[1]").value(ClothSize.CHILD.getLabel()))
+                .andExpect(jsonPath("$[2]").value(ClothSize.XS.getLabel()))
+                .andExpect(jsonPath("$[3]").value(ClothSize.S.getLabel()))
+                .andExpect(jsonPath("$[4]").value(ClothSize.M.getLabel()))
+                .andExpect(jsonPath("$[5]").value(ClothSize.L.getLabel()))
+                .andExpect(jsonPath("$[6]").value(ClothSize.XL.getLabel()))
+                .andExpect(jsonPath("$[7]").value(ClothSize.XXL.getLabel()))
+                .andExpect(jsonPath("$[8]").value(ClothSize.XXXL.getLabel()));
+    }
 }
 

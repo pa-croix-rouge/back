@@ -3,7 +3,7 @@ package fr.croixrouge.repository.db.product;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Table(name = "food-product")
 @Entity
@@ -25,15 +25,15 @@ public class FoodProductDB {
     private FoodConservation foodConservation;
 
     @Column(name = "expiration_date", nullable = false)
-    private LocalDateTime expirationDate;
+    private ZonedDateTime expirationDate;
 
     @Column(name = "optimal_consumption_date")
-    private LocalDateTime optimalConsumptionDate;
+    private ZonedDateTime optimalConsumptionDate;
 
     public FoodProductDB() {
     }
 
-    public FoodProductDB(Long id, ProductDB productDB, Float price, FoodConservation foodConservation, LocalDateTime expirationDate, LocalDateTime optimalConsumptionDate) {
+    public FoodProductDB(Long id, ProductDB productDB, Float price, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate) {
         this.id = id;
         this.productDB = productDB;
         this.price = price;
@@ -74,19 +74,19 @@ public class FoodProductDB {
         this.foodConservation = foodConservation;
     }
 
-    public LocalDateTime getExpirationDate() {
+    public ZonedDateTime getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalDateTime expirationDate) {
+    public void setExpirationDate(ZonedDateTime expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public LocalDateTime getOptimalConsumptionDate() {
+    public ZonedDateTime getOptimalConsumptionDate() {
         return optimalConsumptionDate;
     }
 
-    public void setOptimalConsumptionDate(LocalDateTime optimalConsumptionDate) {
+    public void setOptimalConsumptionDate(ZonedDateTime optimalConsumptionDate) {
         this.optimalConsumptionDate = optimalConsumptionDate;
     }
 }

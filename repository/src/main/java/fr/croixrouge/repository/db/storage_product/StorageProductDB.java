@@ -13,8 +13,7 @@ public class StorageProductDB {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_db_id", nullable = false)
+    @OneToOne(optional = false)
     private ProductDB productDB;
 
     @ManyToOne(optional = false)

@@ -84,14 +84,14 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
-        return new InDBClothProductRepository(clothProductDBRepository, productRepository);
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
+        return new InDBClothProductRepository(clothProductDBRepository, productRepository, storageProductRepository);
     }
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
-        return new InDBFoodProductRepository(foodProductDBRepository, productRepository);
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
+        return new InDBFoodProductRepository(foodProductDBRepository, productRepository, storageProductRepository);
     }
 
     @Bean
