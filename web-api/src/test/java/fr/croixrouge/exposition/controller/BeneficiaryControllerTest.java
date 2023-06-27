@@ -51,9 +51,11 @@ public class BeneficiaryControllerTest {
     @DisplayName("Test that the localunit endpoints returns all beneficiaries of the localunit")
     public void testGetAllBeneficiariesOfLocalUnit() throws Exception {
         BeneficiaryResponse beneficiaryResponse = new BeneficiaryResponse(
+                null,
                 "benefUser",
                 "beneficiaryFirstName",
                 "beneficiaryLastName",
+                null,
                 "+33 6 00 00 00 00",
                 true,
                 ID.of(1L)

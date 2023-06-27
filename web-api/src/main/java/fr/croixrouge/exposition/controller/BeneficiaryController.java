@@ -36,6 +36,12 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok(this.toDTO(beneficiary));
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateRole(@PathVariable ID id, @RequestBody BeneficiaryCreationRequest beneficiaryCreationRequest) {
+        service.updateBeneficiary(id, beneficiaryCreationRequest);
+        return ResponseEntity.ok().build();
+    }
+
     //todo : only admin can update beneficiary
     @PostMapping("/validate/{id}")
     public ResponseEntity<BeneficiaryResponse> validateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
@@ -93,9 +99,11 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
     @Override
     public BeneficiaryResponse toDTO(Beneficiary model) {
         return new BeneficiaryResponse(
+                model.getId().value(),
                 model.getUser().getUsername(),
                 model.getFirstName(),
                 model.getLastName(),
+                model.getBirthDate(),
                 model.getPhoneNumber(),
                 model.isValidated(),
                 model.getUser().getLocalUnit().getId()

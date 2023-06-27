@@ -4,7 +4,7 @@ import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exposition.dto.CreationDTO;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class BeneficiaryCreationRequest extends CreationDTO<Beneficiary> {
@@ -14,14 +14,14 @@ public class BeneficiaryCreationRequest extends CreationDTO<Beneficiary> {
     public String lastName;
     public String phoneNumber;
     public String localUnitCode;
-    public ZonedDateTime birthDate;
+    public LocalDate birthDate;
     public String socialWorkerNumber;
     public List<FamilyMemberCreationRequest> familyMembers;
 
     public BeneficiaryCreationRequest() {
     }
 
-    public BeneficiaryCreationRequest(String username, String password, String firstName, String lastName, String phoneNumber, String localUnitCode, ZonedDateTime birthDate, String socialWorkerNumber, List<FamilyMemberCreationRequest> familyMembers) {
+    public BeneficiaryCreationRequest(String username, String password, String firstName, String lastName, String phoneNumber, String localUnitCode, LocalDate birthDate, String socialWorkerNumber, List<FamilyMemberCreationRequest> familyMembers) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -81,11 +81,11 @@ public class BeneficiaryCreationRequest extends CreationDTO<Beneficiary> {
         this.localUnitCode = localUnitCode;
     }
 
-    public ZonedDateTime getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(ZonedDateTime birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

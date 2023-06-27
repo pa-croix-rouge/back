@@ -119,7 +119,7 @@ public class InDBMockRepositoryConfig {
 
         southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
 
-        beneficiary1 = new Beneficiary(null, beneficiaryUser, "beneficiaryFirstName", "beneficiaryLastName", "+33 6 00 00 00 00", true, ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")), "1223", List.of());
+        beneficiary1 = new Beneficiary(null, beneficiaryUser, "beneficiaryFirstName", "beneficiaryLastName", "+33 6 00 00 00 00", true, LocalDate.of(2000, 6, 1), "1223", List.of());
 
         userForAuthTest = new User(null, "userForAuthTest", passwordEncoder.encode("userForAuthTestPassword"), southernLocalUnit, List.of(roleForAuthTest));
 
