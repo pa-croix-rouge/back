@@ -155,7 +155,7 @@ jobs:
           -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
 
       - name: Upload tests report
-        run: cp -r target/site/* /root/pa-cxr/prod/tests/.
+        run: cp -r web-api/target/site/* /root/pa-cxr/prod/tests/.
 
   deploy:
     needs: test
