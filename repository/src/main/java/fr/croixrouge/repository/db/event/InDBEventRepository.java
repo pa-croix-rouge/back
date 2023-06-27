@@ -328,6 +328,10 @@ public class InDBEventRepository implements EventRepository {
 
         List<EventSession> updatedSessions = new ArrayList<>();
         for (EventSession session : eventToUpdate.getSessions()) {
+            if (session.getStart().isBefore(ZonedDateTime.now())) {
+                updatedSessions.add(session);
+                continue;
+            }
             if (session.getId().equals(sessionId)) {
                 if (sessionToUpdate.getParticipants() > event.getSessions().get(0).getMaxParticipants()) {
                     return false;

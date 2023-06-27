@@ -44,6 +44,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -263,8 +264,8 @@ public class InDBMockRepositoryConfig {
 
         String eventName4 = "EPISOL";
         String eventDescription4 = "Ouverture de l'EPISOL";
-        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 1, 1, 10, 0), ZoneId.of("Europe/Paris"));
-        ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(2002, 2, 1, 12, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue() + 1, LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
 
         int maxParticipants4 = 32;
         List<EventSession> eventSessions4 = new ArrayList<>();
