@@ -63,8 +63,8 @@ public class EventControllerTest {
                 sessionId,
                 "Formation PSC1",
                 "Formation au PSC1",
-                ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 1L,
                 1L,
                 2,
@@ -102,7 +102,7 @@ public class EventControllerTest {
         SingleEventCreationRequest singleEventCreationRequest = new SingleEventCreationRequest(
                 "Formation Premier Secours de niveau 1",
                 "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
-                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 1L,
                 1L,
                 120,
@@ -121,8 +121,8 @@ public class EventControllerTest {
                 sessionId,
                 "Formation Premier Secours de niveau 1",
                 "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
+                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
+                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
                 1L,
                 1L,
                 1,
@@ -233,16 +233,16 @@ public class EventControllerTest {
                 1L,
                 "Formation PSC1",
                 "Formation au PSC1",
-                ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 1L,
                 1L,
                 2,
                 0,
                 List.of(new TimeWindowResponse(
                         1L,
-                        ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(2000, 6, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         2,
                         List.of()
                 )),
@@ -285,16 +285,16 @@ public class EventControllerTest {
                 3L,
                 "Formation PSC1",
                 "Formation au PSC1",
-                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 1L,
                 1L,
                 30,
                 0,
                 List.of(new TimeWindowResponse(
                         5L,
-                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         30,
                         List.of()
                 )),
@@ -341,52 +341,84 @@ public class EventControllerTest {
     @DisplayName("Test that the event endpoint for local unit and month returns a list of events when given a correct local unit id and month")
     public void eventsLocalUnitAndMonthSuccessTest() throws Exception {
         final String localUnitId = "1";
-        final int month = 7;
-        final int year = 2000;
+        final int month = LocalDate.now().getMonthValue();
+        final int year = LocalDate.now().getYear();
 
-        EventResponse eventResponse = new EventResponse(
+        EventResponse eventResponse1 = new EventResponse(
+                4L,
+                4L,
+                "EPIcerie SOciaLe",
+                "Ouverture de l'epicerie sociale pour les personnes dans le besoin",
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                1L,
+                1L,
+                20,
+                0,
+                List.of(new TimeWindowResponse(
+                        26L,
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        20,
+                        List.of()
+                )),
+                true
+        );
+
+        EventResponse eventResponse2 = new EventResponse(
+                1L,
+                1L,
+                "Formation Premier Secours de niveau 1",
+                "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                1L,
+                1L,
+                1,
+                1,
+                List.of(new TimeWindowResponse(
+                        62L,
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        1,
+                        List.of(1L)
+                )),
+                false
+        );
+
+        EventResponse eventResponse3 = new EventResponse(
                 3L,
                 3L,
                 "Formation PSC1",
                 "Formation au PSC1",
-                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 1L,
                 1L,
                 30,
                 0,
                 List.of(new TimeWindowResponse(
                         5L,
-                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         30,
                         List.of()
                 )),
                 false
         );
 
-        mockMvc.perform(get("/event/date?localUnitId=" + localUnitId + "&month=" + month + "&year=" + year)
+        var res = mockMvc.perform(get("/event/date?localUnitId=" + localUnitId + "&month=" + month + "&year=" + year)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].eventId").value(eventResponse.getEventId()))
-                .andExpect(jsonPath("$[0].sessionId").value(eventResponse.getSessionId()))
-                .andExpect(jsonPath("$[0].name").value(eventResponse.getName()))
-                .andExpect(jsonPath("$[0].description").value(eventResponse.getDescription()))
-                .andExpect(jsonPath("$[0].start").value(eventResponse.getStart()))
-                .andExpect(jsonPath("$[0].end").value(eventResponse.getEnd()))
-                .andExpect(jsonPath("$[0].referrerId").value(eventResponse.getReferrerId()))
-                .andExpect(jsonPath("$[0].localUnitId").value(eventResponse.getLocalUnitId()))
-                .andExpect(jsonPath("$[0].maxParticipants").value(eventResponse.getMaxParticipants()))
-                .andExpect(jsonPath("$[0].numberOfParticipants").value(eventResponse.getNumberOfParticipants()))
-                .andExpect(jsonPath("$[0].timeWindows").isArray())
-                .andExpect(jsonPath("$[0].timeWindows[0].timeWindowId").value(eventResponse.getTimeWindows().get(0).getTimeWindowId()))
-                .andExpect(jsonPath("$[0].timeWindows[0].start").value(eventResponse.getTimeWindows().get(0).getStart()))
-                .andExpect(jsonPath("$[0].timeWindows[0].end").value(eventResponse.getTimeWindows().get(0).getEnd()))
-                .andExpect(jsonPath("$[0].timeWindows[0].maxParticipants").value(eventResponse.getTimeWindows().get(0).getMaxParticipants()))
-                .andExpect(jsonPath("$[0].timeWindows[0].participants").isArray())
-                .andExpect(jsonPath("$[0].timeWindows[0].participants").isEmpty())
-                .andExpect(jsonPath("$[0].recurring").value(eventResponse.isRecurring()));
+                .andReturn().getResponse().getContentAsString();
+
+        var resList = List.of(objectMapper.readValue(res, EventResponse[].class));
+
+        Assertions.assertEquals(3, resList.size());
+        Assertions.assertTrue(resList.contains(eventResponse1));
+        Assertions.assertTrue(resList.contains(eventResponse2));
+        Assertions.assertTrue(resList.contains(eventResponse3));
     }
 
     @Test
@@ -395,27 +427,6 @@ public class EventControllerTest {
         final String localUnitId = "1";
         final int month = 6;
         final int year = 2000;
-
-        EventResponse eventResponse1 = new EventResponse(
-                1L,
-                1L,
-                "Formation Premier Secours de niveau 1",
-                "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
-                timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
-                1L,
-                1L,
-                1,
-                1,
-                List.of(new TimeWindowResponse(
-                        62L,
-                        timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 10, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
-                        timestampToLocalDateTime(Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2000, 6, 2, 12, 0), ZoneId.of("Europe/Paris")).toLocalDateTime())).toString(),
-                        1,
-                        List.of(1L)
-                )),
-                false
-        );
 
         EventResponse eventResponse2 = new EventResponse(
                 2L,
@@ -454,27 +465,6 @@ public class EventControllerTest {
                 false
         );
 
-        EventResponse eventResponse3 = new EventResponse(
-                3L,
-                3L,
-                "Formation PSC1",
-                "Formation au PSC1",
-                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
-                1L,
-                1L,
-                30,
-                0,
-                List.of(new TimeWindowResponse(
-                        5L,
-                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(2000, 7, 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
-                        30,
-                        List.of()
-                )),
-                false
-        );
-
         var res = mockMvc.perform(get("/event/trimester?localUnitId=" + localUnitId + "&month=" + month + "&year=" + year)
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -483,10 +473,8 @@ public class EventControllerTest {
 
         var resList = List.of(objectMapper.readValue(res, EventResponse[].class));
 
-        Assertions.assertEquals(3, resList.size());
-        Assertions.assertTrue(resList.contains(eventResponse1));
+        Assertions.assertEquals(1, resList.size());
         Assertions.assertTrue(resList.contains(eventResponse2));
-        Assertions.assertTrue(resList.contains(eventResponse3));
     }
 
     @Test

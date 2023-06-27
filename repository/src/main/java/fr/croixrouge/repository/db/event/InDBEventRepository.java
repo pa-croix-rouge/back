@@ -265,8 +265,16 @@ public class InDBEventRepository implements EventRepository {
 
     @Override
     public boolean updateSingleEvent(ID eventId, ID sessionId, Event event) {
+        if (event.getFirstStart().isBefore(ZonedDateTime.now())) {
+            return false;
+        }
+
         Event eventToUpdate = this.findById(eventId).orElse(null);
         if (eventToUpdate == null) {
+            return false;
+        }
+
+        if (eventToUpdate.getFirstStart().isBefore(ZonedDateTime.now())) {
             return false;
         }
 
@@ -316,8 +324,16 @@ public class InDBEventRepository implements EventRepository {
 
     @Override
     public boolean updateEventSessions(ID eventId, ID sessionId, Event event, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
+        if (event.getFirstStart().isBefore(ZonedDateTime.now())) {
+            return false;
+        }
+
         Event eventToUpdate = this.findById(eventId).orElse(null);
         if (eventToUpdate == null) {
+            return false;
+        }
+
+        if (eventToUpdate.getFirstStart().isBefore(ZonedDateTime.now())) {
             return false;
         }
 
