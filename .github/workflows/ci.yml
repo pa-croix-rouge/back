@@ -112,7 +112,6 @@ jobs:
           SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
           SPRING_HIBERNATE_DIALECT: ${{ secrets.SPRING_HIBERNATE_DIALECT }}
         run: |
-          echo "${SPRING_DDL_AUTO};${SPRING_DATASOURCE_URL};${SPRING_DATASOURCE_USERNAME};${SPRING_DATASOURCE_PASSWORD};${SPRING_DATASOURCE_DRIVER}"; \
           mvn test --batch-mode --no-transfer-progress \
           -Dspring.profiles.active=test-in-db \
           -Djwt.secret="${JWT_SECRET}" \
@@ -126,6 +125,37 @@ jobs:
           -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
           -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
           -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
+
+      - name: Generate tests report
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+          JWT_HEADER: ${{ secrets.JWT_HEADER }}
+          JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          SPRING_DDL_AUTO: ${{ secrets.SPRING_DDL_AUTO }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
+          SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
+          SPRING_HIBERNATE_DIALECT: ${{ secrets.SPRING_HIBERNATE_DIALECT }}
+        run: |
+          mvn surefire-report:report \
+          -Dspring.profiles.active=test-in-db \
+          -Djwt.secret="${JWT_SECRET}" \
+          -Djwt.token.expiration="${JWT_EXPIRATION}" \
+          -Djwt.token.header="${JWT_HEADER}" \
+          -Djwt.token.prefix="${JWT_PREFIX}" \
+          -Dspring.jpa.hibernate.ddl-auto="${SPRING_DDL_AUTO}" \
+          -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
+          -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
+          -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
+          -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
+
+      - name: Upload tests report
+        run: cp -r web-api/target/site/* /root/pa-cxr/prod/tests/.
 
   deploy:
     needs: test
