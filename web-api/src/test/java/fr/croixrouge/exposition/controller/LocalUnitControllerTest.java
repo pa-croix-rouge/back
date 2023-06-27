@@ -253,4 +253,20 @@ public class LocalUnitControllerTest {
                         .content(objectMapper.writeValueAsString(localUnitUpdateSecretRequest)))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    @Order(8)
+    @DisplayName("Test that the localunit stats endpoint returns a local unit stats when given a correct id")
+    public void localUnitStatsSuccessTest() throws Exception {
+        LocalUnitStatsResponse localUnitStatsResponse = new LocalUnitStatsResponse(
+                3,
+                1
+        );
+
+        mockMvc.perform(get("/localunit/stats")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("numberOfVolunteers").value(localUnitStatsResponse.getNumberOfVolunteers()))
+                .andExpect(jsonPath("numberOfBeneficiaries").value(localUnitStatsResponse.getNumberOfBeneficiaries()));
+    }
 }

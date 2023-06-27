@@ -37,4 +37,9 @@ public class InMemoryBeneficiaryRepository extends InMemoryCRUDRepository<ID, Be
     public boolean invalidateBeneficiaryAccount(Beneficiary beneficiary) {
         return false;
     }
+
+    @Override
+    public List<Beneficiary> findAllByLocalUnitId(ID id) {
+        return this.objects.stream().filter(o -> o.getUser().getLocalUnit().getId().equals(id)).toList();
+    }
 }
