@@ -333,7 +333,7 @@ public class InDBEventRepository implements EventRepository {
             return false;
         }
 
-        if (eventToUpdate.getFirstStart().isBefore(ZonedDateTime.now())) {
+        if (eventToUpdate.getSessions().stream().filter(eventSession -> eventSession.getId().equals(sessionId)).findFirst().orElseThrow().getStart().isBefore(ZonedDateTime.now())) {
             return false;
         }
 
