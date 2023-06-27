@@ -101,4 +101,11 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 model.getUser().getLocalUnit().getId()
         );
     }
+
+    @GetMapping("/localunit")
+    public ResponseEntity<List<BeneficiaryResponse>> getByLocalUnit(HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        List<Beneficiary> beneficiaries = service.findAllByLocalUnitId(localUnitId);
+        return ResponseEntity.ok(beneficiaries.stream().map(this::toDTO).toList());
+    }
 }
