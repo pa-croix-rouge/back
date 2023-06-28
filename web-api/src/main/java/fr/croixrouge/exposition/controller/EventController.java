@@ -58,7 +58,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
         boolean result = service.updateSingleEvent(eventId, sessionId, singleEventCreationRequest.toEvent(referrer, localUnit));
         if (!result) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok().build();
     }
@@ -162,7 +162,7 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
 
         boolean result = service.updateEventSessions(eventId, sessionId, singleEventCreationRequest.toEvent(referrer, localUnit),  singleEventCreationRequest.getEventTimeWindowDuration(), singleEventCreationRequest.getEventTimeWindowOccurrence(), singleEventCreationRequest.getEventTimeWindowMaxParticipants());
         if (!result) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok().build();
     }

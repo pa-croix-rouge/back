@@ -265,8 +265,16 @@ public class InDBEventRepository implements EventRepository {
 
     @Override
     public boolean updateSingleEvent(ID eventId, ID sessionId, Event event) {
+        if (event.getFirstStart().isBefore(ZonedDateTime.now())) {
+            return false;
+        }
+
         Event eventToUpdate = this.findById(eventId).orElse(null);
         if (eventToUpdate == null) {
+            return false;
+        }
+
+        if (eventToUpdate.getFirstStart().isBefore(ZonedDateTime.now())) {
             return false;
         }
 
@@ -316,8 +324,16 @@ public class InDBEventRepository implements EventRepository {
 
     @Override
     public boolean updateEventSessions(ID eventId, ID sessionId, Event event, int eventTimeWindowDuration, int eventTimeWindowOccurrence, int eventTimeWindowMaxParticipants) {
+        if (event.getFirstStart().isBefore(ZonedDateTime.now())) {
+            return false;
+        }
+
         Event eventToUpdate = this.findById(eventId).orElse(null);
         if (eventToUpdate == null) {
+            return false;
+        }
+
+        if (eventToUpdate.getSessions().stream().filter(eventSession -> eventSession.getId().equals(sessionId)).findFirst().orElseThrow().getStart().isBefore(ZonedDateTime.now())) {
             return false;
         }
 
@@ -328,6 +344,10 @@ public class InDBEventRepository implements EventRepository {
 
         List<EventSession> updatedSessions = new ArrayList<>();
         for (EventSession session : eventToUpdate.getSessions()) {
+            if (session.getStart().isBefore(ZonedDateTime.now())) {
+                updatedSessions.add(session);
+                continue;
+            }
             if (session.getId().equals(sessionId)) {
                 if (sessionToUpdate.getParticipants() > event.getSessions().get(0).getMaxParticipants()) {
                     return false;

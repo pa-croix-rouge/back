@@ -367,44 +367,43 @@ public class VolunteerControllerTest {
                 .andExpect(status().isOk());
     }
 
+//    @Test
+//    @Order(14)
+//    @DisplayName("Test that the volunteer endpoint deletes volunteer")
+//    public void volunteerDeleteSuccessTest() throws Exception {
+//        Assertions.assertNotEquals(null, createdVolunteerId);
+//
+//        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
+//
+//        String result = mockMvc.perform(post("/login/volunteer")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(loginRequest)))
+//                .andExpect(status().isOk())
+//                .andReturn().getResponse().getContentAsString();
+//
+//        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+//
+//        mockMvc.perform(delete("/volunteer/" + createdVolunteerId)
+//                        .header("Authorization", "Bearer " + jwtToken))
+//                .andExpect(status().isOk());
+//
+//        loginRequest = new LoginRequest("LUManager", "LUPassword");
+//
+//        result = mockMvc.perform(post("/login/volunteer")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(loginRequest)))
+//                .andExpect(status().isOk())
+//                .andReturn().getResponse().getContentAsString();
+//
+//        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
+//
+//        mockMvc.perform(get("/volunteer/" + createdVolunteerId)
+//                        .header("Authorization", "Bearer " + jwtToken))
+//                .andExpect(status().isNotFound());
+//    }
+
     @Test
     @Order(14)
-    @DisplayName("Test that the volunteer endpoint deletes volunteer")
-    @Disabled
-    public void volunteerDeleteSuccessTest() throws Exception {
-        Assertions.assertNotEquals(null, createdVolunteerId);
-
-        LoginRequest loginRequest = new LoginRequest("defaultUser", "defaultPassword");
-
-        String result = mockMvc.perform(post("/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
-
-        mockMvc.perform(delete("/volunteer/" + createdVolunteerId)
-                        .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(status().isOk());
-
-        loginRequest = new LoginRequest("LUManager", "LUPassword");
-
-        result = mockMvc.perform(post("/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        jwtToken = objectMapper.readTree(result).get("jwtToken").asText();
-
-        mockMvc.perform(get("/volunteer/" + createdVolunteerId)
-                        .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Order(15)
     @DisplayName("Test that the volunteer endpoint deletes volunteer when requested by manager")
     public void volunteerManagerDeleteSuccessTest() throws Exception {
         System.out.println("Created volunteer id: " + createdVolunteerId);
@@ -431,7 +430,7 @@ public class VolunteerControllerTest {
     }
 
     @Test
-    @Order(16)
+    @Order(15)
     @DisplayName("Test that the volunteer endpoint can't deletes non existing volunteer when requested by manager")
     public void volunteerManagerDeleteNotFoundSuccessTest() throws Exception {
         String volunteerId = "-1";
