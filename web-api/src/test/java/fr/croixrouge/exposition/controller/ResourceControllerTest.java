@@ -64,7 +64,7 @@ public class ResourceControllerTest {
     public void resourcesAccessDeniedWrongJWTTest() throws Exception {
         mockMvc.perform(get("/resources")
                         .header("Authorization", "Bearer BEAFAEFAEFAEZFZ"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
