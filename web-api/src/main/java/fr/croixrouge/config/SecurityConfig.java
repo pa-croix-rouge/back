@@ -38,6 +38,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         List<RequestMatcher> excludedFilterUrl = List.of(
                 new AntPathRequestMatcher("/login/volunteer"),
+                new AntPathRequestMatcher("/login/beneficiary"),
+                new AntPathRequestMatcher("/login/token"),
                 new AntPathRequestMatcher("/volunteer/register"),
                 new AntPathRequestMatcher("/volunteer/token"),
                 new AntPathRequestMatcher("/beneficiaries/register"),
@@ -50,7 +52,8 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests( auth -> {
                 auth
-                        .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/login/volunteer").permitAll()
+                        .requestMatchers("/login/beneficiary").permitAll()
                         .requestMatchers("/volunteer/register").permitAll()
                         .requestMatchers("/v3/api-docs").permitAll()
                         .requestMatchers("/beneficiaries/register").permitAll()
