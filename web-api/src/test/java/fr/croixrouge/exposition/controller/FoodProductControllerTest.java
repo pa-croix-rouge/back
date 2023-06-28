@@ -18,10 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -64,6 +61,8 @@ class FoodProductControllerTest {
     @Order(1)
     @DisplayName("Test that the endpoint returns a food product when given a correct id")
     public void productIdSuccessTest() throws Exception {
+        final LocalDate date = LocalDate.now();
+
         mockMvc.perform(get("/product/food/1")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -73,8 +72,8 @@ class FoodProductControllerTest {
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
                 .andExpect(jsonPath("$.quantity.value").value(1))
                 .andExpect(jsonPath("$.foodConservation").value("température ambiante"))
-                .andExpect(jsonPath("$.expirationDate").value(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toString()))
-                .andExpect(jsonPath("$.optimalConsumptionDate").value(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toString()));
+                .andExpect(jsonPath("$.expirationDate").value(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toString()))
+                .andExpect(jsonPath("$.optimalConsumptionDate").value(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toString()));
     }
 
     @Test
@@ -91,14 +90,16 @@ class FoodProductControllerTest {
     @Order(3)
     @DisplayName("Test that the get endpoint returns a list of food product")
     public void testGetAllFoodSuccessTest() throws Exception {
+        final LocalDate date = LocalDate.now();
+
         FoodProductResponse foodProductResponse1 = new FoodProductResponse(
                 1L,
                 8L,
                 "Pommes",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE,
-                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
-                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1L
         );
         FoodProductResponse foodProductResponse2 = new FoodProductResponse(
@@ -107,8 +108,8 @@ class FoodProductControllerTest {
                 "Pates",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE,
-                ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0, 0), ZoneId.of("Europe/Paris")),
-                ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1L
         );
 
@@ -138,11 +139,12 @@ class FoodProductControllerTest {
     @Order(4)
     @DisplayName("Test that the post endpoint, used to create a new food product, returns OK when given a correct food product")
     public void productAddSuccessTest() throws Exception {
+        final LocalDate date = LocalDate.now();
         CreateFoodProductDTO createProductDTO = new CreateFoodProductDTO("new Product",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE.getLabel(),
-                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime()),
-                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(3).getYear(), date.plusMonths(3).getMonthValue(), date.plusMonths(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 1,
                 "1",
                 10);
@@ -173,14 +175,16 @@ class FoodProductControllerTest {
     @Order(5)
     @DisplayName("Test that the put endpoint, used to update a food product, returns OK when given a correct food product")
     public void testUpdateFoodByIdSuccessTest() throws Exception {
+        final LocalDate date = LocalDate.now();
+
         FoodProductResponse foodProductResponse = new FoodProductResponse(
                 1L,
                 8L,
                 "Pommes",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
                 FoodConservation.ROOM_TEMPERATURE,
-                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
-                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1L
         );
         mockMvc.perform(get("/product/food/" + foodProductResponse.getId())
@@ -200,8 +204,8 @@ class FoodProductControllerTest {
                 "Pommes vertes",
                 new QuantifierDTO(WeightUnit.GRAM.getName(), 950),
                 FoodConservation.ROOM_TEMPERATURE.getLabel(),
-                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime()),
-                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(3).getYear(), date.plusMonths(3).getMonthValue(), date.plusMonths(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
+                Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 43,
                 "1",
                 10);
@@ -244,5 +248,35 @@ class FoodProductControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Test that the get expired endpoint returns a list of soon expired food product")
+    public void testGetAllExpiredFoodSuccessTest() throws Exception {
+        final LocalDate date = LocalDate.now();
+        FoodProductResponse foodProductResponse = new FoodProductResponse(
+                2L,
+                9L,
+                "Pates",
+                new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                1L
+        );
+
+        mockMvc.perform(get("/product/food/expired")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(foodProductResponse.getId()))
+                .andExpect(jsonPath("$[0].name").value(foodProductResponse.getName()))
+                .andExpect(jsonPath("$[0].quantity.measurementUnit").value(foodProductResponse.getQuantity().getMeasurementUnit()))
+                .andExpect(jsonPath("$[0].quantity.value").value(foodProductResponse.getQuantity().getValue()))
+                .andExpect(jsonPath("$[0].foodConservation").value(foodProductResponse.getFoodConservation()))
+                .andExpect(jsonPath("$[0].expirationDate").value(foodProductResponse.getExpirationDate()))
+                .andExpect(jsonPath("$[0].optimalConsumptionDate").value(foodProductResponse.getOptimalConsumptionDate()))
+                .andExpect(jsonPath("$[0].price").value(foodProductResponse.getPrice()));
     }
 }

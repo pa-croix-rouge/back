@@ -34,4 +34,9 @@ public class InMemoryFoodProductRepository extends InMemoryCRUDRepository<ID, Fo
     public List<FoodProduct> findAllByLocalUnitId(ID localUnitId) {
         return List.of();
     }
+
+    @Override
+    public List<FoodProduct> findAllSoonExpiredByLocalUnitId(ID localUnitId) {
+        return List.of();
+    }
 }

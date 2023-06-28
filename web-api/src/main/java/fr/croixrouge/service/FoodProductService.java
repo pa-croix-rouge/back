@@ -20,4 +20,8 @@ public class FoodProductService extends CRUDService<ID, FoodProduct, FoodProduct
     public List<FoodProduct> findAllByLocalUnitId(ID localUnitId) {
         return this.repository.findAllByLocalUnitId(localUnitId);
     }
+
+    public List<FoodProduct> findAllSoonExpiredByLocalUnitId(ID localUnitId) {
+        return this.repository.findAllSoonExpiredByLocalUnitId(localUnitId);
+    }
 }

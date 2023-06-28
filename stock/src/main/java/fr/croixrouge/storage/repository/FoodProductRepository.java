@@ -14,4 +14,6 @@ public interface FoodProductRepository extends CRUDRepository<ID, FoodProduct> {
     Optional<FoodProduct> findByLocalUnitIdAndId(ID localUnitId, ID id);
 
     List<FoodProduct> findAllByLocalUnitId(ID localUnitId);
+
+    List<FoodProduct> findAllSoonExpiredByLocalUnitId(ID localUnitId);
 }
