@@ -26,7 +26,7 @@ import fr.croixrouge.repository.db.storage_product.InDBStorageProductRepository;
 import fr.croixrouge.repository.db.storage_product.StorageProductDBRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
-import fr.croixrouge.repository.db.user_product.InDBUserProductRepository;
+import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository;
 import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
@@ -34,8 +34,8 @@ import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.*;
 import fr.croixrouge.storage.model.quantifier.*;
+import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
 import fr.croixrouge.storage.repository.StorageProductRepository;
-import fr.croixrouge.storage.repository.UserProductRepository;
 import fr.croixrouge.storage.service.StorageProductService;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -299,23 +299,23 @@ public class InDBMockRepositoryConfig {
     public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository) {
         var storageRepository = new InDBProductRepository(productDBRepository);
 
-        storageRepository.save(product1);
-        storageRepository.save(product2);
-        storageRepository.save(cloth1);
-        storageRepository.save(cloth2);
-        storageRepository.save(cloth3);
-        storageRepository.save(cloth4);
-        storageRepository.save(cloth5);
-        storageRepository.save(food1);
-        storageRepository.save(food2);
+//        storageRepository.save(product1);
+//        storageRepository.save(product2);
+//        storageRepository.save(cloth1);
+//        storageRepository.save(cloth2);
+//        storageRepository.save(cloth3);
+//        storageRepository.save(cloth4);
+//        storageRepository.save(cloth5);
+//        storageRepository.save(food1);
+//        storageRepository.save(food2);
 
         return storageRepository;
     }
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
-        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository, storageProductRepository);
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
+        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
 
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M, ClothGender.NOT_SPECIFIED));
@@ -328,19 +328,19 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
-        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository, storageProductRepository);
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
+        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository);
 
         final LocalDate date = LocalDate.now();
 
-        repository.save(new FoodProduct(new ID(1L),
+        repository.save(new FoodProduct(new ID(6L),
                 food1,
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1));
 
-        repository.save(new FoodProduct(new ID(2L),
+        repository.save(new FoodProduct(new ID(7L),
                 food2,
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
@@ -362,30 +362,32 @@ public class InDBMockRepositoryConfig {
     }
 
     @Bean
-    public UserProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBUserRepository userRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        return new InDBUserProductRepository(userProductDBRepository, userRepository, productRepository, storageRepository);
+    @Primary
+    public BeneficiaryProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+        return new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
     }
 
     @Bean
-    public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+    @Primary
+    public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
         StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
 
-        storageProductRepository.save(new StorageProduct(new ID(1L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(1L)).get(), 10));
-        storageProductRepository.save(new StorageProduct(new ID(2L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(2L)).get(), 10));
+        var storage = storageRepository.findById(new ID(1L)).get();
 
-        storageProductRepository.save(new StorageProduct(new ID(3L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(3L)).get(), 10));
-        storageProductRepository.save(new StorageProduct(new ID(4L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(4L)).get(), 10));
-        storageProductRepository.save(new StorageProduct(new ID(5L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(5L)).get(), 10));
-        storageProductRepository.save(new StorageProduct(new ID(6L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(6L)).get(), 10));
-        storageProductRepository.save(new StorageProduct(new ID(7L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(7L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(1L), storage, productRepository.findById(new ID(1L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(2L), storage, productRepository.findById(new ID(2L)).get(), 10));
 
-        storageProductRepository.save(new StorageProduct(new ID(8L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(8L)).get(), 10));
-        storageProductRepository.save(new StorageProduct(new ID(9L), storageRepository.findById(new ID(1L)).get(), productRepository.findById(new ID(9L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(3L), storage, productRepository.findById(new ID(3L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(4L), storage, productRepository.findById(new ID(4L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(5L), storage, productRepository.findById(new ID(5L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(6L), storage, productRepository.findById(new ID(6L)).get(), 10));
+        storageProductRepository.save(new StorageProduct(new ID(7L), storage, productRepository.findById(new ID(7L)).get(), 10));
 
         return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
     }
 
     @Bean
+    @Primary
     public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
         return new StorageProductService(storageProductRepository);
     }

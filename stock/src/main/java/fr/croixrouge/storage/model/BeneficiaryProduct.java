@@ -1,33 +1,32 @@
 package fr.croixrouge.storage.model;
 
+import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.domain.model.User;
 import fr.croixrouge.storage.model.product.Product;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public final class UserProduct extends Entity<ID> {
+public final class BeneficiaryProduct extends Entity<ID> {
 
-    private final User user;
+    private final Beneficiary beneficiary;
     private final Product product;
-
     private final Storage storage;
     private final LocalDateTime date;
     private final int quantity;
 
-    public UserProduct(ID id, User user, Product product, Storage storage, LocalDateTime date, int quantity) {
+    public BeneficiaryProduct(ID id, Beneficiary beneficiary, Product product, Storage storage, LocalDateTime date, int quantity) {
         super(id);
-        this.user = user;
+        this.beneficiary = beneficiary;
         this.product = product;
         this.storage = storage;
         this.date = date;
         this.quantity = quantity;
     }
 
-    public User user() {
-        return user;
+    public Beneficiary getBeneficiary() {
+        return beneficiary;
     }
 
     public Product product() {
@@ -50,7 +49,7 @@ public final class UserProduct extends Entity<ID> {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (UserProduct) obj;
+        var that = (BeneficiaryProduct) obj;
         return Objects.equals(this.product, that.product) &&
                 Objects.equals(this.date, that.date) &&
                 this.quantity == that.quantity;

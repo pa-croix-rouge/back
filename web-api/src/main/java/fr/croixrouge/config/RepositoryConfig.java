@@ -1,10 +1,9 @@
 package fr.croixrouge.config;
 
-import fr.croixrouge.domain.repository.*;
+import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
 import fr.croixrouge.repository.db.beneficiary.FamilyMemberDBRepository;
 import fr.croixrouge.repository.db.beneficiary.InDBBeneficiaryRepository;
-import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.event.EventDBRepository;
 import fr.croixrouge.repository.db.event.EventSessionDBRepository;
 import fr.croixrouge.repository.db.event.EventTimeWindowDBRepository;
@@ -23,12 +22,12 @@ import fr.croixrouge.repository.db.storage_product.InDBStorageProductRepository;
 import fr.croixrouge.repository.db.storage_product.StorageProductDBRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
-import fr.croixrouge.repository.db.user_product.InDBUserProductRepository;
+import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository;
 import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
+import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
 import fr.croixrouge.storage.repository.StorageProductRepository;
-import fr.croixrouge.storage.repository.UserProductRepository;
 import fr.croixrouge.storage.service.StorageProductService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -84,19 +83,19 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
-        return new InDBClothProductRepository(clothProductDBRepository, productRepository, storageProductRepository);
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
+        return new InDBClothProductRepository(clothProductDBRepository, productRepository);
     }
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
-        return new InDBFoodProductRepository(foodProductDBRepository, productRepository, storageProductRepository);
+    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
+        return new InDBFoodProductRepository(foodProductDBRepository, productRepository);
     }
 
     @Bean
     @Primary
-    public BeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
         return new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
     }
 
@@ -107,8 +106,8 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public UserProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBUserRepository userRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        return new InDBUserProductRepository(userProductDBRepository, userRepository, productRepository, storageRepository);
+    public BeneficiaryProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+        return new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
     }
 
     @Bean

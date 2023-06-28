@@ -1,23 +1,23 @@
 package fr.croixrouge.repository.db.user_product;
 
+import fr.croixrouge.repository.db.beneficiary.BeneficiaryDB;
 import fr.croixrouge.repository.db.product.ProductDB;
 import fr.croixrouge.repository.db.storage.StorageDB;
-import fr.croixrouge.repository.db.user.UserDB;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Table(name = "user-product")
+@Table(name = "beneficiary-product")
 @Entity
-public class UserProductDB {
+public class BeneficiaryProductDB {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_db_user_id", nullable = false)
-    private UserDB userDB;
+    @JoinColumn(name = "beneficiary_db_id", nullable = false, unique = true)
+    private BeneficiaryDB beneficiaryDB;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_db_id", nullable = false)
@@ -33,12 +33,13 @@ public class UserProductDB {
     @Column(name = "number", nullable = false)
     private Integer number;
 
-    public UserProductDB() {
+
+    public BeneficiaryProductDB() {
     }
 
-    public UserProductDB(Long id, UserDB userDB, ProductDB productDB, StorageDB storageDB, LocalDateTime date, Integer number) {
+    public BeneficiaryProductDB(Long id, BeneficiaryDB beneficiaryDB, ProductDB productDB, StorageDB storageDB, LocalDateTime date, Integer number) {
         this.id = id;
-        this.userDB = userDB;
+        this.beneficiaryDB = beneficiaryDB;
         this.productDB = productDB;
         this.storageDB = storageDB;
         this.date = date;
@@ -77,12 +78,12 @@ public class UserProductDB {
         this.productDB = productDB;
     }
 
-    public UserDB getUserDB() {
-        return userDB;
+    public BeneficiaryDB getBeneficiaryDB() {
+        return beneficiaryDB;
     }
 
-    public void setUserDB(UserDB userDB) {
-        this.userDB = userDB;
+    public void setBeneficiaryDB(BeneficiaryDB beneficiaryDB) {
+        this.beneficiaryDB = beneficiaryDB;
     }
 
     public Long getId() {

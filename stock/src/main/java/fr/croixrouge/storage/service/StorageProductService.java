@@ -44,6 +44,10 @@ public class StorageProductService {
         return storageProductRepository.findAllByLocalUnit(localUnitId);
     }
 
+    public StorageProduct getProductsByLocalUnitAndProductID(ID localUnitId, ID productId) {
+        return storageProductRepository.findAllByLocalUnitAndProductId(localUnitId, productId).orElseThrow();
+    }
+
     public void removeProduct(Storage storage, Product product, int quantity) {
         addProduct(storage, product, -quantity);
     }
