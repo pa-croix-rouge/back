@@ -16,7 +16,7 @@ public class BeneficiaryProductDB {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "beneficiary_db_id", nullable = false, unique = true)
+    @JoinColumn(name = "beneficiary_db_id", nullable = false)
     private BeneficiaryDB beneficiaryDB;
 
     @ManyToOne(optional = false)
