@@ -7,6 +7,7 @@ import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.*;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
+import fr.croixrouge.storage.model.product.ClothGender;
 import fr.croixrouge.storage.model.product.ClothProduct;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.product.Product;
@@ -72,7 +73,7 @@ public class ClothProductController extends ErrorHandler {
         }
 
         Product productPersisted = productService.findById(productId);
-        ClothProduct clothProduct = new ClothProduct(null, productPersisted, ClothSize.fromLabel(createClothProductDTO.getSize()));
+        ClothProduct clothProduct = new ClothProduct(null, productPersisted, ClothSize.fromLabel(createClothProductDTO.getSize()), ClothGender.fromLabel(createClothProductDTO.getGender()));
         ID clothProductId = service.save(clothProduct);
         if (clothProductId == null) {
             return ResponseEntity.badRequest().build();
@@ -99,7 +100,7 @@ public class ClothProductController extends ErrorHandler {
         }
 
         Product productPersisted = productService.findById(productId);
-        ClothProduct clothProductUpdated = new ClothProduct(clothProductId, productPersisted, ClothSize.fromLabel(createClothProductDTO.getSize()));
+        ClothProduct clothProductUpdated = new ClothProduct(clothProductId, productPersisted, ClothSize.fromLabel(createClothProductDTO.getSize()), ClothGender.fromLabel(createClothProductDTO.getGender()));
         ID clothProductUpdatedId = service.save(clothProductUpdated);
         if (clothProductUpdatedId == null) {
             return ResponseEntity.badRequest().build();

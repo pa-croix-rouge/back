@@ -9,6 +9,8 @@ public class ClothProductResponse extends ProductResponse {
 
     private String size;
 
+    private String gender;
+
     public ClothProductResponse() {
     }
 
@@ -16,12 +18,14 @@ public class ClothProductResponse extends ProductResponse {
         super(product.getProduct());
         this.id = product.getId().value();
         this.size = product.getSize().getLabel();
+        this.gender = product.getGender().getLabel();
     }
 
-    public ClothProductResponse(Long id, Long productId, String name, QuantifierDTO quantifierDTO, String size) {
+    public ClothProductResponse(Long id, Long productId, String name, QuantifierDTO quantifierDTO, String size, String gender) {
         super(productId, name, quantifierDTO);
         this.id = id;
         this.size = size;
+        this.gender = gender;
     }
 
     public static ClothProductResponse fromClothProduct(ClothProduct product) {
@@ -34,5 +38,9 @@ public class ClothProductResponse extends ProductResponse {
 
     public String getSize() {
         return size;
+    }
+
+    public String getGender() {
+        return gender;
     }
 }

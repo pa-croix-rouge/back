@@ -317,11 +317,11 @@ public class InDBMockRepositoryConfig {
     public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, StorageProductRepository storageProductRepository) {
         InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository, storageProductRepository);
 
-        repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S));
-        repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M));
-        repository.save(new ClothProduct(new ID(3L), cloth3, ClothSize.L));
-        repository.save(new ClothProduct(new ID(4L), cloth4, ClothSize.XL));
-        repository.save(new ClothProduct(new ID(5L), cloth5, ClothSize.XXL));
+        repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(3L), cloth3, ClothSize.L, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(4L), cloth4, ClothSize.XL, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(5L), cloth5, ClothSize.XXL, ClothGender.NOT_SPECIFIED));
 
         return repository;
     }

@@ -9,6 +9,7 @@ import fr.croixrouge.service.ProductLimitService;
 import fr.croixrouge.service.ProductService;
 import fr.croixrouge.service.StorageProductService;
 import fr.croixrouge.storage.model.StorageProduct;
+import fr.croixrouge.storage.model.product.ClothGender;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.product.Product;
 import org.springframework.http.ResponseEntity;
@@ -69,5 +70,10 @@ public class ProductController extends CRUDController<ID, Product, ProductServic
     @GetMapping("/sizes")
     public ResponseEntity<List<String>> getSizes() {
         return ResponseEntity.ok(ClothSize.getAllSizes());
+    }
+
+    @GetMapping("/genders")
+    public ResponseEntity<List<String>> getGenders() {
+        return ResponseEntity.ok(ClothGender.getAllGenders());
     }
 }
