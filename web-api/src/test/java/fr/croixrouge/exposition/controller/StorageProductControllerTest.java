@@ -20,10 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,6 +60,7 @@ public class StorageProductControllerTest {
     @Test
     @DisplayName("Test that the storage product endpoint returns a list of products for the requested storage")
     public void testGetProductsByStorageSuccess() throws Exception {
+        final LocalDate date = LocalDate.now();
         ClothStorageProductResponse chemise1 = new ClothStorageProductResponse(
                 1L,
                 3L,
@@ -123,8 +121,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
-                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1L);
         FoodStorageProductResponse food2 = new FoodStorageProductResponse(
                 2L,
@@ -136,8 +134,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0), ZoneId.of("Europe/Paris")),
-                ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1L);
 
         mockMvc.perform(get("/storage/product/" + chemise1.getStorageId())
@@ -222,6 +220,8 @@ public class StorageProductControllerTest {
     @Test
     @DisplayName("Test that the storage product endpoint returns a list of products based on local unit id")
     public void testGetProductsByLocalUnitSuccess() throws Exception {
+        final LocalDate date = LocalDate.now();
+
         ClothStorageProductResponse chemise1 = new ClothStorageProductResponse(
                 1L,
                 3L,
@@ -282,8 +282,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                ZonedDateTime.of(LocalDateTime.of(2023, 5, 1, 15, 14, 1), ZoneId.of("Europe/Paris")),
-                ZonedDateTime.of(LocalDateTime.of(2023, 4, 10, 15, 14, 1), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1L);
         FoodStorageProductResponse food2 = new FoodStorageProductResponse(
                 2L,
@@ -295,8 +295,8 @@ public class StorageProductControllerTest {
                 "1.0",
                 "kilogram",
                 FoodConservation.ROOM_TEMPERATURE,
-                ZonedDateTime.of(LocalDateTime.of(2023, 6, 15, 12, 0), ZoneId.of("Europe/Paris")),
-                ZonedDateTime.of(LocalDateTime.of(2023, 6, 14, 12, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1L);
 
         mockMvc.perform(get("/storage/product/localunit")

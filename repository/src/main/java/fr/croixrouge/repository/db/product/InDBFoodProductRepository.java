@@ -6,6 +6,7 @@ import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.repository.FoodProductRepository;
 import fr.croixrouge.storage.repository.StorageProductRepository;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -112,5 +113,12 @@ public class InDBFoodProductRepository implements FoodProductRepository {
     @Override
     public Optional<FoodProduct> findByProductId(ID productId) {
         return foodProductDBRepository.findByProductId(productId.value()).map(this::toFoodProduct);
+    }
+
+    @Override
+    public List<FoodProduct> findAllSoonExpiredByLocalUnitId(ID localUnitId) {
+        return this.findAllByLocalUnitId(localUnitId).stream()
+                .filter(foodProduct -> foodProduct.getExpirationDate().minusDays(7).isBefore(ZonedDateTime.now()))
+                .toList();
     }
 }

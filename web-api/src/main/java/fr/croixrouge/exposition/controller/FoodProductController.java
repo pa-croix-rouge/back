@@ -132,4 +132,10 @@ public class FoodProductController extends ErrorHandler {
         productService.delete(product);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping(value = "/expired")
+    public ResponseEntity<List<FoodProductResponse>> getExpired(HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        return ResponseEntity.ok(service.findAllSoonExpiredByLocalUnitId(localUnitId).stream().map(this::toDTO).toList());
+    }
 }
