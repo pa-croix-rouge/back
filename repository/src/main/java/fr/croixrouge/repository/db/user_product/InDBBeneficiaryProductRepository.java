@@ -42,7 +42,7 @@ public class InDBBeneficiaryProductRepository implements BeneficiaryProductRepos
 
     public BeneficiaryProductDB toUserProductDB(BeneficiaryProduct beneficiaryProduct) {
         return new BeneficiaryProductDB(
-                beneficiaryProduct.getId().value(),
+                beneficiaryProduct.getId() == null ? null : beneficiaryProduct.getId().value(),
                 beneficiaryRepository.toBeneficiaryDB(beneficiaryProduct.getBeneficiary()),
                 productRepository.toProductDB(beneficiaryProduct.product()),
                 storageRepository.toStorageDB(beneficiaryProduct.getStorage()),
