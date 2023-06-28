@@ -7,6 +7,7 @@ import fr.croixrouge.repository.db.storage.InDBStorageRepository;
 import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -78,5 +79,11 @@ public class InDBBeneficiaryProductRepository implements BeneficiaryProductRepos
         return userProductDBRepository.findByBeneficiaryDB_IdAndProductDB_Id(userId.value(), productId.value()).stream()
                 .map(this::toUserProduct)
                 .toList();
+    }
+
+    @Override
+    public Optional<BeneficiaryProduct> findByID(ID storageId, ID productId, LocalDateTime date) {
+        return userProductDBRepository.findByProductDB_IdAndStorageDB_IdAndDate(productId.value(), storageId.value(), date)
+                .map(this::toUserProduct);
     }
 }

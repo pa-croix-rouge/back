@@ -67,6 +67,4 @@ public final class BeneficiaryProduct extends Entity<ID> {
                 "date=" + date + ", " +
                 "quantity=" + quantity + ']';
     }
-
-
 }
