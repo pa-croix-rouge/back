@@ -157,10 +157,12 @@ public class MockRepositoryConfig {
     public EventRepository eventTestRepository() {
         var eventRepository = new InMemoryEventRepository();
 
+        final LocalDate dynamicDate = LocalDate.now().plusDays(1);
+
         String eventName1 = "Formation PSC1";
         String eventDescription1 = "Formation au PSC1";
-        ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris"));
-        ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate1 = ZonedDateTime.of(LocalDateTime.of(dynamicDate.getYear(), dynamicDate.getMonthValue(), dynamicDate.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate1 = ZonedDateTime.of(LocalDateTime.of(dynamicDate.getYear(), dynamicDate.getMonthValue(), dynamicDate.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
 
         int maxParticipants1 = 2;
         List<ID> participants1 = new ArrayList<>();
@@ -186,8 +188,8 @@ public class MockRepositoryConfig {
 
         String eventName3 = "Formation PSC1";
         String eventDescription3 = "Formation au PSC1";
-        ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris"));
-        ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(dynamicDate.getYear(), dynamicDate.getMonthValue(), dynamicDate.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate3 = ZonedDateTime.of(LocalDateTime.of(dynamicDate.getYear(), dynamicDate.getMonthValue(), dynamicDate.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
 
         int maxParticipants3 = 30;
         List<ID> participants3 = new ArrayList<>();
@@ -198,8 +200,8 @@ public class MockRepositoryConfig {
 
         String eventName4 = "EPISOL";
         String eventDescription4 = "Ouverture de l'EPISOL";
-        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
-        ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue() + 1, LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(dynamicDate.getYear(), dynamicDate.getMonthValue(), dynamicDate.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventEndDate4 = ZonedDateTime.of(LocalDateTime.of(dynamicDate.plusMonths(1).getYear(), dynamicDate.plusMonths(1).getMonthValue(), dynamicDate.plusMonths(1).getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
 
         int maxParticipants4 = 32;
 

@@ -341,24 +341,25 @@ public class EventControllerTest {
     @DisplayName("Test that the event endpoint for local unit and month returns a list of events when given a correct local unit id and month")
     public void eventsLocalUnitAndMonthSuccessTest() throws Exception {
         final String localUnitId = "1";
-        final int month = LocalDate.now().getMonthValue();
-        final int year = LocalDate.now().getYear();
+        final LocalDate date = LocalDate.now().plusDays(1);
+        final int month = date.getMonthValue();
+        final int year = date.getYear();
 
         EventResponse eventResponse1 = new EventResponse(
                 4L,
                 4L,
                 "EPIcerie SOciaLe",
                 "Ouverture de l'epicerie sociale pour les personnes dans le besoin",
-                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 1L,
                 1L,
                 20,
                 0,
                 List.of(new TimeWindowResponse(
                         26L,
-                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         20,
                         List.of()
                 )),
@@ -370,16 +371,16 @@ public class EventControllerTest {
                 1L,
                 "Formation Premier Secours de niveau 1",
                 "Formation au diplôme du PSC1 (Premier Secours de niveau 1)",
-                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 1L,
                 1L,
                 1,
                 1,
                 List.of(new TimeWindowResponse(
                         62L,
-                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         1,
                         List.of(1L)
                 )),
@@ -391,16 +392,16 @@ public class EventControllerTest {
                 3L,
                 "Formation PSC1",
                 "Formation au PSC1",
-                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
                 1L,
                 1L,
                 30,
                 0,
                 List.of(new TimeWindowResponse(
                         5L,
-                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth() + 1, 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         30,
                         List.of()
                 )),
@@ -545,8 +546,9 @@ public class EventControllerTest {
     @Order(1)
     @DisplayName("Test that the event sessions endpoint returns a recurring event when given a correct event id")
     public void eventIdSessionSuccessTest() throws Exception {
-        final ZonedDateTime eventStart = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
-        final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
+        final LocalDate date = LocalDate.now().plusDays(1);
+        final ZonedDateTime eventStart = ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
+        final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
 
         EventResponse eventResponse = new EventResponse(
                 4L,
@@ -561,26 +563,26 @@ public class EventControllerTest {
                 0,
                 List.of(new TimeWindowResponse(
                         6L,
-                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 30), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), eventStart.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), eventEnd.getDayOfMonth(), 10, 30), ZoneId.of("Europe/Paris")).toString(),
                         8,
                         List.of()
                 ), new TimeWindowResponse(
                         7L,
-                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 30), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), LocalDate.now().getDayOfMonth(), 11, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), eventStart.getDayOfMonth(), 10, 30), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), eventEnd.getDayOfMonth(), 11, 0), ZoneId.of("Europe/Paris")).toString(),
                         8,
                         List.of()
                 ), new TimeWindowResponse(
                         8L,
-                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), LocalDate.now().getDayOfMonth(), 11, 0), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), LocalDate.now().getDayOfMonth(), 11, 30), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), eventStart.getDayOfMonth(), 11, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), eventEnd.getDayOfMonth(), 11, 30), ZoneId.of("Europe/Paris")).toString(),
                         8,
                         List.of()
                 ), new TimeWindowResponse(
                         9L,
-                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), LocalDate.now().getDayOfMonth(), 11, 30), ZoneId.of("Europe/Paris")).toString(),
-                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventStart.getYear(), eventStart.getMonthValue(), eventStart.getDayOfMonth(), 11, 30), ZoneId.of("Europe/Paris")).toString(),
+                        ZonedDateTime.of(LocalDateTime.of(eventEnd.getYear(), eventEnd.getMonthValue(), eventEnd.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris")).toString(),
                         8,
                         List.of()
                 )),
@@ -778,10 +780,11 @@ public class EventControllerTest {
     @Order(2)
     @DisplayName("Test that the event sessions endpoint updates a recurring event when given correct event id and parameters")
     public void eventUpdatesSessionSuccessTest() throws Exception {
+        final LocalDate eventLocalDate = LocalDate.now().plusDays(1);
         final String eventId = "4";
         final String sessionId = "4";
-        final ZonedDateTime eventStart = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
-        final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
+        final ZonedDateTime eventStart = ZonedDateTime.of(LocalDateTime.of(eventLocalDate.getYear(), eventLocalDate.getMonthValue(), eventLocalDate.getDayOfMonth(), 10, 0), ZoneId.of("Europe/Paris"));
+        final ZonedDateTime eventEnd = ZonedDateTime.of(LocalDateTime.of(eventLocalDate.getYear(), eventLocalDate.getMonthValue(), eventLocalDate.getDayOfMonth(), 12, 0), ZoneId.of("Europe/Paris"));
 
         SingleEventCreationRequest singleEventCreationRequest = new SingleEventCreationRequest(
                 "EPIcerie SOciaLe",
