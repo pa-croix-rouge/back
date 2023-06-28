@@ -7,10 +7,7 @@ import fr.croixrouge.storage.model.product.ClothProduct;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.product.ProductList;
-import fr.croixrouge.storage.repository.ClothProductRepository;
-import fr.croixrouge.storage.repository.FoodProductRepository;
-import fr.croixrouge.storage.repository.ProductRepository;
-import fr.croixrouge.storage.repository.StorageRepository;
+import fr.croixrouge.storage.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,20 +15,19 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class StorageProductService {
+public class StorageProductService extends fr.croixrouge.storage.service.StorageProductService {
 
     private final StorageRepository storageRepository;
     private final ProductRepository productRepository;
     private final ClothProductRepository clothProductRepository;
     private final FoodProductRepository foodProductRepository;
-    private final fr.croixrouge.storage.service.StorageProductService storageProductService;
 
-    public StorageProductService(StorageRepository storageRepository, ProductRepository productRepository, ClothProductRepository clothProductRepository, FoodProductRepository foodProductRepository, fr.croixrouge.storage.service.StorageProductService storageProductService) {
+    public StorageProductService(StorageProductRepository storageProductRepository, StorageRepository storageRepository, ProductRepository productRepository, ClothProductRepository clothProductRepository, FoodProductRepository foodProductRepository) {
+        super(storageProductRepository);
         this.storageRepository = storageRepository;
         this.productRepository = productRepository;
         this.clothProductRepository = clothProductRepository;
         this.foodProductRepository = foodProductRepository;
-        this.storageProductService = storageProductService;
     }
 
     private ProductList storageProductListToProductList(List<StorageProduct> storageProducts) {
@@ -44,36 +40,19 @@ public class StorageProductService {
         return new ProductList(clothProducts, foodProducts);
     }
 
-    public StorageProduct findByProduct(Product product) {
-        return storageProductService.findByProduct(product);
+    public StorageProduct findByID(ID id) {
+        return storageProductRepository.findById(id).orElseThrow();
     }
 
-    public ID save(StorageProduct storageProduct) {
-        return storageProductService.save(storageProduct);
-    }
-
-    public void addProduct(ID storageId, ID productId, int quantity) {
-        Storage storage = storageRepository.findById(storageId).orElseThrow();
-        Product product = productRepository.findById(productId).orElseThrow();
-
-        storageProductService.addProduct(storage, product, quantity);
-    }
-
-    public void removeProduct(ID storageId, ID productId, int quantity) {
-        Storage storage = storageRepository.findById(storageId).orElseThrow();
-        Product product = productRepository.findById(productId).orElseThrow();
-
-        storageProductService.removeProduct(storage, product, quantity);
-    }
 
     public ProductList getProductsByStorage(ID storageId) {
         Storage storage = storageRepository.findById(storageId).orElseThrow();
-        List<StorageProduct> products = storageProductService.getProductsByStorage(storage);
+        List<StorageProduct> products = super.getProductsByStorage(storage);
         return storageProductListToProductList(products);
     }
 
     public ProductList getProductsByLocalUnit(ID localUnitId) {
-        List<StorageProduct> products = storageProductService.getProductsByLocalUnit(localUnitId);
+        List<StorageProduct> products = super.getStorageProductsByLocalUnit(localUnitId);
         return storageProductListToProductList(products);
     }
 
@@ -81,18 +60,11 @@ public class StorageProductService {
         Storage storage = storageRepository.findById(storageId).orElseThrow();
         Product product = productRepository.findById(productId).orElseThrow();
 
-        return storageProductService.getProductQuantity(storage, product);
+        return getProductQuantity(storage, product);
     }
 
     public List<StorageProduct> findAllByLocalUnitId(ID localUnitId) {
-        return storageProductService.getProductsByLocalUnit(localUnitId);
+        return super.getStorageProductsByLocalUnit(localUnitId);
     }
 
-    public StorageProduct findAllByLocalUnitIdAndProductId(ID localUnitId, ID productId) {
-        return storageProductService.getProductsByLocalUnitAndProductID(localUnitId, productId);
-    }
-
-    public void delete(StorageProduct storageProduct) {
-        storageProductService.delete(storageProduct);
-    }
 }

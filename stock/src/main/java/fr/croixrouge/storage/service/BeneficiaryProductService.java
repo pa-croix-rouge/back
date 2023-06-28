@@ -1,12 +1,15 @@
 package fr.croixrouge.storage.service;
 
 import fr.croixrouge.domain.model.Beneficiary;
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.model.Storage;
+import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BeneficiaryProductService {
@@ -20,17 +23,23 @@ public class BeneficiaryProductService {
         this.storageProductService = storageProductService;
     }
 
-    public void addProduct(Beneficiary beneficiary, Storage storage, Product product, int quantity) {
-        addProduct(beneficiary, storage, product, quantity, LocalDateTime.now());
+    public void addProduct(Beneficiary beneficiary, StorageProduct storageProduct, int quantity) {
+        addProduct(beneficiary, storageProduct, quantity, LocalDateTime.now());
     }
 
-    public void addProduct(Beneficiary beneficiary, Storage storage, Product product, int quantity, LocalDateTime date) {
-        beneficiaryProductRepository.save(new BeneficiaryProduct(null, beneficiary, product, storage, date, quantity));
-        storageProductService.removeProduct(storage, product, quantity);
+    public ID addProduct(Beneficiary beneficiary, StorageProduct storageProduct, int quantity, LocalDateTime date) {
+        if (!canAddProduct(beneficiary, storageProduct.getStorage(), storageProduct.getProduct(), quantity)) {
+            throw new IllegalArgumentException("Limit reached");
+        }
+
+        var id = beneficiaryProductRepository.save(new BeneficiaryProduct(null, beneficiary, storageProduct.getProduct(), storageProduct.getStorage(), date, quantity));
+        storageProductService.removeProduct(storageProduct.getId(), quantity);
+
+        return id;
     }
 
     public boolean canAddProduct(Beneficiary beneficiary, Storage storage, Product product, int quantity) {
-        List<BeneficiaryProduct> products = beneficiaryProductRepository.findAll(beneficiary.getId(), storage.getId());
+        List<BeneficiaryProduct> products = new ArrayList<>(beneficiaryProductRepository.findAll(beneficiary.getId(), storage.getId()));
         products.add(new BeneficiaryProduct(null, beneficiary, product, storage, LocalDateTime.now(), quantity));
         return !product.getLimit().isLimitReached(products);
 

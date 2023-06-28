@@ -10,7 +10,7 @@ import java.util.List;
 
 public class StorageProductService {
 
-    private final StorageProductRepository storageProductRepository;
+    protected final StorageProductRepository storageProductRepository;
 
     public StorageProductService(StorageProductRepository storageProductRepository) {
         this.storageProductRepository = storageProductRepository;
@@ -30,6 +30,15 @@ public class StorageProductService {
                         () -> storageProductRepository.save(new StorageProduct(storage, product, quantity)));
     }
 
+    public void addProduct(ID storageProductID, int quantity) {
+        var storageProduct = storageProductRepository.findById(storageProductID).orElseThrow();
+        storageProductRepository.save(new StorageProduct(storageProduct.getId(), storageProduct.getStorage(), storageProduct.getProduct(), storageProduct.getQuantity() + quantity));
+    }
+
+    public void removeProduct(ID storageProductID, int quantity) {
+        addProduct(storageProductID, -quantity);
+    }
+
     public int getProductQuantity(Storage storage, Product product) {
         return storageProductRepository.findById(storage, product)
                 .map(StorageProduct::getQuantity)
@@ -40,7 +49,7 @@ public class StorageProductService {
         return storageProductRepository.findAllByStorage(storage);
     }
 
-    public List<StorageProduct> getProductsByLocalUnit(ID localUnitId) {
+    public List<StorageProduct> getStorageProductsByLocalUnit(ID localUnitId) {
         return storageProductRepository.findAllByLocalUnit(localUnitId);
     }
 

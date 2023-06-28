@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.storage.model.Storage;
+import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.product.ProductLimit;
 import fr.croixrouge.storage.model.quantifier.WeightQuantifier;
@@ -39,11 +40,19 @@ class BeneficiaryProductServiceTest {
 
     private final ProductLimit limit1KgFor7Days = new ProductLimit(new ID(1L), Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM));
     private final Product productWeight1KgNoLimit = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
+
+    private final StorageProduct storageProductWeight1KgNoLimit = new StorageProduct(new ID(1L), storage, productWeight1KgNoLimit, 1);
     private final Product productWeight1KgLimit1KgFor7Days = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), limit1KgFor7Days);
-    private final Product productWeight500gLimit1KgFor7Days = new Product(new ID(1L), "pr", new WeightQuantifier(500, WeightUnit.GRAM), limit1KgFor7Days);
+    private final StorageProduct storageProductWeight1KgLimit1KgFor7Days = new StorageProduct(new ID(1L), storage, productWeight1KgLimit1KgFor7Days, 1);
+    private final Product productWeight500gLimit1KgFor7Days = new Product(new ID(2L), "pr", new WeightQuantifier(500, WeightUnit.GRAM), limit1KgFor7Days);
+
+    private final StorageProduct storageProductWeight500gLimit1KgFor7Days = new StorageProduct(new ID(2L), storage, productWeight500gLimit1KgFor7Days, 1);
 
     @BeforeEach
     void setUp() {
+        storageProductRepository = new InMemoryStorageProductRepository();
+
+
     }
 
     @Test
@@ -53,31 +62,31 @@ class BeneficiaryProductServiceTest {
 
     @Test
     void should_add_product_and_decrease_storage_quantity() {
-        beneficiaryProductService.addProduct(beneficiary, storage, productWeight1KgNoLimit, 1);
+        beneficiaryProductService.addProduct(beneficiary, storageProductWeight1KgNoLimit, 1);
         assertEquals(-1, storageProductService.getProductQuantity(storage, productWeight1KgNoLimit));
     }
 
     @Test
     void should_not_add_product_when_limit_is_reached() {
-        beneficiaryProductService.addProduct(beneficiary, storage, productWeight1KgLimit1KgFor7Days, 1);
+        beneficiaryProductService.addProduct(beneficiary, storageProductWeight1KgLimit1KgFor7Days, 1);
         assertFalse(beneficiaryProductService.canAddProduct(beneficiary, storage, productWeight1KgLimit1KgFor7Days, 1));
     }
 
     @Test
     void should_not_add_2product_when_limit_is_reached() {
-        beneficiaryProductService.addProduct(beneficiary, storage, productWeight500gLimit1KgFor7Days, 1);
+        beneficiaryProductService.addProduct(beneficiary, storageProductWeight500gLimit1KgFor7Days, 1);
         assertFalse(beneficiaryProductService.canAddProduct(beneficiary, storage, productWeight500gLimit1KgFor7Days, 2));
     }
 
     @Test
     void should_add_product_when_limit_is_not_entirely_reached() {
-        beneficiaryProductService.addProduct(beneficiary, storage, productWeight500gLimit1KgFor7Days, 1);
+        beneficiaryProductService.addProduct(beneficiary, storageProductWeight500gLimit1KgFor7Days, 1);
         assertTrue(beneficiaryProductService.canAddProduct(beneficiary, storage, productWeight500gLimit1KgFor7Days, 1));
     }
 
     @Test
     void should_add_product_if_duration() {
-        beneficiaryProductService.addProduct(beneficiary, storage, productWeight500gLimit1KgFor7Days, 1, LocalDateTime.now().minusDays(8));
+        beneficiaryProductService.addProduct(beneficiary, storageProductWeight500gLimit1KgFor7Days, 1, LocalDateTime.now().minusDays(8));
         assertTrue(beneficiaryProductService.canAddProduct(beneficiary, storage, productWeight500gLimit1KgFor7Days, 1));
     }
 }
