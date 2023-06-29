@@ -7,6 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RoleAuthResponse {
-    public List<Resources> resources = List.of(Resources.values());
+    public List<String> resources = Arrays.stream(Resources.values()).map(Resources::getName).toList();
     public List<String> operations = Arrays.stream(Operations.values()).map(Operations::getName).toList();
 }

@@ -15,11 +15,11 @@ public class RoleCreationRequest extends CreationDTO<Role> {
 
     private final String name;
     private final String description;
-    private final Map<Resources, Set<String>> authorizations;
+    private final Map<String, Set<String>> authorizations;
 
     private final Long localUnitID;
 
-    public RoleCreationRequest(String name, String description, Map<Resources, Set<String>> authorizations, Long localUnitID) {
+    public RoleCreationRequest(String name, String description, Map<String, Set<String>> authorizations, Long localUnitID) {
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
@@ -34,7 +34,7 @@ public class RoleCreationRequest extends CreationDTO<Role> {
         return description;
     }
 
-    public Map<Resources, Set<String>> getAuthorizations() {
+    public Map<String, Set<String>> getAuthorizations() {
         return authorizations;
     }
 
@@ -44,17 +44,13 @@ public class RoleCreationRequest extends CreationDTO<Role> {
 
     @Override
     public Role toModel() {
-        final Map<Resources, Set<Operations>> auths = new HashMap<>();
-        for (Resources resource : authorizations.keySet()) {
-            auths.put(resource, authorizations.get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
-        }
-        return new Role(null, name, description, auths, null, null);
+        return this.toModel(null);
     }
 
     public Role toModel(LocalUnit localUnit) {
         final Map<Resources, Set<Operations>> auths = new HashMap<>();
-        for (Resources resource : authorizations.keySet()) {
-            auths.put(resource, authorizations.get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
+        for (String resource : authorizations.keySet()) {
+            auths.put(Resources.fromName(resource), authorizations.get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
         }
         return new Role(null, name, description, auths, localUnit, null);
     }

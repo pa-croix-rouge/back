@@ -45,8 +45,8 @@ public class RoleService extends CRUDService<ID, Role, RoleRepository> {
         Role role = findById(id);
         final Map<Resources, Set<Operations>> auths = new HashMap<>();
         if (roleCreationRequest.getAuthorizations() != null) {
-            for (Resources resource : roleCreationRequest.getAuthorizations().keySet()) {
-                auths.put(resource, roleCreationRequest.getAuthorizations().get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
+            for (String resource : roleCreationRequest.getAuthorizations().keySet()) {
+                auths.put(Resources.fromName(resource), roleCreationRequest.getAuthorizations().get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
             }
         }
 

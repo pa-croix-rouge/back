@@ -12,16 +12,16 @@ public class RoleResponse {
     private Long id;
     private String name;
     private String description;
-    private Map<Resources, Set<String>> authorizations;
+    private Map<String, Set<String>> authorizations;
     private List<Long> userIDs;
 
     public RoleResponse() {
     }
 
     public RoleResponse(Long id, String name, String description, Map<Resources, Set<Operations>> authorizations, List<Long> userIds) {
-        final Map<Resources, Set<String>> auths = new HashMap<>();
+        final Map<String, Set<String>> auths = new HashMap<>();
         for (Resources resource : authorizations.keySet()) {
-            auths.put(resource, authorizations.get(resource).stream().map(Operations::getName).collect(Collectors.toSet()));
+            auths.put(resource.getName(), authorizations.get(resource).stream().map(Operations::getName).collect(Collectors.toSet()));
         }
         this.id = id;
         this.name = name;
@@ -52,7 +52,7 @@ public class RoleResponse {
         return description;
     }
 
-    public Map<Resources, Set<String>> getAuthorizations() {
+    public Map<String, Set<String>> getAuthorizations() {
         return authorizations;
     }
 
