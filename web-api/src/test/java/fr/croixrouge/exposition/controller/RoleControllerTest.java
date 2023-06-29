@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -106,11 +107,11 @@ public class RoleControllerTest {
     @Test
     @DisplayName("Test that the role create endpoint returns a 403 when you user is not allowed to")
     public void getRoleForbidden() throws Exception {
-        HashMap<Resources, Set<Operations>> roleResources = new HashMap<>();
+        HashMap<String, Set<String>> roleResources = new HashMap<>();
         for (var ressource : Resources.values()) {
-            roleResources.put(ressource, new HashSet<>( Set.of(Operations.values())));
+            roleResources.put(ressource.getName(), new HashSet<>(Arrays.stream(Operations.values()).map(Operations::getName).toList()));
         }
-        roleResources.get(Resources.ROLE).remove(Operations.READ);
+        roleResources.get(Resources.ROLE.getName()).remove(Operations.READ.getName());
 
         RoleCreationRequest roleCreationRequest = new RoleCreationRequest(
                 null,
@@ -136,15 +137,20 @@ public class RoleControllerTest {
         RoleCreationRequest roleCreationRequest = new RoleCreationRequest(
                 "Test role",
                 "Test role description",
-                Map.of(Resources.RESOURCE, Set.of(Operations.READ)),
+                Map.of(Resources.RESOURCE.getName(), Set.of(Operations.READ.getName())),
                 1L
         );
+
+        final Map<Resources, Set<Operations>> auths = new HashMap<>();
+        for (String resource : roleCreationRequest.getAuthorizations().keySet()) {
+            auths.put(Resources.fromName(resource), roleCreationRequest.getAuthorizations().get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
+        }
 
         RoleResponse roleResponse = new RoleResponse(
                 null,
                 roleCreationRequest.getName(),
                 roleCreationRequest.getDescription(),
-                roleCreationRequest.getAuthorizations(),
+                auths,
                 List.of()
         );
 
@@ -169,11 +175,11 @@ public class RoleControllerTest {
     @Test
     @DisplayName("Test that the role create endpoint returns a 403 when you user is not allowed to")
     public void createRoleForbidden() throws Exception {
-        HashMap<Resources, Set<Operations>> roleResources = new HashMap<>();
+        HashMap<String, Set<String>> roleResources = new HashMap<>();
         for (var ressource : Resources.values()) {
-            roleResources.put(ressource, new HashSet<>( Set.of(Operations.values())));
+            roleResources.put(ressource.getName(), new HashSet<>(Arrays.stream(Operations.values()).map(Operations::getName).toList()));
         }
-        roleResources.get(Resources.ROLE).remove(Operations.CREATE);
+        roleResources.get(Resources.ROLE.getName()).remove(Operations.CREATE.getName());
 
         RoleCreationRequest roleCreationRequest = new RoleCreationRequest(
                 null,
@@ -202,7 +208,7 @@ public class RoleControllerTest {
         RoleCreationRequest roleCreationRequest = new RoleCreationRequest(
                 "Test role 2",
                 "Test role description 2",
-                Map.of(Resources.RESOURCE, Set.of(Operations.READ, Operations.CREATE), Resources.EVENT, Set.of(Operations.READ)),
+                Map.of(Resources.RESOURCE.getName(), Set.of(Operations.READ.getName(), Operations.CREATE.getName()), Resources.EVENT.getName(), Set.of(Operations.READ.getName())),
                 1L
         );
 
@@ -225,11 +231,11 @@ public class RoleControllerTest {
     @Test
     @DisplayName("Test that the role put endpoint returns a 403 when you user is not allowed to")
     public void updateRoleForbidden() throws Exception {
-        HashMap<Resources, Set<Operations>> roleResources = new HashMap<>();
+        HashMap<String, Set<String>> roleResources = new HashMap<>();
         for (var ressource : Resources.values()) {
-            roleResources.put(ressource, new HashSet<>( Set.of(Operations.values())));
+            roleResources.put(ressource.getName(), new HashSet<>(Arrays.stream(Operations.values()).map(Operations::getName).toList()));
         }
-        roleResources.get(Resources.ROLE).remove(Operations.UPDATE);
+        roleResources.get(Resources.ROLE.getName()).remove(Operations.UPDATE.getName());
 
         RoleCreationRequest roleCreationRequest = new RoleCreationRequest(
                 null,
@@ -263,14 +269,13 @@ public class RoleControllerTest {
 
     @Test
     @Order(3)
-    @DisplayName("Test that the role delete endpoint returns a 403 when you user is not allowed to delete any role")
+    @DisplayName("Test that the role delete endpoint returns a 403 when user is not allowed to delete any role")
     public void deleteRoleForbidden() throws Exception {
-
-        HashMap<Resources, Set<Operations>> roleResources = new HashMap<>();
+        HashMap<String, Set<String>> roleResources = new HashMap<>();
         for (var ressource : Resources.values()) {
-            roleResources.put(ressource, new HashSet<>( Set.of(Operations.values())));
+            roleResources.put(ressource.getName(), new HashSet<>(Arrays.stream(Operations.values()).map(Operations::getName).toList()));
         }
-        roleResources.get(Resources.ROLE).remove(Operations.DELETE);
+        roleResources.get(Resources.ROLE.getName()).remove(Operations.DELETE.getName());
 
         RoleCreationRequest roleCreationRequest = new RoleCreationRequest(
                 null,

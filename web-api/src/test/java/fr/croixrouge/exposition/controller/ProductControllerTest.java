@@ -55,6 +55,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test that the product endpoint returns a product when given a correct product id")
     public void productIdSuccessTest() throws Exception {
         mockMvc.perform(get("/product/1")
@@ -81,7 +82,7 @@ class ProductControllerTest {
     }*/
 
     @Test
-    @Order(1)
+    @Order(2)
     @DisplayName("Test that the product endpoint returns a 404 when given a incorrect product id")
     public void productIdFailedTest() throws Exception {
         mockMvc.perform(get("/product/-1")
@@ -91,7 +92,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     @DisplayName("Test that the product post endpoint returns OK when given a correct product")
     public void productAddSuccessTest() throws Exception {
         CreateProductDTO createProductDTO = new CreateProductDTO("new Product", new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1));
@@ -115,7 +116,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     @DisplayName("Test that the product delete endpoint returns OK when given a correct product")
     public void productDeleteSuccessTest() throws Exception {
 
@@ -131,7 +132,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     @DisplayName("Test that the product units endpoint returns the list of units")
     public void productReturnsListOfUnits() throws Exception {
         mockMvc.perform(get("/product/units")
@@ -150,7 +151,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @DisplayName("Test that the product conservation endpoint returns the list of units")
     public void productReturnsListOfConservations() throws Exception {
         mockMvc.perform(get("/product/conservations")
@@ -165,7 +166,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @DisplayName("Test that the product sizes endpoint returns the list of sizes")
     public void productReturnsListOfClothSizes() throws Exception {
         mockMvc.perform(get("/product/sizes")
@@ -186,7 +187,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     @DisplayName("Test that the product genders endpoint returns the list of gender")
     public void productReturnsListOfClothGenders() throws Exception {
         mockMvc.perform(get("/product/genders")

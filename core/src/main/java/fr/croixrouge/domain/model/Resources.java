@@ -1,20 +1,31 @@
 package fr.croixrouge.domain.model;
 
 public enum Resources {
+    BENEFICIARY("Bénéficiaire"),
+    RESOURCE("Ressource"),
+    EVENT("Événement"),
+    PRODUCT("Produit"),
+    ROLE("Rôle"),
+    STORAGE("Stocks"),
+    VOLUNTEER("Volontaire"),
+    LOCAL_UNIT("Unité locale");
 
-    BENEFICIARY(),
+    private final String name;
 
-    RESOURCE(),
+    public static Resources fromName(String name) {
+        for (Resources resource : Resources.values()) {
+            if (resource.getName().equals(name)) {
+                return resource;
+            }
+        }
+        return null;
+    }
 
-    EVENT(),
+    Resources(String name) {
+        this.name = name;
+    }
 
-    PRODUCT(),
-
-    ROLE(),
-
-    STORAGE(),
-
-    VOLUNTEER(),
-
-    LOCAL_UNIT();
+    public String getName() {
+        return name;
+    }
 }
