@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.product_beneficiary.BeneficiaryAddProductRequestDTO;
 import fr.croixrouge.exposition.dto.product_beneficiary.BeneficiaryProductCounterResponse;
 import fr.croixrouge.exposition.error.ErrorHandler;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/product/beneficiary")
@@ -45,5 +48,15 @@ public class ProductBeneficiaryController extends ErrorHandler {
         return ResponseEntity.ok(new BeneficiaryProductCounterResponse(pair.getFirst(), pair.getSecond()));
     }
 
+    @GetMapping(value = "/{id}/quantity", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Map<String, QuantifierDTO>> getAllProductQuantity(@PathVariable ID id, @RequestParam(value = "from") @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate, @RequestParam(value = "to") @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate) {
+        Map<String, QuantifierDTO> result = service.getBeneficiaryProductsQuantity(id, fromDate, toDate).entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> QuantifierDTO.fromQuantifier(entry.getValue())
+                ));
+        return ResponseEntity.ok(result);
+    }
 
 }

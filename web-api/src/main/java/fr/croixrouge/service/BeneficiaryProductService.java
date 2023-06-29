@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.model.product.ClothProduct;
 import fr.croixrouge.storage.model.product.FoodProduct;
+import fr.croixrouge.storage.model.quantifier.Quantifier;
 import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
 import fr.croixrouge.storage.repository.ClothProductRepository;
 import fr.croixrouge.storage.repository.FoodProductRepository;
@@ -51,5 +52,26 @@ public class BeneficiaryProductService extends fr.croixrouge.storage.service.Ben
         }
 
         return Pair.of(foodProducts, clothProducts);
+    }
+
+    public Map<String, Quantifier> getBeneficiaryProductsQuantity(ID beneficiaryID, LocalDate from, LocalDate to) {
+        var list = beneficiaryProductRepository.findAllFromToDate(beneficiaryID, from, to);
+        Map<String, Quantifier> productQuantities = new HashMap<>();
+
+        for (var beneficiaryProduct : list) {
+
+            if (productQuantities.containsKey(beneficiaryProduct.product().getName())) {
+                productQuantities.put(
+                        beneficiaryProduct.product().getName(),
+                        productQuantities.get(beneficiaryProduct.product().getName())
+                                .add(beneficiaryProduct.product().getQuantity()
+                                        .multiply(beneficiaryProduct.quantity()))
+                );
+            } else {
+                productQuantities.put(beneficiaryProduct.product().getName(), beneficiaryProduct.product().getQuantity().multiply(beneficiaryProduct.quantity()));
+            }
+        }
+
+        return productQuantities;
     }
 }
