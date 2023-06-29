@@ -1,5 +1,6 @@
 package fr.croixrouge.repository.db.product;
 
+import fr.croixrouge.storage.model.product.ClothGender;
 import fr.croixrouge.storage.model.product.ClothSize;
 import jakarta.persistence.*;
 
@@ -19,13 +20,18 @@ public class ClothProductDB {
     @OneToOne(optional = false)
     private ProductDB productDB;
 
+    @Enumerated
+    @Column(name = "gender")
+    private ClothGender gender;
+
     public ClothProductDB() {
     }
 
-    public ClothProductDB(Long id, ProductDB productDB, ClothSize size) {
+    public ClothProductDB(Long id, ProductDB productDB, ClothSize size, ClothGender gender) {
         this.id = id;
         this.productDB = productDB;
         this.size = size;
+        this.gender = gender;
     }
 
     public Long getId() {
@@ -50,5 +56,13 @@ public class ClothProductDB {
 
     public void setProductDB(ProductDB productDB) {
         this.productDB = productDB;
+    }
+
+    public ClothGender getGender() {
+        return gender;
+    }
+
+    public void setGender(ClothGender gender) {
+        this.gender = gender;
     }
 }

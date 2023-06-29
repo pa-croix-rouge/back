@@ -7,6 +7,7 @@ import fr.croixrouge.config.MockRepositoryConfig;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
+import fr.croixrouge.storage.model.product.ClothGender;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.quantifier.NumberedUnit;
@@ -80,6 +81,7 @@ class ProductControllerTest {
     }*/
 
     @Test
+    @Order(1)
     @DisplayName("Test that the product endpoint returns a 404 when given a incorrect product id")
     public void productIdFailedTest() throws Exception {
         mockMvc.perform(get("/product/-1")
@@ -89,7 +91,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     @DisplayName("Test that the product post endpoint returns OK when given a correct product")
     public void productAddSuccessTest() throws Exception {
         CreateProductDTO createProductDTO = new CreateProductDTO("new Product", new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1));
@@ -113,7 +115,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     @DisplayName("Test that the product delete endpoint returns OK when given a correct product")
     public void productDeleteSuccessTest() throws Exception {
 
@@ -129,7 +131,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     @DisplayName("Test that the product units endpoint returns the list of units")
     public void productReturnsListOfUnits() throws Exception {
         mockMvc.perform(get("/product/units")
@@ -148,7 +150,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order('3')
+    @Order(5)
     @DisplayName("Test that the product conservation endpoint returns the list of units")
     public void productReturnsListOfConservations() throws Exception {
         mockMvc.perform(get("/product/conservations")
@@ -163,7 +165,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
     @DisplayName("Test that the product sizes endpoint returns the list of sizes")
     public void productReturnsListOfClothSizes() throws Exception {
         mockMvc.perform(get("/product/sizes")
@@ -181,6 +183,21 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[6]").value(ClothSize.XL.getLabel()))
                 .andExpect(jsonPath("$[7]").value(ClothSize.XXL.getLabel()))
                 .andExpect(jsonPath("$[8]").value(ClothSize.XXXL.getLabel()));
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Test that the product genders endpoint returns the list of gender")
+    public void productReturnsListOfClothGenders() throws Exception {
+        mockMvc.perform(get("/product/genders")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$[0]").value(ClothGender.MALE.getLabel()))
+                .andExpect(jsonPath("$[1]").value(ClothGender.FEMALE.getLabel()))
+                .andExpect(jsonPath("$[2]").value(ClothGender.NOT_SPECIFIED.getLabel()));
     }
 }
 

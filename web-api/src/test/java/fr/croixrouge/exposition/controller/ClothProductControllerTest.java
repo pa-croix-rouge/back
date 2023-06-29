@@ -7,6 +7,7 @@ import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.ClothProductResponse;
 import fr.croixrouge.exposition.dto.product.CreateClothProductDTO;
+import fr.croixrouge.storage.model.product.ClothGender;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.quantifier.NumberedUnit;
 import org.junit.jupiter.api.*;
@@ -57,7 +58,8 @@ public class ClothProductControllerTest {
                 3L,
                 "Chemises blanches",
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
-                ClothSize.S.getLabel());
+                ClothSize.S.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         mockMvc.perform(get("/product/cloth/" + clothProductResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -67,7 +69,8 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.name").value(clothProductResponse.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductResponse.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(clothProductResponse.getQuantity().getValue()))
-                .andExpect(jsonPath("$.size").value(clothProductResponse.getSize()));
+                .andExpect(jsonPath("$.size").value(clothProductResponse.getSize()))
+                .andExpect(jsonPath("$.gender").value(clothProductResponse.getGender()));
     }
 
     @Order(2)
@@ -89,31 +92,36 @@ public class ClothProductControllerTest {
                 3L,
                 "Chemises blanches",
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
-                ClothSize.S.getLabel());
+                ClothSize.S.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothProductResponse clothProductResponse2 = new ClothProductResponse(
                 2L,
                 4L,
                 "Chemises blanches",
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
-                ClothSize.M.getLabel());
+                ClothSize.M.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothProductResponse clothProductResponse3 = new ClothProductResponse(
                 3L,
                 5L,
                 "Chemises blanches",
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
-                ClothSize.L.getLabel());
+                ClothSize.L.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothProductResponse clothProductResponse4 = new ClothProductResponse(
                 4L,
                 6L,
                 "Chemises blanches",
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
-                ClothSize.XL.getLabel());
+                ClothSize.XL.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothProductResponse clothProductResponse5 = new ClothProductResponse(
                 5L,
                 7L,
                 "Chemises blanches",
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
-                ClothSize.XXL.getLabel());
+                ClothSize.XXL.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
 
         mockMvc.perform(get("/product/cloth")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -125,30 +133,35 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$[0].quantity.measurementUnit").value(clothProductResponse1.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$[0].quantity.value").value(clothProductResponse1.getQuantity().getValue()))
                 .andExpect(jsonPath("$[0].size").value(clothProductResponse1.getSize()))
+                .andExpect(jsonPath("$[0].gender").value(clothProductResponse1.getGender()))
                 .andExpect(jsonPath("$[1].id").value(clothProductResponse2.getId().toString()))
                 .andExpect(jsonPath("$[1].productId").value(clothProductResponse2.getProductId().toString()))
                 .andExpect(jsonPath("$[1].name").value(clothProductResponse2.getName()))
                 .andExpect(jsonPath("$[1].quantity.measurementUnit").value(clothProductResponse2.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$[1].quantity.value").value(clothProductResponse2.getQuantity().getValue()))
                 .andExpect(jsonPath("$[1].size").value(clothProductResponse2.getSize()))
+                .andExpect(jsonPath("$[1].gender").value(clothProductResponse2.getGender()))
                 .andExpect(jsonPath("$[2].id").value(clothProductResponse3.getId().toString()))
                 .andExpect(jsonPath("$[2].productId").value(clothProductResponse3.getProductId().toString()))
                 .andExpect(jsonPath("$[2].name").value(clothProductResponse3.getName()))
                 .andExpect(jsonPath("$[2].quantity.measurementUnit").value(clothProductResponse3.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$[2].quantity.value").value(clothProductResponse3.getQuantity().getValue()))
                 .andExpect(jsonPath("$[2].size").value(clothProductResponse3.getSize()))
+                .andExpect(jsonPath("$[2].gender").value(clothProductResponse3.getGender()))
                 .andExpect(jsonPath("$[3].id").value(clothProductResponse4.getId().toString()))
                 .andExpect(jsonPath("$[3].productId").value(clothProductResponse4.getProductId().toString()))
                 .andExpect(jsonPath("$[3].name").value(clothProductResponse4.getName()))
                 .andExpect(jsonPath("$[3].quantity.measurementUnit").value(clothProductResponse4.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$[3].quantity.value").value(clothProductResponse4.getQuantity().getValue()))
                 .andExpect(jsonPath("$[3].size").value(clothProductResponse4.getSize()))
+                .andExpect(jsonPath("$[3].gender").value(clothProductResponse4.getGender()))
                 .andExpect(jsonPath("$[4].id").value(clothProductResponse5.getId().toString()))
                 .andExpect(jsonPath("$[4].productId").value(clothProductResponse5.getProductId().toString()))
                 .andExpect(jsonPath("$[4].name").value(clothProductResponse5.getName()))
                 .andExpect(jsonPath("$[4].quantity.measurementUnit").value(clothProductResponse5.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$[4].quantity.value").value(clothProductResponse5.getQuantity().getValue()))
-                .andExpect(jsonPath("$[4].size").value(clothProductResponse5.getSize()));
+                .andExpect(jsonPath("$[4].size").value(clothProductResponse5.getSize()))
+                .andExpect(jsonPath("$[4].gender").value(clothProductResponse5.getGender()));
     }
 
     @Order(4)
@@ -160,7 +173,8 @@ public class ClothProductControllerTest {
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 100),
                 ClothSize.L.getLabel(),
                 "1",
-                1);
+                1,
+                ClothGender.MALE.getLabel());
 
         String result = mockMvc.perform(post("/product/cloth")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -180,7 +194,8 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.name").value(clothProductRequest.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductRequest.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(clothProductRequest.getQuantity().getValue()))
-                .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()));
+                .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()))
+                .andExpect(jsonPath("$.gender").value(clothProductRequest.getGender()));
     }
 
     @Order(5)
@@ -192,7 +207,8 @@ public class ClothProductControllerTest {
                 3L,
                 "Chemises blanches",
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 20),
-                ClothSize.S.getLabel());
+                ClothSize.S.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         mockMvc.perform(get("/product/cloth/" + clothProductResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -202,7 +218,8 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.name").value(clothProductResponse.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductResponse.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(clothProductResponse.getQuantity().getValue()))
-                .andExpect(jsonPath("$.size").value(clothProductResponse.getSize()));
+                .andExpect(jsonPath("$.size").value(clothProductResponse.getSize()))
+                .andExpect(jsonPath("$.gender").value(clothProductResponse.getGender()));
 
 
         CreateClothProductDTO clothProductRequest = new CreateClothProductDTO(
@@ -210,7 +227,8 @@ public class ClothProductControllerTest {
                 new QuantifierDTO(NumberedUnit.NUMBER.getName(), 50),
                 ClothSize.S.getLabel(),
                 "1",
-                1);
+                1,
+                ClothGender.FEMALE.getLabel());
 
         mockMvc.perform(post("/product/cloth/" + clothProductResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -228,7 +246,8 @@ public class ClothProductControllerTest {
                 .andExpect(jsonPath("$.name").value(clothProductRequest.getName()))
                 .andExpect(jsonPath("$.quantity.measurementUnit").value(clothProductRequest.getQuantity().getMeasurementUnit()))
                 .andExpect(jsonPath("$.quantity.value").value(50))
-                .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()));
+                .andExpect(jsonPath("$.size").value(clothProductRequest.getSize()))
+                .andExpect(jsonPath("$.gender").value(clothProductRequest.getGender()));
     }
 
     @Order(6)

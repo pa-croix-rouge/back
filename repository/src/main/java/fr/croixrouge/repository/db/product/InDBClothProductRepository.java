@@ -26,7 +26,8 @@ public class InDBClothProductRepository implements ClothProductRepository {
         return new ClothProduct(
                 ID.of(clothProductDB.getId()),
                 inDBProductRepository.findById(new ID(clothProductDB.getProductDB().getId())).orElseThrow(),
-                clothProductDB.getSize()
+                clothProductDB.getSize(),
+                clothProductDB.getGender()
         );
     }
 
@@ -34,7 +35,8 @@ public class InDBClothProductRepository implements ClothProductRepository {
         return new ClothProductDB(
                 clothProduct.getId() == null ? null : clothProduct.getId().value(),
                 inDBProductRepository.toProductDB(inDBProductRepository.findById(clothProduct.getProduct().getId()).orElseThrow()),
-                clothProduct.getSize()
+                clothProduct.getSize(),
+                clothProduct.getGender()
         );
     }
 

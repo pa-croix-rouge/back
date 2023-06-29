@@ -7,6 +7,7 @@ import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.ClothStorageProductResponse;
 import fr.croixrouge.exposition.dto.product.FoodStorageProductResponse;
 import fr.croixrouge.exposition.dto.product.StorageProductStatsResponse;
+import fr.croixrouge.storage.model.product.ClothGender;
 import fr.croixrouge.storage.model.product.ClothSize;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +20,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Timestamp;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,10 +42,6 @@ public class StorageProductControllerTest {
     private ObjectMapper objectMapper;
 
     private String jwtToken;
-
-    private ZonedDateTime timestampToLocalDateTime(Timestamp timestamp) {
-        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.getTime()), ZoneId.of("Europe/Paris"));
-    }
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -70,7 +69,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.S.getLabel());
+                ClothSize.S.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
                 4L,
@@ -80,7 +80,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.M.getLabel());
+                ClothSize.M.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
                 5L,
@@ -90,7 +91,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.L.getLabel());
+                ClothSize.L.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
                 6L,
@@ -100,7 +102,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.XL.getLabel());
+                ClothSize.XL.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
                 7L,
@@ -110,7 +113,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.XXL.getLabel());
+                ClothSize.XXL.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
                 8L,
@@ -153,6 +157,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[0].quantifierQuantity").value(chemise1.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[0].quantifierName").value(chemise1.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[0].size").value(chemise1.getSize()))
+                .andExpect(jsonPath("$.clothProducts[0].gender").value(chemise1.getGender()))
                 .andExpect(jsonPath("$.clothProducts[1].id").value(chemise2.getId()))
                 .andExpect(jsonPath("$.clothProducts[1].productId").value(chemise2.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[1].storageProductId").value(chemise2.getStorageProductId()))
@@ -162,6 +167,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[1].quantifierQuantity").value(chemise2.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[1].quantifierName").value(chemise2.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[1].size").value(chemise2.getSize()))
+                .andExpect(jsonPath("$.clothProducts[1].gender").value(chemise2.getGender()))
                 .andExpect(jsonPath("$.clothProducts[2].id").value(chemise3.getId()))
                 .andExpect(jsonPath("$.clothProducts[2].productId").value(chemise3.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[2].storageProductId").value(chemise3.getStorageProductId()))
@@ -171,6 +177,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[2].quantifierQuantity").value(chemise3.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[2].quantifierName").value(chemise3.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[2].size").value(chemise3.getSize()))
+                .andExpect(jsonPath("$.clothProducts[2].gender").value(chemise3.getGender()))
                 .andExpect(jsonPath("$.clothProducts[3].id").value(chemise4.getId()))
                 .andExpect(jsonPath("$.clothProducts[3].productId").value(chemise4.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[3].storageProductId").value(chemise4.getStorageProductId()))
@@ -180,6 +187,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[3].quantifierQuantity").value(chemise4.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[3].quantifierName").value(chemise4.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[3].size").value(chemise4.getSize()))
+                .andExpect(jsonPath("$.clothProducts[3].gender").value(chemise4.getGender()))
                 .andExpect(jsonPath("$.clothProducts[4].id").value(chemise5.getId()))
                 .andExpect(jsonPath("$.clothProducts[4].productId").value(chemise5.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[4].storageProductId").value(chemise5.getStorageProductId()))
@@ -189,6 +197,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[4].quantifierQuantity").value(chemise5.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[4].quantifierName").value(chemise5.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[4].size").value(chemise5.getSize()))
+                .andExpect(jsonPath("$.clothProducts[4].gender").value(chemise5.getGender()))
                 .andExpect(jsonPath("$.foodProducts").isArray())
                 .andExpect(jsonPath("$.foodProducts").isNotEmpty())
                 .andExpect(jsonPath("$.foodProducts[0].id").value(food1.getId()))
@@ -231,7 +240,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.S.getLabel());
+                ClothSize.S.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
                 4L,
@@ -241,7 +251,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.M.getLabel());
+                ClothSize.M.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
                 5L,
@@ -251,7 +262,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.L.getLabel());
+                ClothSize.L.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
                 6L,
@@ -261,7 +273,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.XL.getLabel());
+                ClothSize.XL.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
                 7L,
@@ -271,7 +284,8 @@ public class StorageProductControllerTest {
                 10,
                 "20.0",
                 "pièce",
-                ClothSize.XXL.getLabel());
+                ClothSize.XXL.getLabel(),
+                ClothGender.NOT_SPECIFIED.getLabel());
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
                 8L,
@@ -314,6 +328,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[0].quantifierQuantity").value(chemise1.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[0].quantifierName").value(chemise1.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[0].size").value(chemise1.getSize()))
+                .andExpect(jsonPath("$.clothProducts[0].gender").value(chemise1.getGender()))
                 .andExpect(jsonPath("$.clothProducts[1].id").value(chemise2.getId()))
                 .andExpect(jsonPath("$.clothProducts[1].productId").value(chemise2.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[1].storageProductId").value(chemise2.getStorageProductId()))
@@ -323,6 +338,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[1].quantifierQuantity").value(chemise2.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[1].quantifierName").value(chemise2.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[1].size").value(chemise2.getSize()))
+                .andExpect(jsonPath("$.clothProducts[1].gender").value(chemise2.getGender()))
                 .andExpect(jsonPath("$.clothProducts[2].id").value(chemise3.getId()))
                 .andExpect(jsonPath("$.clothProducts[2].productId").value(chemise3.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[2].storageProductId").value(chemise3.getStorageProductId()))
@@ -332,6 +348,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[2].quantifierQuantity").value(chemise3.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[2].quantifierName").value(chemise3.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[2].size").value(chemise3.getSize()))
+                .andExpect(jsonPath("$.clothProducts[2].gender").value(chemise3.getGender()))
                 .andExpect(jsonPath("$.clothProducts[3].id").value(chemise4.getId()))
                 .andExpect(jsonPath("$.clothProducts[3].productId").value(chemise4.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[3].storageProductId").value(chemise4.getStorageProductId()))
@@ -341,6 +358,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[3].quantifierQuantity").value(chemise4.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[3].quantifierName").value(chemise4.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[3].size").value(chemise4.getSize()))
+                .andExpect(jsonPath("$.clothProducts[3].gender").value(chemise4.getGender()))
                 .andExpect(jsonPath("$.clothProducts[4].id").value(chemise5.getId()))
                 .andExpect(jsonPath("$.clothProducts[4].productId").value(chemise5.getProductId()))
                 .andExpect(jsonPath("$.clothProducts[4].storageProductId").value(chemise5.getStorageProductId()))
@@ -350,6 +368,7 @@ public class StorageProductControllerTest {
                 .andExpect(jsonPath("$.clothProducts[4].quantifierQuantity").value(chemise5.getQuantifierQuantity()))
                 .andExpect(jsonPath("$.clothProducts[4].quantifierName").value(chemise5.getQuantifierName()))
                 .andExpect(jsonPath("$.clothProducts[4].size").value(chemise5.getSize()))
+                .andExpect(jsonPath("$.clothProducts[4].gender").value(chemise5.getGender()))
                 .andExpect(jsonPath("$.foodProducts").isArray())
                 .andExpect(jsonPath("$.foodProducts").isNotEmpty())
                 .andExpect(jsonPath("$.foodProducts[0].id").value(food1.getId()))
