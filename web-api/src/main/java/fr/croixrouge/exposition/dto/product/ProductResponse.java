@@ -5,10 +5,10 @@ import fr.croixrouge.storage.model.product.Product;
 
 public class ProductResponse {
 
-    private Long productId;
+    public Long productId;
 
-    private String name;
-    private QuantifierDTO quantity;
+    public String name;
+    public QuantifierDTO quantity;
 
     public ProductResponse() {
     }
