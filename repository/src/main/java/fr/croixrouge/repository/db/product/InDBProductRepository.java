@@ -69,7 +69,9 @@ public class InDBProductRepository implements ProductRepository {
 
     @Override
     public ID save(Product object) {
-        return new ID( productDBRepository.save(toProductDB(object)).getId());
+        var id = new ID(productDBRepository.save(toProductDB(object)).getId());
+        object.setId(id);
+        return id;
     }
 
     @Override

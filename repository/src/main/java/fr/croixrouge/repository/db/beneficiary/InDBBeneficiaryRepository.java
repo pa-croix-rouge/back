@@ -32,7 +32,7 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
         this.inDBUserRepository = inDBUserRepository;
     }
 
-    private BeneficiaryDB toBeneficiaryDB(Beneficiary beneficiary) {
+    public BeneficiaryDB toBeneficiaryDB(Beneficiary beneficiary) {
         return new BeneficiaryDB(beneficiary.getId() == null ? null : beneficiary.getId().value(),
                 beneficiary.getFirstName(),
                 beneficiary.getLastName(),
@@ -53,7 +53,7 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
         );
     }
 
-    private Beneficiary toBeneficiary(BeneficiaryDB beneficiaryDB) {
+    public Beneficiary toBeneficiary(BeneficiaryDB beneficiaryDB) {
         return new Beneficiary(
                 new ID(beneficiaryDB.getId()),
                 inDBUserRepository.toUser(beneficiaryDB.getUserDB()),

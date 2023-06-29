@@ -270,8 +270,8 @@ public class MockRepositoryConfig {
     }
 
     @Bean
-    public UserProductRepository storageUserProductRepository() {
-        return new InMemoryUserProductRepository();
+    public BeneficiaryProductRepository storageUserProductRepository() {
+        return new InMemoryBeneficiaryProductRepository();
     }
 
     @Bean

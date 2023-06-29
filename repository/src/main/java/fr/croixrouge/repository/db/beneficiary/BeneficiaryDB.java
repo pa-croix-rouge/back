@@ -4,9 +4,7 @@ package fr.croixrouge.repository.db.beneficiary;
 import fr.croixrouge.repository.db.user.UserDB;
 import jakarta.persistence.*;
 
-import java.time.ZonedDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDate;
 
 @Table(name = "beneficiary")
 @Entity
@@ -33,12 +31,12 @@ public class BeneficiaryDB {
     private Boolean validated;
 
     @Column(name = "birthdate")
-    private ZonedDateTime birthdate;
+    private LocalDate birthdate;
 
     @Column(name = "socialworkernumber")
     private String socialWorkerNumber;
 
-    public BeneficiaryDB(Long id, String firstname, String lastname, String phonenumber, UserDB userDB, Boolean validated, ZonedDateTime birthdate, String socialWorkerNumber) {
+    public BeneficiaryDB(Long id, String firstname, String lastname, String phonenumber, UserDB userDB, Boolean validated, LocalDate birthdate, String socialWorkerNumber) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -77,7 +75,7 @@ public class BeneficiaryDB {
         return validated;
     }
 
-    public ZonedDateTime getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 

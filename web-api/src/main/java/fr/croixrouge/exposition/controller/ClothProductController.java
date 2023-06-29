@@ -49,7 +49,7 @@ public class ClothProductController extends ErrorHandler {
     @GetMapping("/{id}")
     public ResponseEntity<ClothProductResponse> getByID(@PathVariable ID id, HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
-        ClothProduct clothProduct = service.findByLocalUnitIdAndId(localUnitId, id);
+        ClothProduct clothProduct = service.findByLocalUnitIdAndProductId(localUnitId, id);
         return ResponseEntity.ok(toDTO(clothProduct));
     }
 
@@ -89,7 +89,7 @@ public class ClothProductController extends ErrorHandler {
     @PostMapping("/{clothProductId}")
     public ResponseEntity<ID> update(@PathVariable ID clothProductId, @RequestBody CreateClothProductDTO createClothProductDTO, HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
-        ClothProduct clothProduct = service.findByLocalUnitIdAndId(localUnitId, clothProductId);
+        ClothProduct clothProduct = service.findByLocalUnitIdAndProductId(localUnitId, clothProductId);
         if (clothProduct == null) {
             return ResponseEntity.notFound().build();
         }
@@ -111,7 +111,7 @@ public class ClothProductController extends ErrorHandler {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable ID id, HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
-        ClothProduct clothProduct = service.findByLocalUnitIdAndId(localUnitId, id);
+        ClothProduct clothProduct = service.findByLocalUnitIdAndProductId(localUnitId, id);
         if (clothProduct == null) {
             return ResponseEntity.notFound().build();
         }
