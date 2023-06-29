@@ -1,16 +1,23 @@
 package fr.croixrouge.config;
 
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.crypto.SecretKey;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -29,23 +36,47 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/login")
-                .permitAll()
-                .requestMatchers("/resources")
-                .hasAuthority("ROLE_ADMIN")
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        List<RequestMatcher> excludedFilterUrl = List.of(
+                new AntPathRequestMatcher("/login/volunteer"),
+                new AntPathRequestMatcher("/login/beneficiary"),
+                new AntPathRequestMatcher("/login/token"),
+                new AntPathRequestMatcher("/volunteer/register"),
+                new AntPathRequestMatcher("/volunteer/token"),
+                new AntPathRequestMatcher("/beneficiaries/register"),
+                new AntPathRequestMatcher("/beneficiaries/token"),
+                new AntPathRequestMatcher("/v3/api-docs"),
+                new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name())
+        );
 
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests( auth -> {
+                auth
+                        .requestMatchers("/login/volunteer").permitAll()
+                        .requestMatchers("/login/beneficiary").permitAll()
+                        .requestMatchers("/volunteer/register").permitAll()
+                        .requestMatchers("/v3/api-docs").permitAll()
+                        .requestMatchers("/beneficiaries/register").permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //allow CORS option calls
+                    .anyRequest().authenticated();
+            })
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/volunteer/**"), excludedFilterUrl, Resources.VOLUNTEER), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/resources/**"), excludedFilterUrl, Resources.RESOURCE), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/event/**"), excludedFilterUrl, Resources.EVENT), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/product/**"), excludedFilterUrl, Resources.PRODUCT), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/storage/**"), excludedFilterUrl, Resources.STORAGE), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/role/**"), excludedFilterUrl, Resources.ROLE), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/localunit/**"), excludedFilterUrl, Resources.LOCAL_UNIT), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/beneficiaries/**"), excludedFilterUrl, Resources.BENEFICIARY), UsernamePasswordAuthenticationFilter.class)
+
+            .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.GET.name()), excludedFilterUrl, Operations.READ), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.DELETE.name()), excludedFilterUrl, Operations.DELETE), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.PUT.name()), excludedFilterUrl, Operations.UPDATE), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.PATCH.name()), excludedFilterUrl, Operations.UPDATE), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.POST.name()), excludedFilterUrl, Operations.CREATE), UsernamePasswordAuthenticationFilter.class);
 
 //            .logout()
 //            .logoutUrl("/logout")

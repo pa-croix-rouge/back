@@ -2,21 +2,18 @@ package fr.croixrouge.domain.model;
 
 import java.util.Objects;
 
-public class LocalUnit {
-    private final String localUnitId;
+public class LocalUnit extends Entity<ID> {
     private final String name;
     private final Address address;
-    private final String managerId;
+    private final String managerUsername;
+    private final String code;
 
-    public LocalUnit(String localUnitId, String name, Address address, String managerId) {
-        this.localUnitId = localUnitId;
+    public LocalUnit(ID id, String name, Address address, String managerUsername, String code) {
+        super(id);
         this.name = name;
         this.address = address;
-        this.managerId = managerId;
-    }
-
-    public String getLocalUnitId() {
-        return localUnitId;
+        this.managerUsername = managerUsername;
+        this.code = code;
     }
 
     public String getName() {
@@ -27,18 +24,12 @@ public class LocalUnit {
         return address;
     }
 
-    public String getManagerId() {
-        return managerId;
+    public String getManagerUsername() {
+        return managerUsername;
     }
 
-    @Override
-    public String toString() {
-        return "LocalUnit{" +
-                "localUnitId='" + localUnitId + '\'' +
-                ", name='" + name + '\'' +
-                ", address=" + address +
-                ", managerId='" + managerId + '\'' +
-                '}';
+    public String getCode() {
+        return code;
     }
 
     @Override
@@ -46,11 +37,21 @@ public class LocalUnit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocalUnit localUnit = (LocalUnit) o;
-        return Objects.equals(localUnitId, localUnit.localUnitId) && Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(managerId, localUnit.managerId);
+        return Objects.equals(name, localUnit.name) && Objects.equals(address, localUnit.address) && Objects.equals(managerUsername, localUnit.managerUsername) && Objects.equals(code, localUnit.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(localUnitId, name, address, managerId);
+        return Objects.hash(name, address, managerUsername, code);
+    }
+
+    @Override
+    public String toString() {
+        return "LocalUnit{" +
+                "name='" + name + '\'' +
+                ", address=" + address +
+                ", managerUsername='" + managerUsername + '\'' +
+                ", code='" + code + '\'' +
+                '}';
     }
 }

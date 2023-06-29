@@ -31,30 +31,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Archive Maven dependencies
-        run: tar czvf maven_dependencies.tgz -C ~/.m2 repository .
-
   sca_testing:
     needs: archive_dependencies
     runs-on: self-hosted
     steps:
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
-
-      - name: Extract Maven dependencies
-        run: tar xvf maven_dependencies.tgz
-
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -66,7 +46,7 @@ jobs:
         run: npm install -g snyk
 
       - name: Run Snyk test
-        run: snyk test --all-projects
+        run: snyk test --all-projects --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: false
@@ -75,12 +55,6 @@ jobs:
     needs: sca_testing
     runs-on: self-hosted
     steps:
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
-
-      - name: Extract Maven dependencies
-        run: tar xvf maven_dependencies.tgz
-
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -93,12 +67,26 @@ jobs:
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           JWT_HEADER: ${{ secrets.JWT_HEADER }}
           JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          SPRING_DDL_AUTO: ${{ secrets.SPRING_DDL_AUTO }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
+          SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
+          SPRING_HIBERNATE_DIALECT: ${{ secrets.SPRING_HIBERNATE_DIALECT }}
         run: |
           mvn clean compile package -Dmaven.test.skip=true --batch-mode --no-transfer-progress \
           -Djwt.secret="${JWT_SECRET}" \
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
-          -Djwt.token.prefix="${JWT_PREFIX}"
+          -Djwt.token.prefix="${JWT_PREFIX}" \
+          -Dspring.jpa.hibernate.ddl-auto="${SPRING_DDL_AUTO}" \
+          -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
+          -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
+          -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
+          -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
 
   test:
     needs: build
@@ -110,21 +98,64 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Restore local Maven cache
-        run: mkdir -p ~/.m2/repository; if [ -f maven_cache.tar.gz ]; then tar xzf maven_cache.tar.gz -C ~/.m2; fi
-
       - name: Run tests
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           JWT_HEADER: ${{ secrets.JWT_HEADER }}
           JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          SPRING_DDL_AUTO: ${{ secrets.SPRING_DDL_AUTO }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
+          SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
+          SPRING_HIBERNATE_DIALECT: ${{ secrets.SPRING_HIBERNATE_DIALECT }}
         run: |
           mvn test --batch-mode --no-transfer-progress \
+          -Dspring.profiles.active=test-in-db \
           -Djwt.secret="${JWT_SECRET}" \
           -Djwt.token.expiration="${JWT_EXPIRATION}" \
           -Djwt.token.header="${JWT_HEADER}" \
-          -Djwt.token.prefix="${JWT_PREFIX}"
+          -Djwt.token.prefix="${JWT_PREFIX}" \
+          -Dspring.jpa.hibernate.ddl-auto="${SPRING_DDL_AUTO}" \
+          -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
+          -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
+          -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
+          -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
+
+      - name: Generate tests report
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+          JWT_HEADER: ${{ secrets.JWT_HEADER }}
+          JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+          SPRING_DDL_AUTO: ${{ secrets.SPRING_DDL_AUTO }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          SPRING_DATASOURCE_DRIVER: ${{ secrets.SPRING_DATASOURCE_DRIVER }}
+          SPRING_TEST_PROFILE: ${{ secrets.SPRING_TEST_PROFILE }}
+          SPRING_HIBERNATE_DIALECT: ${{ secrets.SPRING_HIBERNATE_DIALECT }}
+        run: |
+          mvn surefire-report:report \
+          -Dspring.profiles.active=test-in-db \
+          -Djwt.secret="${JWT_SECRET}" \
+          -Djwt.token.expiration="${JWT_EXPIRATION}" \
+          -Djwt.token.header="${JWT_HEADER}" \
+          -Djwt.token.prefix="${JWT_PREFIX}" \
+          -Dspring.jpa.hibernate.ddl-auto="${SPRING_DDL_AUTO}" \
+          -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
+          -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
+          -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
+          -Dspring.datasource.driver-class-name="${SPRING_DATASOURCE_DRIVER}" \
+          -Dspring.profiles.active="${SPRING_TEST_PROFILE}" \
+          -Dspring.jpa.properties.hibernate.dialect="${SPRING_HIBERNATE_DIALECT}"
+
+      - name: Upload tests report
+        run: cp -r web-api/target/site/* /root/pa-cxr/prod/tests/.
 
   deploy:
     needs: test

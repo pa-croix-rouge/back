@@ -3,27 +3,24 @@ package fr.croixrouge.domain.model;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
-public class Role {
-    private final String id;
+public class Role extends Entity<ID> {
     private final String name;
     private final String description;
-    private final Map<Resources, List<Operations>> authorizations;
+    private final Map<Resources, Set<Operations>> authorizations;
 
-    private final String localUnitId;
-    private final List<String> userIds;
+    private final LocalUnit localUnit;
 
-    public Role(String id, String name, String description, Map<Resources, List<Operations>> authorizations, String localUnitId, List<String> userIds) {
-        this.id = id;
+    private final List<ID> userIds;
+
+    public Role(ID id, String name, String description, Map<Resources, Set<Operations>> authorizations, LocalUnit localUnit, List<ID> userIds) {
+        super(id);
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
-        this.localUnitId = localUnitId;
+        this.localUnit = localUnit;
         this.userIds = userIds;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {
@@ -38,15 +35,15 @@ public class Role {
         return authorizations.get(resource).contains(operation);
     }
 
-    public Map<Resources, List<Operations>> getAuthorizations() {
+    public Map<Resources, Set<Operations>> getAuthorizations() {
         return authorizations;
     }
 
-    public String getLocalUnitId() {
-        return localUnitId;
+    public LocalUnit getLocalUnit() {
+        return localUnit;
     }
 
-    public List<String> getUserIds() {
+    public List<ID> getUserIds() {
         return userIds;
     }
 
@@ -56,16 +53,16 @@ public class Role {
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
         return Objects.equals(id, role.id)
-            && Objects.equals(name, role.name)
-            && Objects.equals(description, role.description)
-            && Objects.equals(authorizations, role.authorizations)
-            && Objects.equals(localUnitId, role.localUnitId)
-            && Objects.equals(userIds, role.userIds);
+                && Objects.equals(name, role.name)
+                && Objects.equals(description, role.description)
+                && Objects.equals(authorizations, role.authorizations)
+                && Objects.equals(localUnit, role.localUnit)
+                && Objects.equals(userIds, role.userIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, authorizations, localUnitId, userIds);
+        return Objects.hash(id, name, description, authorizations, localUnit, userIds);
     }
 
 

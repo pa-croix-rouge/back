@@ -1,24 +1,21 @@
 package fr.croixrouge.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class User {
-    private final String userId;
+public class User extends Entity<ID> {
 
-    private final String username;
-    private final String password;
+    protected final String username;
+    protected final String password;
+    protected final LocalUnit localUnit;
+    protected final List<Role> roles;
 
-    private final List<String> authorities;
-
-    public User(String userId, String username, String password, List<String> authorities) {
-        this.userId = userId;
+    public User(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles) {
+        super(userId);
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
-    }
-
-    public String getUserId() {
-        return userId;
+        this.localUnit = localUnit;
+        this.roles = roles;
     }
 
     public String getUsername() {
@@ -29,7 +26,39 @@ public class User {
         return password;
     }
 
-    public List<String> getAuthorities() {
-        return authorities;
+    public LocalUnit getLocalUnit() {
+        return localUnit;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public User removeRole(Role role) {
+        return new User(id, username, password, localUnit, roles.stream().filter(r -> !r.equals(role)).toList());
+    }
+
+    public User addRole(Role role) {
+        if (roles.contains(role)) {
+            return this;
+        }
+        var newRoles = new ArrayList<>(roles);
+        newRoles.add(role);
+        return new User(id, username, password, localUnit, newRoles);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", localUnit=" + localUnit +
+                ", roles=" + roles +
+                ", id=" + id +
+                '}';
+    }
+
+    public User setPassword(String encode) {
+        return new User(id, username, encode, localUnit, roles);
     }
 }
