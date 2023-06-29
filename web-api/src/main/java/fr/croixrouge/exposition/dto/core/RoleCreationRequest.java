@@ -1,21 +1,25 @@
 package fr.croixrouge.exposition.dto.core;
 
-import fr.croixrouge.domain.model.*;
+import fr.croixrouge.domain.model.LocalUnit;
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.exposition.dto.CreationDTO;
-import org.springframework.cglib.core.Local;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RoleCreationRequest extends CreationDTO<Role> {
 
     private final String name;
     private final String description;
-    private final Map<Resources, Set<Operations>> authorizations;
+    private final Map<String, Set<String>> authorizations;
 
     private final Long localUnitID;
 
-    public RoleCreationRequest(String name, String description, Map<Resources, Set<Operations>> authorizations, Long localUnitID) {
+    public RoleCreationRequest(String name, String description, Map<String, Set<String>> authorizations, Long localUnitID) {
         this.name = name;
         this.description = description;
         this.authorizations = authorizations;
@@ -30,7 +34,7 @@ public class RoleCreationRequest extends CreationDTO<Role> {
         return description;
     }
 
-    public Map<Resources, Set<Operations>> getAuthorizations() {
+    public Map<String, Set<String>> getAuthorizations() {
         return authorizations;
     }
 
@@ -40,9 +44,14 @@ public class RoleCreationRequest extends CreationDTO<Role> {
 
     @Override
     public Role toModel() {
-        return new Role(null, name, description, authorizations, null, null);
+        return this.toModel(null);
     }
+
     public Role toModel(LocalUnit localUnit) {
-        return new Role(null, name, description, authorizations, localUnit, null);
+        final Map<Resources, Set<Operations>> auths = new HashMap<>();
+        for (String resource : authorizations.keySet()) {
+            auths.put(Resources.fromName(resource), authorizations.get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
+        }
+        return new Role(null, name, description, auths, localUnit, null);
     }
 }

@@ -3,10 +3,13 @@ package fr.croixrouge.service;
 import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
-import fr.croixrouge.model.UserSecurity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleService extends CRUDService<ID, Role, RoleRepository> {
@@ -40,11 +43,17 @@ public class RoleService extends CRUDService<ID, Role, RoleRepository> {
 
     public void updateRole(ID id, RoleCreationRequest roleCreationRequest) {
         Role role = findById(id);
+        final Map<Resources, Set<Operations>> auths = new HashMap<>();
+        if (roleCreationRequest.getAuthorizations() != null) {
+            for (String resource : roleCreationRequest.getAuthorizations().keySet()) {
+                auths.put(Resources.fromName(resource), roleCreationRequest.getAuthorizations().get(resource).stream().map(Operations::fromName).collect(Collectors.toSet()));
+            }
+        }
 
         Role newRole = new Role(id,
                 roleCreationRequest.getName() == null ? role.getName() : roleCreationRequest.getName(),
                 roleCreationRequest.getDescription() == null ? role.getDescription() : roleCreationRequest.getDescription(),
-                roleCreationRequest.getAuthorizations() == null ? role.getAuthorizations() : roleCreationRequest.getAuthorizations(),
+                roleCreationRequest.getAuthorizations() == null ? role.getAuthorizations() : auths,
                 role.getLocalUnit(),
                 role.getUserIds() );
 
