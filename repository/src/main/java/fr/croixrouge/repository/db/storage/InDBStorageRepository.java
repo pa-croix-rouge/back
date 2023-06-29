@@ -81,4 +81,10 @@ public class InDBStorageRepository implements StorageRepository {
                 .map(this::toStorage)
                 .toList();
     }
+
+    @Override
+    public boolean update(Storage storage) {
+        this.save(storage);
+        return true;
+    }
 }

@@ -28,4 +28,9 @@ public class InMemoryStorageRepository extends InMemoryCRUDRepository<ID, Storag
     public List<Storage> findAllByLocalUnitId(ID localUnitId) {
         return this.objects.stream().filter(storage -> storage.getLocalUnit().getId().equals(localUnitId)).toList();
     }
+
+    @Override
+    public boolean update(Storage storage) {
+        return false;
+    }
 }

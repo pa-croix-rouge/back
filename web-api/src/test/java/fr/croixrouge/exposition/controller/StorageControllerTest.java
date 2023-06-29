@@ -8,9 +8,7 @@ import fr.croixrouge.exposition.dto.CreateStorageDTO;
 import fr.croixrouge.exposition.dto.StorageResponse;
 import fr.croixrouge.exposition.dto.core.AddressDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({InDBMockRepositoryConfig.class, MockRepositoryConfig.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StorageControllerTest {
 
     @Autowired
@@ -49,6 +48,7 @@ class StorageControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test that the storage endpoint returns a storage when given a correct storage id")
     public void storageIdSuccessTest() throws Exception {
         mockMvc.perform(get("/storage/1")
@@ -59,6 +59,7 @@ class StorageControllerTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Test that the storage endpoint returns a 404 when given a incorrect storage id")
     public void productIdFailedTest() throws Exception {
         mockMvc.perform(get("/storage/-1")
@@ -68,6 +69,7 @@ class StorageControllerTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Test that the storage post endpoint returns OK when given a correct storage")
     public void productAddSuccessTest() throws Exception {
         AddressDTO addressDTO = new AddressDTO("91", "91240", "St Michel sur Orge", "76 rue des Liers");
@@ -95,6 +97,7 @@ class StorageControllerTest {
     }
 
     @Test
+    @Order(4)
     @DisplayName("Test that the storage delete endpoint returns OK when given a correct storage")
     public void productDeleteSuccessTest() throws Exception {
         String id = "2";
@@ -111,6 +114,7 @@ class StorageControllerTest {
     }
 
     @Test
+    @Order(5)
     @DisplayName("Test that the storage endpoint returns a list of storage matching your local unit id")
     public void storageAllSuccessTest() throws Exception {
         AddressDTO addressDTO = new AddressDTO(
@@ -153,6 +157,7 @@ class StorageControllerTest {
     }
 
     @Test
+    @Order(6)
     @DisplayName("Test that the storage endpoint returns a list of storage which is empty matching your local unit id")
     public void storageAllEmptySuccessTest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("SLUManager", "SLUPassword");
@@ -171,5 +176,32 @@ class StorageControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Test that the storage update endpoint updates a storage when given correct parameters")
+    public void productUpdateSuccessTest() throws Exception {
+        String storageId = "3";
+        AddressDTO addressDTO = new AddressDTO("91", "91240", "St Michel sur Orge", "76 rue des Liers");
+        CreateStorageDTO createStorageDTO = new CreateStorageDTO("updatedStorageName", 1L, addressDTO);
+
+        mockMvc.perform(post("/storage/" + storageId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createStorageDTO)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/storage/" + storageId)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(storageId))
+                .andExpect(jsonPath("$.name").value(createStorageDTO.getName()))
+                .andExpect(jsonPath("$.address.departmentCode").value(addressDTO.getDepartmentCode()))
+                .andExpect(jsonPath("$.address.postalCode").value(addressDTO.getPostalCode()))
+                .andExpect(jsonPath("$.address.city").value(addressDTO.getCity()))
+                .andExpect(jsonPath("$.address.streetNumberAndName").value(addressDTO.getStreetNumberAndName()))
+                .andExpect(jsonPath("$.localUnitId").value("1"));
     }
 }

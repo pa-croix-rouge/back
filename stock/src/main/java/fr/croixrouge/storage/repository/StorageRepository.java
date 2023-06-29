@@ -11,4 +11,6 @@ public interface StorageRepository extends CRUDRepository<ID, Storage> {
     List<Storage> findAllByLocalUnitId(ID localUnitId);
 
     Optional<Storage> findByLocalUnitIdAndId(ID localUnitId, ID id);
+
+    boolean update(Storage storage);
 }
