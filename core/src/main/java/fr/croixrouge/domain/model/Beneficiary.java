@@ -1,20 +1,20 @@
 package fr.croixrouge.domain.model;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
-public class Beneficiary extends Entity<ID>{
+public class Beneficiary extends Entity<ID> {
 
     private final User user;
     private final String firstName;
     private final String lastName;
     private final String phoneNumber;
     private final boolean isValidated;
-    private final ZonedDateTime birthDate;
+    private final LocalDate birthDate;
     private final String socialWorkerNumber;
     private final List<FamilyMember> familyMembers;
 
-    public Beneficiary(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, ZonedDateTime birthDate, String socialWorkerNumber, List<FamilyMember> familyMembers) {
+    public Beneficiary(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, LocalDate birthDate, String socialWorkerNumber, List<FamilyMember> familyMembers) {
         super(id);
         this.user = user;
         this.firstName = firstName;
@@ -46,7 +46,7 @@ public class Beneficiary extends Entity<ID>{
         return isValidated;
     }
 
-    public ZonedDateTime getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 

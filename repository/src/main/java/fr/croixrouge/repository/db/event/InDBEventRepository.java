@@ -283,6 +283,7 @@ public class InDBEventRepository implements EventRepository {
             return false;
         }
 
+
         List<EventSession> updatedSessions = new ArrayList<>();
         for (EventSession session : eventToUpdate.getSessions()) {
             if (session.getId().equals(sessionId)) {

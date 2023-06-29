@@ -62,9 +62,9 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.productId").value("1"))
-                .andExpect(jsonPath("$.name").value("Product 1"))
-                .andExpect(jsonPath("$.quantity.measurementUnit").value(WeightUnit.KILOGRAM.getName()))
-                .andExpect(jsonPath("$.quantity.value").value(1));
+                .andExpect(jsonPath("$.name").value("Chemises blanches"))
+                .andExpect(jsonPath("$.quantity.measurementUnit").value(NumberedUnit.NUMBER.getName()))
+                .andExpect(jsonPath("$.quantity.value").value(20));
     }
 
  /*   @Test

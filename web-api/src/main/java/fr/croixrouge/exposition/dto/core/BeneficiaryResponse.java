@@ -2,18 +2,28 @@ package fr.croixrouge.exposition.dto.core;
 
 import fr.croixrouge.domain.model.ID;
 
+import java.time.LocalDate;
+
 public class BeneficiaryResponse {
+
+    public Long id;
+
     public String username;
     public String firstName;
     public String lastName;
+
+    public LocalDate birthDate;
     public String phoneNumber;
+
     public boolean isValidated;
     public Long localUnitId;
 
-    public BeneficiaryResponse(String username, String firstName, String lastName, String phoneNumber, boolean isValidated, ID localUnitId) {
+    public BeneficiaryResponse(Long id, String username, String firstName, String lastName, LocalDate birthDate, String phoneNumber, boolean isValidated, ID localUnitId) {
+        this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.isValidated = isValidated;
         this.localUnitId = localUnitId.value();
