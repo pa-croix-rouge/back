@@ -5,9 +5,9 @@ import fr.croixrouge.storage.model.product.ClothProduct;
 
 public class ClothProductResponse extends ProductResponse {
 
-    private Long id;
+    public Long id;
 
-    private String size;
+    public String size;
 
     private String gender;
 

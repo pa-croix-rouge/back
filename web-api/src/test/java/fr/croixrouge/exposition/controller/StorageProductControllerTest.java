@@ -70,7 +70,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.S.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
                 4L,
@@ -81,7 +81,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.M.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
                 5L,
@@ -92,7 +92,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.L.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
                 6L,
@@ -103,7 +103,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.XL.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
                 7L,
@@ -114,7 +114,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.XXL.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
                 8L,
@@ -127,7 +127,7 @@ public class StorageProductControllerTest {
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
-                1L);
+                1L, null);
         FoodStorageProductResponse food2 = new FoodStorageProductResponse(
                 2L,
                 9L,
@@ -140,7 +140,7 @@ public class StorageProductControllerTest {
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
-                1L);
+                1L, null);
 
         mockMvc.perform(get("/storage/product/" + chemise1.getStorageId())
                         .header("Authorization", "Bearer " + jwtToken)
@@ -213,7 +213,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.S.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise2 = new ClothStorageProductResponse(
                 2L,
                 4L,
@@ -224,7 +224,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.M.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise3 = new ClothStorageProductResponse(
                 3L,
                 5L,
@@ -235,7 +235,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.L.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise4 = new ClothStorageProductResponse(
                 4L,
                 6L,
@@ -246,7 +246,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.XL.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         ClothStorageProductResponse chemise5 = new ClothStorageProductResponse(
                 5L,
                 7L,
@@ -257,7 +257,7 @@ public class StorageProductControllerTest {
                 "20.0",
                 "pièce",
                 ClothSize.XXL.getLabel(),
-                ClothGender.NOT_SPECIFIED.getLabel());
+                ClothGender.NOT_SPECIFIED.getLabel(), null);
         FoodStorageProductResponse food1 = new FoodStorageProductResponse(
                 1L,
                 8L,
@@ -270,7 +270,7 @@ public class StorageProductControllerTest {
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
-                1L);
+                1L, null);
         FoodStorageProductResponse food2 = new FoodStorageProductResponse(
                 2L,
                 9L,
@@ -283,7 +283,7 @@ public class StorageProductControllerTest {
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
-                1L);
+                1L, null);
 
         mockMvc.perform(get("/storage/product/localunit")
                         .header("Authorization", "Bearer " + jwtToken)

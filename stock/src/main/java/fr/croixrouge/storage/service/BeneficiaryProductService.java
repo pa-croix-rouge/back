@@ -14,9 +14,9 @@ import java.util.List;
 
 public class BeneficiaryProductService {
 
-    private final BeneficiaryProductRepository beneficiaryProductRepository;
+    protected final BeneficiaryProductRepository beneficiaryProductRepository;
 
-    private final StorageProductService storageProductService;
+    protected final StorageProductService storageProductService;
 
     public BeneficiaryProductService(BeneficiaryProductRepository beneficiaryProductRepository, StorageProductService storageProductService) {
         this.beneficiaryProductRepository = beneficiaryProductRepository;

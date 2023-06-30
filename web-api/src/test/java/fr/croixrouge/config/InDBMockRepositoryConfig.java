@@ -130,13 +130,13 @@ public class InDBMockRepositoryConfig {
         volunteerUser = new User(null, "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of());
         product1 = new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
         product2 = new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null);
-        cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
-        cloth2 = new Product(new ID(4L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
-        cloth3 = new Product(new ID(5L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
-        cloth4 = new Product(new ID(6L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
-        cloth5 = new Product(new ID(7L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
-        food1 = new Product(new ID(8L), "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
-        food2 = new Product(new ID(9L), "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
+        cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
+        cloth2 = new Product(new ID(4L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
+        cloth3 = new Product(new ID(5L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
+        cloth4 = new Product(new ID(6L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
+        cloth5 = new Product(new ID(7L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
+        food1 = new Product(new ID(8L), "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
+        food2 = new Product(new ID(9L), "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
     }
 
     @Bean
@@ -296,8 +296,8 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository) {
-        var storageRepository = new InDBProductRepository(productDBRepository);
+    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
+        var storageRepository = new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
 
 //        storageRepository.save(product1);
 //        storageRepository.save(product2);

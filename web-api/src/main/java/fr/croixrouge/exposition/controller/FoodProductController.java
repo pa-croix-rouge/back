@@ -11,6 +11,7 @@ import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
+import fr.croixrouge.storage.model.product.ProductLimit;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +69,12 @@ public class FoodProductController extends ErrorHandler {
             return ResponseEntity.notFound().build();
         }
 
-        Product product = model.toModel().getProduct();
+        ProductLimit productLimit = null;
+        if (model.getLimitID() != null) {
+            productLimit = productLimitService.findById(new ID(model.getLimitID()));
+        }
+
+        Product product = model.toModel(productLimit).getProduct();
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
@@ -95,7 +101,12 @@ public class FoodProductController extends ErrorHandler {
         if (foodProduct == null) {
             return ResponseEntity.notFound().build();
         }
-        Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), model.toModel().getProduct().getLimit());
+        ProductLimit productLimit = null;
+        if (model.getLimitID() != null) {
+            productLimit = productLimitService.findById(new ID(model.getLimitID()));
+        }
+
+        Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), productLimit);
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();

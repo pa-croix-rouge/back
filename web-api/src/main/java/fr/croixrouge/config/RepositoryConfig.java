@@ -71,8 +71,8 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository) {
-        return new InDBProductRepository(productDBRepository);
+    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
+        return new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
     }
 
     @Bean

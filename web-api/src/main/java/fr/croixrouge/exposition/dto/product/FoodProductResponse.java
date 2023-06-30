@@ -9,15 +9,15 @@ import java.time.ZonedDateTime;
 
 public class FoodProductResponse extends ProductResponse {
 
-    private Long id;
+    public Long id;
 
-    private String foodConservation;
+    public String foodConservation;
 
-    private String expirationDate;
+    public String expirationDate;
 
-    private String optimalConsumptionDate;
+    public String optimalConsumptionDate;
 
-    private Long price;
+    public Long price;
 
     public FoodProductResponse() {
     }
@@ -63,4 +63,5 @@ public class FoodProductResponse extends ProductResponse {
     public Long getPrice() {
         return price;
     }
+
 }

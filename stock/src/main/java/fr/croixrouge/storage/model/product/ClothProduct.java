@@ -13,15 +13,15 @@ public class ClothProduct extends Entity<ID> {
     private final ClothSize size;
     private final ClothGender gender;
 
-    public ClothProduct(ID id, ID productId, String name, double quantity, ClothSize size, ClothGender clothGender) {
+    public ClothProduct(ID id, ID productId, String name, double quantity, ProductLimit limit, ClothSize size, ClothGender clothGender) {
         super(id);
-        this.product = new Product(productId, name, new Quantifier(quantity, NumberedUnit.NUMBER), ProductLimit.NO_LIMIT);
+        this.product = new Product(productId, name, new Quantifier(quantity, NumberedUnit.NUMBER), limit);
         this.size = size;
         this.gender = clothGender;
     }
 
     public ClothProduct(ID id, Product product, ClothSize size, ClothGender clothGender) {
-        this(id, product.getId(), product.name, product.quantity.getQuantity(), size, clothGender);
+        this(id, product.getId(), product.name, product.quantity.getQuantity(), product.limit, size, clothGender);
     }
 
     public Product getProduct() {
