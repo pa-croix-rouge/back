@@ -10,8 +10,7 @@ import fr.croixrouge.service.StorageService;
 import fr.croixrouge.storage.model.Storage;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,5 +46,19 @@ public class StorageController extends CRUDController<ID, Storage, StorageServic
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(service.findAllByLocalUnitId(localUnitId).stream().map(this::toDTO).toList());
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<String> updateStorage(HttpServletRequest request, @PathVariable ID id, @RequestBody CreateStorageDTO createStorageDTO) {
+        final ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        if (localUnitId == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Storage storage = service.findByLocalUnitIdAndId(localUnitId, id);
+        if (storage == null) {
+            return ResponseEntity.notFound().build();
+        }
+        service.update(new Storage(storage.getId(), createStorageDTO.getName(), storage.getLocalUnit(), createStorageDTO.getAddress().toModel()));
+        return ResponseEntity.ok().build();
     }
 }
