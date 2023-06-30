@@ -344,13 +344,14 @@ public class StorageProductControllerTest {
     @Test
     @DisplayName("Test that the storage stats endpoints returns the correct stats")
     public void testGetStatsSuccess() throws Exception {
-        StorageProductStatsResponse statsResponse = new StorageProductStatsResponse(20, 50);
+        StorageProductStatsResponse statsResponse = new StorageProductStatsResponse(20, 50, 10);
 
         mockMvc.perform(get("/storage/product/stats")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalFoodQuantity").value(statsResponse.getTotalFoodQuantity()))
-                .andExpect(jsonPath("$.totalClothesQuantity").value(statsResponse.getTotalClothesQuantity()));
+                .andExpect(jsonPath("$.totalClothesQuantity").value(statsResponse.getTotalClothesQuantity()))
+                .andExpect(jsonPath("$.soonExpiredFood").value(statsResponse.getSoonExpiredFood()));
     }
 }
