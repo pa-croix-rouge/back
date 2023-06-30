@@ -7,6 +7,7 @@ import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.product.CreateFoodProductDTO;
 import fr.croixrouge.exposition.dto.product.FoodProductResponse;
+import fr.croixrouge.exposition.dto.product.FoodStorageProductResponse;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.quantifier.WeightUnit;
 import org.junit.jupiter.api.*;
@@ -251,11 +252,16 @@ class FoodProductControllerTest {
     @DisplayName("Test that the get expired endpoint returns a list of soon expired food product")
     public void testGetAllExpiredFoodSuccessTest() throws Exception {
         final LocalDate date = LocalDate.now();
-        FoodProductResponse foodProductResponse = new FoodProductResponse(
+
+        FoodStorageProductResponse foodStorageProductResponse = new FoodStorageProductResponse(
                 2L,
                 9L,
+                1L,
+                1L,
                 "Pates",
-                new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
+                10,
+                "1.0",
+                WeightUnit.KILOGRAM.getName(),
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
@@ -266,12 +272,14 @@ class FoodProductControllerTest {
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(foodProductResponse.getName()))
-                .andExpect(jsonPath("$[0].quantity.measurementUnit").value(foodProductResponse.getQuantity().getMeasurementUnit()))
-                .andExpect(jsonPath("$[0].quantity.value").value(foodProductResponse.getQuantity().getValue()))
-                .andExpect(jsonPath("$[0].foodConservation").value(foodProductResponse.getFoodConservation()))
-                .andExpect(jsonPath("$[0].expirationDate").value(foodProductResponse.getExpirationDate()))
-                .andExpect(jsonPath("$[0].optimalConsumptionDate").value(foodProductResponse.getOptimalConsumptionDate()))
-                .andExpect(jsonPath("$[0].price").value(foodProductResponse.getPrice()));
+                .andExpect(jsonPath("$[0].productName").value(foodStorageProductResponse.getProductName()))
+                .andExpect(jsonPath("$[0].quantity").value(foodStorageProductResponse.getQuantity()))
+                .andExpect(jsonPath("$[0].quantifierQuantity").value(foodStorageProductResponse.getQuantifierQuantity()))
+                .andExpect(jsonPath("$[0].quantifierName").value(foodStorageProductResponse.getQuantifierName()))
+                .andExpect(jsonPath("$[0].foodConservation").value(foodStorageProductResponse.getFoodConservation()))
+                .andExpect(jsonPath("$[0].expirationDate").value(foodStorageProductResponse.getExpirationDate()))
+                .andExpect(jsonPath("$[0].optimalConsumptionDate").value(foodStorageProductResponse.getOptimalConsumptionDate()))
+                .andExpect(jsonPath("$[0].price").value(foodStorageProductResponse.getPrice()));
     }
+
 }

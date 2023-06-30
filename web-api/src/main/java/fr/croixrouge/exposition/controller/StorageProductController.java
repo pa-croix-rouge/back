@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.ZonedDateTime;
+
 @RestController
 @RequestMapping("/storage/product")
 public class StorageProductController extends ErrorHandler {
@@ -51,7 +53,8 @@ public class StorageProductController extends ErrorHandler {
     public ResponseEntity<StorageProductStatsResponse> getProductStats(HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
         ProductList productList = service.getProductsByLocalUnit(localUnitId);
-        StorageProductStatsResponse response = StorageProductStatsResponse.fromProductList(productList);
+        int soonExpiredFood = productList.getFoodProducts().entrySet().stream().filter(entry -> entry.getValue().getExpirationDate().minusDays(7).isBefore(ZonedDateTime.now())).mapToInt(entry -> entry.getKey().getQuantity()).sum();
+        StorageProductStatsResponse response = StorageProductStatsResponse.fromProductList(productList, soonExpiredFood);
         return ResponseEntity.ok(response);
     }
 }

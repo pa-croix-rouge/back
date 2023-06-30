@@ -3,6 +3,7 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.product.CreateFoodProductDTO;
 import fr.croixrouge.exposition.dto.product.FoodProductResponse;
+import fr.croixrouge.exposition.dto.product.FoodStorageProductResponse;
 import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.*;
 import fr.croixrouge.storage.model.Storage;
@@ -14,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -134,8 +137,10 @@ public class FoodProductController extends ErrorHandler {
     }
 
     @GetMapping(value = "/expired")
-    public ResponseEntity<List<FoodProductResponse>> getExpired(HttpServletRequest request) {
+    public ResponseEntity<List<FoodStorageProductResponse>> getExpired(HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
-        return ResponseEntity.ok(service.findAllSoonExpiredByLocalUnitId(localUnitId).stream().map(this::toDTO).toList());
+        var foodStorageProducts = storageProductService.getProductsByLocalUnit(localUnitId).getFoodProducts();
+        var foods = foodStorageProducts.entrySet().stream().filter(entry -> entry.getValue().getExpirationDate().minusDays(7).isBefore(ZonedDateTime.now())).map(entry -> FoodStorageProductResponse.fromFoodProduct(entry.getValue(), entry.getKey())).sorted(Comparator.comparing(FoodStorageProductResponse::getId)).toList();
+        return ResponseEntity.ok(foods);
     }
 }
