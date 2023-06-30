@@ -30,8 +30,8 @@ public class FoodStorageProductResponse extends StorageProductResponse {
         this.price = (long) product.getPrice();
     }
 
-    public FoodStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate, Long price) {
-        super(productId, storageProductId, storageId, productName, quantity, quantifierQuantity, quantifierName);
+    public FoodStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, FoodConservation foodConservation, ZonedDateTime expirationDate, ZonedDateTime optimalConsumptionDate, Long price, ProductLimitDTO limit) {
+        super(productId, storageProductId, storageId, productName, quantity, quantifierQuantity, quantifierName, limit);
         this.id = id;
         this.foodConservation = foodConservation.getLabel();
         this.expirationDate = expirationDate.withZoneSameInstant(ZoneId.of("Europe/Paris")).toString();

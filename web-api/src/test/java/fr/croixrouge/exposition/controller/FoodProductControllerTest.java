@@ -265,7 +265,8 @@ class FoodProductControllerTest {
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
-                1L
+                1L,
+                null
         );
 
         mockMvc.perform(get("/product/food/expired")

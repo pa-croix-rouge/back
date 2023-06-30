@@ -1,6 +1,7 @@
 package fr.croixrouge.exposition.dto.product;
 
 import fr.croixrouge.exposition.dto.QuantifierDTO;
+import fr.croixrouge.storage.model.product.ProductLimit;
 
 public class ProductLimitDTO {
 
@@ -20,6 +21,13 @@ public class ProductLimitDTO {
     }
 
     public ProductLimitDTO() {
+    }
+
+    public static ProductLimitDTO of(ProductLimit limit) {
+        if (limit == null) {
+            return null;
+        }
+        return new ProductLimitDTO(limit.getId().value(), limit.getName(), new QuantifierDTO(limit.getQuantity()), limit.getDuration().toDays());
     }
 
     public Long getId() {

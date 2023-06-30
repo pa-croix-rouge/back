@@ -13,6 +13,10 @@ public class QuantifierDTO {
         this.value = value;
     }
 
+    public QuantifierDTO(Quantifier quantifier) {
+        this(quantifier.getUnit().getName(), quantifier.getQuantity());
+    }
+
     public String getMeasurementUnit() {
         return measurementUnit;
     }

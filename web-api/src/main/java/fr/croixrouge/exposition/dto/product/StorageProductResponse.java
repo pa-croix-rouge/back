@@ -14,10 +14,12 @@ public class StorageProductResponse {
     private String quantifierQuantity;
     private String quantifierName;
 
+    private ProductLimitDTO limit;
+
     public StorageProductResponse() {
     }
 
-    public StorageProductResponse(Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName) {
+    public StorageProductResponse(Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, ProductLimitDTO limit) {
         this.storageProductId = storageProductId;
         this.productId = productId;
         this.storageId = storageId;
@@ -25,16 +27,19 @@ public class StorageProductResponse {
         this.quantity = quantity;
         this.quantifierQuantity = quantifierQuantity;
         this.quantifierName = quantifierName;
+        this.limit = limit;
     }
 
     public StorageProductResponse(Product product, StorageProduct storageProduct) {
-        this.storageProductId = storageProduct.getId().value();
-        this.productId = product.getId().value();
-        this.storageId = storageProduct.getStorage().getId().value();
-        this.productName = product.getName();
-        this.quantity = storageProduct.getQuantity();
-        this.quantifierQuantity = BigDecimal.valueOf(product.getQuantity().getQuantity()).toString();
-        this.quantifierName = product.getQuantity().getUnit().getName();
+        this(storageProduct.getId().value(),
+                product.getId().value(),
+                storageProduct.getStorage().getId().value(),
+                product.getName(),
+                storageProduct.getQuantity(),
+                BigDecimal.valueOf(product.getQuantity().getQuantity()).toString(),
+                product.getQuantity().getUnit().getName(),
+                ProductLimitDTO.of(product.getLimit()));
+
     }
 
     public static StorageProductResponse fromStorageProduct(StorageProduct storageProduct) {
@@ -45,8 +50,8 @@ public class StorageProductResponse {
                 storageProduct.getProduct().getName(),
                 storageProduct.getQuantity(),
                 BigDecimal.valueOf(storageProduct.getProduct().getQuantity().getQuantity()).toString(),
-                storageProduct.getProduct().getQuantity().getUnit().getName()
-        );
+                storageProduct.getProduct().getQuantity().getUnit().getName(),
+                ProductLimitDTO.of(storageProduct.getProduct().getLimit()));
     }
 
     public Long getStorageProductId() {
@@ -103,5 +108,9 @@ public class StorageProductResponse {
 
     public void setQuantifierName(String quantifierName) {
         this.quantifierName = quantifierName;
+    }
+
+    public ProductLimitDTO getLimit() {
+        return limit;
     }
 }
