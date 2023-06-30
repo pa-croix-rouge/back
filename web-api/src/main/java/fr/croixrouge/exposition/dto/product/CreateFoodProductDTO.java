@@ -4,6 +4,7 @@ import fr.croixrouge.exposition.dto.CreationDTO;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
+import fr.croixrouge.storage.model.product.ProductLimit;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -14,6 +15,8 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
 
     private final String name;
     private final QuantifierDTO quantity;
+
+    private final String limitID;
 
     private final String foodConservation;
 
@@ -27,9 +30,10 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
 
     private final int amount;
 
-    public CreateFoodProductDTO(String name, QuantifierDTO quantity, String foodConservation, Timestamp expirationDate, Timestamp optimalConsumptionDate, double price, String storageId, int amount) {
+    public CreateFoodProductDTO(String name, QuantifierDTO quantity, String limitID, String foodConservation, Timestamp expirationDate, Timestamp optimalConsumptionDate, double price, String storageId, int amount) {
         this.name = name;
         this.quantity = quantity;
+        this.limitID = limitID;
         this.foodConservation = foodConservation;
         this.expirationDate = expirationDate;
         this.optimalConsumptionDate = optimalConsumptionDate;
@@ -74,8 +78,32 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
         return amount;
     }
 
+    public String getLimitID() {
+        return limitID;
+    }
+
     @Override
     public FoodProduct toModel() {
-        return new FoodProduct(null, null, name, quantity.toQuantifier(), null, FoodConservation.fromLabel(foodConservation), toLocalDateTime(expirationDate), toLocalDateTime(optimalConsumptionDate), price);
+        return new FoodProduct(null,
+                null,
+                name,
+                quantity.toQuantifier(),
+                null,
+                FoodConservation.fromLabel(foodConservation),
+                toLocalDateTime(expirationDate),
+                toLocalDateTime(optimalConsumptionDate),
+                price);
+    }
+
+    public FoodProduct toModel(ProductLimit limit) {
+        return new FoodProduct(null,
+                null,
+                name,
+                quantity.toQuantifier(),
+                limit,
+                FoodConservation.fromLabel(foodConservation),
+                toLocalDateTime(expirationDate),
+                toLocalDateTime(optimalConsumptionDate),
+                price);
     }
 }

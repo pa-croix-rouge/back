@@ -141,7 +141,7 @@ class FoodProductControllerTest {
         final LocalDate date = LocalDate.now();
         CreateFoodProductDTO createProductDTO = new CreateFoodProductDTO("new Product",
                 new QuantifierDTO(WeightUnit.KILOGRAM.getName(), 1),
-                FoodConservation.ROOM_TEMPERATURE.getLabel(),
+                null, FoodConservation.ROOM_TEMPERATURE.getLabel(),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(3).getYear(), date.plusMonths(3).getMonthValue(), date.plusMonths(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 1,
@@ -200,7 +200,7 @@ class FoodProductControllerTest {
         CreateFoodProductDTO createProductDTO = new CreateFoodProductDTO(
                 "Pommes vertes",
                 new QuantifierDTO(WeightUnit.GRAM.getName(), 950),
-                FoodConservation.ROOM_TEMPERATURE.getLabel(),
+                null, FoodConservation.ROOM_TEMPERATURE.getLabel(),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(3).getYear(), date.plusMonths(3).getMonthValue(), date.plusMonths(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 Timestamp.valueOf(ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")).toLocalDateTime()),
                 43,

@@ -165,7 +165,8 @@ public class ClothProductControllerTest {
                 ClothSize.L.getLabel(),
                 "1",
                 1,
-                ClothGender.MALE.getLabel());
+                ClothGender.MALE.getLabel(),
+                null);
 
         String result = mockMvc.perform(post("/product/cloth")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -217,7 +218,8 @@ public class ClothProductControllerTest {
                 ClothSize.S.getLabel(),
                 "1",
                 1,
-                ClothGender.FEMALE.getLabel());
+                ClothGender.FEMALE.getLabel(),
+                null);
 
         mockMvc.perform(post("/product/cloth/" + clothProductResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
