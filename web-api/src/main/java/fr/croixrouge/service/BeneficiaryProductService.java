@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BeneficiaryProductService extends fr.croixrouge.storage.service.BeneficiaryProductService {
@@ -60,6 +61,8 @@ public class BeneficiaryProductService extends fr.croixrouge.storage.service.Ben
 
         for (var beneficiaryProduct : list) {
 
+            if (beneficiaryProduct.quantity() == 0) continue;
+
             if (productQuantities.containsKey(beneficiaryProduct.product().getName())) {
                 productQuantities.put(
                         beneficiaryProduct.product().getName(),
@@ -72,6 +75,6 @@ public class BeneficiaryProductService extends fr.croixrouge.storage.service.Ben
             }
         }
 
-        return productQuantities;
+        return productQuantities.entrySet().stream().filter(entry -> entry.getValue().getQuantity() != 0).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
