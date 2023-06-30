@@ -12,13 +12,15 @@ import java.util.List;
 
 public class ProductLimit extends Entity<ID> {
 
-    public static final ProductLimit NO_LIMIT = new ProductLimit(null,null, null);
+    public static final ProductLimit NO_LIMIT = new ProductLimit(null, "unlimited", null, null);
 
+    private final String name;
     private final Duration duration;
     private final Quantifier quantity;
 
-    public ProductLimit(ID id, Duration duration, Quantifier quantity) {
+    public ProductLimit(ID id, String name, Duration duration, Quantifier quantity) {
         super(id);
+        this.name = name;
         this.duration = duration;
         this.quantity = quantity;
     }
@@ -45,5 +47,9 @@ public class ProductLimit extends Entity<ID> {
 
     public Quantifier getQuantity() {
         return quantity;
+    }
+
+    public String getName() {
+        return name;
     }
 }

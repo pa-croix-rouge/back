@@ -1,9 +1,8 @@
 package fr.croixrouge.repository.db.product;
 
 import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.repository.db.product_limit.ProductLimitDB;
+import fr.croixrouge.repository.db.product_limit.InDBProductLimitRepository;
 import fr.croixrouge.storage.model.product.Product;
-import fr.croixrouge.storage.model.product.ProductLimit;
 import fr.croixrouge.storage.model.quantifier.MeasurementUnit;
 import fr.croixrouge.storage.model.quantifier.Quantifier;
 import fr.croixrouge.storage.repository.ProductRepository;
@@ -16,30 +15,11 @@ public class InDBProductRepository implements ProductRepository {
 
     private final ProductDBRepository productDBRepository;
 
-    public InDBProductRepository(ProductDBRepository productDBRepository) {
+    private final InDBProductLimitRepository inDBProductLimitRepository;
+
+    public InDBProductRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
         this.productDBRepository = productDBRepository;
-    }
-
-    public ProductLimit toProductLimit(ProductLimitDB productLimitDB) {
-        if(productLimitDB == null)
-            return null;
-        return new ProductLimit(
-                new ID(productLimitDB.getId()),
-                productLimitDB.getDuration(),
-                productLimitDB.getQuantity() == null ? null : new Quantifier(productLimitDB.getQuantity(),
-                        productLimitDB.getUnit() == null ? null : MeasurementUnit.fromName( productLimitDB.getUnit()) )
-        );
-    }
-
-    public ProductLimitDB toProductLimitDB(ProductLimit productLimit) {
-        if(productLimit == null)
-            return null;
-        return new ProductLimitDB(
-                productLimit.getId() == null ? null : productLimit.getId().value(),
-                productLimit.getDuration(),
-                productLimit.getQuantity() == null ? null : productLimit.getQuantity().getQuantity(),
-                productLimit.getQuantity() == null ? null : productLimit.getQuantity().getUnit().getName()
-        );
+        this.inDBProductLimitRepository = inDBProductLimitRepository;
     }
 
     public Product toProduct(ProductDB productDB) {
@@ -47,8 +27,8 @@ public class InDBProductRepository implements ProductRepository {
                 new ID(productDB.getId()),
                 productDB.getName(),
                 new Quantifier(productDB.getQuantity(),
-                        MeasurementUnit.fromName( productDB.getUnit())),
-                toProductLimit(productDB.getProductLimitDB())
+                        MeasurementUnit.fromName(productDB.getUnit())),
+                inDBProductLimitRepository.toProductLimit(productDB.getProductLimitDB())
         );
     }
 
@@ -58,7 +38,7 @@ public class InDBProductRepository implements ProductRepository {
                 product.getName(),
                 product.getQuantity().getQuantity(),
                 product.getQuantity().getUnit().getName(),
-                toProductLimitDB(product.getLimit())
+                inDBProductLimitRepository.toProductLimitDB(product.getLimit())
         );
     }
 

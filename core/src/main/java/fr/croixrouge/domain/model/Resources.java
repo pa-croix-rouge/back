@@ -5,6 +5,7 @@ public enum Resources {
     RESOURCE("Ressource"),
     EVENT("Événement"),
     PRODUCT("Produit"),
+    PRODUCT_LIMIT("Limite Produit"),
     ROLE("Rôle"),
     STORAGE("Stocks"),
     VOLUNTEER("Volontaire"),

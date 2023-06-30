@@ -5,7 +5,6 @@ import fr.croixrouge.exposition.dto.product.ConservationResponse;
 import fr.croixrouge.exposition.dto.product.CreateProductDTO;
 import fr.croixrouge.exposition.dto.product.ProductResponse;
 import fr.croixrouge.exposition.dto.product.UnitResponse;
-import fr.croixrouge.service.ProductLimitService;
 import fr.croixrouge.service.ProductService;
 import fr.croixrouge.service.StorageProductService;
 import fr.croixrouge.storage.model.StorageProduct;
@@ -21,13 +20,10 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController extends CRUDController<ID, Product, ProductService, ProductResponse, CreateProductDTO> {
 
-    private final  ProductLimitService productLimitService;
-
     private final StorageProductService storageProductService;
 
-    public ProductController(ProductService service, ProductLimitService productLimitService, StorageProductService storageProductService) {
+    public ProductController(ProductService service, StorageProductService storageProductService) {
         super(service);
-        this.productLimitService = productLimitService;
         this.storageProductService = storageProductService;
     }
 
@@ -42,10 +38,6 @@ public class ProductController extends CRUDController<ID, Product, ProductServic
         Product product = service.findById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
-        }
-
-        if(product.getLimit() != null) {
-            productLimitService.delete(product.getLimit());
         }
 
         StorageProduct storageProduct = storageProductService.findByProduct(product);

@@ -21,7 +21,7 @@ public class ProductDB {
     @Column(name = "unit", nullable = false)
     private String unit;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_limit_db_id")
     private ProductLimitDB productLimitDB;
 

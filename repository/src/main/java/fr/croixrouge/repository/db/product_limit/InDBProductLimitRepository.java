@@ -23,9 +23,10 @@ public class InDBProductLimitRepository implements ProductLimitRepository {
             return null;
         return new ProductLimit(
                 new ID(productLimitDB.getId()),
+                productLimitDB.getName(),
                 productLimitDB.getDuration(),
                 productLimitDB.getQuantity() == null ? null : new Quantifier(productLimitDB.getQuantity(),
-                        productLimitDB.getUnit() == null ? null : MeasurementUnit.fromName( productLimitDB.getUnit()) )
+                        productLimitDB.getUnit() == null ? null : MeasurementUnit.fromName(productLimitDB.getUnit()))
         );
     }
 
@@ -34,6 +35,7 @@ public class InDBProductLimitRepository implements ProductLimitRepository {
             return null;
         return new ProductLimitDB(
                 productLimit.getId() == null ? null : productLimit.getId().value(),
+                productLimit.getName(),
                 productLimit.getDuration(),
                 productLimit.getQuantity() == null ? null : productLimit.getQuantity().getQuantity(),
                 productLimit.getQuantity() == null ? null : productLimit.getQuantity().getUnit().getName()

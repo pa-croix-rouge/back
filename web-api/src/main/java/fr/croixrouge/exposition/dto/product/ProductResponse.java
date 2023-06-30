@@ -8,6 +8,7 @@ public class ProductResponse {
     public Long productId;
 
     public String name;
+
     public QuantifierDTO quantity;
 
     public ProductResponse() {
