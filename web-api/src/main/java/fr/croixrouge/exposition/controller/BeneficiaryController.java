@@ -45,7 +45,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
     //todo : only admin can update beneficiary
     @PostMapping("/validate/{id}")
     public ResponseEntity<BeneficiaryResponse> validateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
-        Beneficiary beneficiary = service.findByUserId(id);
+        Beneficiary beneficiary = service.findById(id);
         if (beneficiary == null) {
             return ResponseEntity.notFound().build();
         }
@@ -54,17 +54,16 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
         }
-        boolean success = service.validateBeneficiaryAccount(beneficiary);
-        if (!success) {
-            return ResponseEntity.internalServerError().build();
-        }
+
+        service.validateBeneficiaryAccount(beneficiary);
+
         return ResponseEntity.ok().build();
     }
 
     //todo : only admin can update beneficiary
     @PostMapping("/invalidate/{id}")
     public ResponseEntity<BeneficiaryResponse> invalidateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
-        Beneficiary beneficiary = service.findByUserId(id);
+        Beneficiary beneficiary = service.findById(id);
         if (beneficiary == null) {
             return ResponseEntity.notFound().build();
         }
@@ -73,10 +72,9 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
         }
-        boolean success = service.invalidateBeneficiaryAccount(beneficiary);
-        if (!success) {
-            return ResponseEntity.internalServerError().build();
-        }
+
+        service.invalidateBeneficiaryAccount(beneficiary);
+
         return ResponseEntity.ok().build();
     }
 

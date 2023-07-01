@@ -25,11 +25,11 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
     }
 
     public boolean validateBeneficiaryAccount(Beneficiary beneficiary) {
-        return this.repository.validateBeneficiaryAccount(beneficiary);
+        return this.repository.setValidateBeneficiaryAccount(beneficiary.getId(), true);
     }
 
     public boolean invalidateBeneficiaryAccount(Beneficiary beneficiary) {
-        return this.repository.invalidateBeneficiaryAccount(beneficiary);
+        return this.repository.setValidateBeneficiaryAccount(beneficiary.getId(), false);
     }
 
     public void updateBeneficiary(ID id, BeneficiaryCreationRequest beneficiaryCreationRequest) {
