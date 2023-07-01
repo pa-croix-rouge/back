@@ -2,6 +2,7 @@ package fr.croixrouge.service;
 
 import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.exposition.dto.core.BeneficiaryCreationRequest;
 import org.springframework.stereotype.Service;
@@ -24,18 +25,26 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
     }
 
     public boolean validateBeneficiaryAccount(Beneficiary beneficiary) {
-        return this.repository.validateBeneficiaryAccount(beneficiary);
+        return this.repository.setValidateBeneficiaryAccount(beneficiary.getId(), true);
     }
 
     public boolean invalidateBeneficiaryAccount(Beneficiary beneficiary) {
-        return this.repository.invalidateBeneficiaryAccount(beneficiary);
+        return this.repository.setValidateBeneficiaryAccount(beneficiary.getId(), false);
     }
 
     public void updateBeneficiary(ID id, BeneficiaryCreationRequest beneficiaryCreationRequest) {
         var beneficiary = findById(id);
 
+        var newUser = new User(
+                beneficiary.getUser().getId(),
+                beneficiaryCreationRequest.getUsername() == null ? beneficiary.getUser().getUsername() : beneficiaryCreationRequest.getUsername(),
+                beneficiaryCreationRequest.getPassword() == null ? beneficiary.getUser().getPassword() : beneficiaryCreationRequest.getPassword(),
+                beneficiary.getUser().getLocalUnit(),
+                beneficiary.getUser().getRoles()
+        );
+
         var newBeneficiary = new Beneficiary(id,
-                beneficiary.getUser(),
+                newUser,
                 beneficiaryCreationRequest.getFirstName() == null ? beneficiary.getFirstName() : beneficiaryCreationRequest.getFirstName(),
                 beneficiaryCreationRequest.getLastName() == null ? beneficiary.getLastName() : beneficiaryCreationRequest.getLastName(),
                 beneficiaryCreationRequest.getPhoneNumber() == null ? beneficiary.getPhoneNumber() : beneficiaryCreationRequest.getPhoneNumber(),

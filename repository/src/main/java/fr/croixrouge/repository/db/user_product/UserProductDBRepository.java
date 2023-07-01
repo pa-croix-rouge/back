@@ -15,5 +15,7 @@ public interface UserProductDBRepository extends CrudRepository<BeneficiaryProdu
     @Query("select b from BeneficiaryProductDB b where b.productDB.id = ?1 and b.storageDB.id = ?2 and b.date = ?3")
     Optional<BeneficiaryProductDB> findByProductDB_IdAndStorageDB_IdAndDate(Long id, Long id1, LocalDateTime date);
 
+    @Query("select b from BeneficiaryProductDB b where b.beneficiaryDB.id = ?1 and b.date >= ?2 and b.date <= ?3")
+    List<BeneficiaryProductDB> findByBeneficiaryDB_IdAndDateGreaterThanAndDateLessThan(Long id, LocalDateTime date, LocalDateTime date1);
 
 }

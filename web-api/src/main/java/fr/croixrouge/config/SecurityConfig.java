@@ -71,6 +71,7 @@ public class SecurityConfig {
                 .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/role/**"), excludedFilterUrl, Resources.ROLE), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/localunit/**"), excludedFilterUrl, Resources.LOCAL_UNIT), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/beneficiaries/**"), excludedFilterUrl, Resources.BENEFICIARY), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RessourceFilter(new AntPathRequestMatcher("/product-limit/**"), excludedFilterUrl, Resources.PRODUCT_LIMIT), UsernamePasswordAuthenticationFilter.class)
 
             .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.GET.name()), excludedFilterUrl, Operations.READ), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new OperationFilter( new AntPathRequestMatcher("/**", HttpMethod.DELETE.name()), excludedFilterUrl, Operations.DELETE), UsernamePasswordAuthenticationFilter.class)

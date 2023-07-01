@@ -3,6 +3,7 @@ package fr.croixrouge.exposition.controller;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.product.CreateFoodProductDTO;
 import fr.croixrouge.exposition.dto.product.FoodProductResponse;
+import fr.croixrouge.exposition.dto.product.FoodStorageProductResponse;
 import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.*;
 import fr.croixrouge.storage.model.Storage;
@@ -10,10 +11,13 @@ import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
 import fr.croixrouge.storage.model.product.Product;
+import fr.croixrouge.storage.model.product.ProductLimit;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -65,7 +69,12 @@ public class FoodProductController extends ErrorHandler {
             return ResponseEntity.notFound().build();
         }
 
-        Product product = model.toModel().getProduct();
+        ProductLimit productLimit = null;
+        if (model.getLimitID() != null) {
+            productLimit = productLimitService.findById(new ID(model.getLimitID()));
+        }
+
+        Product product = model.toModel(productLimit).getProduct();
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
@@ -92,7 +101,12 @@ public class FoodProductController extends ErrorHandler {
         if (foodProduct == null) {
             return ResponseEntity.notFound().build();
         }
-        Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), model.toModel().getProduct().getLimit());
+        ProductLimit productLimit = null;
+        if (model.getLimitID() != null) {
+            productLimit = productLimitService.findById(new ID(model.getLimitID()));
+        }
+
+        Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), productLimit);
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
@@ -134,8 +148,10 @@ public class FoodProductController extends ErrorHandler {
     }
 
     @GetMapping(value = "/expired")
-    public ResponseEntity<List<FoodProductResponse>> getExpired(HttpServletRequest request) {
+    public ResponseEntity<List<FoodStorageProductResponse>> getExpired(HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
-        return ResponseEntity.ok(service.findAllSoonExpiredByLocalUnitId(localUnitId).stream().map(this::toDTO).toList());
+        var foodStorageProducts = storageProductService.getProductsByLocalUnit(localUnitId).getFoodProducts();
+        var foods = foodStorageProducts.entrySet().stream().filter(entry -> entry.getValue().getExpirationDate().minusDays(7).isBefore(ZonedDateTime.now())).map(entry -> FoodStorageProductResponse.fromFoodProduct(entry.getValue(), entry.getKey())).sorted(Comparator.comparing(FoodStorageProductResponse::getId)).toList();
+        return ResponseEntity.ok(foods);
     }
 }

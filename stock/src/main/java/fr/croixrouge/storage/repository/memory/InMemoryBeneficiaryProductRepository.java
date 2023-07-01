@@ -6,6 +6,7 @@ import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,5 +29,10 @@ public class InMemoryBeneficiaryProductRepository extends InMemoryCRUDRepository
     @Override
     public Optional<BeneficiaryProduct> findByID(ID storageId, ID productId, LocalDateTime date) {
         return Optional.empty();
+    }
+
+    @Override
+    public List<BeneficiaryProduct> findAllFromToDate(ID beneficiaryID, LocalDate from, LocalDate to) {
+        return null;
     }
 }

@@ -17,6 +17,9 @@ public class ProductLimitDB {
     @Column(name = "duration", nullable = true)
     private Duration duration;
 
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
     @Column(name = "quantity", nullable = true)
     private Double quantity;
 
@@ -26,9 +29,10 @@ public class ProductLimitDB {
     public ProductLimitDB() {
     }
 
-    public ProductLimitDB(Long id, Duration duration, Double quantity, String unit) {
+    public ProductLimitDB(Long id, String name, Duration duration, Double quantity, String unit) {
         this.id = id;
         this.duration = duration;
+        this.name = name;
         this.quantity = quantity;
         this.unit = unit;
     }
@@ -63,5 +67,13 @@ public class ProductLimitDB {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -20,4 +20,8 @@ public class StorageService extends CRUDService<ID, Storage, StorageRepository> 
     public Storage findByLocalUnitIdAndId(ID localUnitId, ID id) {
         return repository.findByLocalUnitIdAndId(localUnitId, id).orElse(null);
     }
+
+    public boolean update(Storage storage) {
+        return repository.update(storage);
+    }
 }

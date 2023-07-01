@@ -31,4 +31,10 @@ public class FoodProductService extends CRUDService<ID, FoodProduct, FoodProduct
                 .filter(foodProduct -> foodProduct.getExpirationDate().minusDays(7).isBefore(ZonedDateTime.now()))
                 .toList();
     }
+
+    public List<FoodProduct> findAllByLocalUnitIdAndProductLimitId(ID localUnitId, ID productLimitId) {
+        return storageProductService.findAllByLocalUnitId(localUnitId).stream()
+                .map(storageProduct -> storageProduct.getProduct().getLimit() != null && storageProduct.getProduct().getLimit().getId().equals(productLimitId) ? this.repository.findByProductId(storageProduct.getProduct().getId()) : java.util.Optional.<FoodProduct>empty())
+                .flatMap(java.util.Optional::stream).toList();
+    }
 }

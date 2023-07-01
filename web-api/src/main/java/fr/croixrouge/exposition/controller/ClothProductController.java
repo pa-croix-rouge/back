@@ -7,10 +7,7 @@ import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.*;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
-import fr.croixrouge.storage.model.product.ClothGender;
-import fr.croixrouge.storage.model.product.ClothProduct;
-import fr.croixrouge.storage.model.product.ClothSize;
-import fr.croixrouge.storage.model.product.Product;
+import fr.croixrouge.storage.model.product.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +63,13 @@ public class ClothProductController extends ErrorHandler {
         if (storage == null) {
             return ResponseEntity.notFound().build();
         }
-        Product product = createClothProductDTO.toModel().getProduct();
+
+        ProductLimit productLimit = null;
+        if (createClothProductDTO.getLimitID() != null) {
+            productLimit = productLimitService.findById(new ID(createClothProductDTO.getLimitID()));
+        }
+
+        Product product = createClothProductDTO.toModel(productLimit).getProduct();
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
@@ -93,7 +96,13 @@ public class ClothProductController extends ErrorHandler {
         if (clothProduct == null) {
             return ResponseEntity.notFound().build();
         }
-        Product product = new Product(clothProduct.getProduct().getId(), createClothProductDTO.toModel().getProduct().getName(), createClothProductDTO.toModel().getProduct().getQuantity(), createClothProductDTO.toModel().getProduct().getLimit());
+
+        ProductLimit productLimit = null;
+        if (createClothProductDTO.getLimitID() != null) {
+            productLimit = productLimitService.findById(new ID(createClothProductDTO.getLimitID()));
+        }
+
+        Product product = new Product(clothProduct.getProduct().getId(), createClothProductDTO.toModel().getProduct().getName(), createClothProductDTO.toModel().getProduct().getQuantity(), productLimit);
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();

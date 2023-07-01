@@ -21,8 +21,8 @@ public class ClothStorageProductResponse extends StorageProductResponse {
         this.gender = product.getGender().getLabel();
     }
 
-    public ClothStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, String size, String gender) {
-        super(storageProductId, productId, storageId, productName, quantity, quantifierQuantity, quantifierName);
+    public ClothStorageProductResponse(Long id, Long storageProductId, Long productId, Long storageId, String productName, int quantity, String quantifierQuantity, String quantifierName, String size, String gender, ProductLimitDTO limit) {
+        super(storageProductId, productId, storageId, productName, quantity, quantifierQuantity, quantifierName, limit);
         this.id = id;
         this.size = size;
         this.gender = gender;

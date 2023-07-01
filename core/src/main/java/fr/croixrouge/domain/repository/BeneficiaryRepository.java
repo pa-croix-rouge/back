@@ -13,9 +13,7 @@ public interface BeneficiaryRepository extends CRUDRepository<ID, Beneficiary>{
 
     Optional<Beneficiary> findByUsername(String username);
 
-    boolean validateBeneficiaryAccount(Beneficiary beneficiary);
-
-    boolean invalidateBeneficiaryAccount(Beneficiary beneficiary);
+    boolean setValidateBeneficiaryAccount(ID id, boolean valid);
 
     List<Beneficiary> findAllByLocalUnitId(ID id);
 }

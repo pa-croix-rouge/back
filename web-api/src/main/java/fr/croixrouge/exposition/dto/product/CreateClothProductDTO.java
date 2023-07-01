@@ -12,18 +12,31 @@ public class CreateClothProductDTO extends CreationDTO<ClothProduct> {
     private int amount;
     private String gender;
 
-    public CreateClothProductDTO(String name, QuantifierDTO quantity, String size, String storageId, int amount, String gender) {
+    private final String limitID;
+
+    public CreateClothProductDTO(String name, QuantifierDTO quantity, String size, String storageId, int amount, String gender, String limitID) {
         this.name = name;
         this.quantity = quantity;
         this.size = size;
         this.storageId = storageId;
         this.amount = amount;
         this.gender = gender;
+        this.limitID = limitID;
     }
 
     @Override
     public ClothProduct toModel() {
-        return new ClothProduct(null, new Product(null, name, quantity.toQuantifier(), ProductLimit.NO_LIMIT), ClothSize.fromLabel(size), ClothGender.fromLabel(gender));
+        return new ClothProduct(null,
+                new Product(null, name, quantity.toQuantifier(), null),
+                ClothSize.fromLabel(size),
+                ClothGender.fromLabel(gender));
+    }
+
+    public ClothProduct toModel(ProductLimit limit) {
+        return new ClothProduct(null,
+                new Product(null, name, quantity.toQuantifier(), limit),
+                ClothSize.fromLabel(size),
+                ClothGender.fromLabel(gender));
     }
 
     public String getName() {
@@ -72,5 +85,9 @@ public class CreateClothProductDTO extends CreationDTO<ClothProduct> {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getLimitID() {
+        return limitID;
     }
 }
