@@ -78,14 +78,8 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
     }
 
     @Override
-    public boolean validateBeneficiaryAccount(Beneficiary beneficiary) {
-        //todo
-        return false;
-    }
-
-    @Override
-    public boolean invalidateBeneficiaryAccount(Beneficiary beneficiary) {
-        //todo
+    public boolean setValidateBeneficiaryAccount(ID id, boolean valid) {
+        beneficiaryDBRepository.updateValidatedById(valid, id.value());
         return false;
     }
 

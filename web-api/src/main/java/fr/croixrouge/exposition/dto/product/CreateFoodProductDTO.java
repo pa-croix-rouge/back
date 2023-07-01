@@ -4,6 +4,7 @@ import fr.croixrouge.exposition.dto.CreationDTO;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.FoodConservation;
 import fr.croixrouge.storage.model.product.FoodProduct;
+import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.product.ProductLimit;
 
 import java.sql.Timestamp;
@@ -85,10 +86,7 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
     @Override
     public FoodProduct toModel() {
         return new FoodProduct(null,
-                null,
-                name,
-                quantity.toQuantifier(),
-                null,
+                new Product(null, name, quantity.toQuantifier(), null),
                 FoodConservation.fromLabel(foodConservation),
                 toLocalDateTime(expirationDate),
                 toLocalDateTime(optimalConsumptionDate),
@@ -97,10 +95,7 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
 
     public FoodProduct toModel(ProductLimit limit) {
         return new FoodProduct(null,
-                null,
-                name,
-                quantity.toQuantifier(),
-                limit,
+                new Product(null, name, quantity.toQuantifier(), limit),
                 FoodConservation.fromLabel(foodConservation),
                 toLocalDateTime(expirationDate),
                 toLocalDateTime(optimalConsumptionDate),

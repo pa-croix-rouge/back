@@ -25,18 +25,11 @@ public class InMemoryBeneficiaryRepository extends InMemoryCRUDRepository<ID, Be
         return this.objects.stream().filter(o -> o.getUser().getUsername().equals(username)).findFirst();
     }
 
-    //todo: implement this
     @Override
-    public boolean validateBeneficiaryAccount(Beneficiary beneficiary) {
+    public boolean setValidateBeneficiaryAccount(ID id, boolean valid) {
         return false;
     }
 
-
-    //todo: implement this
-    @Override
-    public boolean invalidateBeneficiaryAccount(Beneficiary beneficiary) {
-        return false;
-    }
 
     @Override
     public List<Beneficiary> findAllByLocalUnitId(ID id) {

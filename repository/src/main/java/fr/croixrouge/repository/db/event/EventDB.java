@@ -23,7 +23,7 @@ public class EventDB {
     @JoinColumn(name = "volunteer_db_id", nullable = false)
     private VolunteerDB volunteerDB;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 1024)
     private String description;
 
     @Column(name = "name", nullable = false)

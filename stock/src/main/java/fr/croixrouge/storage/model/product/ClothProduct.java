@@ -2,8 +2,6 @@ package fr.croixrouge.storage.model.product;
 
 import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.storage.model.quantifier.NumberedUnit;
-import fr.croixrouge.storage.model.quantifier.Quantifier;
 
 import java.util.Objects;
 
@@ -13,15 +11,11 @@ public class ClothProduct extends Entity<ID> {
     private final ClothSize size;
     private final ClothGender gender;
 
-    public ClothProduct(ID id, ID productId, String name, double quantity, ProductLimit limit, ClothSize size, ClothGender clothGender) {
+    public ClothProduct(ID id, Product product, ClothSize size, ClothGender clothGender) {
         super(id);
-        this.product = new Product(productId, name, new Quantifier(quantity, NumberedUnit.NUMBER), limit);
+        this.product = product;
         this.size = size;
         this.gender = clothGender;
-    }
-
-    public ClothProduct(ID id, Product product, ClothSize size, ClothGender clothGender) {
-        this(id, product.getId(), product.name, product.quantity.getQuantity(), product.limit, size, clothGender);
     }
 
     public Product getProduct() {
