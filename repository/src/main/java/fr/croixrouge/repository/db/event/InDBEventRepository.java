@@ -184,10 +184,9 @@ public class InDBEventRepository implements EventRepository {
 
         List<EventSessionDB> eventSessions = eventSessionDBRepository.findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end);
 
-        Set<ID> eventIds = eventSessions.stream().map(eventSessionDB -> ID.of(eventSessionDB.getEventDB().getId())).collect(Collectors.toSet());
+        Set<EventDB> eventDBs = eventSessions.stream().map(EventSessionDB::getEventDB).collect(Collectors.toSet());
 
-        List<Event> events = eventIds.stream().map(id -> toEvent(eventSessions.stream().filter(eventSessionDB -> Objects.equals(eventSessionDB.getEventDB().getId(), id.value())).findFirst().get().getEventDB())).toList();
-        return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
+        return eventDBs.stream().map(eventDB -> toEvent(eventDB, eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(eventDB.getId())).map(this::toEventSession).toList())).toList();
     }
 
     @Override
@@ -202,10 +201,9 @@ public class InDBEventRepository implements EventRepository {
 
         List<EventSessionDB> eventSessions = eventSessionDBRepository.findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end);
 
-        Set<ID> eventIds = eventSessions.stream().map(eventSession -> ID.of(eventSession.getEventDB().getId())).collect(Collectors.toSet());
+        Set<EventDB> eventDBs = eventSessions.stream().map(EventSessionDB::getEventDB).collect(Collectors.toSet());
 
-        List<Event> events = eventIds.stream().map(id -> toEvent(eventSessions.stream().filter(eventSessionDB -> Objects.equals(eventSessionDB.getEventDB().getId(), id.value())).findFirst().get().getEventDB())).toList();
-        return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
+        return eventDBs.stream().map(eventDB -> toEvent(eventDB, eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(eventDB.getId())).map(this::toEventSession).toList())).toList();
     }
 
     @Override
