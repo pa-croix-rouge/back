@@ -52,7 +52,9 @@ public class BeneficiaryProductService {
     }
 
     public boolean canAddProduct(Beneficiary beneficiary, Storage storage, Product product, int quantity) {
-        List<BeneficiaryProduct> products = new ArrayList<>(beneficiaryProductRepository.findAll(beneficiary.getId(), storage.getId()));
+        if (product.getLimit() == null) return true;
+
+        List<BeneficiaryProduct> products = new ArrayList<>(beneficiaryProductRepository.findAll(beneficiary.getId(), product.getId()));
         products.add(new BeneficiaryProduct(null, beneficiary, product, storage, LocalDateTime.now(), quantity));
 
         return !product.getLimit().isLimitReached(products);
