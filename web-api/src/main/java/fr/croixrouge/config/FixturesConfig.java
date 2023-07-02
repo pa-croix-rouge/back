@@ -239,21 +239,21 @@ public class FixturesConfig {
 
         productLimits = List.of(productLimit, productLimit1, productLimit2, productLimit3, productLimit4, productLimit5, productLimit6, productLimit7, productLimit8, productLimit9, productLimit10, productLimit11, productLimit12, productLimit13, productLimit14);
 
-        cloth1 = new Product(null, "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), productLimit11);
-        cloth2 = new Product(null, "Chemises blanches", new Quantifier(15, NumberedUnit.NUMBER), productLimit11);
-        cloth3 = new Product(null, "Chemises blanches", new Quantifier(17, NumberedUnit.NUMBER), productLimit11);
-        cloth4 = new Product(null, "Chemises blanches", new Quantifier(6, NumberedUnit.NUMBER), productLimit11);
-        cloth5 = new Product(null, "Chemises blanches", new Quantifier(5, NumberedUnit.NUMBER), productLimit11);
-        cloth6 = new Product(null, "T-shirts blancs", new Quantifier(15, NumberedUnit.NUMBER), productLimit11);
-        cloth7 = new Product(null, "Pantalons noirs", new Quantifier(10, NumberedUnit.NUMBER), productLimit11);
-        cloth8 = new Product(null, "Robes rouges", new Quantifier(8, NumberedUnit.NUMBER), productLimit11);
-        cloth9 = new Product(null, "Pulls gris", new Quantifier(12, NumberedUnit.NUMBER), productLimit11);
-        cloth10 = new Product(null, "Jupes bleues", new Quantifier(20, NumberedUnit.NUMBER), productLimit11);
-        cloth11 = new Product(null, "Chaussures noires", new Quantifier(5, NumberedUnit.NUMBER), productLimit12);
-        cloth12 = new Product(null, "Chaussures blanches", new Quantifier(8, NumberedUnit.NUMBER), productLimit12);
-        cloth13 = new Product(null, "Chaussettes noires", new Quantifier(10, NumberedUnit.NUMBER), productLimit10);
-        cloth14 = new Product(null, "Chaussettes blanches", new Quantifier(15, NumberedUnit.NUMBER), productLimit10);
-        cloth15 = new Product(null, "Baskets rouges", new Quantifier(7, NumberedUnit.NUMBER), productLimit12);
+        cloth1 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth2 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth3 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth4 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth5 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth6 = new Product(null, "T-shirts blancs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth7 = new Product(null, "Pantalons noirs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth8 = new Product(null, "Robes rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth9 = new Product(null, "Pulls gris", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth10 = new Product(null, "Jupes bleues", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth11 = new Product(null, "Chaussures noires", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth12 = new Product(null, "Chaussures blanches", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth13 = new Product(null, "Chaussettes noires", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth14 = new Product(null, "Chaussettes blanches", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth15 = new Product(null, "Baskets rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
         food1 = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9);
         food2 = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit7);
         food3 = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), productLimit9);
@@ -654,6 +654,9 @@ public class FixturesConfig {
     private void fillBeneficiaryProductWithRandom(InDBBeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
         for (var entry : beneficiaryFoodProductDates.entrySet()) {
             for (var date : entry.getValue()) {
+                if (date.isAfter(LocalDateTime.now()))
+                    continue;
+
                 for (int i = 0; i < random.nextInt((int) (foodProductList.size() * 0.75)); i++) {
                     repo.save(
                             new BeneficiaryProduct(null,
