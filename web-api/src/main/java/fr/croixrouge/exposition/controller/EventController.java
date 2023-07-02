@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.event.*;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventStats;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.EventService;
 import fr.croixrouge.service.LocalUnitService;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -91,27 +91,8 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
     @GetMapping("/stats")
     public ResponseEntity<EventStatsResponse> getEventsStatsByLocalUnitId(HttpServletRequest request) {
         ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
-        final List<EventSession> sessions = service.findByLocalUnitIdOver12Month(localUnitId);
-        final YearMonth now = YearMonth.now();
-        final List<EventSession> sessionList = new ArrayList<>(sessions);
-        final List<EventSession> sessionListOverMonth = new ArrayList<>(sessions.stream().filter(session -> {
-            YearMonth sessionDate = YearMonth.from(session.getStart());
-            return sessionDate.equals(now);
-        }).toList());
-        final EventStatsResponse eventStatsResponse = new EventStatsResponse(
-                sessionListOverMonth.size(),
-                sessionListOverMonth.stream().map(
-                        eventSession -> eventSession.getTimeWindows().stream().map(
-                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
-                        ).reduce(0, Integer::sum)
-                ).reduce(0, Integer::sum),
-                sessionList.size(),
-                sessionList.stream().map(
-                        eventSession -> eventSession.getTimeWindows().stream().map(
-                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
-                        ).reduce(0, Integer::sum)
-                ).reduce(0, Integer::sum));
-        return ResponseEntity.ok(eventStatsResponse);
+        final EventStats stats = service.findByLocalUnitIdOver12Month(localUnitId);
+        return ResponseEntity.ok(EventStatsResponse.fromEventStats(stats));
     }
 
     @GetMapping("/date")

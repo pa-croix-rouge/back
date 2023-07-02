@@ -2,7 +2,7 @@ package fr.croixrouge.service;
 
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
-import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventStats;
 import fr.croixrouge.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class EventService extends CRUDService<ID, Event, EventRepository> {
         return repository.findByLocalUnitId(localUnitId);
     }
 
-    public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
+    public EventStats findByLocalUnitIdOver12Month(ID localUnitId) {
         return repository.findByLocalUnitIdOver12Month(localUnitId);
     }
 

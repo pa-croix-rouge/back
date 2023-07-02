@@ -6,13 +6,13 @@ import fr.croixrouge.domain.repository.InMemoryCRUDRepository;
 import fr.croixrouge.domain.repository.IncrementalIDGenerator;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventStats;
 import fr.croixrouge.model.EventTimeWindow;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.chrono.ChronoZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,14 +57,9 @@ public class InMemoryEventRepository extends InMemoryCRUDRepository<ID, Event> i
     }
 
     @Override
-    public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
+    public EventStats findByLocalUnitIdOver12Month(ID localUnitId) {
         ChronoZonedDateTime<LocalDate> now = ZonedDateTime.now();
-        return this.objects.stream()
-                .filter(event -> event.getLocalUnit().getId().equals(localUnitId))
-                .map(Event::getSessions)
-                .flatMap(List::stream)
-                .filter(session -> session.getStart().isAfter(now.minus(12, ChronoUnit.MONTHS)))
-                .toList();
+        return null;
     }
 
     @Override

@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.CRUDRepository;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventStats;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface EventRepository extends CRUDRepository<ID, Event> {
 
     List<Event> findByLocalUnitId(ID localUnitId);
 
-    List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId);
+    EventStats findByLocalUnitIdOver12Month(ID localUnitId);
 
     List<Event> findByLocalUnitIdAndMonth(ID localUnitId, int month, int year);
 
