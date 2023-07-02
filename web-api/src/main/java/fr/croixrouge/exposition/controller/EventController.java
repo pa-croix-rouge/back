@@ -4,9 +4,11 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.event.*;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.EventService;
 import fr.croixrouge.service.LocalUnitService;
 import fr.croixrouge.service.VolunteerService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +25,13 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
     private final VolunteerService volunteerService;
 
     private final LocalUnitService localUnitService;
+    private final AuthenticationService authenticationService;
 
-    public EventController(EventService eventService, VolunteerService volunteerService, LocalUnitService localUnitService) {
+    public EventController(EventService eventService, VolunteerService volunteerService, LocalUnitService localUnitService, AuthenticationService authenticationService) {
         super(eventService);
         this.volunteerService = volunteerService;
         this.localUnitService = localUnitService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -84,8 +88,9 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(eventResponse);
     }
 
-    @GetMapping("/stats/{localUnitId}")
-    public ResponseEntity<EventStatsResponse> getEventsStatsByLocalUnitId(@PathVariable ID localUnitId) {
+    @GetMapping("/stats")
+    public ResponseEntity<EventStatsResponse> getEventsStatsByLocalUnitId(HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
         final List<EventSession> sessions = service.findByLocalUnitIdOver12Month(localUnitId);
         final YearMonth now = YearMonth.now();
         final List<EventSession> sessionList = new ArrayList<>(sessions);

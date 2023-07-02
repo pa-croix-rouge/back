@@ -3,6 +3,7 @@ package fr.croixrouge.repository.db.event;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 @Table(name = "event-session")
 @Entity
@@ -44,5 +45,28 @@ public class EventSessionDB {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EventSessionDB that = (EventSessionDB) o;
+        return Objects.equals(id, that.id) && Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(eventDB, that.eventDB);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, start, end, eventDB);
+    }
+
+    @Override
+    public String toString() {
+        return "EventSessionDB{" +
+                "id=" + id +
+                ", start=" + start +
+                ", end=" + end +
+                ", eventDB=" + eventDB +
+                '}';
     }
 }

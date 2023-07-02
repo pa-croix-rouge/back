@@ -172,9 +172,15 @@ public class InDBEventRepository implements EventRepository {
 
     @Override
     public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
-        return eventSessionDBRepository.
-                findByEventDB_LocalUnitDB_LocalUnitIDAndStartTimeAfter(localUnitId.value(), ZonedDateTime.now().minusMonths(12))
-                .stream().map(this::toEventSession).toList();
+        List<EventTimeWindowDB> timeWindowDBS = eventTimeWindowDBRepository.findByEventSessionDB_EventDB_LocalUnitIDAndStartTimeAfter(localUnitId.value(), ZonedDateTime.now().minusMonths(12));
+        Map<EventSessionDB, List<EventTimeWindowDB>> timeWindowDBMap = timeWindowDBS.stream().collect(Collectors.groupingBy(EventTimeWindowDB::getEventSessionDB));
+        List<EventSession> eventSessions = timeWindowDBMap.entrySet().stream().map(entry ->
+                new EventSession(ID.of(entry.getKey().getId()), entry.getValue().stream().map(eventTimeWindowDB ->
+                        new EventTimeWindow(ID.of(eventTimeWindowDB.getId()), eventTimeWindowDB.getStart(), eventTimeWindowDB.getEnd(), eventTimeWindowDB.getMaxParticipants(), eventTimeWindowDB.getUserDBs().stream().map(userDB ->
+                                ID.of(userDB.getUserID())).toList()))
+                        .toList()))
+                .toList();
+        return eventSessions;
     }
 
     @Override
