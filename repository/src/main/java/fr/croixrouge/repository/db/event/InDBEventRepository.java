@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventStats;
 import fr.croixrouge.model.EventTimeWindow;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
@@ -171,10 +172,20 @@ public class InDBEventRepository implements EventRepository {
     }
 
     @Override
-    public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
-        return eventSessionDBRepository.
-                findByEventDB_LocalUnitDB_LocalUnitIDAndStartTimeAfter(localUnitId.value(), ZonedDateTime.now().minusMonths(12))
-                .stream().map(this::toEventSession).toList();
+    public EventStats findByLocalUnitIdOver12Month(ID localUnitId) {
+        ZonedDateTime oneYearAgo = ZonedDateTime.of(ZonedDateTime.now().getYear(), ZonedDateTime.now().getMonthValue(), 1, 0, 0, 0, 0, ZonedDateTime.now().getZone()).minusYears(1);
+        ZonedDateTime lastDayOfYear = ZonedDateTime.of(ZonedDateTime.now().getYear(), 12, 31, 23, 59, 59, 0, ZonedDateTime.now().getZone());
+        ZonedDateTime oneMonthAgo = ZonedDateTime.of(ZonedDateTime.now().getYear(), ZonedDateTime.now().getMonthValue(), 1, 0, 0, 0, 0, ZonedDateTime.now().getZone());
+        ZonedDateTime lastDayOfMonth = ZonedDateTime.of(ZonedDateTime.now().getYear(), ZonedDateTime.now().getMonthValue(), 1, 0, 0, 0, 0, ZonedDateTime.now().getZone()).plusMonths(1);
+        List<EventTimeWindowDB> timeWindowDBS = eventTimeWindowDBRepository.findByEventSessionDB_EventDB_LocalUnitIDAndStartTimeAfter(localUnitId.value(), ZonedDateTime.now().minusMonths(12));
+        Map<EventSessionDB, List<EventTimeWindowDB>> timeWindowDBMap = timeWindowDBS.stream().collect(Collectors.groupingBy(EventTimeWindowDB::getEventSessionDB));
+
+        return new EventStats(
+                (int) timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneMonthAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfMonth)).map(Map.Entry::getKey).count(),
+                timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneMonthAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfMonth)).map(entry -> entry.getValue().stream().map(eventTimeWindowDB -> eventTimeWindowDB.getUserDBs().size()).reduce(0, Integer::sum)).reduce(0, Integer::sum),
+                (int) timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneYearAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfYear)).map(Map.Entry::getKey).count(),
+                timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneYearAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfYear)).map(entry -> entry.getValue().stream().map(eventTimeWindowDB -> eventTimeWindowDB.getUserDBs().size()).reduce(0, Integer::sum)).reduce(0, Integer::sum)
+        );
     }
 
     @Override
@@ -184,10 +195,9 @@ public class InDBEventRepository implements EventRepository {
 
         List<EventSessionDB> eventSessions = eventSessionDBRepository.findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end);
 
-        Set<ID> eventIds = eventSessions.stream().map(eventSessionDB -> ID.of(eventSessionDB.getEventDB().getId())).collect(Collectors.toSet());
+        Set<EventDB> eventDBs = eventSessions.stream().map(EventSessionDB::getEventDB).collect(Collectors.toSet());
 
-        List<Event> events = eventIds.stream().map(id -> toEvent(eventSessions.stream().filter(eventSessionDB -> Objects.equals(eventSessionDB.getEventDB().getId(), id.value())).findFirst().get().getEventDB())).toList();
-        return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
+        return eventDBs.stream().map(eventDB -> toEvent(eventDB, eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(eventDB.getId())).map(this::toEventSession).toList())).toList();
     }
 
     @Override
@@ -202,10 +212,9 @@ public class InDBEventRepository implements EventRepository {
 
         List<EventSessionDB> eventSessions = eventSessionDBRepository.findByLocalUnitDB_LocalUnitIDAndStartTimeAfterOrEndTimeBefore(localUnitId.value(), start, end);
 
-        Set<ID> eventIds = eventSessions.stream().map(eventSession -> ID.of(eventSession.getEventDB().getId())).collect(Collectors.toSet());
+        Set<EventDB> eventDBs = eventSessions.stream().map(EventSessionDB::getEventDB).collect(Collectors.toSet());
 
-        List<Event> events = eventIds.stream().map(id -> toEvent(eventSessions.stream().filter(eventSessionDB -> Objects.equals(eventSessionDB.getEventDB().getId(), id.value())).findFirst().get().getEventDB())).toList();
-        return events.stream().map(event -> new Event(event.getId(), event.getName(), event.getDescription(), event.getReferrer(), event.getLocalUnit(), eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(event.getId().value())).map(this::toEventSession).toList(), event.getOccurrences())).toList();
+        return eventDBs.stream().map(eventDB -> toEvent(eventDB, eventSessions.stream().filter(eventSession -> eventSession.getEventDB().getId().equals(eventDB.getId())).map(this::toEventSession).toList())).toList();
     }
 
     @Override

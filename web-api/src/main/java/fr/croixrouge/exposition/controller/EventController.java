@@ -4,13 +4,15 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.event.*;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventStats;
+import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.EventService;
 import fr.croixrouge.service.LocalUnitService;
 import fr.croixrouge.service.VolunteerService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,11 +25,13 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
     private final VolunteerService volunteerService;
 
     private final LocalUnitService localUnitService;
+    private final AuthenticationService authenticationService;
 
-    public EventController(EventService eventService, VolunteerService volunteerService, LocalUnitService localUnitService) {
+    public EventController(EventService eventService, VolunteerService volunteerService, LocalUnitService localUnitService, AuthenticationService authenticationService) {
         super(eventService);
         this.volunteerService = volunteerService;
         this.localUnitService = localUnitService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -84,29 +88,11 @@ public class EventController extends CRUDController<ID, Event, EventService, Eve
         return ResponseEntity.ok(eventResponse);
     }
 
-    @GetMapping("/stats/{localUnitId}")
-    public ResponseEntity<EventStatsResponse> getEventsStatsByLocalUnitId(@PathVariable ID localUnitId) {
-        final List<EventSession> sessions = service.findByLocalUnitIdOver12Month(localUnitId);
-        final YearMonth now = YearMonth.now();
-        final List<EventSession> sessionList = new ArrayList<>(sessions);
-        final List<EventSession> sessionListOverMonth = new ArrayList<>(sessions.stream().filter(session -> {
-            YearMonth sessionDate = YearMonth.from(session.getStart());
-            return sessionDate.equals(now);
-        }).toList());
-        final EventStatsResponse eventStatsResponse = new EventStatsResponse(
-                sessionListOverMonth.size(),
-                sessionListOverMonth.stream().map(
-                        eventSession -> eventSession.getTimeWindows().stream().map(
-                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
-                        ).reduce(0, Integer::sum)
-                ).reduce(0, Integer::sum),
-                sessionList.size(),
-                sessionList.stream().map(
-                        eventSession -> eventSession.getTimeWindows().stream().map(
-                                eventTimeWindow -> eventTimeWindow.getParticipants().size()
-                        ).reduce(0, Integer::sum)
-                ).reduce(0, Integer::sum));
-        return ResponseEntity.ok(eventStatsResponse);
+    @GetMapping("/stats")
+    public ResponseEntity<EventStatsResponse> getEventsStatsByLocalUnitId(HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        final EventStats stats = service.findByLocalUnitIdOver12Month(localUnitId);
+        return ResponseEntity.ok(EventStatsResponse.fromEventStats(stats));
     }
 
     @GetMapping("/date")

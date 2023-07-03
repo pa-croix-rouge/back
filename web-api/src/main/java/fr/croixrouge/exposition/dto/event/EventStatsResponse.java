@@ -1,5 +1,7 @@
 package fr.croixrouge.exposition.dto.event;
 
+import fr.croixrouge.model.EventStats;
+
 public class EventStatsResponse {
     private int numberOfEventsOverTheMonth;
     private int totalParticipantsOverTheMonth;
@@ -14,6 +16,10 @@ public class EventStatsResponse {
         this.totalParticipantsOverTheMonth = totalParticipantsOverTheMonth;
         this.numberOfEventsOverTheYear = numberOfEventsOverTheYear;
         this.totalParticipantsOverTheYear = totalParticipantsOverTheYear;
+    }
+
+    public static EventStatsResponse fromEventStats(EventStats eventStats) {
+        return new EventStatsResponse(eventStats.getNumberOfEventsOverTheMonth(), eventStats.getTotalParticipantsOverTheMonth(), eventStats.getNumberOfEventsOverTheYear(), eventStats.getTotalParticipantsOverTheYear());
     }
 
     public int getNumberOfEventsOverTheMonth() {
