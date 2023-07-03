@@ -5,6 +5,7 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.exposition.dto.core.BeneficiaryCreationRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +13,11 @@ import java.util.List;
 @Service
 public class BeneficiaryService extends CRUDService<ID, Beneficiary, BeneficiaryRepository> {
 
-    public BeneficiaryService(BeneficiaryRepository repository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public BeneficiaryService(BeneficiaryRepository repository, PasswordEncoder passwordEncoder) {
         super(repository);
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Beneficiary findByUserId(ID id) {
@@ -30,6 +34,26 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
     public boolean invalidateBeneficiaryAccount(Beneficiary beneficiary) {
         return this.repository.setValidateBeneficiaryAccount(beneficiary.getId(), false);
+    }
+
+    @Override
+    public ID save(Beneficiary object) {
+        if (object.getUser().getId() == null || object.getId() == null) {
+            return super.save(
+                    new Beneficiary(
+                            object.getId(),
+                            object.getUser().setPassword(passwordEncoder.encode(object.getUser().getPassword())),
+                            object.getFirstName(),
+                            object.getLastName(),
+                            object.getPhoneNumber(),
+                            object.isValidated(),
+                            object.getBirthDate(),
+                            object.getSocialWorkerNumber(),
+                            object.getFamilyMembers()
+                    )
+            );
+        }
+        return super.save(object);
     }
 
     public void updateBeneficiary(ID id, BeneficiaryCreationRequest beneficiaryCreationRequest) {

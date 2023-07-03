@@ -174,15 +174,15 @@ public class FixturesConfig {
         beneficiaryUserValOrge47 = new User(null, "sibusiso.khumalo@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
 
         beneficiary1 = new Beneficiary(null, beneficiaryUserValOrge1, "Eloise", "DEBOIS", "+33 6 72 51 39 84", true, LocalDate.of(2000, 6, 1), "2 00 06 01 2A 122 019", List.of());
-        beneficiary2 = new Beneficiary(null, beneficiaryUserValOrge1, "Mathieu", "MARTIN", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 3), "1 92 03 03 75 113 557", List.of());
-        beneficiary3 = new Beneficiary(null, beneficiaryUserValOrge1, "Léa", "LAMBERT", "+33 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "2 88 07 19 91 190 349", List.of());
-        beneficiary4 = new Beneficiary(null, beneficiaryUserValOrge1, "Jerome", "GIRARD", "+33 7 63 18 47 92", true, LocalDate.of(1983, 11, 7), "1 83 11 07 91 125 789", List.of());
-        beneficiary5 = new Beneficiary(null, beneficiaryUserValOrge1, "Camille", "ROUX", "+33 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "2 90 05 28 93 102 901", List.of());
-        beneficiary6 = new Beneficiary(null, beneficiaryUserValOrge1, "Alexandre", "BERNARD", "+33 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "1 87 01 15 92 105 302", List.of());
-        beneficiary7 = new Beneficiary(null, beneficiaryUserValOrge1, "Margaux", "DUPONT", "+33 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "2 94 08 09 75 120 270", List.of());
-        beneficiary8 = new Beneficiary(null, beneficiaryUserValOrge1, "Antoine", "LEFEBVRE", "+33 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "1 91 06 25 91 157 633", List.of());
-        beneficiary9 = new Beneficiary(null, beneficiaryUserValOrge1, "Juliette", "MOREAU", "+33 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "2 89 12 17 91 143 751", List.of());
-        beneficiary10 = new Beneficiary(null, beneficiaryUserValOrge1, "Théo", "THOMAS", "+33 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "1 93 02 06 91 109 669", List.of());
+        beneficiary2 = new Beneficiary(null, beneficiaryUserValOrge2, "Mathieu", "MARTIN", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 3), "1 92 03 03 75 113 557", List.of());
+        beneficiary3 = new Beneficiary(null, beneficiaryUserValOrge3, "Léa", "LAMBERT", "+33 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "2 88 07 19 91 190 349", List.of());
+        beneficiary4 = new Beneficiary(null, beneficiaryUserValOrge4, "Jerome", "GIRARD", "+33 7 63 18 47 92", true, LocalDate.of(1983, 11, 7), "1 83 11 07 91 125 789", List.of());
+        beneficiary5 = new Beneficiary(null, beneficiaryUserValOrge5, "Camille", "ROUX", "+33 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "2 90 05 28 93 102 901", List.of());
+        beneficiary6 = new Beneficiary(null, beneficiaryUserValOrge6, "Alexandre", "BERNARD", "+33 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "1 87 01 15 92 105 302", List.of());
+        beneficiary7 = new Beneficiary(null, beneficiaryUserValOrge7, "Margaux", "DUPONT", "+33 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "2 94 08 09 75 120 270", List.of());
+        beneficiary8 = new Beneficiary(null, beneficiaryUserValOrge8, "Antoine", "LEFEBVRE", "+33 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "1 91 06 25 91 157 633", List.of());
+        beneficiary9 = new Beneficiary(null, beneficiaryUserValOrge9, "Juliette", "MOREAU", "+33 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "2 89 12 17 91 143 751", List.of());
+        beneficiary10 = new Beneficiary(null, beneficiaryUserValOrge10, "Théo", "THOMAS", "+33 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "1 93 02 06 91 109 669", List.of());
         beneficiary11 = new Beneficiary(null, beneficiaryUserValOrge11, "Fernando", "GOMEZ", "+34 6 72 51 39 84", true, LocalDate.of(1980, 6, 1), "1 80 06 01 99 999 019", List.of());
         beneficiary12 = new Beneficiary(null, beneficiaryUserValOrge12, "Ana", "MARTINEZ", "+34 6 28 93 75 46", true, LocalDate.of(1985, 3, 3), "2 85 03 03 99 999 557", List.of());
         beneficiary13 = new Beneficiary(null, beneficiaryUserValOrge13, "José", "SANCHEZ", "+34 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "1 88 07 19 99 999 349", List.of());
