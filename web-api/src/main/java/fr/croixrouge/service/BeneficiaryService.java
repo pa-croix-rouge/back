@@ -2,6 +2,7 @@ package fr.croixrouge.service;
 
 import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.exposition.dto.core.BeneficiaryCreationRequest;
@@ -30,7 +31,7 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
             return super.save(beneficiary);
         }
 
-        var volunteerRole = roleService.getCommonRole("Bénéficiaire");
+        var volunteerRole = roleService.getCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME);
         var newVolunteer = new Beneficiary(
                 null,
                 new User(null,

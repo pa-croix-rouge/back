@@ -1,6 +1,7 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.domain.repository.VolunteerRepository;
@@ -30,12 +31,12 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
             return super.save(volunteer);
         }
 
-        var volunteerRole = roleService.getCommonRole("Volontaire");
+        var volunteerRole = roleService.getCommonRole(Role.COMMON_VOLUNTEER_ROLE_NAME);
         var newVolunteer = new Volunteer(
                 null,
-                new User( null,
+                new User(null,
                         volunteer.getUser().getUsername(),
-                        passwordEncoder.encode( volunteer.getUser().getPassword()),
+                        passwordEncoder.encode(volunteer.getUser().getPassword()),
                         volunteer.getUser().getLocalUnit(),
                         List.of(volunteerRole)),
                 volunteer.getFirstName(),

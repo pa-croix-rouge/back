@@ -58,7 +58,7 @@ public class RepositoryConfig {
         var repo = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
         HashMap<Resources, Set<Operations>> roleResources;
 
-        if (repo.findCommonRole("Manager").isEmpty()) {
+        if (repo.findCommonRole(Role.COMMON_MANAGER_ROLE_NAME).isEmpty()) {
             roleResources = new HashMap<>();
             for (var ressource : Resources.values()) {
                 roleResources.put(ressource, Set.of(Operations.values()));
@@ -66,7 +66,7 @@ public class RepositoryConfig {
 
             repo.save(new Role(
                     null,
-                    "Manager",
+                    Role.COMMON_MANAGER_ROLE_NAME,
                     "Manger d'unité local",
                     roleResources,
                     null,
@@ -74,7 +74,7 @@ public class RepositoryConfig {
             ));
         }
 
-        if (repo.findCommonRole("Volontaire").isEmpty()) {
+        if (repo.findCommonRole(Role.COMMON_VOLUNTEER_ROLE_NAME).isEmpty()) {
             roleResources = new HashMap<>();
             for (var ressource : Resources.values()) {
                 roleResources.put(ressource, Set.of(Operations.READ));
@@ -82,7 +82,7 @@ public class RepositoryConfig {
 
             repo.save(new Role(
                     null,
-                    "Volontaire",
+                    Role.COMMON_VOLUNTEER_ROLE_NAME,
                     "Volontaire d'unité local",
                     roleResources,
                     null,
@@ -90,10 +90,10 @@ public class RepositoryConfig {
             ));
         }
 
-        if (repo.findCommonRole("Bénéficiaire").isEmpty()) {
+        if (repo.findCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME).isEmpty()) {
             repo.save(new Role(
                     null,
-                    "Bénéficiaire",
+                    Role.COMMON_BENEFICIARY_ROLE_NAME,
                     "Bénéficiaire d'unité local",
                     Map.of(Resources.EVENT, Set.of(Operations.READ, Operations.CREATE, Operations.DELETE),
                             Resources.BENEFICIARY, Set.of(Operations.READ, Operations.CREATE, Operations.UPDATE, Operations.DELETE),
