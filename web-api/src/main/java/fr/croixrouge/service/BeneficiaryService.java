@@ -13,11 +13,42 @@ import java.util.List;
 @Service
 public class BeneficiaryService extends CRUDService<ID, Beneficiary, BeneficiaryRepository> {
 
+    private final RoleService roleService;
+
     private final PasswordEncoder passwordEncoder;
 
-    public BeneficiaryService(BeneficiaryRepository repository, PasswordEncoder passwordEncoder) {
+    public BeneficiaryService(BeneficiaryRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
         super(repository);
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public ID save(Beneficiary beneficiary) {
+
+        if (beneficiary.getId() != null) {
+            return super.save(beneficiary);
+        }
+
+        var volunteerRole = roleService.getCommonRole("Bénéficiaire");
+        var newVolunteer = new Beneficiary(
+                null,
+                new User(null,
+                        beneficiary.getUser().getUsername(),
+                        passwordEncoder.encode(beneficiary.getUser().getPassword()),
+                        beneficiary.getUser().getLocalUnit(),
+                        List.of(volunteerRole)),
+                beneficiary.getFirstName(),
+                beneficiary.getLastName(),
+                beneficiary.getPhoneNumber(),
+                beneficiary.isValidated(),
+                beneficiary.getBirthDate(),
+                beneficiary.getSocialWorkerNumber(),
+                beneficiary.getFamilyMembers()
+
+        );
+
+        return super.save(newVolunteer);
     }
 
     public Beneficiary findByUserId(ID id) {
@@ -34,26 +65,6 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
     public boolean invalidateBeneficiaryAccount(Beneficiary beneficiary) {
         return this.repository.setValidateBeneficiaryAccount(beneficiary.getId(), false);
-    }
-
-    @Override
-    public ID save(Beneficiary object) {
-        if (object.getUser().getId() == null || object.getId() == null) {
-            return super.save(
-                    new Beneficiary(
-                            object.getId(),
-                            object.getUser().setPassword(passwordEncoder.encode(object.getUser().getPassword())),
-                            object.getFirstName(),
-                            object.getLastName(),
-                            object.getPhoneNumber(),
-                            object.isValidated(),
-                            object.getBirthDate(),
-                            object.getSocialWorkerNumber(),
-                            object.getFamilyMembers()
-                    )
-            );
-        }
-        return super.save(object);
     }
 
     public void updateBeneficiary(ID id, BeneficiaryCreationRequest beneficiaryCreationRequest) {
