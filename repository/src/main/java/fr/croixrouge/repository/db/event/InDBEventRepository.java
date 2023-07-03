@@ -283,9 +283,9 @@ public class InDBEventRepository implements EventRepository {
             return false;
         }
 
-        if (eventToUpdate.getFirstStart().isBefore(ZonedDateTime.now())) {
-            return false;
-        }
+//        if (eventToUpdate.getFirstStart().isBefore(ZonedDateTime.now())) {
+//            return false;
+//        }
 
         EventSession sessionToUpdate = eventToUpdate.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
         if (sessionToUpdate == null) {
