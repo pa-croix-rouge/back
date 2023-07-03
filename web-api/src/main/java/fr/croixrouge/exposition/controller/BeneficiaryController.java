@@ -29,7 +29,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         this.authenticationService = authenticationService;
     }
 
-    @GetMapping("/token")
+    @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<BeneficiaryResponse> get(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Beneficiary beneficiary = service.findByUsername(username);

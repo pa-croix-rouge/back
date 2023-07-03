@@ -24,7 +24,7 @@ public class BeneficiaryDB {
     private String phonenumber;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_db_user_id", nullable = false)
+    @JoinColumn(name = "user_db_user_id", nullable = false, unique = true)
     private UserDB userDB;
 
     @Column(name = "validated")
