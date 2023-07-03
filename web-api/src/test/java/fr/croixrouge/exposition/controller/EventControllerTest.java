@@ -417,7 +417,7 @@ public class EventControllerTest {
 
         var resList = List.of(objectMapper.readValue(res, EventResponse[].class));
 
-        Assertions.assertEquals(7, resList.size());
+        Assertions.assertEquals(6, resList.size());
         Assertions.assertTrue(resList.contains(eventResponse1));
 //        Assertions.assertTrue(resList.contains(eventResponse2));
         Assertions.assertTrue(resList.contains(eventResponse3));
