@@ -283,10 +283,6 @@ public class InDBEventRepository implements EventRepository {
             return false;
         }
 
-//        if (eventToUpdate.getFirstStart().isBefore(ZonedDateTime.now())) {
-//            return false;
-//        }
-
         EventSession sessionToUpdate = eventToUpdate.getSessions().stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
         if (sessionToUpdate == null) {
             return false;
@@ -301,13 +297,13 @@ public class InDBEventRepository implements EventRepository {
                 }
                 List<EventTimeWindow> updatedTimeWindows = new ArrayList<>();
                 for (EventTimeWindow timeWindow : event.getSessions().get(0).getTimeWindows()) {
-                    updatedTimeWindows.add(new EventTimeWindow(new ID(String.valueOf(updatedTimeWindows.size())), timeWindow.getStart(), timeWindow.getEnd(), timeWindow.getMaxParticipants(), new ArrayList<>()));
+                    updatedTimeWindows.add(new EventTimeWindow(null, timeWindow.getStart(), timeWindow.getEnd(), timeWindow.getMaxParticipants(), new ArrayList<>()));
                 }
                 List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
                 int currentTimeWindowIndex = 0;
                 for (ID participant : participants) {
                     EventTimeWindow timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
-                    if (timeWindow.getParticipants().size() >= timeWindow.getMaxParticipants()) {
+                    if (timeWindow.getParticipants().size() > timeWindow.getMaxParticipants()) {
                         currentTimeWindowIndex++;
                         timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
                     }
@@ -365,7 +361,7 @@ public class InDBEventRepository implements EventRepository {
                 List<EventTimeWindow> updatedTimeWindows = new ArrayList<>();
                 for (int i = 0; i < eventTimeWindowOccurrence; i++) {
                     updatedTimeWindows.add(new EventTimeWindow(
-                            new ID(String.valueOf(updatedTimeWindows.size())),
+                            null,
                             session.getStart().plusMinutes((long) i * eventTimeWindowDuration),
                             session.getStart().plusMinutes((long) (i + 1) * eventTimeWindowDuration),
                             eventTimeWindowMaxParticipants,
@@ -384,20 +380,20 @@ public class InDBEventRepository implements EventRepository {
                 }
                 updatedSessions.add(new EventSession(session.getId(), updatedTimeWindows));
             } else {
-                if (sessionToUpdate.getParticipants() > event.getSessions().get(0).getMaxParticipants()) {
+                if (session.getParticipants() > event.getSessions().get(0).getMaxParticipants()) {
                     return false;
                 }
                 List<EventTimeWindow> updatedTimeWindows = new ArrayList<>();
                 for (int i = 0; i < eventTimeWindowOccurrence; i++) {
                     updatedTimeWindows.add(new EventTimeWindow(
-                            new ID(String.valueOf(updatedTimeWindows.size())),
+                            null,
                             session.getStart().plusMinutes((long) i * eventTimeWindowDuration),
                             session.getStart().plusMinutes((long) (i + 1) * eventTimeWindowDuration),
                             eventTimeWindowMaxParticipants,
                             new ArrayList<>()
                     ));
                 }
-                List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
+                List<ID> participants = session.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
                 int currentTimeWindowIndex = 0;
                 for (ID participant : participants) {
                     EventTimeWindow timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);

@@ -333,7 +333,11 @@ public class FixturesConfig {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(4);
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList2.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 20), eventStartDate2.plusMinutes((i + 1) * 20), 4, participants));
             }
@@ -350,7 +354,11 @@ public class FixturesConfig {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(6);
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList3.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), eventStartDate3.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -367,7 +375,11 @@ public class FixturesConfig {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(6);
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList4.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList4.add(new EventTimeWindow(null, eventStartDate4.plusMinutes(i * 30), eventStartDate4.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -384,7 +396,11 @@ public class FixturesConfig {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(6);
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList5.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList5.add(new EventTimeWindow(null, eventStartDate5.plusMinutes(i * 30), eventStartDate5.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -401,7 +417,11 @@ public class FixturesConfig {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(5);
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList6.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList6.add(new EventTimeWindow(null, eventStartDate6.plusMinutes(i * 30), eventStartDate6.plusMinutes((i + 1) * 30), 5, participants));
             }
@@ -412,7 +432,11 @@ public class FixturesConfig {
 
         List<ID> participants = new ArrayList<>();
         for (int j = 0; j < 10; j++) {
-            participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+            ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+            while (participants.contains(randomBeneficiaryId)) {
+                randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+            }
+            participants.add(randomBeneficiaryId);
         }
 
         eventRepository.save(new Event(null,
