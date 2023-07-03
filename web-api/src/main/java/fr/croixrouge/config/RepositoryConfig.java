@@ -1,5 +1,8 @@
 package fr.croixrouge.config;
 
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
 import fr.croixrouge.repository.db.beneficiary.FamilyMemberDBRepository;
@@ -34,6 +37,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 @Configuration
 @Profile("prod")
 public class RepositoryConfig {
@@ -47,8 +55,57 @@ public class RepositoryConfig {
     @Bean
     @Primary
     public InDBRoleRepository roleTestRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
-        return new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
-    }
+        var repo = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
+        HashMap<Resources, Set<Operations>> roleResources;
+
+        if (repo.findCommonRole("Manager").isEmpty()) {
+            roleResources = new HashMap<>();
+            for (var ressource : Resources.values()) {
+                roleResources.put(ressource, Set.of(Operations.values()));
+            }
+
+            repo.save(new Role(
+                    null,
+                    "Manager",
+                    "Manger d'unité local",
+                    roleResources,
+                    null,
+                    List.of()
+            ));
+        }
+
+        if (repo.findCommonRole("Volontaire").isEmpty()) {
+            roleResources = new HashMap<>();
+            for (var ressource : Resources.values()) {
+                roleResources.put(ressource, Set.of(Operations.READ));
+            }
+
+            repo.save(new Role(
+                    null,
+                    "Volontaire",
+                    "Volontaire d'unité local",
+                    roleResources,
+                    null,
+                    List.of()
+            ));
+        }
+
+        if (repo.findCommonRole("Bénéficiaire").isEmpty()) {
+            repo.save(new Role(
+                    null,
+                    "Bénéficiaire",
+                    "Bénéficiaire d'unité local",
+                    Map.of(Resources.EVENT, Set.of(Operations.READ, Operations.CREATE, Operations.DELETE),
+                            Resources.BENEFICIARY, Set.of(Operations.READ, Operations.CREATE, Operations.UPDATE, Operations.DELETE),
+                            Resources.LOCAL_UNIT, Set.of(Operations.READ)
+                    ),
+                    null,
+                    List.of()
+            ));
+        }
+
+        return repo;
+}
 
     @Bean
     @Primary
