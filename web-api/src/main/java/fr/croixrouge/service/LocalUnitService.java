@@ -19,7 +19,7 @@ public class LocalUnitService extends CRUDService<ID, LocalUnit, LocalUnitReposi
     }
 
     public LocalUnit getLocalUnitByCode(String code) {
-        return repository.findByCode(code).orElseThrow(() -> new NoSuchElementException("LocalUnit with code "+code ));
+        return repository.findByCode(code).orElseThrow(() -> new NoSuchElementException("LocalUnit with code " + code));
     }
 
     public String regenerateSecret(ID localUnitId) {

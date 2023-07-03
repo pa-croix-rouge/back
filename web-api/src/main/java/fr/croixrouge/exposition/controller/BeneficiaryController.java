@@ -29,7 +29,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         this.authenticationService = authenticationService;
     }
 
-    @GetMapping("/token")
+    @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<BeneficiaryResponse> get(HttpServletRequest request) {
         String username = authenticationService.getUserIdFromJwtToken(request);
         Beneficiary beneficiary = service.findByUsername(username);
@@ -79,7 +79,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
     }
 
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<BeneficiaryResponse> register(@RequestBody BeneficiaryCreationRequest creationRequest) {
+    public ResponseEntity<ID> register(@RequestBody BeneficiaryCreationRequest creationRequest) {
         LocalUnit localUnit = this.localUnitService.getLocalUnitByCode(creationRequest.getLocalUnitCode());
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
@@ -91,7 +91,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (beneficiaryId == null) {
             return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok(this.toDTO(beneficiary));
+        return ResponseEntity.ok(beneficiaryId);
     }
 
     @Override

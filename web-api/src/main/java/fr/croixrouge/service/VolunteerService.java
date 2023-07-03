@@ -3,6 +3,7 @@ package fr.croixrouge.service;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.domain.repository.VolunteerRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +12,11 @@ import java.util.NoSuchElementException;
 @Service
 public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerRepository> {
 
-    public VolunteerService(VolunteerRepository repository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public VolunteerService(VolunteerRepository repository, PasswordEncoder passwordEncoder) {
         super(repository);
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Volunteer findByUserId(ID id) {
@@ -25,6 +29,20 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
 
     public List<Volunteer> findAllByLocalUnitId(ID id) {
         return this.repository.findAllByLocalUnitId(id);
+    }
+
+    @Override
+    public ID save(Volunteer object) {
+        if (object.getUser().getId() == null || object.getId() == null) {
+            return super.save( new Volunteer(
+                    object.getId(),
+                    object.getUser().setPassword(passwordEncoder.encode(object.getUser().getPassword())),
+                    object.getFirstName(),
+                    object.getLastName(),
+                    object.getPhoneNumber(),
+                    object.isValidated()));
+        }
+        return super.save(object);
     }
 
     public boolean validateVolunteerAccount(Volunteer volunteer) {
