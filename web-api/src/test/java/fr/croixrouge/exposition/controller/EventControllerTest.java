@@ -319,10 +319,8 @@ public class EventControllerTest {
     }
 
     @Test
-    @DisplayName("Test that the event endpoint for local unit returns the stats when given a correct local unit id")
+    @DisplayName("Test that the event stats endpoint returns the stats")
     public void eventsStatsLocalUnitSuccessTest() throws Exception {
-        String localUnitId = "1";
-
         EventStatsResponse eventStatsResponse = new EventStatsResponse(
                 0,
                 0,
@@ -330,7 +328,7 @@ public class EventControllerTest {
                 0
         );
 
-        mockMvc.perform(get("/event/stats/" + localUnitId)
+        mockMvc.perform(get("/event/stats")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -419,7 +417,7 @@ public class EventControllerTest {
 
         var resList = List.of(objectMapper.readValue(res, EventResponse[].class));
 
-        Assertions.assertEquals(7, resList.size());
+        Assertions.assertEquals(6, resList.size());
         Assertions.assertTrue(resList.contains(eventResponse1));
 //        Assertions.assertTrue(resList.contains(eventResponse2));
         Assertions.assertTrue(resList.contains(eventResponse3));

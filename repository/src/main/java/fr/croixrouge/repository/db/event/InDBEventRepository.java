@@ -4,6 +4,7 @@ import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
+import fr.croixrouge.model.EventStats;
 import fr.croixrouge.model.EventTimeWindow;
 import fr.croixrouge.repository.EventRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
@@ -171,10 +172,20 @@ public class InDBEventRepository implements EventRepository {
     }
 
     @Override
-    public List<EventSession> findByLocalUnitIdOver12Month(ID localUnitId) {
-        return eventSessionDBRepository.
-                findByEventDB_LocalUnitDB_LocalUnitIDAndStartTimeAfter(localUnitId.value(), ZonedDateTime.now().minusMonths(12))
-                .stream().map(this::toEventSession).toList();
+    public EventStats findByLocalUnitIdOver12Month(ID localUnitId) {
+        ZonedDateTime oneYearAgo = ZonedDateTime.of(ZonedDateTime.now().getYear(), ZonedDateTime.now().getMonthValue(), 1, 0, 0, 0, 0, ZonedDateTime.now().getZone()).minusYears(1);
+        ZonedDateTime lastDayOfYear = ZonedDateTime.of(ZonedDateTime.now().getYear(), 12, 31, 23, 59, 59, 0, ZonedDateTime.now().getZone());
+        ZonedDateTime oneMonthAgo = ZonedDateTime.of(ZonedDateTime.now().getYear(), ZonedDateTime.now().getMonthValue(), 1, 0, 0, 0, 0, ZonedDateTime.now().getZone());
+        ZonedDateTime lastDayOfMonth = ZonedDateTime.of(ZonedDateTime.now().getYear(), ZonedDateTime.now().getMonthValue(), 1, 0, 0, 0, 0, ZonedDateTime.now().getZone()).plusMonths(1);
+        List<EventTimeWindowDB> timeWindowDBS = eventTimeWindowDBRepository.findByEventSessionDB_EventDB_LocalUnitIDAndStartTimeAfter(localUnitId.value(), ZonedDateTime.now().minusMonths(12));
+        Map<EventSessionDB, List<EventTimeWindowDB>> timeWindowDBMap = timeWindowDBS.stream().collect(Collectors.groupingBy(EventTimeWindowDB::getEventSessionDB));
+
+        return new EventStats(
+                (int) timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneMonthAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfMonth)).map(Map.Entry::getKey).count(),
+                timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneMonthAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfMonth)).map(entry -> entry.getValue().stream().map(eventTimeWindowDB -> eventTimeWindowDB.getUserDBs().size()).reduce(0, Integer::sum)).reduce(0, Integer::sum),
+                (int) timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneYearAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfYear)).map(Map.Entry::getKey).count(),
+                timeWindowDBMap.entrySet().stream().filter(entry -> entry.getValue().get(0).getStart().isAfter(oneYearAgo) && entry.getValue().get(0).getStart().isBefore(lastDayOfYear)).map(entry -> entry.getValue().stream().map(eventTimeWindowDB -> eventTimeWindowDB.getUserDBs().size()).reduce(0, Integer::sum)).reduce(0, Integer::sum)
+        );
     }
 
     @Override
