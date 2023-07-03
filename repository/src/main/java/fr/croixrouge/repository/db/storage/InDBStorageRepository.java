@@ -60,7 +60,9 @@ public class InDBStorageRepository implements StorageRepository {
 
     @Override
     public ID save(Storage object) {
-        return new ID(storageDBRepository.save(toStorageDB(object)).getId());
+        var id = new ID(storageDBRepository.save(toStorageDB(object)).getId());
+        object.setId(id);
+        return id;
     }
 
     @Override

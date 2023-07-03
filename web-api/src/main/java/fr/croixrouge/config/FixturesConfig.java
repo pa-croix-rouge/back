@@ -30,6 +30,7 @@ import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository
 import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
+import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.*;
@@ -44,10 +45,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.*;
 
 @Configuration
@@ -55,14 +53,16 @@ import java.util.*;
 public class FixturesConfig {
     private final Role managerRoleValOrge, defaultRoleValOrge, beneficiaryRoleValOrge;
     private final User managerValOrge, volunteerUserValOrge1, volunteerUserValOrge2, volunteerUserValOrge3, volunteerUserValOrge4, volunteerUserValOrge5, volunteerUserValOrge6, volunteerUserValOrge7, volunteerUserValOrge8, volunteerUserValOrge9, volunteerUserValOrge10, beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47;
-
     private final Volunteer volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10;
     private final Beneficiary beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
-
     private final LocalUnit localUnit;
-
     private final Product cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15, food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15;
+    private final List<ProductLimit> productLimits;
+    private final Storage storage;
+
+    private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
+    private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
 
     public FixturesConfig(PasswordEncoder passwordEncoder) {
         localUnit = new LocalUnit(new ID(1L),
@@ -221,36 +221,56 @@ public class FixturesConfig {
         beneficiary46 = new Beneficiary(null, beneficiaryUserValOrge46, "Zola", "Ndlovu", "+263 753 628 841", true, LocalDate.of(1994, 5, 25), "2 94 05 25 91 157 633", List.of());
         beneficiary47 = new Beneficiary(null, beneficiaryUserValOrge47, "Sibusiso", "Khumalo", "+263 437 845 219", true, LocalDate.of(1989, 12, 15), "1 89 12 15 91 143 751", List.of());
 
-        cloth1 = new Product(null, "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth2 = new Product(null, "Chemises blanches", new Quantifier(15, NumberedUnit.NUMBER), null);
-        cloth3 = new Product(null, "Chemises blanches", new Quantifier(17, NumberedUnit.NUMBER), null);
-        cloth4 = new Product(null, "Chemises blanches", new Quantifier(6, NumberedUnit.NUMBER), null);
-        cloth5 = new Product(null, "Chemises blanches", new Quantifier(5, NumberedUnit.NUMBER), null);
-        cloth6 = new Product(null, "T-shirts blancs", new Quantifier(15, NumberedUnit.NUMBER), null);
-        cloth7 = new Product(null, "Pantalons noirs", new Quantifier(10, NumberedUnit.NUMBER), null);
-        cloth8 = new Product(null, "Robes rouges", new Quantifier(8, NumberedUnit.NUMBER), null);
-        cloth9 = new Product(null, "Pulls gris", new Quantifier(12, NumberedUnit.NUMBER), null);
-        cloth10 = new Product(null, "Jupes bleues", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth11 = new Product(null, "Chaussures noires", new Quantifier(5, NumberedUnit.NUMBER), null);
-        cloth12 = new Product(null, "Chaussures blanches", new Quantifier(8, NumberedUnit.NUMBER), null);
-        cloth13 = new Product(null, "Chaussettes noires", new Quantifier(10, NumberedUnit.NUMBER), null);
-        cloth14 = new Product(null, "Chaussettes blanches", new Quantifier(15, NumberedUnit.NUMBER), null);
-        cloth15 = new Product(null, "Baskets rouges", new Quantifier(7, NumberedUnit.NUMBER), null);
-        food1 = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food2 = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food3 = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), null);
-        food4 = new Product(null, "Oranges", new WeightQuantifier(750, WeightUnit.GRAM), null);
-        food5 = new Product(null, "Tomates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food6 = new Product(null, "Carottes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food7 = new Product(null, "Pommes de terre", new WeightQuantifier(2, WeightUnit.KILOGRAM), null);
-        food8 = new Product(null, "Fraises", new WeightQuantifier(250, WeightUnit.GRAM), null);
-        food9 = new Product(null, "Blancs de poulet", new WeightQuantifier(500, WeightUnit.GRAM), null);
-        food10 = new Product(null, "Filets de saumon", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food11 = new Product(null, "Épinards", new WeightQuantifier(200, WeightUnit.GRAM), null);
-        food12 = new Product(null, "Yaourt", new WeightQuantifier(500, WeightUnit.GRAM), null);
-        food13 = new Product(null, "Pain", new WeightQuantifier(800, WeightUnit.GRAM), null);
-        food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), null);
+        var productLimit = new ProductLimit(null, "Farine", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit1 = new ProductLimit(null, "Sucre", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit2 = new ProductLimit(null, "Couche", Duration.ofDays(15), new Quantifier(1, NumberedUnit.NUMBER));
+        var productLimit3 = new ProductLimit(null, "Lessive", Duration.ofDays(30), new Quantifier(1, VolumeUnit.LITER));
+        var productLimit14 = new ProductLimit(null, "laitier", Duration.ofDays(30), new Quantifier(1, VolumeUnit.LITER));
+        var productLimit4 = new ProductLimit(null, "Brosse a dents", Duration.ofDays(60), new Quantifier(1, NumberedUnit.NUMBER));
+        var productLimit5 = new ProductLimit(null, "dentifrice", Duration.ofDays(30), new Quantifier(1, NumberedUnit.NUMBER));
+        var productLimit6 = new ProductLimit(null, "shampooing / gel douche", Duration.ofDays(15), new Quantifier(1, VolumeUnit.LITER));
+        var productLimit7 = new ProductLimit(null, "féculents", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit8 = new ProductLimit(null, "légumes", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit13 = new ProductLimit(null, "viandes", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit9 = new ProductLimit(null, "fruits", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit10 = new ProductLimit(null, "sous vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER));
+        var productLimit11 = new ProductLimit(null, "vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER));
+        var productLimit12 = new ProductLimit(null, "sur vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER));
+
+        productLimits = List.of(productLimit, productLimit1, productLimit2, productLimit3, productLimit4, productLimit5, productLimit6, productLimit7, productLimit8, productLimit9, productLimit10, productLimit11, productLimit12, productLimit13, productLimit14);
+
+        cloth1 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth2 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth3 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth4 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth5 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth6 = new Product(null, "T-shirts blancs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth7 = new Product(null, "Pantalons noirs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth8 = new Product(null, "Robes rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth9 = new Product(null, "Pulls gris", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth10 = new Product(null, "Jupes bleues", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth11 = new Product(null, "Chaussures noires", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth12 = new Product(null, "Chaussures blanches", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth13 = new Product(null, "Chaussettes noires", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth14 = new Product(null, "Chaussettes blanches", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth15 = new Product(null, "Baskets rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        food1 = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9);
+        food2 = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit7);
+        food3 = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), productLimit9);
+        food4 = new Product(null, "Oranges", new WeightQuantifier(750, WeightUnit.GRAM), productLimit9);
+        food5 = new Product(null, "Tomates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9);
+        food6 = new Product(null, "Carottes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit8);
+        food7 = new Product(null, "Pommes de terre", new WeightQuantifier(2, WeightUnit.KILOGRAM), productLimit7);
+        food8 = new Product(null, "Fraises", new WeightQuantifier(250, WeightUnit.GRAM), productLimit9);
+        food9 = new Product(null, "Blancs de poulet", new WeightQuantifier(500, WeightUnit.GRAM), productLimit13);
+        food10 = new Product(null, "Filets de saumon", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
+        food11 = new Product(null, "Épinards", new WeightQuantifier(200, WeightUnit.GRAM), productLimit8);
+        food12 = new Product(null, "Yaourt", new WeightQuantifier(500, WeightUnit.GRAM), productLimit14);
+        food13 = new Product(null, "Pain", new WeightQuantifier(800, WeightUnit.GRAM), productLimit7);
+        food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
+        food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
+
+        storage = new Storage(null, "defaultStorage", localUnit, address);
     }
 
     @Bean
@@ -315,7 +335,9 @@ public class FixturesConfig {
     @Primary
     public EventRepository eventTestRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var eventRepository = new InDBEventRepository(eventDBRepository, eventSessionDBRepository, eventTimeWindowDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
+        Random random = new Random();
         List<User> userBeneficiariesInDB = userDBRepository.findAll().stream().filter(user -> !user.getUsername().contains("@croix-rouge.fr")).toList();
+        List<Beneficiary> beneficiaryList = List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47);
 
         ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 4, 10, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions1 = new ArrayList<>();
@@ -332,10 +354,17 @@ public class FixturesConfig {
             for (int i = 0; i < 6; i++) {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(4);
+                var endDate = eventStartDate2.plusMinutes((i + 1) * 30);
                 for (int j = 0; j < numberOfParticipants; j++) {
+                    var bene = beneficiaryList.get(random.nextInt(beneficiaryList.size()));
+                    participants.add(bene.getId());
                     participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    if (!beneficiaryClothProductDates.containsKey(bene)) {
+                        beneficiaryClothProductDates.put(bene, new ArrayList<>());
+                    }
+                    beneficiaryClothProductDates.get(bene).add(endDate.toLocalDateTime());
                 }
-                eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 20), eventStartDate2.plusMinutes((i + 1) * 20), 4, participants));
+                eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 20), endDate, 4, participants));
             }
             eventSessions2.add(new EventSession(null, eventTimeWindowList2));
         }
@@ -349,10 +378,16 @@ public class FixturesConfig {
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(6);
+                var endDate = eventStartDate3.plusMinutes((i + 1) * 30);
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    var bene = beneficiaryList.get(random.nextInt(beneficiaryList.size()));
+                    participants.add(bene.getId());
+                    if (!beneficiaryFoodProductDates.containsKey(bene)) {
+                        beneficiaryFoodProductDates.put(bene, new ArrayList<>());
+                    }
+                    beneficiaryFoodProductDates.get(bene).add(endDate.toLocalDateTime());
                 }
-                eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), eventStartDate3.plusMinutes((i + 1) * 30), 6, participants));
+                eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), endDate, 6, participants));
             }
             eventSessions3.add(new EventSession(null, eventTimeWindowList3));
         }
@@ -422,8 +457,8 @@ public class FixturesConfig {
                 localUnit,
                 List.of(new EventSession(null,
                         List.of(new EventTimeWindow(null,
-                                    ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 17, 0), ZoneId.of("Europe/Paris")),
-                                    ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 19, 0), ZoneId.of("Europe/Paris")),
+                                ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 17, 0), ZoneId.of("Europe/Paris")),
+                                ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 19, 0), ZoneId.of("Europe/Paris")),
                                 10,
                                 participants)))),
                 1));
@@ -434,7 +469,13 @@ public class FixturesConfig {
     @Bean
     @Primary
     public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
-        return new InDBProductLimitRepository(productLimitDBRepository);
+        var repo = new InDBProductLimitRepository(productLimitDBRepository);
+
+        for (var productLimit : productLimits) {
+            repo.save(productLimit);
+        }
+
+        return repo;
     }
 
     @Bean
@@ -445,7 +486,7 @@ public class FixturesConfig {
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
+    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, InDBProductLimitRepository productLimitRepository) {
         InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
 
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S, ClothGender.NOT_SPECIFIED));
@@ -588,8 +629,8 @@ public class FixturesConfig {
     public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
 
-        storageRepository.save(new Storage(new ID(1L), "defaultStorage", localUnit, address));
-        storageRepository.save(new Storage(new ID(2L), "secondStorage", localUnit, address));
+        storageRepository.save(storage);
+        storageRepository.save(new Storage(null, "secondStorage", localUnit, address));
 
         return storageRepository;
     }
@@ -597,15 +638,43 @@ public class FixturesConfig {
     @Bean
     @Primary
     public BeneficiaryProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        return new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
+        var repo = new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
+        Random random = new Random();
+
+        var foodProductList = List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15);
+        var clothProductList = List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15);
+
+        fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates);
+
+        fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates);
+
+        return repo;
+    }
+
+    private void fillBeneficiaryProductWithRandom(InDBBeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
+        for (var entry : beneficiaryFoodProductDates.entrySet()) {
+            for (var date : entry.getValue()) {
+                if (date.isAfter(LocalDateTime.now()))
+                    continue;
+
+                for (int i = 0; i < random.nextInt((int) (foodProductList.size() * 0.75)); i++) {
+                    repo.save(
+                            new BeneficiaryProduct(null,
+                                    entry.getKey(),
+                                    foodProductList.get(random.nextInt(foodProductList.size())),
+                                    storage,
+                                    date,
+                                    random.nextInt(5))
+                    );
+                }
+            }
+        }
     }
 
     @Bean
     @Primary
     public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
         StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
-
-        var storage = storageRepository.findById(new ID(1L)).orElseThrow();
 
         storageProductRepository.save(new StorageProduct(null, storage, cloth1, 5));
         storageProductRepository.save(new StorageProduct(null, storage, cloth2, 8));

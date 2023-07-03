@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class BeneficiaryProductService extends fr.croixrouge.storage.service.Ben
         this.clothProductRepository = clothProductRepository;
     }
 
-    public Pair<Map<FoodProduct, Integer>, Map<ClothProduct, Integer>> getBeneficiaryProducts(ID beneficiaryID, LocalDate from, LocalDate to) {
+    public Pair<Map<FoodProduct, Integer>, Map<ClothProduct, Integer>> getBeneficiaryProductsCount(ID beneficiaryID, LocalDate from, LocalDate to) {
         var list = beneficiaryProductRepository.findAllFromToDate(beneficiaryID, from, to).stream().map(BeneficiaryProduct::product).toList();
         Map<FoodProduct, Integer> foodProducts = new HashMap<>();
         Map<ClothProduct, Integer> clothProducts = new HashMap<>();
@@ -55,13 +56,17 @@ public class BeneficiaryProductService extends fr.croixrouge.storage.service.Ben
         return Pair.of(foodProducts, clothProducts);
     }
 
+    public List<BeneficiaryProduct> getBeneficiaryProducts(ID beneficiaryID, LocalDate from, LocalDate to) {
+        return beneficiaryProductRepository.findAllFromToDate(beneficiaryID, from, to);
+    }
+
     public Map<String, Quantifier> getBeneficiaryProductsQuantity(ID beneficiaryID, LocalDate from, LocalDate to) {
         var list = beneficiaryProductRepository.findAllFromToDate(beneficiaryID, from, to);
         Map<String, Quantifier> productQuantities = new HashMap<>();
 
         for (var beneficiaryProduct : list) {
 
-            if (beneficiaryProduct.quantity() == 0) continue;
+            if (beneficiaryProduct.quantity() <= 0) continue;
 
             if (productQuantities.containsKey(beneficiaryProduct.product().getName())) {
                 productQuantities.put(

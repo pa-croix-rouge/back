@@ -6,6 +6,11 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Role extends Entity<ID> {
+
+    public static final String COMMON_BENEFICIARY_ROLE_NAME = "Bénéficiaire";
+    public static final String COMMON_VOLUNTEER_ROLE_NAME = "Volontaire";
+    public static final String COMMON_MANAGER_ROLE_NAME = "Manager";
+
     private final String name;
     private final String description;
     private final Map<Resources, Set<Operations>> authorizations;
