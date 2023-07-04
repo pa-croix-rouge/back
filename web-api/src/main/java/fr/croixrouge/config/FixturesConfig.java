@@ -612,8 +612,8 @@ public class FixturesConfig {
     public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
 
-        storageRepository.save(new Storage(new ID(1L), "defaultStorage", localUnit, address));
-        storageRepository.save(new Storage(new ID(2L), "secondStorage", localUnit, address));
+        storageRepository.save(new Storage(new ID(1L), "Entrepot de l'unité local", localUnit, address));
+        storageRepository.save(new Storage(new ID(2L), "Box de l'unité local", localUnit, address));
 
         return storageRepository;
     }
