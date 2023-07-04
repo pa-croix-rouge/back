@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Table(name = "beneficiary")
 @Entity
 public class BeneficiaryDB {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
