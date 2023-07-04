@@ -32,7 +32,7 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
         }
 
         var volunteerRole = roleService.getCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME);
-        var newVolunteer = new Beneficiary(
+        var newBeneficiary = new Beneficiary(
                 null,
                 new User(null,
                         beneficiary.getUser().getUsername(),
@@ -49,7 +49,7 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
         );
 
-        return super.save(newVolunteer);
+        return super.save(newBeneficiary);
     }
 
     public Beneficiary findByUserId(ID id) {
