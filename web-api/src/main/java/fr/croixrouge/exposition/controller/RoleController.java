@@ -33,7 +33,12 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
 
     @Override
     public RoleResponse toDTO(Role model) {
-        return new RoleResponse(model.getId().value(), model.getName(), model.getDescription(), model.getAuthorizations(), List.of());
+        return new RoleResponse(model.getId().value(),
+                model.getLocalUnit() == null ? null : model.getLocalUnit().getId().value(),
+                model.getName(),
+                model.getDescription(),
+                model.getAuthorizations(),
+                List.of());
     }
 
     @Override
