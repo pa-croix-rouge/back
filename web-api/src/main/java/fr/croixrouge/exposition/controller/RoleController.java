@@ -21,8 +21,6 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
 
     private final LocalUnitService localUnitService;
 
-
-
     public RoleController(RoleService roleService, LocalUnitService localUnitService) {
         super(roleService);
         this.localUnitService = localUnitService;
