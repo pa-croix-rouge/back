@@ -51,9 +51,6 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
     @GetMapping("/localunit/{id}")
     public ResponseEntity<List<RoleResponse>> getRolesFromLocalUnitId(@PathVariable ID id) {
         List<RoleResponse> roleResponse = service.getRoleByLocalUnitId(id).stream().map(RoleResponse::fromRole).collect(Collectors.toList());
-        if (roleResponse.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(roleResponse);
     }
 

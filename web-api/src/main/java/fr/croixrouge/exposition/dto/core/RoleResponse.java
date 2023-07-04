@@ -72,11 +72,11 @@ public class RoleResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoleResponse that = (RoleResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(localUnitID, that.localUnitID) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(authorizations, that.authorizations) && Objects.equals(userIDs, that.userIDs);
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(authorizations, that.authorizations) && Objects.equals(userIDs, that.userIDs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, localUnitID, name, description, authorizations, userIDs);
+        return Objects.hash(name, description, authorizations, userIDs);
     }
 }
