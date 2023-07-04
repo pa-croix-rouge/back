@@ -299,11 +299,25 @@ public class InDBEventRepository implements EventRepository {
                 for (EventTimeWindow timeWindow : event.getSessions().get(0).getTimeWindows()) {
                     updatedTimeWindows.add(new EventTimeWindow(null, timeWindow.getStart(), timeWindow.getEnd(), timeWindow.getMaxParticipants(), new ArrayList<>()));
                 }
-                List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
+                Map<ZonedDateTime, List<ID>> participantsByTimeWindow = sessionToUpdate.getTimeWindows().stream().collect(Collectors.toMap(EventTimeWindow::getStart, EventTimeWindow::getParticipants));
+                for (EventTimeWindow timeWindow : updatedTimeWindows) {
+                    for (Map.Entry<ZonedDateTime, List<ID>> entry : participantsByTimeWindow.entrySet()) {
+                        if (entry.getKey().toEpochSecond() >= timeWindow.getStart().toEpochSecond() && entry.getKey().toEpochSecond() < timeWindow.getEnd().toEpochSecond()) {
+                            List<ID> participants = entry.getValue().stream().toList();
+                            for (ID participant : participants) {
+                                if (timeWindow.getParticipants().size() < timeWindow.getMaxParticipants()) {
+                                    timeWindow.getParticipants().add(participant);
+                                }
+                            }
+                            participantsByTimeWindow.get(entry.getKey()).removeAll(timeWindow.getParticipants());
+                        }
+                    }
+                }
+                List<ID> participants = participantsByTimeWindow.values().stream().flatMap(Collection::stream).toList();
                 int currentTimeWindowIndex = 0;
                 for (ID participant : participants) {
                     EventTimeWindow timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
-                    if (timeWindow.getParticipants().size() > timeWindow.getMaxParticipants()) {
+                    while (timeWindow.getParticipants().size() >= timeWindow.getMaxParticipants()) {
                         currentTimeWindowIndex++;
                         timeWindow = updatedTimeWindows.get(currentTimeWindowIndex);
                     }
@@ -368,6 +382,20 @@ public class InDBEventRepository implements EventRepository {
                             new ArrayList<>()
                     ));
                 }
+                Map<ZonedDateTime, List<ID>> participantsByTimeWindow = sessionToUpdate.getTimeWindows().stream().collect(Collectors.toMap(EventTimeWindow::getStart, EventTimeWindow::getParticipants));
+                for (EventTimeWindow timeWindow : updatedTimeWindows) {
+                    for (Map.Entry<ZonedDateTime, List<ID>> entry : participantsByTimeWindow.entrySet()) {
+                        if (entry.getKey().toEpochSecond() >= timeWindow.getStart().toEpochSecond() && entry.getKey().toEpochSecond() < timeWindow.getEnd().toEpochSecond()) {
+                            List<ID> participants = entry.getValue().stream().toList();
+                            for (ID participant : participants) {
+                                if (timeWindow.getParticipants().size() < timeWindow.getMaxParticipants()) {
+                                    timeWindow.getParticipants().add(participant);
+                                }
+                            }
+                            participantsByTimeWindow.get(entry.getKey()).removeAll(timeWindow.getParticipants());
+                        }
+                    }
+                }
                 List<ID> participants = sessionToUpdate.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
                 int currentTimeWindowIndex = 0;
                 for (ID participant : participants) {
@@ -392,6 +420,19 @@ public class InDBEventRepository implements EventRepository {
                             eventTimeWindowMaxParticipants,
                             new ArrayList<>()
                     ));
+                }Map<ZonedDateTime, List<ID>> participantsByTimeWindow = session.getTimeWindows().stream().collect(Collectors.toMap(EventTimeWindow::getStart, EventTimeWindow::getParticipants));
+                for (EventTimeWindow timeWindow : updatedTimeWindows) {
+                    for (Map.Entry<ZonedDateTime, List<ID>> entry : participantsByTimeWindow.entrySet()) {
+                        if (entry.getKey().toEpochSecond() >= timeWindow.getStart().toEpochSecond() && entry.getKey().toEpochSecond() < timeWindow.getEnd().toEpochSecond()) {
+                            List<ID> participants = entry.getValue().stream().toList();
+                            for (ID participant : participants) {
+                                if (timeWindow.getParticipants().size() < timeWindow.getMaxParticipants()) {
+                                    timeWindow.getParticipants().add(participant);
+                                }
+                            }
+                            participantsByTimeWindow.get(entry.getKey()).removeAll(timeWindow.getParticipants());
+                        }
+                    }
                 }
                 List<ID> participants = session.getTimeWindows().stream().map(EventTimeWindow::getParticipants).flatMap(List::stream).toList();
                 int currentTimeWindowIndex = 0;
