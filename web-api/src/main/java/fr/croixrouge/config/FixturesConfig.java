@@ -361,22 +361,26 @@ public class FixturesConfig {
     public EventRepository eventFixtureRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository, VolunteerService volunteerService, BeneficiaryService beneficiaryService) {
         var eventRepository = new InDBEventRepository(eventDBRepository, eventSessionDBRepository, eventTimeWindowDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
         List<User> userBeneficiariesInDB = userDBRepository.findAll().stream().filter(user -> !user.getUsername().contains("@croix-rouge.fr")).toList();
+        ZonedDateTime eventLimit = ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 0, 0), ZoneId.of("Europe/Paris"));
 
-        ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 4, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 1, 10, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions1 = new ArrayList<>();
         for (; eventStart1.isBefore(ZonedDateTime.of(LocalDateTime.of(2023, 9, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStart1 = eventStart1.plusDays(14)) {
-            eventSessions1.add(new EventSession(null, List.of(new EventTimeWindow(null, eventStart1, eventStart1.plusHours(8), 12, new ArrayList<>()))));
+            eventSessions1.add(new EventSession(null, List.of(new EventTimeWindow(null, eventStart1, eventStart1.plusHours(8), 0, new ArrayList<>()))));
         }
         Event event1 = new Event(null, "Formation PSC1", "Acquérir les compétences essentielles pour intervenir en cas d'urgence et sauver des vies ! Formation PSC1, une session interactive dispensée par des formateurs certifiés. Apprendre les gestes de premiers secours tels que la réanimation, la position latérale de sécurité et le traitement des hémorragies. Places limitées à 12 personnes. Les stagiaires obtiennent une attestation officielle reconnue nationalement.", volunteerValOrge2, localUnit, eventSessions1, eventSessions1.size());
         eventRepository.save(event1);
 
-        ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 5, 14, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 2, 14, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions2 = new ArrayList<>();
         for (; eventStartDate2.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate2 = eventStartDate2.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList2 = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(4);
+                int numberOfParticipants = 0;
+                if (eventStartDate2.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(4);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
                     ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     while (participants.contains(randomBeneficiaryId) || eventTimeWindowList2.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
@@ -391,13 +395,16 @@ public class FixturesConfig {
         Event event2 = new Event(null, "Ouverture du vestiaire", "Chaque semaine, nous organisons une distribution de vêtements aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge7, localUnit, eventSessions2, eventSessions2.size());
         eventRepository.save(event2);
 
-        ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 6, 16, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 3, 16, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions3 = new ArrayList<>();
         for (; eventStartDate3.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate3 = eventStartDate3.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList3 = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(6);
+                int numberOfParticipants = 0;
+                if (eventStartDate3.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(6);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
                     ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     while (participants.contains(randomBeneficiaryId) || eventTimeWindowList3.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
@@ -412,13 +419,16 @@ public class FixturesConfig {
         Event event3 = new Event(null, "EPISOL Lundi", "Chaque semaine, nous ouvrons l'épicerie sociale aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge1, localUnit, eventSessions3, eventSessions3.size());
         eventRepository.save(event3);
 
-        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 8, 16, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 5, 16, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions4 = new ArrayList<>();
         for (; eventStartDate4.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate4 = eventStartDate4.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList4 = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(6);
+                int numberOfParticipants = 0;
+                if (eventStartDate4.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(6);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
                     ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     while (participants.contains(randomBeneficiaryId) || eventTimeWindowList4.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
@@ -433,13 +443,16 @@ public class FixturesConfig {
         Event event4 = new Event(null, "EPISOL Mercredi", "Chaque semaine, nous ouvrons l'épicerie sociale aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge1, localUnit, eventSessions4, eventSessions4.size());
         eventRepository.save(event4);
 
-        ZonedDateTime eventStartDate5 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 10, 16, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate5 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 7, 16, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions5 = new ArrayList<>();
         for (; eventStartDate5.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate5 = eventStartDate5.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList5 = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(6);
+                int numberOfParticipants = 0;
+                if (eventStartDate5.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(6);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
                     ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     while (participants.contains(randomBeneficiaryId) || eventTimeWindowList5.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
@@ -454,13 +467,16 @@ public class FixturesConfig {
         Event event5 = new Event(null, "EPISOL Vendredi", "Chaque semaine, nous ouvrons l'épicerie sociale aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge1, localUnit, eventSessions5, eventSessions5.size());
         eventRepository.save(event5);
 
-        ZonedDateTime eventStartDate6 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 9, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate6 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 6, 10, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions6 = new ArrayList<>();
         for (; eventStartDate6.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate6 = eventStartDate6.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList6 = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(5);
+                int numberOfParticipants = 0;
+                if (eventStartDate6.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(5);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
                     ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     while (participants.contains(randomBeneficiaryId) || eventTimeWindowList6.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
