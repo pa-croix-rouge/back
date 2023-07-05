@@ -9,6 +9,7 @@ import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class InDBRoleRepository implements RoleRepository {
@@ -30,7 +31,7 @@ public class InDBRoleRepository implements RoleRepository {
         Map<Resources, Set<Operations>> resourcesSetMap = new HashMap<>();
         for (var roleResourceDB : roleDB.getRoleResourceDBs()) {
 
-            if(!resourcesSetMap.containsKey(roleResourceDB.getResources()))
+            if (!resourcesSetMap.containsKey(roleResourceDB.getResources()))
                 resourcesSetMap.put(roleResourceDB.getResources(), new HashSet<>());
 
             resourcesSetMap.get(roleResourceDB.getResources()).add(roleResourceDB.getOperations());
@@ -88,7 +89,16 @@ public class InDBRoleRepository implements RoleRepository {
 
     @Override
     public List<Role> findAllByLocalUnitId(ID localUnitId) {
-        return roleDBRepository.findByLocalUnitDB_LocalUnitID(localUnitId.value()).stream().map(this::toRole).toList();
+        return Stream.of(roleDBRepository.findByLocalUnitDB_LocalUnitIDNull(),
+                        roleDBRepository.findByLocalUnitDB_LocalUnitID(localUnitId.value()))
+                .flatMap(Collection::stream)
+                .map(this::toRole)
+                .toList();
+    }
+
+    @Override
+    public Optional<Role> findCommonRole(String name) {
+        return roleDBRepository.findByLocalUnitDB_LocalUnitIDNullAndName(name).map(this::toRole);
     }
 
     @Override

@@ -8,6 +8,7 @@ import fr.croixrouge.domain.repository.TimeStampIDGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class InMemoryRoleRepository extends InMemoryCRUDRepository<ID, Role> implements RoleRepository {
@@ -27,6 +28,11 @@ public class InMemoryRoleRepository extends InMemoryCRUDRepository<ID, Role> imp
                 .filter(role -> role.getLocalUnit().getId().equals(localUnitId))
                 .forEach(rolesByLocalUnitId::add);
         return rolesByLocalUnitId;
+    }
+
+    @Override
+    public Optional<Role> findCommonRole(String name) {
+        return Optional.empty();
     }
 
     @Override

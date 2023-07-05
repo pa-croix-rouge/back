@@ -58,11 +58,11 @@ public class InDBVolunteerRepository implements VolunteerRepository {
     @Override
     public ID save(Volunteer object) {
         logger.info("InDBVolunteerRepository.save " + object.toString());
-        inDBUserRepository.save(object.getUser());
+        var userID = inDBUserRepository.save(object.getUser());
+        object.setId(userID);
         var volunteerDB = volunteerDBRepository.save(toVolunteerDB(object));
         logger.info("InDBVolunteerRepository.save " + volunteerDB.getId());
-        object.setId(new ID(volunteerDB.getId()));
-        return new ID(volunteerDB.getId());
+        return userID;
     }
 
     @Override

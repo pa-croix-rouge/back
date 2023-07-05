@@ -21,8 +21,6 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
 
     private final LocalUnitService localUnitService;
 
-
-
     public RoleController(RoleService roleService, LocalUnitService localUnitService) {
         super(roleService);
         this.localUnitService = localUnitService;
@@ -35,7 +33,12 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
 
     @Override
     public RoleResponse toDTO(Role model) {
-        return new RoleResponse(model.getId().value(), model.getName(), model.getDescription(), model.getAuthorizations(), List.of());
+        return new RoleResponse(model.getId().value(),
+                model.getLocalUnit() == null ? null : model.getLocalUnit().getId().value(),
+                model.getName(),
+                model.getDescription(),
+                model.getAuthorizations(),
+                List.of());
     }
 
     @Override
@@ -48,9 +51,6 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
     @GetMapping("/localunit/{id}")
     public ResponseEntity<List<RoleResponse>> getRolesFromLocalUnitId(@PathVariable ID id) {
         List<RoleResponse> roleResponse = service.getRoleByLocalUnitId(id).stream().map(RoleResponse::fromRole).collect(Collectors.toList());
-        if (roleResponse.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(roleResponse);
     }
 

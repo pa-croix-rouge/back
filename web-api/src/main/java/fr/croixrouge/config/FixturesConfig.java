@@ -1,6 +1,8 @@
 package fr.croixrouge.config;
 
 import fr.croixrouge.domain.model.*;
+import fr.croixrouge.domain.repository.BeneficiaryRepository;
+import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
@@ -30,6 +32,10 @@ import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository
 import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
+import fr.croixrouge.service.BeneficiaryService;
+import fr.croixrouge.service.RoleService;
+import fr.croixrouge.service.VolunteerService;
+import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.*;
@@ -44,10 +50,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.*;
 
 @Configuration
@@ -55,14 +58,16 @@ import java.util.*;
 public class FixturesConfig {
     private final Role managerRoleValOrge, defaultRoleValOrge, beneficiaryRoleValOrge;
     private final User managerValOrge, volunteerUserValOrge1, volunteerUserValOrge2, volunteerUserValOrge3, volunteerUserValOrge4, volunteerUserValOrge5, volunteerUserValOrge6, volunteerUserValOrge7, volunteerUserValOrge8, volunteerUserValOrge9, volunteerUserValOrge10, beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47;
-
     private final Volunteer volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10;
     private final Beneficiary beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
-
     private final LocalUnit localUnit;
-
     private final Product cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15, food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15;
+    private final List<ProductLimit> productLimits;
+    private final Storage storage;
+
+    private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
+    private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
 
     public FixturesConfig(PasswordEncoder passwordEncoder) {
         localUnit = new LocalUnit(new ID(1L),
@@ -100,18 +105,18 @@ public class FixturesConfig {
                 localUnit,
                 List.of());
 
-        managerValOrge = new User(null, "bernard.lhuillier@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(managerRoleValOrge));
+        managerValOrge = new User(null, "bernard.lhuillier@croix-rouge.fr", "Password.123", localUnit, List.of(managerRoleValOrge));
 
-        volunteerUserValOrge1 = new User(null, "valerie.leroux@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge2 = new User(null, "jerome.piat@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge3 = new User(null, "elodie.lechervy@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge4 = new User(null, "hugo.jean@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge5 = new User(null, "sebastien.joubert@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge6 = new User(null, "thomas.georget@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge7 = new User(null, "gael.germain@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge8 = new User(null, "charles.lefeuvre@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge9 = new User(null, "emilie.lassalas@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge10 = new User(null, "anne.ozanne@croix-rouge.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge1 = new User(null, "valerie.leroux@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge2 = new User(null, "jerome.piat@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge3 = new User(null, "elodie.lechervy@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge4 = new User(null, "hugo.jean@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge5 = new User(null, "sebastien.joubert@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge6 = new User(null, "thomas.georget@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge7 = new User(null, "gael.germain@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge8 = new User(null, "charles.lefeuvre@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge9 = new User(null, "emilie.lassalas@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge10 = new User(null, "anne.ozanne@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
 
         volunteerManagerValOrge = new Volunteer(null, managerValOrge, "Bernard", "L’HUILLIER", "+33 6 52 87 37 55", true);
         volunteerValOrge1 = new Volunteer(null, volunteerUserValOrge1, "Valerie", "LEROUX", "+33 6 78 45 23 10", true);
@@ -125,64 +130,64 @@ public class FixturesConfig {
         volunteerValOrge9 = new Volunteer(null, volunteerUserValOrge9, "Emilie", "LASSALAS", "+33 6 51 67 93 27", true);
         volunteerValOrge10 = new Volunteer(null, volunteerUserValOrge10, "Anne", "OZANNE", "+33 7 36 80 72 55", true);
 
-        beneficiaryUserValOrge1 = new User(null, "dubois.elise92@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge2 = new User(null, "m.martin-explorer@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge3 = new User(null, "lea.lambert91@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge4 = new User(null, "jerome.girard.aventure@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge5 = new User(null, "camille.roux@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge6 = new User(null, "alexandre.bernard@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge7 = new User(null, "margot.dupont@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge8 = new User(null, "antoine.lefebvre@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge9 = new User(null, "juliette.moreau@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge10 = new User(null, "theo.thomas@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge11 = new User(null, "fernando.gomez92@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge12 = new User(null, "ana.martinez-explorer@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge13 = new User(null, "jose.sanchez91@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge14 = new User(null, "maria.hernandez.aventure@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge15 = new User(null, "juan.rodriguez@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge16 = new User(null, "carmen.gonzalez@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge17 = new User(null, "manuel.fernandez@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge18 = new User(null, "isabel.lopez@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge19 = new User(null, "francisco.torres@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge20 = new User(null, "rosa.garcia@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge21 = new User(null, "ali.hassan92@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge22 = new User(null, "amina.mahmoud-explorer@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge23 = new User(null, "omar.farouk91@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge24 = new User(null, "sarah.abdelrahman@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge25 = new User(null, "yusuf.alamoudi@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge26 = new User(null, "huda.fawzy@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge27 = new User(null, "kareem.elshamy@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge28 = new User(null, "asmaa.abdelfattah@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge29 = new User(null, "mostafa.kamal@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge30 = new User(null, "samar.ahmed@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge31 = new User(null, "khaled.sayed@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge32 = new User(null, "heba.elmohandes@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge33 = new User(null, "mohammed.ali@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge34 = new User(null, "fatma.hosny@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge35 = new User(null, "tamer.hosny@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge36 = new User(null, "jan.kowalski92@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge37 = new User(null, "anna.nowak-explorer@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge38 = new User(null, "piotr.wisniewski@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge39 = new User(null, "ewa.dabrowska@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge40 = new User(null, "tomasz.zielinski@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge41 = new User(null, "amara.ndiaye@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge42 = new User(null, "nneka.osei@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge43 = new User(null, "kwame.mensah@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge44 = new User(null, "aminata.diallo@orange.fr", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge45 = new User(null, "tendai.mutasa@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge46 = new User(null, "zola.ndlovu@outlook.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge47 = new User(null, "sibusiso.khumalo@gmail.com", passwordEncoder.encode("Password.123"), localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge1 = new User(null, "dubois.elise92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge2 = new User(null, "m.martin-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge3 = new User(null, "lea.lambert91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge4 = new User(null, "jerome.girard.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge5 = new User(null, "camille.roux@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge6 = new User(null, "alexandre.bernard@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge7 = new User(null, "margot.dupont@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge8 = new User(null, "antoine.lefebvre@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge9 = new User(null, "juliette.moreau@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge10 = new User(null, "theo.thomas@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge11 = new User(null, "fernando.gomez92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge12 = new User(null, "ana.martinez-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge13 = new User(null, "jose.sanchez91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge14 = new User(null, "maria.hernandez.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge15 = new User(null, "juan.rodriguez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge16 = new User(null, "carmen.gonzalez@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge17 = new User(null, "manuel.fernandez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge18 = new User(null, "isabel.lopez@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge19 = new User(null, "francisco.torres@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge20 = new User(null, "rosa.garcia@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge21 = new User(null, "ali.hassan92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge22 = new User(null, "amina.mahmoud-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge23 = new User(null, "omar.farouk91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge24 = new User(null, "sarah.abdelrahman@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge25 = new User(null, "yusuf.alamoudi@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge26 = new User(null, "huda.fawzy@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge27 = new User(null, "kareem.elshamy@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge28 = new User(null, "asmaa.abdelfattah@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge29 = new User(null, "mostafa.kamal@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge30 = new User(null, "samar.ahmed@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge31 = new User(null, "khaled.sayed@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge32 = new User(null, "heba.elmohandes@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge33 = new User(null, "mohammed.ali@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge34 = new User(null, "fatma.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge35 = new User(null, "tamer.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge36 = new User(null, "jan.kowalski92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge37 = new User(null, "anna.nowak-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge38 = new User(null, "piotr.wisniewski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge39 = new User(null, "ewa.dabrowska@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge40 = new User(null, "tomasz.zielinski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge41 = new User(null, "amara.ndiaye@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge42 = new User(null, "nneka.osei@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge43 = new User(null, "kwame.mensah@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge44 = new User(null, "aminata.diallo@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge45 = new User(null, "tendai.mutasa@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge46 = new User(null, "zola.ndlovu@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge47 = new User(null, "sibusiso.khumalo@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
 
         beneficiary1 = new Beneficiary(null, beneficiaryUserValOrge1, "Eloise", "DEBOIS", "+33 6 72 51 39 84", true, LocalDate.of(2000, 6, 1), "2 00 06 01 2A 122 019", List.of());
-        beneficiary2 = new Beneficiary(null, beneficiaryUserValOrge1, "Mathieu", "MARTIN", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 3), "1 92 03 03 75 113 557", List.of());
-        beneficiary3 = new Beneficiary(null, beneficiaryUserValOrge1, "Léa", "LAMBERT", "+33 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "2 88 07 19 91 190 349", List.of());
-        beneficiary4 = new Beneficiary(null, beneficiaryUserValOrge1, "Jerome", "GIRARD", "+33 7 63 18 47 92", true, LocalDate.of(1983, 11, 7), "1 83 11 07 91 125 789", List.of());
-        beneficiary5 = new Beneficiary(null, beneficiaryUserValOrge1, "Camille", "ROUX", "+33 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "2 90 05 28 93 102 901", List.of());
-        beneficiary6 = new Beneficiary(null, beneficiaryUserValOrge1, "Alexandre", "BERNARD", "+33 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "1 87 01 15 92 105 302", List.of());
-        beneficiary7 = new Beneficiary(null, beneficiaryUserValOrge1, "Margaux", "DUPONT", "+33 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "2 94 08 09 75 120 270", List.of());
-        beneficiary8 = new Beneficiary(null, beneficiaryUserValOrge1, "Antoine", "LEFEBVRE", "+33 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "1 91 06 25 91 157 633", List.of());
-        beneficiary9 = new Beneficiary(null, beneficiaryUserValOrge1, "Juliette", "MOREAU", "+33 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "2 89 12 17 91 143 751", List.of());
-        beneficiary10 = new Beneficiary(null, beneficiaryUserValOrge1, "Théo", "THOMAS", "+33 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "1 93 02 06 91 109 669", List.of());
+        beneficiary2 = new Beneficiary(null, beneficiaryUserValOrge2, "Mathieu", "MARTIN", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 3), "1 92 03 03 75 113 557", List.of());
+        beneficiary3 = new Beneficiary(null, beneficiaryUserValOrge3, "Léa", "LAMBERT", "+33 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "2 88 07 19 91 190 349", List.of());
+        beneficiary4 = new Beneficiary(null, beneficiaryUserValOrge4, "Jerome", "GIRARD", "+33 7 63 18 47 92", true, LocalDate.of(1983, 11, 7), "1 83 11 07 91 125 789", List.of());
+        beneficiary5 = new Beneficiary(null, beneficiaryUserValOrge5, "Camille", "ROUX", "+33 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "2 90 05 28 93 102 901", List.of());
+        beneficiary6 = new Beneficiary(null, beneficiaryUserValOrge6, "Alexandre", "BERNARD", "+33 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "1 87 01 15 92 105 302", List.of());
+        beneficiary7 = new Beneficiary(null, beneficiaryUserValOrge7, "Margaux", "DUPONT", "+33 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "2 94 08 09 75 120 270", List.of());
+        beneficiary8 = new Beneficiary(null, beneficiaryUserValOrge8, "Antoine", "LEFEBVRE", "+33 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "1 91 06 25 91 157 633", List.of());
+        beneficiary9 = new Beneficiary(null, beneficiaryUserValOrge9, "Juliette", "MOREAU", "+33 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "2 89 12 17 91 143 751", List.of());
+        beneficiary10 = new Beneficiary(null, beneficiaryUserValOrge10, "Théo", "THOMAS", "+33 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "1 93 02 06 91 109 669", List.of());
         beneficiary11 = new Beneficiary(null, beneficiaryUserValOrge11, "Fernando", "GOMEZ", "+34 6 72 51 39 84", true, LocalDate.of(1980, 6, 1), "1 80 06 01 99 999 019", List.of());
         beneficiary12 = new Beneficiary(null, beneficiaryUserValOrge12, "Ana", "MARTINEZ", "+34 6 28 93 75 46", true, LocalDate.of(1985, 3, 3), "2 85 03 03 99 999 557", List.of());
         beneficiary13 = new Beneficiary(null, beneficiaryUserValOrge13, "José", "SANCHEZ", "+34 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "1 88 07 19 99 999 349", List.of());
@@ -221,41 +226,61 @@ public class FixturesConfig {
         beneficiary46 = new Beneficiary(null, beneficiaryUserValOrge46, "Zola", "Ndlovu", "+263 753 628 841", true, LocalDate.of(1994, 5, 25), "2 94 05 25 91 157 633", List.of());
         beneficiary47 = new Beneficiary(null, beneficiaryUserValOrge47, "Sibusiso", "Khumalo", "+263 437 845 219", true, LocalDate.of(1989, 12, 15), "1 89 12 15 91 143 751", List.of());
 
-        cloth1 = new Product(null, "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth2 = new Product(null, "Chemises blanches", new Quantifier(15, NumberedUnit.NUMBER), null);
-        cloth3 = new Product(null, "Chemises blanches", new Quantifier(17, NumberedUnit.NUMBER), null);
-        cloth4 = new Product(null, "Chemises blanches", new Quantifier(6, NumberedUnit.NUMBER), null);
-        cloth5 = new Product(null, "Chemises blanches", new Quantifier(5, NumberedUnit.NUMBER), null);
-        cloth6 = new Product(null, "T-shirts blancs", new Quantifier(15, NumberedUnit.NUMBER), null);
-        cloth7 = new Product(null, "Pantalons noirs", new Quantifier(10, NumberedUnit.NUMBER), null);
-        cloth8 = new Product(null, "Robes rouges", new Quantifier(8, NumberedUnit.NUMBER), null);
-        cloth9 = new Product(null, "Pulls gris", new Quantifier(12, NumberedUnit.NUMBER), null);
-        cloth10 = new Product(null, "Jupes bleues", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth11 = new Product(null, "Chaussures noires", new Quantifier(5, NumberedUnit.NUMBER), null);
-        cloth12 = new Product(null, "Chaussures blanches", new Quantifier(8, NumberedUnit.NUMBER), null);
-        cloth13 = new Product(null, "Chaussettes noires", new Quantifier(10, NumberedUnit.NUMBER), null);
-        cloth14 = new Product(null, "Chaussettes blanches", new Quantifier(15, NumberedUnit.NUMBER), null);
-        cloth15 = new Product(null, "Baskets rouges", new Quantifier(7, NumberedUnit.NUMBER), null);
-        food1 = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food2 = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food3 = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), null);
-        food4 = new Product(null, "Oranges", new WeightQuantifier(750, WeightUnit.GRAM), null);
-        food5 = new Product(null, "Tomates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food6 = new Product(null, "Carottes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food7 = new Product(null, "Pommes de terre", new WeightQuantifier(2, WeightUnit.KILOGRAM), null);
-        food8 = new Product(null, "Fraises", new WeightQuantifier(250, WeightUnit.GRAM), null);
-        food9 = new Product(null, "Blancs de poulet", new WeightQuantifier(500, WeightUnit.GRAM), null);
-        food10 = new Product(null, "Filets de saumon", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food11 = new Product(null, "Épinards", new WeightQuantifier(200, WeightUnit.GRAM), null);
-        food12 = new Product(null, "Yaourt", new WeightQuantifier(500, WeightUnit.GRAM), null);
-        food13 = new Product(null, "Pain", new WeightQuantifier(800, WeightUnit.GRAM), null);
-        food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), null);
+        var productLimit = new ProductLimit(null, "Farine", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit1 = new ProductLimit(null, "Sucre", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit2 = new ProductLimit(null, "Couche", Duration.ofDays(15), new Quantifier(1, NumberedUnit.NUMBER));
+        var productLimit3 = new ProductLimit(null, "Lessive", Duration.ofDays(30), new Quantifier(1, VolumeUnit.LITER));
+        var productLimit14 = new ProductLimit(null, "laitier", Duration.ofDays(30), new Quantifier(1, VolumeUnit.LITER));
+        var productLimit4 = new ProductLimit(null, "Brosse a dents", Duration.ofDays(60), new Quantifier(1, NumberedUnit.NUMBER));
+        var productLimit5 = new ProductLimit(null, "dentifrice", Duration.ofDays(30), new Quantifier(1, NumberedUnit.NUMBER));
+        var productLimit6 = new ProductLimit(null, "shampooing / gel douche", Duration.ofDays(15), new Quantifier(1, VolumeUnit.LITER));
+        var productLimit7 = new ProductLimit(null, "féculents", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit8 = new ProductLimit(null, "légumes", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit13 = new ProductLimit(null, "viandes", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit9 = new ProductLimit(null, "fruits", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
+        var productLimit10 = new ProductLimit(null, "sous vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER));
+        var productLimit11 = new ProductLimit(null, "vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER));
+        var productLimit12 = new ProductLimit(null, "sur vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER));
+
+        productLimits = List.of(productLimit, productLimit1, productLimit2, productLimit3, productLimit4, productLimit5, productLimit6, productLimit7, productLimit8, productLimit9, productLimit10, productLimit11, productLimit12, productLimit13, productLimit14);
+
+        cloth1 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth2 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth3 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth4 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth5 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth6 = new Product(null, "T-shirts blancs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth7 = new Product(null, "Pantalons noirs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth8 = new Product(null, "Robes rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth9 = new Product(null, "Pulls gris", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth10 = new Product(null, "Jupes bleues", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth11 = new Product(null, "Chaussures noires", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth12 = new Product(null, "Chaussures blanches", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth13 = new Product(null, "Chaussettes noires", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth14 = new Product(null, "Chaussettes blanches", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth15 = new Product(null, "Baskets rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        food1 = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9);
+        food2 = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit7);
+        food3 = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), productLimit9);
+        food4 = new Product(null, "Oranges", new WeightQuantifier(750, WeightUnit.GRAM), productLimit9);
+        food5 = new Product(null, "Tomates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9);
+        food6 = new Product(null, "Carottes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit8);
+        food7 = new Product(null, "Pommes de terre", new WeightQuantifier(2, WeightUnit.KILOGRAM), productLimit7);
+        food8 = new Product(null, "Fraises", new WeightQuantifier(250, WeightUnit.GRAM), productLimit9);
+        food9 = new Product(null, "Blancs de poulet", new WeightQuantifier(500, WeightUnit.GRAM), productLimit13);
+        food10 = new Product(null, "Filets de saumon", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
+        food11 = new Product(null, "Épinards", new WeightQuantifier(200, WeightUnit.GRAM), productLimit8);
+        food12 = new Product(null, "Yaourt", new WeightQuantifier(500, WeightUnit.GRAM), productLimit14);
+        food13 = new Product(null, "Pain", new WeightQuantifier(800, WeightUnit.GRAM), productLimit7);
+        food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
+        food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
+
+        storage = new Storage(null, "defaultStorage", localUnit, address);
     }
 
     @Bean
     @Primary
-    public InDBLocalUnitRepository localTestInDBUnitRepository(LocalUnitDBRepository localUnitDBRepository) {
+    public InDBLocalUnitRepository localUnitFixtureRepository(LocalUnitDBRepository localUnitDBRepository) {
         InDBLocalUnitRepository localUnitRepository = new InDBLocalUnitRepository(localUnitDBRepository);
         localUnitRepository.save(localUnit);
         return localUnitRepository;
@@ -272,7 +297,7 @@ public class FixturesConfig {
 
     @Bean
     @Primary
-    public InDBRoleRepository roleTestRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
+    public InDBRoleRepository roleFixtureRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
         InDBRoleRepository inDBRoleRepository = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
 
         inDBRoleRepository.save(managerRoleValOrge);
@@ -284,38 +309,57 @@ public class FixturesConfig {
 
     @Bean
     @Primary
-    public InDBUserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
+    public InDBUserRepository userFixtureRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
         return new InDBUserRepository(userDBRepository, roleDBRepository, localUnitDBRepository);
     }
 
     @Bean
     @Primary
-    public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        var volunteerRepository = new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
-
-        for (Volunteer volunteer : Arrays.asList(volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10)) {
-            volunteerRepository.save(volunteer);
-        }
-
-        return volunteerRepository;
-    }
-
-    @Bean
-    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        var beneficiaryRepository = new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
-
-        for (Beneficiary beneficiary : Arrays.asList(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47)) {
-            beneficiaryRepository.save(beneficiary);
-        }
-
-        return beneficiaryRepository;
+    public InDBVolunteerRepository volunteerRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        return new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
     }
 
     @Bean
     @Primary
-    public EventRepository eventTestRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+    public VolunteerService volunteerFixtureRepository(VolunteerRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
+        var volunteerService = new VolunteerService(repository, roleService, passwordEncoder);
+
+        for (Volunteer volunteer : List.of(volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10)) {
+            var id = volunteerService.save(volunteer);
+            volunteer.setId(id);
+            volunteer.getUser().setId(id);
+        }
+
+        return volunteerService;
+    }
+
+    @Bean
+    @Primary
+    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+        return new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
+    }
+
+    @Bean
+    @Primary
+    public BeneficiaryService beneficiaryFixtureRepository(BeneficiaryRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
+        var beneficiaryService = new BeneficiaryService(repository, roleService, passwordEncoder);
+
+        for (Beneficiary beneficiary : List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47)) {
+            var id = beneficiaryService.save(beneficiary);
+            beneficiary.setId(id);
+            beneficiary.getUser().setId(id);
+        }
+
+        return beneficiaryService;
+    }
+
+    @Bean
+    @Primary
+    public EventRepository eventFixtureRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository, VolunteerService volunteerService, BeneficiaryService beneficiaryService) {
         var eventRepository = new InDBEventRepository(eventDBRepository, eventSessionDBRepository, eventTimeWindowDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
+        Random random = new Random();
         List<User> userBeneficiariesInDB = userDBRepository.findAll().stream().filter(user -> !user.getUsername().contains("@croix-rouge.fr")).toList();
+        List<Beneficiary> beneficiaryList = List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47);
 
         ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 4, 10, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions1 = new ArrayList<>();
@@ -332,10 +376,17 @@ public class FixturesConfig {
             for (int i = 0; i < 6; i++) {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(4);
+                var endDate = eventStartDate2.plusMinutes((i + 1) * 30);
                 for (int j = 0; j < numberOfParticipants; j++) {
+                    var bene = beneficiaryList.get(random.nextInt(beneficiaryList.size()));
+                    participants.add(bene.getId());
                     participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    if (!beneficiaryClothProductDates.containsKey(bene)) {
+                        beneficiaryClothProductDates.put(bene, new ArrayList<>());
+                    }
+                    beneficiaryClothProductDates.get(bene).add(endDate.toLocalDateTime());
                 }
-                eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 20), eventStartDate2.plusMinutes((i + 1) * 20), 4, participants));
+                eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 20), endDate, 4, participants));
             }
             eventSessions2.add(new EventSession(null, eventTimeWindowList2));
         }
@@ -349,10 +400,16 @@ public class FixturesConfig {
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
                 int numberOfParticipants = new Random().nextInt(6);
+                var endDate = eventStartDate3.plusMinutes((i + 1) * 30);
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    var bene = beneficiaryList.get(random.nextInt(beneficiaryList.size()));
+                    participants.add(bene.getId());
+                    if (!beneficiaryFoodProductDates.containsKey(bene)) {
+                        beneficiaryFoodProductDates.put(bene, new ArrayList<>());
+                    }
+                    beneficiaryFoodProductDates.get(bene).add(endDate.toLocalDateTime());
                 }
-                eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), eventStartDate3.plusMinutes((i + 1) * 30), 6, participants));
+                eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), endDate, 6, participants));
             }
             eventSessions3.add(new EventSession(null, eventTimeWindowList3));
         }
@@ -422,8 +479,8 @@ public class FixturesConfig {
                 localUnit,
                 List.of(new EventSession(null,
                         List.of(new EventTimeWindow(null,
-                                    ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 17, 0), ZoneId.of("Europe/Paris")),
-                                    ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 19, 0), ZoneId.of("Europe/Paris")),
+                                ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 17, 0), ZoneId.of("Europe/Paris")),
+                                ZonedDateTime.of(LocalDateTime.of(2023, 7, 11, 19, 0), ZoneId.of("Europe/Paris")),
                                 10,
                                 participants)))),
                 1));
@@ -433,19 +490,25 @@ public class FixturesConfig {
 
     @Bean
     @Primary
-    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
-        return new InDBProductLimitRepository(productLimitDBRepository);
+    public InDBProductLimitRepository productLimitFixtureRepository(ProductLimitDBRepository productLimitDBRepository) {
+        var repo = new InDBProductLimitRepository(productLimitDBRepository);
+
+        for (var productLimit : productLimits) {
+            repo.save(productLimit);
+        }
+
+        return repo;
     }
 
     @Bean
     @Primary
-    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
+    public InDBProductRepository productFixtureRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
         return new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
     }
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
+    public InDBClothProductRepository clothProductFixtureRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, InDBProductLimitRepository productLimitRepository) {
         InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
 
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S, ClothGender.NOT_SPECIFIED));
@@ -469,7 +532,7 @@ public class FixturesConfig {
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
+    public InDBFoodProductRepository foodProductFixtureRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
         var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository);
 
         final LocalDate date = LocalDate.now();
@@ -585,27 +648,55 @@ public class FixturesConfig {
 
     @Bean
     @Primary
-    public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+    public InDBStorageRepository storageFixtureRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
 
-        storageRepository.save(new Storage(new ID(1L), "defaultStorage", localUnit, address));
-        storageRepository.save(new Storage(new ID(2L), "secondStorage", localUnit, address));
+        storageRepository.save(storage);
+        storageRepository.save(new Storage(null, "secondStorage", localUnit, address));
 
         return storageRepository;
     }
 
     @Bean
     @Primary
-    public BeneficiaryProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        return new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
+    public BeneficiaryProductRepository storageUserProductFixtureRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+        var repo = new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
+        Random random = new Random();
+
+        var foodProductList = List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15);
+        var clothProductList = List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15);
+
+        fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates);
+
+        fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates);
+
+        return repo;
+    }
+
+    private void fillBeneficiaryProductWithRandom(InDBBeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
+        for (var entry : beneficiaryFoodProductDates.entrySet()) {
+            for (var date : entry.getValue()) {
+                if (date.isAfter(LocalDateTime.now()))
+                    continue;
+
+                for (int i = 0; i < random.nextInt((int) (foodProductList.size() * 0.75)); i++) {
+                    repo.save(
+                            new BeneficiaryProduct(null,
+                                    entry.getKey(),
+                                    foodProductList.get(random.nextInt(foodProductList.size())),
+                                    storage,
+                                    date,
+                                    random.nextInt(5))
+                    );
+                }
+            }
+        }
     }
 
     @Bean
     @Primary
-    public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
+    public StorageProductRepository storageProductFixtureRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
         StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
-
-        var storage = storageRepository.findById(new ID(1L)).orElseThrow();
 
         storageProductRepository.save(new StorageProduct(null, storage, cloth1, 5));
         storageProductRepository.save(new StorageProduct(null, storage, cloth2, 8));
@@ -639,11 +730,5 @@ public class FixturesConfig {
         storageProductRepository.save(new StorageProduct(null, storage, food15, 10));
 
         return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
-    }
-
-    @Bean
-    @Primary
-    public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
-        return new StorageProductService(storageProductRepository);
     }
 }

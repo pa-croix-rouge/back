@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Table(name = "beneficiary")
 @Entity
 public class BeneficiaryDB {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -24,7 +24,7 @@ public class BeneficiaryDB {
     private String phonenumber;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_db_user_id", nullable = false)
+    @JoinColumn(name = "user_db_user_id", nullable = false, unique = true)
     private UserDB userDB;
 
     @Column(name = "validated")

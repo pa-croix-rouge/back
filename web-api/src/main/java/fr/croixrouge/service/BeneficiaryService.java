@@ -2,18 +2,56 @@ package fr.croixrouge.service;
 
 import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.Role;
 import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.exposition.dto.core.BeneficiaryCreationRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class BeneficiaryService extends CRUDService<ID, Beneficiary, BeneficiaryRepository> {
 
-    public BeneficiaryService(BeneficiaryRepository repository) {
+    private final RoleService roleService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public BeneficiaryService(BeneficiaryRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
         super(repository);
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public ID save(Beneficiary beneficiary) {
+
+        if (beneficiary.getId() != null) {
+            return super.save(beneficiary);
+        }
+
+        var volunteerRole = roleService.getCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME);
+        var newBeneficiary = new Beneficiary(
+                null,
+                new User(null,
+                        beneficiary.getUser().getUsername(),
+                        passwordEncoder.encode(beneficiary.getUser().getPassword()),
+                        beneficiary.getUser().getLocalUnit(),
+                        Stream.concat(Stream.of(volunteerRole), beneficiary.getUser().getRoles().stream()).toList()
+                ),
+                beneficiary.getFirstName(),
+                beneficiary.getLastName(),
+                beneficiary.getPhoneNumber(),
+                beneficiary.isValidated(),
+                beneficiary.getBirthDate(),
+                beneficiary.getSocialWorkerNumber(),
+                beneficiary.getFamilyMembers()
+
+        );
+
+        return super.save(newBeneficiary);
     }
 
     public Beneficiary findByUserId(ID id) {

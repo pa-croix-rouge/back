@@ -13,7 +13,24 @@ public class UserSecurity extends User implements UserDetails {
 
     public UserSecurity(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles) {
         super(userId, username, password, localUnit, roles);
-        allAuthorizations = roles.stream().flatMap(r -> r.getAuthorizations().entrySet().stream()).collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), HashMap::putAll);
+
+        allAuthorizations = new HashMap<>();
+        for (var role : roles) {
+            for (var entry : role.getAuthorizations().entrySet()) {
+                var resource = entry.getKey();
+                var operations = entry.getValue();
+
+                if (!allAuthorizations.containsKey(resource)) {
+                    allAuthorizations.put(resource, new HashSet<>());
+                }
+
+                for (var operation : operations) {
+
+                    allAuthorizations.get(resource).add(operation);
+                }
+            }
+        }
+
     }
 
     public UserSecurity(User user) {
