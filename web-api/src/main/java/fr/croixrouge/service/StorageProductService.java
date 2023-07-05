@@ -67,4 +67,7 @@ public class StorageProductService extends fr.croixrouge.storage.service.Storage
         return super.getStorageProductsByLocalUnit(localUnitId);
     }
 
+    public StorageProduct findByProductId(ID productId) {
+        return storageProductRepository.findByProductId(productId).orElseThrow();
+    }
 }
