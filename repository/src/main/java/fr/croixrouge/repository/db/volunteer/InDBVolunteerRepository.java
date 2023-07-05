@@ -5,16 +5,12 @@ import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 public class InDBVolunteerRepository implements VolunteerRepository {
-
-    private final Logger logger = LoggerFactory.getLogger(InDBVolunteerRepository.class);
 
     private final VolunteerDBRepository volunteerDBRepository;
 
@@ -57,17 +53,14 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public ID save(Volunteer object) {
-        logger.info("InDBVolunteerRepository.save " + object.toString());
         var userID = inDBUserRepository.save(object.getUser());
         object.setId(userID);
         var volunteerDB = volunteerDBRepository.save(toVolunteerDB(object));
-        logger.info("InDBVolunteerRepository.save " + volunteerDB.getId());
         return userID;
     }
 
     @Override
     public void delete(Volunteer object) {
-        logger.info("InDBVolunteerRepository.delete " + object.toString());
         volunteerDBRepository.delete(toVolunteerDB(object));
         userDBRepository.delete(toVolunteerDB(object).getUserDB());
     }
