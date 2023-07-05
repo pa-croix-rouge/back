@@ -18,24 +18,17 @@ import fr.croixrouge.repository.db.role.RoleDBRepository;
 import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
 import fr.croixrouge.repository.db.storage.InDBStorageRepository;
 import fr.croixrouge.repository.db.storage.StorageDBRepository;
-import fr.croixrouge.repository.db.storage_product.InDBStorageProductRepository;
-import fr.croixrouge.repository.db.storage_product.StorageProductDBRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
-import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository;
-import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
-import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
-import fr.croixrouge.storage.repository.StorageProductRepository;
-import fr.croixrouge.storage.service.StorageProductService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile({"prod"})
+@Profile({"prod", "fixtures-prod"})
 public class RepositoryConfig {
 
     @Bean

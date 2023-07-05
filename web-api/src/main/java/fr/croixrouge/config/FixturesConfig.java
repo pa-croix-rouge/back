@@ -1,8 +1,8 @@
 package fr.croixrouge.config;
 
 import fr.croixrouge.domain.model.*;
-import fr.croixrouge.domain.repository.BeneficiaryRepository;
-import fr.croixrouge.domain.repository.VolunteerRepository;
+import fr.croixrouge.domain.repository.LocalUnitRepository;
+import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
@@ -40,10 +40,7 @@ import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.*;
 import fr.croixrouge.storage.model.quantifier.*;
-import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
-import fr.croixrouge.storage.repository.StorageProductRepository;
-import fr.croixrouge.storage.service.StorageProductService;
-import org.springframework.context.annotation.Bean;
+import fr.croixrouge.storage.repository.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
@@ -58,13 +55,10 @@ import java.util.*;
 public class FixturesConfig {
     private final Role managerRoleValOrge, defaultRoleValOrge, beneficiaryRoleValOrge;
     private final User managerValOrge, volunteerUserValOrge1, volunteerUserValOrge2, volunteerUserValOrge3, volunteerUserValOrge4, volunteerUserValOrge5, volunteerUserValOrge6, volunteerUserValOrge7, volunteerUserValOrge8, volunteerUserValOrge9, volunteerUserValOrge10, beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47;
-
     private final Volunteer volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10;
     private final Beneficiary beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
-
     private final LocalUnit localUnit;
-
     private final Product cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15, food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15;
     private final List<ProductLimit> productLimits;
     private final Storage storage;
@@ -72,7 +66,19 @@ public class FixturesConfig {
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
 
-    public FixturesConfig(PasswordEncoder passwordEncoder) {
+    public FixturesConfig(RoleConfig roleConfig,
+                          LocalUnitRepository localUnitRepository,
+                          RoleRepository roleRepository,
+                          VolunteerService volunteerService,
+                          BeneficiaryService beneficiaryService,
+                          EventRepository eventRepository,
+                          StorageProductRepository storageProductRepository,
+                          ProductLimitRepository productLimitRepository,
+                          ClothProductRepository clothProductRepository,
+                          FoodProductRepository foodProductRepository,
+                          StorageRepository storageRepository,
+                          BeneficiaryProductRepository storageUserProductRepository) {
+
         localUnit = new LocalUnit(new ID(1L),
                 "Unité Local du Val d'Orge",
                 address,
@@ -279,87 +285,47 @@ public class FixturesConfig {
         food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
 
         storage = new Storage(null, "Entrepot de l'unité local", localUnit, address);
+
+        localUnitFixtureRepository(localUnitRepository);
+        roleFixtureRepository(roleRepository);
+        volunteerFixtureRepository(volunteerService);
+        beneficiaryFixtureRepository(beneficiaryService);
+        eventFixtureRepository(eventRepository);
+        productLimitFixtureRepository(productLimitRepository);
+        clothProductFixtureRepository(clothProductRepository);
+        foodProductFixtureRepository(foodProductRepository);
+        storageFixtureRepository(storageRepository);
+        storageUserProductFixtureRepository(storageUserProductRepository);
+        storageProductFixtureRepository(storageProductRepository);
     }
 
-    @Bean
-    @Primary
-    public InDBLocalUnitRepository localUnitFixtureRepository(LocalUnitDBRepository localUnitDBRepository) {
-        InDBLocalUnitRepository localUnitRepository = new InDBLocalUnitRepository(localUnitDBRepository);
+    public void localUnitFixtureRepository(LocalUnitRepository localUnitRepository) {
         localUnitRepository.save(localUnit);
-        return localUnitRepository;
     }
 
-    @Bean
-    @Primary
-    CharacterEncodingFilter characterEncodingFilter() {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-        return filter;
-    }
-
-    @Bean
-    @Primary
-    public InDBRoleRepository roleFixtureRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
-        InDBRoleRepository inDBRoleRepository = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
-
+    public void roleFixtureRepository(RoleRepository inDBRoleRepository) {
         inDBRoleRepository.save(managerRoleValOrge);
         inDBRoleRepository.save(defaultRoleValOrge);
         inDBRoleRepository.save(beneficiaryRoleValOrge);
-
-        return inDBRoleRepository;
     }
 
-    @Bean
-    @Primary
-    public InDBUserRepository userFixtureRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
-        return new InDBUserRepository(userDBRepository, roleDBRepository, localUnitDBRepository);
-    }
-
-    @Bean
-    @Primary
-    public InDBVolunteerRepository volunteerRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        return new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
-    }
-
-    @Bean
-    @Primary
-    public VolunteerService volunteerFixtureRepository(VolunteerRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
-        var volunteerService = new VolunteerService(repository, roleService, passwordEncoder);
-
+    public void volunteerFixtureRepository(VolunteerService volunteerService) {
         for (Volunteer volunteer : List.of(volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10)) {
             var id = volunteerService.save(volunteer);
             volunteer.setId(id);
             volunteer.getUser().setId(id);
         }
-
-        return volunteerService;
     }
 
-    @Bean
-    @Primary
-    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        return new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
-    }
-
-    @Bean
-    @Primary
-    public BeneficiaryService beneficiaryFixtureRepository(BeneficiaryRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
-        var beneficiaryService = new BeneficiaryService(repository, roleService, passwordEncoder);
-
+    public void beneficiaryFixtureRepository(BeneficiaryService beneficiaryService) {
         for (Beneficiary beneficiary : List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47)) {
             var id = beneficiaryService.save(beneficiary);
             beneficiary.setId(id);
             beneficiary.getUser().setId(id);
         }
-
-        return beneficiaryService;
     }
 
-    @Bean
-    @Primary
-    public EventRepository eventFixtureRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository, VolunteerService volunteerService, BeneficiaryService beneficiaryService) {
-        var eventRepository = new InDBEventRepository(eventDBRepository, eventSessionDBRepository, eventTimeWindowDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
+    public void eventFixtureRepository(EventRepository eventRepository) {
         List<User> userBeneficiariesInDB = userDBRepository.findAll().stream().filter(user -> !user.getUsername().contains("@croix-rouge.fr")).toList();
         ZonedDateTime eventLimit = ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 0, 0), ZoneId.of("Europe/Paris"));
 
@@ -512,33 +478,15 @@ public class FixturesConfig {
                                 10,
                                 participants)))),
                 1));
-
-        return eventRepository;
     }
 
-    @Bean
-    @Primary
-    public InDBProductLimitRepository productLimitFixtureRepository(ProductLimitDBRepository productLimitDBRepository) {
-        var repo = new InDBProductLimitRepository(productLimitDBRepository);
-
+    public void productLimitFixtureRepository(ProductLimitRepository repo) {
         for (var productLimit : productLimits) {
             repo.save(productLimit);
         }
-
-        return repo;
     }
 
-    @Bean
-    @Primary
-    public InDBProductRepository productFixtureRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
-        return new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
-    }
-
-    @Bean
-    @Primary
-    public InDBClothProductRepository clothProductFixtureRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, InDBProductLimitRepository productLimitRepository) {
-        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
-
+    public void clothProductFixtureRepository(ClothProductRepository repository) {
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(3L), cloth3, ClothSize.L, ClothGender.NOT_SPECIFIED));
@@ -554,15 +502,9 @@ public class FixturesConfig {
         repository.save(new ClothProduct(new ID(13L), cloth13, ClothSize.CHILD, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(14L), cloth14, ClothSize.XL, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(15L), cloth15, ClothSize.UNKNOWN, ClothGender.NOT_SPECIFIED));
-
-        return repository;
     }
 
-    @Bean
-    @Primary
-    public InDBFoodProductRepository foodProductFixtureRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
-        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository);
-
+    public void foodProductFixtureRepository(FoodProductRepository repository) {
         final LocalDate date = LocalDate.now();
 
         repository.save(new FoodProduct(null,
@@ -670,25 +612,14 @@ public class FixturesConfig {
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 91));
-
-        return repository;
     }
 
-    @Bean
-    @Primary
-    public InDBStorageRepository storageFixtureRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
-        var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
-
+    public void storageFixtureRepository(StorageRepository storageRepository) {
         storageRepository.save(storage);
-        storageRepository.save(new Storage(null, "Box de l'unité local", localUnit, address));
-
-        return storageRepository;
+        storageRepository.save(new Storage(null, "secondStorage", localUnit, address));
     }
 
-    @Bean
-    @Primary
-    public BeneficiaryProductRepository storageUserProductFixtureRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        var repo = new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
+    public void storageUserProductFixtureRepository(BeneficiaryProductRepository repo) {
         Random random = new Random();
 
         var foodProductList = List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15);
@@ -697,11 +628,9 @@ public class FixturesConfig {
         fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates);
 
         fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates);
-
-        return repo;
     }
 
-    private void fillBeneficiaryProductWithRandom(InDBBeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
+    private void fillBeneficiaryProductWithRandom(BeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
         for (var entry : beneficiaryFoodProductDates.entrySet()) {
             for (var date : entry.getValue()) {
                 if (date.isAfter(LocalDateTime.now()))
@@ -721,11 +650,7 @@ public class FixturesConfig {
         }
     }
 
-    @Bean
-    @Primary
-    public StorageProductRepository storageProductFixtureRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
-        StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
-
+    public void storageProductFixtureRepository(StorageProductRepository storageProductRepository) {
         storageProductRepository.save(new StorageProduct(null, storage, cloth1, 5));
         storageProductRepository.save(new StorageProduct(null, storage, cloth2, 8));
         storageProductRepository.save(new StorageProduct(null, storage, cloth3, 15));
@@ -756,7 +681,5 @@ public class FixturesConfig {
         storageProductRepository.save(new StorageProduct(null, storage, food13, 3));
         storageProductRepository.save(new StorageProduct(null, storage, food14, 5));
         storageProductRepository.save(new StorageProduct(null, storage, food15, 10));
-
-        return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
     }
 }

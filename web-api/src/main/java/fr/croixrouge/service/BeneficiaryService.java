@@ -1,9 +1,6 @@
 package fr.croixrouge.service;
 
-import fr.croixrouge.domain.model.Beneficiary;
-import fr.croixrouge.domain.model.ID;
-import fr.croixrouge.domain.model.Role;
-import fr.croixrouge.domain.model.User;
+import fr.croixrouge.domain.model.*;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.exposition.dto.core.BeneficiaryCreationRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,7 +86,14 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
                 beneficiary.isValidated(),
                 beneficiaryCreationRequest.getBirthDate() == null ? beneficiary.getBirthDate() : beneficiaryCreationRequest.getBirthDate(),
                 beneficiaryCreationRequest.getSocialWorkerNumber() == null ? beneficiary.getSocialWorkerNumber() : beneficiaryCreationRequest.getSocialWorkerNumber(),
-                beneficiary.getFamilyMembers());
+                beneficiaryCreationRequest.getFamilyMembers() == null ? beneficiary.getFamilyMembers() : beneficiaryCreationRequest.getFamilyMembers().stream()
+                        .map(familyMember -> new FamilyMember(
+                                familyMember.id == null ? null : new ID(familyMember.id),
+                                familyMember.firstName,
+                                familyMember.lastName,
+                                familyMember.birthDate))
+                        .toList()
+        );
 
         save(newBeneficiary);
     }

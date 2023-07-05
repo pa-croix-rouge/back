@@ -7,6 +7,7 @@ import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exposition.dto.core.BeneficiaryCreationRequest;
 import fr.croixrouge.exposition.dto.core.BeneficiaryResponse;
 import fr.croixrouge.exposition.dto.core.FamilyMemberCreationRequest;
+import fr.croixrouge.exposition.dto.core.FamilyMemberResponse;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.BeneficiaryService;
 import fr.croixrouge.service.LocalUnitService;
@@ -104,7 +105,8 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 model.getBirthDate(),
                 model.getPhoneNumber(),
                 model.isValidated(),
-                model.getUser().getLocalUnit().getId()
+                model.getUser().getLocalUnit().getId(),
+                model.getFamilyMembers().stream().map(FamilyMemberResponse::new).toList()
         );
     }
 
