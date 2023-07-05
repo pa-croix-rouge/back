@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 @Service
 public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerRepository> {
@@ -38,7 +39,8 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
                         volunteer.getUser().getUsername(),
                         passwordEncoder.encode(volunteer.getUser().getPassword()),
                         volunteer.getUser().getLocalUnit(),
-                        List.of(volunteerRole)),
+                        Stream.concat(Stream.of(volunteerRole), volunteer.getUser().getRoles().stream()).toList()
+                ),
                 volunteer.getFirstName(),
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),

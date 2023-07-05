@@ -91,12 +91,12 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
     @Override
     public ID save(Beneficiary object) {
         logger.info("InDBBeneficiaryRepository.save " + object.toString());
-        inDBUserRepository.save(object.getUser());
+        var userID = inDBUserRepository.save(object.getUser());
+        object.setId(userID);
         var beneficiaryDB = beneficiaryDBRepository.save(toBeneficiaryDB(object));
         logger.info("InDBBeneficiaryRepository.save " + beneficiaryDB.getId());
-        object.setId(new ID(beneficiaryDB.getId()));
         object.getFamilyMembers().forEach(familyMember -> familyMemberDBRepository.save(toFamilyMemberDB(familyMember, beneficiaryDB)));
-        return new ID(beneficiaryDB.getId());
+        return userID;
     }
 
     @Override

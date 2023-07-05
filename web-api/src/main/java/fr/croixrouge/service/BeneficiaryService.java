@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class BeneficiaryService extends CRUDService<ID, Beneficiary, BeneficiaryRepository> {
@@ -32,13 +33,14 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
         }
 
         var volunteerRole = roleService.getCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME);
-        var newVolunteer = new Beneficiary(
+        var newBeneficiary = new Beneficiary(
                 null,
                 new User(null,
                         beneficiary.getUser().getUsername(),
                         passwordEncoder.encode(beneficiary.getUser().getPassword()),
                         beneficiary.getUser().getLocalUnit(),
-                        List.of(volunteerRole)),
+                        Stream.concat(Stream.of(volunteerRole), beneficiary.getUser().getRoles().stream()).toList()
+                ),
                 beneficiary.getFirstName(),
                 beneficiary.getLastName(),
                 beneficiary.getPhoneNumber(),
@@ -49,7 +51,7 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
         );
 
-        return super.save(newVolunteer);
+        return super.save(newBeneficiary);
     }
 
     public Beneficiary findByUserId(ID id) {
