@@ -65,6 +65,7 @@ public class FixturesConfig {
 
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
+    private final UserDBRepository userDBRepository;
 
     public FixturesConfig(RoleConfig roleConfig,
                           LocalUnitRepository localUnitRepository,
@@ -77,7 +78,8 @@ public class FixturesConfig {
                           ClothProductRepository clothProductRepository,
                           FoodProductRepository foodProductRepository,
                           StorageRepository storageRepository,
-                          BeneficiaryProductRepository storageUserProductRepository) {
+                          BeneficiaryProductRepository storageUserProductRepository,
+                          UserDBRepository userDBRepository) {
 
         localUnit = new LocalUnit(new ID(1L),
                 "Unité Local du Val d'Orge",
@@ -297,6 +299,7 @@ public class FixturesConfig {
         storageFixtureRepository(storageRepository);
         storageUserProductFixtureRepository(storageUserProductRepository);
         storageProductFixtureRepository(storageProductRepository);
+        this.userDBRepository = userDBRepository;
     }
 
     public void localUnitFixtureRepository(LocalUnitRepository localUnitRepository) {
@@ -326,7 +329,7 @@ public class FixturesConfig {
     }
 
     public void eventFixtureRepository(EventRepository eventRepository) {
-        List<User> userBeneficiariesInDB = userDBRepository.findAll().stream().filter(user -> !user.getUsername().contains("@croix-rouge.fr")).toList();
+        List<User> userBeneficiariesInDB = List.of(beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47);
         ZonedDateTime eventLimit = ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 0, 0), ZoneId.of("Europe/Paris"));
 
         ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 1, 10, 0), ZoneId.of("Europe/Paris"));
