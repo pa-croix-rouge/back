@@ -48,7 +48,7 @@ public class RepositoryConfig {
     @Primary
     public InDBRoleRepository roleTestRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
         return new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
-    }
+}
 
     @Bean
     @Primary

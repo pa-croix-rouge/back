@@ -25,6 +25,10 @@ public class RoleService extends CRUDService<ID, Role, RoleRepository> {
         return repository.findAllByLocalUnitId(localUnitId);
     }
 
+    public Role getCommonRole(String name) {
+        return repository.findCommonRole(name).orElseThrow();
+    }
+
     public boolean isUserIdAuthorizedToAccessRoute(ID userId, Resources route, Operations operation) {
         List<Role> roles = repository.findAllByUserId(userId);
         for (Role role : roles) {

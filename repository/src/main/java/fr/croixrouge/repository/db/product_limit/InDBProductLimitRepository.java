@@ -49,7 +49,9 @@ public class InDBProductLimitRepository implements ProductLimitRepository {
 
     @Override
     public ID save(ProductLimit object) {
-        return new ID(productLimitDBRepository.save(toProductLimitDB(object)).getId());
+        var id = new ID(productLimitDBRepository.save(toProductLimitDB(object)).getId());
+        object.setId(id);
+        return id;
     }
 
     @Override

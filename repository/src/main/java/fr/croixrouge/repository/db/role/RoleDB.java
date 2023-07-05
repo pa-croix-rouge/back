@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Table(name = "role")
+@Table(name = "role",
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "local_unit_db_localunit_id" }) })
 @Entity
 public class RoleDB {
 
@@ -19,7 +20,7 @@ public class RoleDB {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne
@@ -31,7 +32,6 @@ public class RoleDB {
             joinColumns = @JoinColumn(name = "roledb_role_id"),
             inverseJoinColumns = @JoinColumn(name = "role_resourcedbs_id"))
     private Set<RoleResourceDB> roleResourceDBs = new LinkedHashSet<>();
-
 
     public RoleDB(Long roleID, String name, String description, LocalUnitDB localUnitDB, Set<RoleResourceDB> roleResourceDBs) {
         this.roleID = roleID;
