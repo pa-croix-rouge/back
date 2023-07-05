@@ -6,18 +6,14 @@ import fr.croixrouge.domain.model.User;
 import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
 import fr.croixrouge.repository.db.role.InDBRoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
-
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class InDBUserRepository implements UserRepository {
 
-    private final Logger logger = LoggerFactory.getLogger(InDBUserRepository.class);
     private final UserDBRepository userDBRepository;
 
     private final InDBRoleRepository roleDBRepository;
@@ -58,16 +54,13 @@ public class InDBUserRepository implements UserRepository {
 
     @Override
     public ID save(User user) {
-        logger.info("InDBUserRepository.save " + user.toString());
         UserDB userDB = userDBRepository.save(toUserDB(user));
-        logger.info("InDBUserRepository.save " + userDB.getUserID());
         user.setId(new ID(userDB.getUserID()));
         return new ID(userDB.getUserID());
     }
 
     @Override
     public void delete(User user) {
-        logger.info("InDBUserRepository.delete " + user.toString());
         userDBRepository.delete(toUserDB(user));
     }
 

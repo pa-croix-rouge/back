@@ -1,8 +1,8 @@
 package fr.croixrouge.config;
 
 import fr.croixrouge.domain.model.*;
-import fr.croixrouge.domain.repository.BeneficiaryRepository;
-import fr.croixrouge.domain.repository.VolunteerRepository;
+import fr.croixrouge.domain.repository.LocalUnitRepository;
+import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
@@ -40,10 +40,7 @@ import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.*;
 import fr.croixrouge.storage.model.quantifier.*;
-import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
-import fr.croixrouge.storage.repository.StorageProductRepository;
-import fr.croixrouge.storage.service.StorageProductService;
-import org.springframework.context.annotation.Bean;
+import fr.croixrouge.storage.repository.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
@@ -68,8 +65,22 @@ public class FixturesConfig {
 
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
+    private final UserDBRepository userDBRepository;
 
-    public FixturesConfig(PasswordEncoder passwordEncoder) {
+    public FixturesConfig(RoleConfig roleConfig,
+                          LocalUnitRepository localUnitRepository,
+                          RoleRepository roleRepository,
+                          VolunteerService volunteerService,
+                          BeneficiaryService beneficiaryService,
+                          EventRepository eventRepository,
+                          StorageProductRepository storageProductRepository,
+                          ProductLimitRepository productLimitRepository,
+                          ClothProductRepository clothProductRepository,
+                          FoodProductRepository foodProductRepository,
+                          StorageRepository storageRepository,
+                          BeneficiaryProductRepository storageUserProductRepository,
+                          UserDBRepository userDBRepository) {
+
         localUnit = new LocalUnit(new ID(1L),
                 "Unité Local du Val d'Orge",
                 address,
@@ -275,156 +286,124 @@ public class FixturesConfig {
         food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
         food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
 
-        storage = new Storage(null, "defaultStorage", localUnit, address);
+        storage = new Storage(null, "Entrepot de l'unité local", localUnit, address);
+
+        localUnitFixtureRepository(localUnitRepository);
+        roleFixtureRepository(roleRepository);
+        volunteerFixtureRepository(volunteerService);
+        beneficiaryFixtureRepository(beneficiaryService);
+        eventFixtureRepository(eventRepository);
+        productLimitFixtureRepository(productLimitRepository);
+        clothProductFixtureRepository(clothProductRepository);
+        foodProductFixtureRepository(foodProductRepository);
+        storageFixtureRepository(storageRepository);
+        storageUserProductFixtureRepository(storageUserProductRepository);
+        storageProductFixtureRepository(storageProductRepository);
+        this.userDBRepository = userDBRepository;
     }
 
-    @Bean
-    @Primary
-    public InDBLocalUnitRepository localUnitFixtureRepository(LocalUnitDBRepository localUnitDBRepository) {
-        InDBLocalUnitRepository localUnitRepository = new InDBLocalUnitRepository(localUnitDBRepository);
+    public void localUnitFixtureRepository(LocalUnitRepository localUnitRepository) {
         localUnitRepository.save(localUnit);
-        return localUnitRepository;
     }
 
-    @Bean
-    @Primary
-    CharacterEncodingFilter characterEncodingFilter() {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-        return filter;
-    }
-
-    @Bean
-    @Primary
-    public InDBRoleRepository roleFixtureRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
-        InDBRoleRepository inDBRoleRepository = new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
-
+    public void roleFixtureRepository(RoleRepository inDBRoleRepository) {
         inDBRoleRepository.save(managerRoleValOrge);
         inDBRoleRepository.save(defaultRoleValOrge);
         inDBRoleRepository.save(beneficiaryRoleValOrge);
-
-        return inDBRoleRepository;
     }
 
-    @Bean
-    @Primary
-    public InDBUserRepository userFixtureRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
-        return new InDBUserRepository(userDBRepository, roleDBRepository, localUnitDBRepository);
-    }
-
-    @Bean
-    @Primary
-    public InDBVolunteerRepository volunteerRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        return new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
-    }
-
-    @Bean
-    @Primary
-    public VolunteerService volunteerFixtureRepository(VolunteerRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
-        var volunteerService = new VolunteerService(repository, roleService, passwordEncoder);
-
+    public void volunteerFixtureRepository(VolunteerService volunteerService) {
         for (Volunteer volunteer : List.of(volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10)) {
             var id = volunteerService.save(volunteer);
             volunteer.setId(id);
             volunteer.getUser().setId(id);
         }
-
-        return volunteerService;
     }
 
-    @Bean
-    @Primary
-    public InDBBeneficiaryRepository beneficiaryRepository(BeneficiaryDBRepository beneficiaryDBRepository, FamilyMemberDBRepository familyMemberDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
-        return new InDBBeneficiaryRepository(beneficiaryDBRepository, familyMemberDBRepository, userDBRepository, inDBUserRepository);
-    }
-
-    @Bean
-    @Primary
-    public BeneficiaryService beneficiaryFixtureRepository(BeneficiaryRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
-        var beneficiaryService = new BeneficiaryService(repository, roleService, passwordEncoder);
-
+    public void beneficiaryFixtureRepository(BeneficiaryService beneficiaryService) {
         for (Beneficiary beneficiary : List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47)) {
             var id = beneficiaryService.save(beneficiary);
             beneficiary.setId(id);
             beneficiary.getUser().setId(id);
         }
-
-        return beneficiaryService;
     }
 
-    @Bean
-    @Primary
-    public EventRepository eventFixtureRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository, VolunteerService volunteerService, BeneficiaryService beneficiaryService) {
-        var eventRepository = new InDBEventRepository(eventDBRepository, eventSessionDBRepository, eventTimeWindowDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
-        Random random = new Random();
-        List<User> userBeneficiariesInDB = userDBRepository.findAll().stream().filter(user -> !user.getUsername().contains("@croix-rouge.fr")).toList();
-        List<Beneficiary> beneficiaryList = List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47);
+    public void eventFixtureRepository(EventRepository eventRepository) {
+        List<User> userBeneficiariesInDB = List.of(beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47);
+        ZonedDateTime eventLimit = ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 0, 0), ZoneId.of("Europe/Paris"));
 
-        ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 4, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 1, 10, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions1 = new ArrayList<>();
         for (; eventStart1.isBefore(ZonedDateTime.of(LocalDateTime.of(2023, 9, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStart1 = eventStart1.plusDays(14)) {
-            eventSessions1.add(new EventSession(null, List.of(new EventTimeWindow(null, eventStart1, eventStart1.plusHours(8), 12, new ArrayList<>()))));
+            eventSessions1.add(new EventSession(null, List.of(new EventTimeWindow(null, eventStart1, eventStart1.plusHours(8), 0, new ArrayList<>()))));
         }
         Event event1 = new Event(null, "Formation PSC1", "Acquérir les compétences essentielles pour intervenir en cas d'urgence et sauver des vies ! Formation PSC1, une session interactive dispensée par des formateurs certifiés. Apprendre les gestes de premiers secours tels que la réanimation, la position latérale de sécurité et le traitement des hémorragies. Places limitées à 12 personnes. Les stagiaires obtiennent une attestation officielle reconnue nationalement.", volunteerValOrge2, localUnit, eventSessions1, eventSessions1.size());
         eventRepository.save(event1);
 
-        ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 5, 14, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate2 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 2, 14, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions2 = new ArrayList<>();
         for (; eventStartDate2.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate2 = eventStartDate2.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList2 = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(4);
-                var endDate = eventStartDate2.plusMinutes((i + 1) * 30);
-                for (int j = 0; j < numberOfParticipants; j++) {
-                    var bene = beneficiaryList.get(random.nextInt(beneficiaryList.size()));
-                    participants.add(bene.getId());
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
-                    if (!beneficiaryClothProductDates.containsKey(bene)) {
-                        beneficiaryClothProductDates.put(bene, new ArrayList<>());
-                    }
-                    beneficiaryClothProductDates.get(bene).add(endDate.toLocalDateTime());
+                int numberOfParticipants = 0;
+                if (eventStartDate2.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(4);
                 }
-                eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 20), endDate, 4, participants));
+                for (int j = 0; j < numberOfParticipants; j++) {
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList2.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
+                }
+                eventTimeWindowList2.add(new EventTimeWindow(null, eventStartDate2.plusMinutes(i * 20), eventStartDate2.plusMinutes((i + 1) * 20), 4, participants));
             }
             eventSessions2.add(new EventSession(null, eventTimeWindowList2));
         }
         Event event2 = new Event(null, "Ouverture du vestiaire", "Chaque semaine, nous organisons une distribution de vêtements aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge7, localUnit, eventSessions2, eventSessions2.size());
         eventRepository.save(event2);
 
-        ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 6, 16, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate3 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 3, 16, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions3 = new ArrayList<>();
         for (; eventStartDate3.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate3 = eventStartDate3.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList3 = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(6);
-                var endDate = eventStartDate3.plusMinutes((i + 1) * 30);
-                for (int j = 0; j < numberOfParticipants; j++) {
-                    var bene = beneficiaryList.get(random.nextInt(beneficiaryList.size()));
-                    participants.add(bene.getId());
-                    if (!beneficiaryFoodProductDates.containsKey(bene)) {
-                        beneficiaryFoodProductDates.put(bene, new ArrayList<>());
-                    }
-                    beneficiaryFoodProductDates.get(bene).add(endDate.toLocalDateTime());
+                int numberOfParticipants = 0;
+                if (eventStartDate3.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(6);
                 }
-                eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), endDate, 6, participants));
+                for (int j = 0; j < numberOfParticipants; j++) {
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList3.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
+                }
+                eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), eventStartDate3.plusMinutes((i + 1) * 30), 6, participants));
             }
             eventSessions3.add(new EventSession(null, eventTimeWindowList3));
         }
         Event event3 = new Event(null, "EPISOL Lundi", "Chaque semaine, nous ouvrons l'épicerie sociale aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge1, localUnit, eventSessions3, eventSessions3.size());
         eventRepository.save(event3);
 
-        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 8, 16, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate4 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 5, 16, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions4 = new ArrayList<>();
         for (; eventStartDate4.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate4 = eventStartDate4.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList4 = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(6);
+                int numberOfParticipants = 0;
+                if (eventStartDate4.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(6);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList4.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList4.add(new EventTimeWindow(null, eventStartDate4.plusMinutes(i * 30), eventStartDate4.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -433,15 +412,22 @@ public class FixturesConfig {
         Event event4 = new Event(null, "EPISOL Mercredi", "Chaque semaine, nous ouvrons l'épicerie sociale aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge1, localUnit, eventSessions4, eventSessions4.size());
         eventRepository.save(event4);
 
-        ZonedDateTime eventStartDate5 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 10, 16, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate5 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 7, 16, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions5 = new ArrayList<>();
         for (; eventStartDate5.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate5 = eventStartDate5.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList5 = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(6);
+                int numberOfParticipants = 0;
+                if (eventStartDate5.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(6);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList5.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList5.add(new EventTimeWindow(null, eventStartDate5.plusMinutes(i * 30), eventStartDate5.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -450,15 +436,22 @@ public class FixturesConfig {
         Event event5 = new Event(null, "EPISOL Vendredi", "Chaque semaine, nous ouvrons l'épicerie sociale aux personnes dans le besoin. Distribution sur rendez-vous.", volunteerValOrge1, localUnit, eventSessions5, eventSessions5.size());
         eventRepository.save(event5);
 
-        ZonedDateTime eventStartDate6 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 9, 10, 0), ZoneId.of("Europe/Paris"));
+        ZonedDateTime eventStartDate6 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 6, 10, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions6 = new ArrayList<>();
         for (; eventStartDate6.isBefore(ZonedDateTime.of(LocalDateTime.of(2024, 1, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDate6 = eventStartDate6.plusDays(7)) {
             List<EventTimeWindow> eventTimeWindowList6 = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
                 List<ID> participants = new ArrayList<>();
-                int numberOfParticipants = new Random().nextInt(5);
+                int numberOfParticipants = 0;
+                if (eventStartDate6.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(5);
+                }
                 for (int j = 0; j < numberOfParticipants; j++) {
-                    participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowList6.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participants.add(randomBeneficiaryId);
                 }
                 eventTimeWindowList6.add(new EventTimeWindow(null, eventStartDate6.plusMinutes(i * 30), eventStartDate6.plusMinutes((i + 1) * 30), 5, participants));
             }
@@ -469,7 +462,11 @@ public class FixturesConfig {
 
         List<ID> participants = new ArrayList<>();
         for (int j = 0; j < 10; j++) {
-            participants.add(userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId());
+            ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+            while (participants.contains(randomBeneficiaryId)) {
+                randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+            }
+            participants.add(randomBeneficiaryId);
         }
 
         eventRepository.save(new Event(null,
@@ -484,33 +481,15 @@ public class FixturesConfig {
                                 10,
                                 participants)))),
                 1));
-
-        return eventRepository;
     }
 
-    @Bean
-    @Primary
-    public InDBProductLimitRepository productLimitFixtureRepository(ProductLimitDBRepository productLimitDBRepository) {
-        var repo = new InDBProductLimitRepository(productLimitDBRepository);
-
+    public void productLimitFixtureRepository(ProductLimitRepository repo) {
         for (var productLimit : productLimits) {
             repo.save(productLimit);
         }
-
-        return repo;
     }
 
-    @Bean
-    @Primary
-    public InDBProductRepository productFixtureRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
-        return new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
-    }
-
-    @Bean
-    @Primary
-    public InDBClothProductRepository clothProductFixtureRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository, InDBProductLimitRepository productLimitRepository) {
-        InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
-
+    public void clothProductFixtureRepository(ClothProductRepository repository) {
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(2L), cloth2, ClothSize.M, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(3L), cloth3, ClothSize.L, ClothGender.NOT_SPECIFIED));
@@ -526,15 +505,9 @@ public class FixturesConfig {
         repository.save(new ClothProduct(new ID(13L), cloth13, ClothSize.CHILD, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(14L), cloth14, ClothSize.XL, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(15L), cloth15, ClothSize.UNKNOWN, ClothGender.NOT_SPECIFIED));
-
-        return repository;
     }
 
-    @Bean
-    @Primary
-    public InDBFoodProductRepository foodProductFixtureRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
-        var repository = new InDBFoodProductRepository(foodProductDBRepository, productRepository);
-
+    public void foodProductFixtureRepository(FoodProductRepository repository) {
         final LocalDate date = LocalDate.now();
 
         repository.save(new FoodProduct(null,
@@ -642,25 +615,14 @@ public class FixturesConfig {
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 91));
-
-        return repository;
     }
 
-    @Bean
-    @Primary
-    public InDBStorageRepository storageFixtureRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
-        var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
-
+    public void storageFixtureRepository(StorageRepository storageRepository) {
         storageRepository.save(storage);
         storageRepository.save(new Storage(null, "secondStorage", localUnit, address));
-
-        return storageRepository;
     }
 
-    @Bean
-    @Primary
-    public BeneficiaryProductRepository storageUserProductFixtureRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        var repo = new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
+    public void storageUserProductFixtureRepository(BeneficiaryProductRepository repo) {
         Random random = new Random();
 
         var foodProductList = List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15);
@@ -669,11 +631,9 @@ public class FixturesConfig {
         fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates);
 
         fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates);
-
-        return repo;
     }
 
-    private void fillBeneficiaryProductWithRandom(InDBBeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
+    private void fillBeneficiaryProductWithRandom(BeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
         for (var entry : beneficiaryFoodProductDates.entrySet()) {
             for (var date : entry.getValue()) {
                 if (date.isAfter(LocalDateTime.now()))
@@ -693,11 +653,7 @@ public class FixturesConfig {
         }
     }
 
-    @Bean
-    @Primary
-    public StorageProductRepository storageProductFixtureRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
-        StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
-
+    public void storageProductFixtureRepository(StorageProductRepository storageProductRepository) {
         storageProductRepository.save(new StorageProduct(null, storage, cloth1, 5));
         storageProductRepository.save(new StorageProduct(null, storage, cloth2, 8));
         storageProductRepository.save(new StorageProduct(null, storage, cloth3, 15));
@@ -728,7 +684,5 @@ public class FixturesConfig {
         storageProductRepository.save(new StorageProduct(null, storage, food13, 3));
         storageProductRepository.save(new StorageProduct(null, storage, food14, 5));
         storageProductRepository.save(new StorageProduct(null, storage, food15, 10));
-
-        return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
     }
 }

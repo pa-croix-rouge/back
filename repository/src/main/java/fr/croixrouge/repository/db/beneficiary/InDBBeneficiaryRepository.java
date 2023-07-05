@@ -6,16 +6,12 @@ import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 public class InDBBeneficiaryRepository implements BeneficiaryRepository {
-
-    private final Logger logger = LoggerFactory.getLogger(InDBBeneficiaryRepository.class);
 
     private final BeneficiaryDBRepository beneficiaryDBRepository;
 
@@ -63,7 +59,12 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
                 beneficiaryDB.getValidated(),
                 beneficiaryDB.getBirthdate(),
                 beneficiaryDB.getSocialWorkerNumber(),
-                StreamSupport.stream(familyMemberDBRepository.findByBeneficiaryDB_Id(beneficiaryDB.getId()).spliterator(), false).map(familyMemberDB -> new FamilyMember(new ID(familyMemberDB.getId()), familyMemberDB.getFirstname(), familyMemberDB.getLastname(), familyMemberDB.getBirthdate())).toList()
+                StreamSupport.stream(familyMemberDBRepository.findByBeneficiaryDB_Id(beneficiaryDB.getId()).spliterator(), false)
+                        .map(familyMemberDB -> new FamilyMember(new ID(familyMemberDB.getId()),
+                                familyMemberDB.getFirstname(),
+                                familyMemberDB.getLastname(),
+                                familyMemberDB.getBirthdate()))
+                        .toList()
         );
     }
 
@@ -90,18 +91,23 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
 
     @Override
     public ID save(Beneficiary object) {
-        logger.info("InDBBeneficiaryRepository.save " + object.toString());
         var userID = inDBUserRepository.save(object.getUser());
         object.setId(userID);
         var beneficiaryDB = beneficiaryDBRepository.save(toBeneficiaryDB(object));
-        logger.info("InDBBeneficiaryRepository.save " + beneficiaryDB.getId());
+
+        var familyMembers = familyMemberDBRepository.findByBeneficiaryDB_Id(beneficiaryDB.getId());
+        for (var familyMember : familyMembers) {
+            if (object.getFamilyMembers().stream().noneMatch(familyMember1 -> familyMember1.getId().value().equals(familyMember.getId()))) {
+                familyMemberDBRepository.delete(familyMember);
+            }
+        }
+
         object.getFamilyMembers().forEach(familyMember -> familyMemberDBRepository.save(toFamilyMemberDB(familyMember, beneficiaryDB)));
         return userID;
     }
 
     @Override
     public void delete(Beneficiary object) {
-        logger.info("InDBVolunteerRepository.delete " + object.toString());
         beneficiaryDBRepository.delete(toBeneficiaryDB(object));
         userDBRepository.delete(toBeneficiaryDB(object).getUserDB());
     }

@@ -45,4 +45,9 @@ public class InMemoryStorageProductRepository extends InMemoryCRUDRepository<ID,
     public Optional<StorageProduct> findAllByLocalUnitAndProductId(ID localUnitId, ID productId) {
         return null;
     }
+
+    @Override
+    public Optional<StorageProduct> findByProductId(ID productId) {
+        return Optional.empty();
+    }
 }

@@ -96,22 +96,32 @@ public class ClothProductController extends ErrorHandler {
         if (clothProduct == null) {
             return ResponseEntity.notFound().build();
         }
-
+        Storage storage = storageService.findByLocalUnitIdAndId(localUnitId, new ID(createClothProductDTO.getStorageId()));
+        if (storage == null) {
+            return ResponseEntity.notFound().build();
+        }
         ProductLimit productLimit = null;
         if (createClothProductDTO.getLimitID() != null) {
             productLimit = productLimitService.findById(new ID(createClothProductDTO.getLimitID()));
         }
-
         Product product = new Product(clothProduct.getProduct().getId(), createClothProductDTO.toModel().getProduct().getName(), createClothProductDTO.toModel().getProduct().getQuantity(), productLimit);
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
         }
-
         Product productPersisted = productService.findById(productId);
         ClothProduct clothProductUpdated = new ClothProduct(clothProductId, productPersisted, ClothSize.fromLabel(createClothProductDTO.getSize()), ClothGender.fromLabel(createClothProductDTO.getGender()));
         ID clothProductUpdatedId = service.save(clothProductUpdated);
         if (clothProductUpdatedId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        StorageProduct storageProduct = storageProductService.findByProductId(productPersisted.getId());
+        if (storageProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        StorageProduct storageProductUpdated = new StorageProduct(storageProduct.getId(), storage, productPersisted, createClothProductDTO.getAmount());
+        ID storageProductUpdatedId = storageProductService.save(storageProductUpdated);
+        if (storageProductUpdatedId == null) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(clothProductUpdatedId);
@@ -128,16 +138,10 @@ public class ClothProductController extends ErrorHandler {
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
-
-        if(product.getLimit() != null) {
-            productLimitService.delete(product.getLimit());
-        }
-
         StorageProduct storageProduct = storageProductService.findByProduct(product);
         if (storageProduct != null) {
             storageProductService.delete(storageProduct);
         }
-
         service.delete(clothProduct);
         productService.delete(product);
         return ResponseEntity.ok().build();

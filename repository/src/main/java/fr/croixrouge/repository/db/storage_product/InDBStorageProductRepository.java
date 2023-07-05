@@ -92,4 +92,9 @@ public class InDBStorageProductRepository implements StorageProductRepository {
     public Optional<StorageProduct> findAllByLocalUnitAndProductId(ID localUnitId, ID productId) {
         return storageProductDBRepository.findByStorageDB_LocalUnitDB_LocalUnitIDAndProductDB_Id(localUnitId.value(), productId.value()).map(this::toStorageProduct);
     }
+
+    @Override
+    public Optional<StorageProduct> findByProductId(ID productId) {
+        return storageProductDBRepository.findByProductDB_Id(productId.value()).map(this::toStorageProduct);
+    }
 }
