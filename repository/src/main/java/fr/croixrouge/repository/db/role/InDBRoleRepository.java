@@ -89,8 +89,8 @@ public class InDBRoleRepository implements RoleRepository {
 
     @Override
     public List<Role> findAllByLocalUnitId(ID localUnitId) {
-        return Stream.of(roleDBRepository.findByLocalUnitDB_LocalUnitID(localUnitId.value())
-                        , roleDBRepository.findByLocalUnitDB_LocalUnitID(null))
+        return Stream.of(roleDBRepository.findByLocalUnitDB_LocalUnitIDNull(),
+                        roleDBRepository.findByLocalUnitDB_LocalUnitID(localUnitId.value()))
                 .flatMap(Collection::stream)
                 .map(this::toRole)
                 .toList();

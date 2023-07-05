@@ -16,12 +16,16 @@ public class RoleService extends CRUDService<ID, Role, RoleRepository> {
 
     private final UserService userService;
 
-    public RoleService(RoleRepository roleRepository, UserService userService) {
+    private final LocalUnitService localUnitService;
+
+    public RoleService(RoleRepository roleRepository, UserService userService, LocalUnitService localUnitService) {
         super(roleRepository);
         this.userService = userService;
+        this.localUnitService = localUnitService;
     }
 
     public List<Role> getRoleByLocalUnitId(ID localUnitId) {
+        localUnitService.findById(localUnitId);
         return repository.findAllByLocalUnitId(localUnitId);
     }
 

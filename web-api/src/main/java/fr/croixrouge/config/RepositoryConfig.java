@@ -35,49 +35,49 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("prod")
+@Profile({"prod"})
 public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBLocalUnitRepository localTestInDBUnitRepository(LocalUnitDBRepository localUnitDBRepository) {
+    public InDBLocalUnitRepository localUnitRepository(LocalUnitDBRepository localUnitDBRepository) {
         return new InDBLocalUnitRepository(localUnitDBRepository);
     }
 
     @Bean
     @Primary
-    public InDBRoleRepository roleTestRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
+    public InDBRoleRepository roleRepository(RoleDBRepository roleDBRepository, RoleResourceDBRepository roleResourceDBRepository, InDBLocalUnitRepository localUnitDBRepository) {
         return new InDBRoleRepository(roleDBRepository, roleResourceDBRepository, localUnitDBRepository);
 }
 
     @Bean
     @Primary
-    public InDBUserRepository userTestRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+    public InDBUserRepository userRepository(UserDBRepository userDBRepository, InDBRoleRepository roleDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         return new InDBUserRepository(userDBRepository, roleDBRepository, inDBLocalUnitRepository);
     }
 
     @Bean
     @Primary
-    public InDBVolunteerRepository volunteerTestRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
+    public InDBVolunteerRepository volunteerRepository(VolunteerDBRepository volunteerDBRepository, UserDBRepository userDBRepository, InDBUserRepository inDBUserRepository) {
         return new InDBVolunteerRepository(volunteerDBRepository, userDBRepository, inDBUserRepository);
     }
 
     @Bean
     @Primary
-    public EventRepository eventTestRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+    public EventRepository eventRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         return new InDBEventRepository(eventDBRepository, eventSessionDBRepository, eventTimeWindowDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
     }
 
 
     @Bean
     @Primary
-    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
+    public InDBProductRepository productRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
         return new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
     }
 
     @Bean
     @Primary
-    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
+    public InDBProductLimitRepository productLimitRepository(ProductLimitDBRepository productLimitDBRepository) {
         return new InDBProductLimitRepository(productLimitDBRepository);
     }
 
@@ -89,7 +89,7 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBFoodProductRepository foodProductTestRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
+    public InDBFoodProductRepository foodProductRepository(FoodProductDBRepository foodProductDBRepository, InDBProductRepository productRepository) {
         return new InDBFoodProductRepository(foodProductDBRepository, productRepository);
     }
 
@@ -101,23 +101,8 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBStorageRepository storageTestRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
+    public InDBStorageRepository storageRepository(StorageDBRepository storageDBRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         return new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
-    }
-
-    @Bean
-    public BeneficiaryProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        return new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
-    }
-
-    @Bean
-    public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
-        return new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
-    }
-
-    @Bean
-    public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
-        return new StorageProductService(storageProductRepository);
     }
 
 }

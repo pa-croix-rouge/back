@@ -314,7 +314,7 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBClothProductRepository clothProductRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
+    public InDBClothProductRepository clothProductTestRepository(ClothProductDBRepository clothProductDBRepository, InDBProductRepository productRepository) {
         InDBClothProductRepository repository = new InDBClothProductRepository(clothProductDBRepository, productRepository);
 
         repository.save(new ClothProduct(new ID(1L), cloth1, ClothSize.S, ClothGender.NOT_SPECIFIED));
@@ -363,13 +363,13 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public BeneficiaryProductRepository storageUserProductRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
+    public BeneficiaryProductRepository storageUserProductTestRepository(UserProductDBRepository userProductDBRepository, InDBBeneficiaryRepository beneficiaryRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository) {
         return new InDBBeneficiaryProductRepository(userProductDBRepository, beneficiaryRepository, productRepository, storageRepository);
     }
 
     @Bean
     @Primary
-    public StorageProductRepository storageProductRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
+    public StorageProductRepository storageProductTestRepository(StorageProductDBRepository storageProductDBRepository, InDBProductRepository productRepository, InDBStorageRepository storageRepository, InDBFoodProductRepository foodProductRepository, InDBClothProductRepository clothProductRepository) {
         StorageProductRepository storageProductRepository = new InDBStorageProductRepository(storageProductDBRepository, productRepository, storageRepository);
 
         var storage = storageRepository.findById(new ID(1L)).get();
@@ -388,7 +388,7 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public StorageProductService storageProductServiceCore(StorageProductRepository storageProductRepository) {
+    public StorageProductService storageProductServiceTestCore(StorageProductRepository storageProductRepository) {
         return new StorageProductService(storageProductRepository);
     }
 }

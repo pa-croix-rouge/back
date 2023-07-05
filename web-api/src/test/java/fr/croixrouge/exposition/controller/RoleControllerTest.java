@@ -75,6 +75,7 @@ public class RoleControllerTest {
 
         RoleResponse roleResponse = new RoleResponse(
                 null,
+                roleId,
                 "Val d'Orge default role",
                 "Default role for Val d'Orge",
                 roleResources,
@@ -84,7 +85,7 @@ public class RoleControllerTest {
         mockMvc.perform(get("/role/localunit/" + roleId)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$", hasSize(6)))
 //                .andExpect(jsonPath("$[0].name").value(roleResponse.getName()))
 //                .andExpect(jsonPath("$[0].description").value(roleResponse.getDescription()))
         //  .andExpect(jsonPath("$[0].authorizations").value(roleResponse.getAuthorizations()))
@@ -98,7 +99,7 @@ public class RoleControllerTest {
     @Test
     @DisplayName("Test that the role endpoint returns a 404 when given an incorrect local unit id")
     public void roleLocalUnitIdFailedTest() throws Exception {
-        String roleId = "2";
+        String roleId = "953168";
 
         mockMvc.perform(get("/role/localunit/" + roleId)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -149,6 +150,7 @@ public class RoleControllerTest {
 
         RoleResponse roleResponse = new RoleResponse(
                 null,
+                1L,
                 roleCreationRequest.getName(),
                 roleCreationRequest.getDescription(),
                 auths,
