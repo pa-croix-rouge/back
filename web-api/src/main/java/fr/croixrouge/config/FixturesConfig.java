@@ -273,7 +273,7 @@ public class FixturesConfig {
         food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
         food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
 
-        storage = new Storage(null, "defaultStorage", localUnit, address);
+        storage = new Storage(null, "Entrepot de l'unité local", localUnit, address);
     }
 
     @Bean
@@ -338,9 +338,7 @@ public class FixturesConfig {
     @Primary
     public EventRepository eventTestRepository(EventDBRepository eventDBRepository, EventSessionDBRepository eventSessionDBRepository, EventTimeWindowDBRepository eventTimeWindowDBRepository, InDBUserRepository userDBRepository, InDBVolunteerRepository inDBVolunteerRepository, InDBLocalUnitRepository inDBLocalUnitRepository) {
         var eventRepository = new InDBEventRepository(eventDBRepository, eventSessionDBRepository, eventTimeWindowDBRepository, userDBRepository, inDBVolunteerRepository, inDBLocalUnitRepository);
-        Random random = new Random();
         List<User> userBeneficiariesInDB = userDBRepository.findAll().stream().filter(user -> !user.getUsername().contains("@croix-rouge.fr")).toList();
-        List<Beneficiary> beneficiaryList = List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47);
 
         ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 3, 4, 10, 0), ZoneId.of("Europe/Paris"));
         List<EventSession> eventSessions1 = new ArrayList<>();
@@ -644,7 +642,7 @@ public class FixturesConfig {
         var storageRepository = new InDBStorageRepository(storageDBRepository, inDBLocalUnitRepository);
 
         storageRepository.save(storage);
-        storageRepository.save(new Storage(null, "secondStorage", localUnit, address));
+        storageRepository.save(new Storage(null, "Box de l'unité local", localUnit, address));
 
         return storageRepository;
     }
