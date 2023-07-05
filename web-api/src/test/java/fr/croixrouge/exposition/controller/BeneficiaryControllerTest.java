@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,7 +60,8 @@ public class BeneficiaryControllerTest {
                 null,
                 "+33 6 00 00 00 00",
                 true,
-                ID.of(1L)
+                ID.of(1L),
+                List.of()
         );
 
         mockMvc.perform(get("/beneficiaries")

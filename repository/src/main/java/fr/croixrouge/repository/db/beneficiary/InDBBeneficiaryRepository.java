@@ -59,7 +59,12 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
                 beneficiaryDB.getValidated(),
                 beneficiaryDB.getBirthdate(),
                 beneficiaryDB.getSocialWorkerNumber(),
-                StreamSupport.stream(familyMemberDBRepository.findByBeneficiaryDB_Id(beneficiaryDB.getId()).spliterator(), false).map(familyMemberDB -> new FamilyMember(new ID(familyMemberDB.getId()), familyMemberDB.getFirstname(), familyMemberDB.getLastname(), familyMemberDB.getBirthdate())).toList()
+                StreamSupport.stream(familyMemberDBRepository.findByBeneficiaryDB_Id(beneficiaryDB.getId()).spliterator(), false)
+                        .map(familyMemberDB -> new FamilyMember(new ID(familyMemberDB.getId()),
+                                familyMemberDB.getFirstname(),
+                                familyMemberDB.getLastname(),
+                                familyMemberDB.getBirthdate()))
+                        .toList()
         );
     }
 
