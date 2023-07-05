@@ -94,6 +94,14 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
         var userID = inDBUserRepository.save(object.getUser());
         object.setId(userID);
         var beneficiaryDB = beneficiaryDBRepository.save(toBeneficiaryDB(object));
+
+        var familyMembers = familyMemberDBRepository.findByBeneficiaryDB_Id(beneficiaryDB.getId());
+        for (var familyMember : familyMembers) {
+            if (object.getFamilyMembers().stream().noneMatch(familyMember1 -> familyMember1.getId().value().equals(familyMember.getId()))) {
+                familyMemberDBRepository.delete(familyMember);
+            }
+        }
+
         object.getFamilyMembers().forEach(familyMember -> familyMemberDBRepository.save(toFamilyMemberDB(familyMember, beneficiaryDB)));
         return userID;
     }

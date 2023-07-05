@@ -5,6 +5,7 @@ import fr.croixrouge.domain.model.FamilyMember;
 import java.time.LocalDate;
 
 public class FamilyMemberCreationRequest {
+    public Long id;
     public String firstName;
     public String lastName;
     public LocalDate birthDate;

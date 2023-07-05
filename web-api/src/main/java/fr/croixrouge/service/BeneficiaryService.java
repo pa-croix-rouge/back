@@ -88,7 +88,7 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
                 beneficiaryCreationRequest.getSocialWorkerNumber() == null ? beneficiary.getSocialWorkerNumber() : beneficiaryCreationRequest.getSocialWorkerNumber(),
                 beneficiaryCreationRequest.getFamilyMembers() == null ? beneficiary.getFamilyMembers() : beneficiaryCreationRequest.getFamilyMembers().stream()
                         .map(familyMember -> new FamilyMember(
-                                null,
+                                familyMember.id == null ? null : new ID(familyMember.id),
                                 familyMember.firstName,
                                 familyMember.lastName,
                                 familyMember.birthDate))
