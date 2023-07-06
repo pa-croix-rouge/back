@@ -22,7 +22,7 @@ public class MailService {
     final private JavaMailSender mailSender;
 
 
-    MailService(JavaMailSender javaMailSender) {
+    public MailService(JavaMailSender javaMailSender) {
         this.mailSender = javaMailSender;
     }
 

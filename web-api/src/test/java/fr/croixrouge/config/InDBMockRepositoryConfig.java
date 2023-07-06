@@ -30,6 +30,7 @@ import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository
 import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
+import fr.croixrouge.service.MailService;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.*;
@@ -138,6 +139,12 @@ public class InDBMockRepositoryConfig {
         cloth5 = new Product(new ID(7L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
         food1 = new Product(new ID(8L), "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
         food2 = new Product(new ID(9L), "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
+    }
+
+    @Bean
+    @Primary
+    public MailService mockMailService() {
+        return new MockMailService();
     }
 
     @Bean
