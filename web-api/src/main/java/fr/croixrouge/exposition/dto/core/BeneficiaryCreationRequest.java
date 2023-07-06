@@ -18,6 +18,8 @@ public class BeneficiaryCreationRequest extends CreationDTO<Beneficiary> {
     public String socialWorkerNumber;
     public List<FamilyMemberCreationRequest> familyMembers;
 
+    public Long solde;
+
     public BeneficiaryCreationRequest() {
     }
 
@@ -31,6 +33,7 @@ public class BeneficiaryCreationRequest extends CreationDTO<Beneficiary> {
         this.birthDate = birthDate;
         this.socialWorkerNumber = socialWorkerNumber;
         this.familyMembers = familyMembers;
+        this.solde = 0L;
     }
 
     public String getUsername() {
@@ -109,14 +112,14 @@ public class BeneficiaryCreationRequest extends CreationDTO<Beneficiary> {
     public Beneficiary toModel() {
         return new Beneficiary(
                 null,
-                new User(null, this.username, this.password, null, List.of()),
+                new User(null, this.username, this.password, null, List.of(), false, null),
                 this.firstName,
                 this.lastName,
                 this.phoneNumber,
                 false,
                 this.birthDate,
                 this.socialWorkerNumber,
-                familyMembers.stream().map(FamilyMemberCreationRequest::toModel).toList()
-        );
+                familyMembers.stream().map(FamilyMemberCreationRequest::toModel).toList(),
+                solde);
     }
 }

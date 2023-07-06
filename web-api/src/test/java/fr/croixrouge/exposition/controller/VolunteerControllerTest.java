@@ -65,7 +65,8 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true,
-                1L
+                1L,
+                true
         );
 
         mockMvc.perform(get("/volunteer/" + volunteerId)
@@ -90,7 +91,8 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true,
-                1L
+                1L,
+                true
         );
         VolunteerResponse volunteerResponse2 = new VolunteerResponse(
                 2L,
@@ -99,7 +101,8 @@ public class VolunteerControllerTest {
                 "newVolunteerName",
                 "+33 6 00 11 22 33",
                 true,
-                1L
+                1L,
+                true
         );
         VolunteerResponse volunteerResponse3 = new VolunteerResponse(
                 3L,
@@ -108,7 +111,8 @@ public class VolunteerControllerTest {
                 "newVolunteerName2",
                 "+33 6 00 11 22 34",
                 false,
-                1L
+                1L,
+                true
         );
 
         mockMvc.perform(get("/volunteer")
@@ -172,7 +176,8 @@ public class VolunteerControllerTest {
                 "volunteerLastName",
                 "+33 6 00 00 00 00",
                 true,
-                1L
+                1L,
+                true
         );
 
         mockMvc.perform(get("/volunteer/token")
@@ -201,7 +206,7 @@ public class VolunteerControllerTest {
     @DisplayName("Test that the volunteer endpoint register a new volunteer when given the correct parameters")
     public void volunteerCreateSuccessTest() throws Exception {
         VolunteerCreationRequest volunteerCreationRequest = new VolunteerCreationRequest(
-                "newvolunteer@croix-rouge.fr",
+                "newvolunteer@crx.fr",
                 "secretPassword",
                 "John",
                 "Doe",
@@ -219,12 +224,13 @@ public class VolunteerControllerTest {
         System.out.println("Created volunteer id: " + createdVolunteerId);
         VolunteerResponse volunteerResponse = new VolunteerResponse(
                 createdVolunteerId,
-                "newvolunteer@croix-rouge.fr",
+                "newvolunteer@crx.fr",
                 "John",
                 "Doe",
                 "+33 6 00 11 00 11",
                 false,
-                1L
+                1L,
+                true
         );
 
         mockMvc.perform(get("/volunteer/" + createdVolunteerId)

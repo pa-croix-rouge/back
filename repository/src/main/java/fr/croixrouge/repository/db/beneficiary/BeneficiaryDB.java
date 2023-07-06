@@ -36,7 +36,10 @@ public class BeneficiaryDB {
     @Column(name = "socialworkernumber")
     private String socialWorkerNumber;
 
-    public BeneficiaryDB(Long id, String firstname, String lastname, String phonenumber, UserDB userDB, Boolean validated, LocalDate birthdate, String socialWorkerNumber) {
+    @Column(name = "solde")
+    private Long solde;
+
+    public BeneficiaryDB(Long id, String firstname, String lastname, String phonenumber, UserDB userDB, Boolean validated, LocalDate birthdate, String socialWorkerNumber, Long solde) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -45,6 +48,7 @@ public class BeneficiaryDB {
         this.validated = validated;
         this.birthdate = birthdate;
         this.socialWorkerNumber = socialWorkerNumber;
+        this.solde = solde;
     }
 
     public BeneficiaryDB() {
@@ -82,4 +86,9 @@ public class BeneficiaryDB {
     public String getSocialWorkerNumber() {
         return socialWorkerNumber;
     }
+
+    public Long getSolde() {
+        return solde;
+    }
+
 }

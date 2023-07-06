@@ -7,6 +7,7 @@ import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exposition.dto.core.BeneficiaryCreationRequest;
 import fr.croixrouge.exposition.dto.core.BeneficiaryResponse;
 import fr.croixrouge.exposition.dto.core.FamilyMemberCreationRequest;
+import fr.croixrouge.exposition.dto.core.FamilyMemberResponse;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.BeneficiaryService;
 import fr.croixrouge.service.LocalUnitService;
@@ -31,7 +32,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
 
     @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<BeneficiaryResponse> get(HttpServletRequest request) {
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         Beneficiary beneficiary = service.findByUsername(username);
         return ResponseEntity.ok(this.toDTO(beneficiary));
     }
@@ -42,14 +43,13 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok().build();
     }
 
-    //todo : only admin can update beneficiary
     @PostMapping("/validate/{id}")
     public ResponseEntity<BeneficiaryResponse> validateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
         Beneficiary beneficiary = service.findById(id);
         if (beneficiary == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = beneficiary.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
@@ -60,14 +60,13 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok().build();
     }
 
-    //todo : only admin can update beneficiary
     @PostMapping("/invalidate/{id}")
     public ResponseEntity<BeneficiaryResponse> invalidateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
         Beneficiary beneficiary = service.findById(id);
         if (beneficiary == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = beneficiary.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
@@ -84,14 +83,34 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, creationRequest.getUsername(), creationRequest.getPassword(), localUnit, List.of());
-        Beneficiary beneficiary = new Beneficiary(null, user, creationRequest.getFirstName(), creationRequest.getLastName(), creationRequest.getPhoneNumber(), false, creationRequest.getBirthDate(), creationRequest.getSocialWorkerNumber(), creationRequest.getFamilyMembers().stream().map(FamilyMemberCreationRequest::toModel).toList());
+        User user = new User(null, creationRequest.getUsername(), creationRequest.getPassword(), localUnit, List.of(), false, null);
+        Beneficiary beneficiary = new Beneficiary(null,
+                user,
+                creationRequest.getFirstName(),
+                creationRequest.getLastName(),
+                creationRequest.getPhoneNumber(),
+                false,
+                creationRequest.getBirthDate(),
+                creationRequest.getSocialWorkerNumber(),
+                creationRequest.getFamilyMembers().stream()
+                        .map(FamilyMemberCreationRequest::toModel)
+                        .toList(),
+                creationRequest.solde);
 
         ID beneficiaryId = service.save(beneficiary);
         if (beneficiaryId == null) {
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok(beneficiaryId);
+    }
+
+    //update
+    @PutMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Void> update(@RequestBody BeneficiaryCreationRequest creationRequest, HttpServletRequest request) {
+        String username = authenticationService.getUsernameFromJwtToken(request);
+        Beneficiary beneficiary = service.findByUsername(username);
+        service.updateBeneficiary(beneficiary.getId(), creationRequest);
+        return ResponseEntity.ok().build();
     }
 
     @Override
@@ -104,7 +123,12 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 model.getBirthDate(),
                 model.getPhoneNumber(),
                 model.isValidated(),
-                model.getUser().getLocalUnit().getId()
+                model.getUser().getLocalUnit().getId(),
+                model.getFamilyMembers().stream()
+                        .map(FamilyMemberResponse::new)
+                        .toList(),
+                model.getUser().isEmailValidated(),
+                model.getSolde()
         );
     }
 

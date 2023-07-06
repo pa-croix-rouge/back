@@ -5,10 +5,7 @@ import fr.croixrouge.domain.repository.RoleRepository;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,4 +81,18 @@ public class RoleService extends CRUDService<ID, Role, RoleRepository> {
         return userService.findByRole(findById(roleID));
     }
 
+    public Map<Resources, Set<Operations>> getUserAuthorizations(ID roleId) {
+        List<Map<Resources, Set<Operations>>> authList = getUserRole(roleId).stream().map(Role::getAuthorizations).toList();
+        Map<Resources, Set<Operations>> auths = new HashMap<>();
+        for (Map<Resources, Set<Operations>> auth : authList) {
+            for (Resources resource : auth.keySet()) {
+                if (auths.containsKey(resource)) {
+                    auths.get(resource).addAll(auth.get(resource));
+                } else {
+                    auths.put(resource, auth.get(resource));
+                }
+            }
+        }
+        return auths;
+    }
 }

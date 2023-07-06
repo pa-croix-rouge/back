@@ -30,6 +30,7 @@ import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository
 import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
 import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
+import fr.croixrouge.service.MailService;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.*;
@@ -109,25 +110,26 @@ public class InDBMockRepositoryConfig {
                 localUnit,
                 List.of());
 
-        defaultUser = new User(null, "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of(defaultRole));
+        defaultUser = new User(null, "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of(defaultRole), true, null);
 
-        managerUser = new User(null, "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
+        managerUser = new User(null, "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole), true, null);
 
-        beneficiaryUser = new User(null, "benefUser", passwordEncoder.encode("benefPassword"), localUnit, List.of(defaultRole));
+        beneficiaryUser = new User(null, "benefUser", passwordEncoder.encode("benefPassword"), localUnit, List.of(defaultRole), true, null);
 
         volunteer1 = new Volunteer(null, managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
         southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
 
-        beneficiary1 = new Beneficiary(null, beneficiaryUser, "beneficiaryFirstName", "beneficiaryLastName", "+33 6 00 00 00 00", true, LocalDate.of(2000, 6, 1), "1223", List.of());
+        beneficiary1 = new Beneficiary(null, beneficiaryUser, "beneficiaryFirstName", "beneficiaryLastName", "+33 6 00 00 00 00", true, LocalDate.of(2000, 6, 1), "1223", List.of(), 0L);
 
-        userForAuthTest = new User(null, "userForAuthTest", passwordEncoder.encode("userForAuthTestPassword"), southernLocalUnit, List.of(roleForAuthTest));
+        userForAuthTest = new User(null, "userForAuthTest", passwordEncoder.encode("userForAuthTestPassword"), southernLocalUnit, List.of(roleForAuthTest), true, null);
 
-        southernManagerUser = new User(null, "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
+        southernManagerUser = new User(null, "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole), true, null);
 
         southernVolunteer1 = new Volunteer(null, southernManagerUser, "southernVolunteer", "southernVolunteerName", "+33 6 83 83 83 83", true);
 
-        volunteerUser = new User(null, "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of());
+        volunteerUser = new User(null, "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of(defaultRole), true, null);
+
         product1 = new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
         product2 = new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null);
         cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
@@ -137,6 +139,12 @@ public class InDBMockRepositoryConfig {
         cloth5 = new Product(new ID(7L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
         food1 = new Product(new ID(8L), "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
         food2 = new Product(new ID(9L), "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
+    }
+
+    @Bean
+    @Primary
+    public MailService mockMailService() {
+        return new MockMailService();
     }
 
     @Bean

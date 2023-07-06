@@ -37,7 +37,16 @@ public class VolunteerController extends ErrorHandler {
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
-        return new VolunteerResponse(model.getId().value(), model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getUser().getLocalUnit().getId().value());
+        return new VolunteerResponse(
+                model.getId().value(),
+                model.getUser().getUsername(),
+                model.getFirstName(),
+                model.getLastName(),
+                model.getPhoneNumber(),
+                model.isValidated(),
+                model.getUser().getLocalUnit().getId().value(),
+                model.getUser().isEmailValidated()
+        );
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
@@ -48,7 +57,7 @@ public class VolunteerController extends ErrorHandler {
 
     @GetMapping
     public ResponseEntity<List<VolunteerResponse>> findAll(HttpServletRequest request) {
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
         var test = service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId());
         return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId()).stream().map(this::toDTO).sorted(Comparator.comparing(v -> v.username)).collect(Collectors.toList()));
@@ -56,7 +65,7 @@ public class VolunteerController extends ErrorHandler {
 
     @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<VolunteerResponse> get(HttpServletRequest request) {
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
         return ResponseEntity.ok(this.toDTO(volunteer));
     }
@@ -67,7 +76,7 @@ public class VolunteerController extends ErrorHandler {
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
+        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of(), false, null);
         Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false);
 
         ID volunteerId = service.save(volunteer);
@@ -84,7 +93,7 @@ public class VolunteerController extends ErrorHandler {
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = volunteer.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
@@ -102,7 +111,7 @@ public class VolunteerController extends ErrorHandler {
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = volunteer.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
@@ -120,7 +129,7 @@ public class VolunteerController extends ErrorHandler {
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = volunteer.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)
                 && !volunteer.getUser().getUsername().equals(username)) {

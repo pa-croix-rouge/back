@@ -3,7 +3,7 @@ package fr.croixrouge.repository.db.beneficiary;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Table(name = "family_member")
@@ -21,7 +21,7 @@ public class FamilyMemberDB {
     private String lastname;
 
     @Column(name = "birthdate")
-    private ZonedDateTime birthdate;
+    private LocalDate birthdate;
 
     @ManyToOne
     @JoinColumn(name = "beneficiary_db_id")
@@ -35,7 +35,7 @@ public class FamilyMemberDB {
         this.beneficiaryDB = beneficiaryDB;
     }
 
-    public FamilyMemberDB(Long id, String firstname, String lastname, ZonedDateTime birthdate, BeneficiaryDB beneficiaryDB) {
+    public FamilyMemberDB(Long id, String firstname, String lastname, LocalDate birthdate, BeneficiaryDB beneficiaryDB) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -70,11 +70,11 @@ public class FamilyMemberDB {
         this.lastname = lastname;
     }
 
-    public ZonedDateTime getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(ZonedDateTime birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 

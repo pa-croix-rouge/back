@@ -19,10 +19,13 @@ public class ProductLimitService extends CRUDService<ID, ProductLimit, ProductLi
 
     private final FoodProductService foodProductService;
 
-    public ProductLimitService(ProductLimitRepository productLimitRepository, ClothProductService clothProductService, FoodProductService foodProductService) {
+    private final ProductService productService;
+
+    public ProductLimitService(ProductLimitRepository productLimitRepository, ClothProductService clothProductService, FoodProductService foodProductService, ProductService productService) {
         super(productLimitRepository);
         this.clothProductService = clothProductService;
         this.foodProductService = foodProductService;
+        this.productService = productService;
     }
 
     public void update(ID id, CreateProductLimitDTO createProductLimitDTO) {
@@ -36,6 +39,12 @@ public class ProductLimitService extends CRUDService<ID, ProductLimit, ProductLi
         );
 
         save(newProductLimit);
+    }
+
+    @Override
+    public void delete(ProductLimit object) {
+        productService.removeAllProductLimit(object.getId());
+        super.delete(object);
     }
 
     public Pair<List<FoodProduct>, List<ClothProduct>> getProductsByLimit(ID localUnitId, ID limitId) {

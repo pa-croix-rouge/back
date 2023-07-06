@@ -1,14 +1,14 @@
 package fr.croixrouge.domain.model;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 public class FamilyMember {
     private final ID id;
     private final String firstName;
     private final String lastName;
-    private final ZonedDateTime birthDate;
+    private final LocalDate birthDate;
 
-    public FamilyMember(ID id, String firstName, String lastName, ZonedDateTime birthDate) {
+    public FamilyMember(ID id, String firstName, String lastName, LocalDate birthDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -27,7 +27,7 @@ public class FamilyMember {
         return lastName;
     }
 
-    public ZonedDateTime getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 }

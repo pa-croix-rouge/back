@@ -68,18 +68,15 @@ public class FoodProductController extends ErrorHandler {
         if (storage == null) {
             return ResponseEntity.notFound().build();
         }
-
         ProductLimit productLimit = null;
         if (model.getLimitID() != null) {
             productLimit = productLimitService.findById(new ID(model.getLimitID()));
         }
-
         Product product = model.toModel(productLimit).getProduct();
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
         }
-
         Product productPersisted = productService.findById(productId);
         FoodProduct foodProduct = new FoodProduct(null, productPersisted, FoodConservation.fromLabel(model.getFoodConservation()), CreateFoodProductDTO.toLocalDateTime(model.getExpirationDate()), CreateFoodProductDTO.toLocalDateTime(model.getOptimalConsumptionDate()), model.getPrice());
         ID foodProductId = service.save(foodProduct);
@@ -101,21 +98,32 @@ public class FoodProductController extends ErrorHandler {
         if (foodProduct == null) {
             return ResponseEntity.notFound().build();
         }
+        Storage storage = storageService.findByLocalUnitIdAndId(localUnitId, new ID(model.getStorageId()));
+        if (storage == null) {
+            return ResponseEntity.notFound().build();
+        }
         ProductLimit productLimit = null;
         if (model.getLimitID() != null) {
             productLimit = productLimitService.findById(new ID(model.getLimitID()));
         }
-
         Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), productLimit);
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
         }
-
         Product productPersisted = productService.findById(productId);
         FoodProduct foodProductUpdated = new FoodProduct(id, productPersisted, model.toModel().getFoodConservation(), model.toModel().getExpirationDate(), model.toModel().getOptimalConsumptionDate(), model.getPrice());
         ID foodProductUpdatedId = service.save(foodProductUpdated);
         if (foodProductUpdatedId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        StorageProduct storageProduct = storageProductService.findByProductId(productPersisted.getId());
+        if (storageProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        StorageProduct storageProductUpdated = new StorageProduct(storageProduct.getId(), storage, productPersisted, model.getAmount());
+        ID storageProductUpdatedId = storageProductService.save(storageProductUpdated);
+        if (storageProductUpdatedId == null) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(foodProductUpdatedId);
@@ -127,21 +135,14 @@ public class FoodProductController extends ErrorHandler {
         if (foodProduct == null) {
             return ResponseEntity.notFound().build();
         }
-
         Product product = productService.findById(foodProduct.getProduct().getId());
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
-
-        if(product.getLimit() != null) {
-            productLimitService.delete(product.getLimit());
-        }
-
         StorageProduct storageProduct = storageProductService.findByProduct(product);
         if (storageProduct != null) {
             storageProductService.delete(storageProduct);
         }
-
         service.delete(foodProduct);
         productService.delete(product);
         return ResponseEntity.ok().build();
