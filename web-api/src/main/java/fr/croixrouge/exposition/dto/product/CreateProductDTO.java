@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.dto.product;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.CreationDTO;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.Product;
@@ -35,7 +36,17 @@ public class CreateProductDTO extends CreationDTO<Product> {
 
     @Override
     public Product toModel() {
-        return new Product(null, name, quantity.toQuantifier(), null);
+        return new Product(null,
+                name,
+                quantity.toQuantifier(),
+                null, null);
+    }
+
+    public Product toModel(ID localUnitId) {
+        return new Product(null,
+                name,
+                quantity.toQuantifier(),
+                null, localUnitId);
     }
 
 }

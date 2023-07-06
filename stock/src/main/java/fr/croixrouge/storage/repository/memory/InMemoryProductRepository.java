@@ -8,6 +8,7 @@ import fr.croixrouge.storage.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class InMemoryProductRepository extends InMemoryCRUDRepository<ID, Product> implements ProductRepository {
 
@@ -21,6 +22,16 @@ public class InMemoryProductRepository extends InMemoryCRUDRepository<ID, Produc
 
     @Override
     public List<Product> findAllWithProductLimit(ID productLimitId) {
+        return null;
+    }
+
+    @Override
+    public Optional<Product> findByIdAndLocalUnitId(ID id, ID localUnitId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Product> findAllByLocalUnitId(ID localUnitId) {
         return null;
     }
 

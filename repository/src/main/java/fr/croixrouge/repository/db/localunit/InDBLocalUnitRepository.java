@@ -52,6 +52,11 @@ public class InDBLocalUnitRepository implements LocalUnitRepository {
         );
     }
 
+
+    public Optional<LocalUnitDB> findDBById(ID id) {
+        return localUnitDBRepository.findById(id.value());
+    }
+
     @Override
     public Optional<LocalUnit> findById(ID id) {
         return localUnitDBRepository.findById(id.value()).map(this::toLocalUnit);

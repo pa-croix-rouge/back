@@ -1,6 +1,7 @@
 package fr.croixrouge.repository.db.product;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
 import fr.croixrouge.repository.db.product_limit.InDBProductLimitRepository;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.model.quantifier.MeasurementUnit;
@@ -17,9 +18,12 @@ public class InDBProductRepository implements ProductRepository {
 
     private final InDBProductLimitRepository inDBProductLimitRepository;
 
-    public InDBProductRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
+    private final LocalUnitDBRepository inDBLocalUnitRepository;
+
+    public InDBProductRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository, LocalUnitDBRepository inDBLocalUnitRepository) {
         this.productDBRepository = productDBRepository;
         this.inDBProductLimitRepository = inDBProductLimitRepository;
+        this.inDBLocalUnitRepository = inDBLocalUnitRepository;
     }
 
     public Product toProduct(ProductDB productDB) {
@@ -28,8 +32,8 @@ public class InDBProductRepository implements ProductRepository {
                 productDB.getName(),
                 new Quantifier(productDB.getQuantity(),
                         MeasurementUnit.fromName(productDB.getUnit())),
-                inDBProductLimitRepository.toProductLimit(productDB.getProductLimitDB())
-        );
+                inDBProductLimitRepository.toProductLimit(productDB.getProductLimitDB()),
+                new ID(productDB.getLocalUnitDB().getLocalUnitID()));
     }
 
     public ProductDB toProductDB(Product product) {
@@ -38,8 +42,8 @@ public class InDBProductRepository implements ProductRepository {
                 product.getName(),
                 product.getQuantity().getQuantity(),
                 product.getQuantity().getUnit().getName(),
-                inDBProductLimitRepository.toProductLimitDB(product.getLimit())
-        );
+                inDBProductLimitRepository.toProductLimitDB(product.getLimit()),
+                inDBLocalUnitRepository.findById(product.getLocalUnitId().value()).orElseThrow());
     }
 
     @Override
@@ -69,6 +73,19 @@ public class InDBProductRepository implements ProductRepository {
     @Override
     public List<Product> findAllWithProductLimit(ID productLimitId) {
         return productDBRepository.findByProductLimitDB_Id(productLimitId.value()).stream()
+                .map(this::toProduct)
+                .toList();
+    }
+
+    @Override
+    public Optional<Product> findByIdAndLocalUnitId(ID id, ID localUnitId) {
+        return productDBRepository.findByIdAndLocalUnitDB_LocalUnitID(id.value(), localUnitId.value())
+                .map(this::toProduct);
+    }
+
+    @Override
+    public List<Product> findAllByLocalUnitId(ID localUnitId) {
+        return productDBRepository.findByLocalUnitDB_LocalUnitID(localUnitId.value()).stream()
                 .map(this::toProduct)
                 .toList();
     }

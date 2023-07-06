@@ -1,9 +1,9 @@
 package fr.croixrouge.repository.db.product;
 
+import fr.croixrouge.repository.db.localunit.LocalUnitDB;
 import fr.croixrouge.repository.db.product_limit.ProductLimitDB;
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -33,23 +33,20 @@ public class ProductDB {
     @Column(name = "deleted")
     private LocalDateTime deletionDate;
 
-    public LocalDateTime getDeletionDate() {
-        return deletionDate;
-    }
-
-    public void setDeletionDate(LocalDateTime deletionDate) {
-        this.deletionDate = deletionDate;
-    }
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "local_unit_db_localunit_id", nullable = false)
+    private LocalUnitDB localUnitDB;
 
     public ProductDB() {
     }
 
-    public ProductDB(Long id, String name, Double quantity, String unit, ProductLimitDB productLimitDB) {
+    public ProductDB(Long id, String name, Double quantity, String unit, ProductLimitDB productLimitDB, LocalUnitDB localUnitDB) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
         this.productLimitDB = productLimitDB;
+        this.localUnitDB = localUnitDB;
     }
 
     public String getName() {
@@ -63,10 +60,6 @@ public class ProductDB {
 
     public ProductLimitDB getProductLimitDB() {
         return productLimitDB;
-    }
-
-    public void setProductLimitDB(ProductLimitDB productLimitDB) {
-        this.productLimitDB = productLimitDB;
     }
 
     public Long getId() {
@@ -84,4 +77,13 @@ public class ProductDB {
     public String getUnit() {
         return unit;
     }
+
+    public LocalUnitDB getLocalUnitDB() {
+        return localUnitDB;
+    }
+
+    public LocalDateTime getDeletionDate() {
+        return deletionDate;
+    }
+
 }

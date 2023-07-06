@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.dto.product;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.CreationDTO;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.FoodConservation;
@@ -86,16 +87,16 @@ public class CreateFoodProductDTO extends CreationDTO<FoodProduct> {
     @Override
     public FoodProduct toModel() {
         return new FoodProduct(null,
-                new Product(null, name, quantity.toQuantifier(), null),
+                new Product(null, name, quantity.toQuantifier(), null, null),
                 FoodConservation.fromLabel(foodConservation),
                 toLocalDateTime(expirationDate),
                 toLocalDateTime(optimalConsumptionDate),
                 price);
     }
 
-    public FoodProduct toModel(ProductLimit limit) {
+    public FoodProduct toModel(ProductLimit limit, ID localUnitId) {
         return new FoodProduct(null,
-                new Product(null, name, quantity.toQuantifier(), limit),
+                new Product(null, name, quantity.toQuantifier(), limit, localUnitId),
                 FoodConservation.fromLabel(foodConservation),
                 toLocalDateTime(expirationDate),
                 toLocalDateTime(optimalConsumptionDate),
