@@ -1,6 +1,7 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.model.product.ClothProduct;
 import fr.croixrouge.storage.model.product.FoodProduct;
@@ -21,13 +22,11 @@ import java.util.stream.Collectors;
 @Service
 public class BeneficiaryProductService extends fr.croixrouge.storage.service.BeneficiaryProductService {
 
-    private final FoodProductRepository foodProductRepository;
 
     private final ClothProductRepository clothProductRepository;
 
-    public BeneficiaryProductService(BeneficiaryProductRepository beneficiaryProductRepository, StorageProductService storageProductService, FoodProductRepository foodProductRepository, ClothProductRepository clothProductRepository) {
-        super(beneficiaryProductRepository, storageProductService);
-        this.foodProductRepository = foodProductRepository;
+    public BeneficiaryProductService(BeneficiaryProductRepository beneficiaryProductRepository, StorageProductService storageProductService, FoodProductRepository foodProductRepository, ClothProductRepository clothProductRepository, BeneficiaryRepository beneficiaryRepository) {
+        super(beneficiaryProductRepository, storageProductService, beneficiaryRepository, foodProductRepository);
         this.clothProductRepository = clothProductRepository;
     }
 

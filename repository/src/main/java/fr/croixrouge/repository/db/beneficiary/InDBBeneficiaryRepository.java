@@ -36,7 +36,8 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
                 inDBUserRepository.toUserDB(beneficiary.getUser()),
                 beneficiary.isValidated(),
                 beneficiary.getBirthDate(),
-                beneficiary.getSocialWorkerNumber()
+                beneficiary.getSocialWorkerNumber(),
+                beneficiary.getSolde()
         );
     }
 
@@ -64,8 +65,8 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
                                 familyMemberDB.getFirstname(),
                                 familyMemberDB.getLastname(),
                                 familyMemberDB.getBirthdate()))
-                        .toList()
-        );
+                        .toList(),
+                beneficiaryDB.getSolde());
     }
 
     @Override
@@ -120,5 +121,10 @@ public class InDBBeneficiaryRepository implements BeneficiaryRepository {
     @Override
     public List<Beneficiary> findAllByLocalUnitId(ID id) {
         return beneficiaryDBRepository.findByLocalUnitDB_Id(id.value()).stream().map(this::toBeneficiary).toList();
+    }
+
+    @Override
+    public void updateSolde(ID id, Double solde) {
+        beneficiaryDBRepository.updateSoldeById(solde, id.value());
     }
 }

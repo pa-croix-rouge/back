@@ -23,5 +23,8 @@ public interface BeneficiaryDBRepository extends CrudRepository<BeneficiaryDB, L
     @Query("update BeneficiaryDB b set b.validated = ?1 where b.id = ?2")
     int updateValidatedById(Boolean validated, Long id);
 
-
+    @Transactional
+    @Modifying
+    @Query("update BeneficiaryDB b set b.solde = ?1 where b.id = ?2")
+    int updateSoldeById(Double solde, Long id);
 }

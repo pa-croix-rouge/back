@@ -2,11 +2,13 @@ package fr.croixrouge.storage.service;
 
 import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.model.Storage;
 import fr.croixrouge.storage.model.StorageProduct;
 import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.repository.BeneficiaryProductRepository;
+import fr.croixrouge.storage.repository.FoodProductRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,9 +20,15 @@ public class BeneficiaryProductService {
 
     protected final StorageProductService storageProductService;
 
-    public BeneficiaryProductService(BeneficiaryProductRepository beneficiaryProductRepository, StorageProductService storageProductService) {
+    protected final BeneficiaryRepository beneficiaryRepository;
+
+    protected final FoodProductRepository foodProductRepository;
+
+    public BeneficiaryProductService(BeneficiaryProductRepository beneficiaryProductRepository, StorageProductService storageProductService, BeneficiaryRepository beneficiaryRepository, FoodProductRepository foodProductRepository) {
         this.beneficiaryProductRepository = beneficiaryProductRepository;
         this.storageProductService = storageProductService;
+        this.beneficiaryRepository = beneficiaryRepository;
+        this.foodProductRepository = foodProductRepository;
     }
 
     public void addProduct(Beneficiary beneficiary, StorageProduct storageProduct, int quantity) {
@@ -28,9 +36,9 @@ public class BeneficiaryProductService {
     }
 
     public ID addProduct(Beneficiary beneficiary, StorageProduct storageProduct, int quantity, LocalDateTime date) {
-        if (!canAddProduct(beneficiary, storageProduct.getStorage(), storageProduct.getProduct(), quantity)) {
-            throw new IllegalArgumentException("Limit reached");
-        }
+//        if (!canAddProduct(beneficiary, storageProduct.getStorage(), storageProduct.getProduct(), quantity)) {
+//            throw new IllegalArgumentException("Limit reached");
+//        }
 
         BeneficiaryProduct userProduct;
         var already = beneficiaryProductRepository.findByID(storageProduct.getStorage().getId(), storageProduct.getProduct().getId(), date);
@@ -47,6 +55,10 @@ public class BeneficiaryProductService {
 
         var id = beneficiaryProductRepository.save(userProduct);
         storageProductService.removeProduct(storageProduct.getId(), quantity);
+
+        foodProductRepository.findByProductId(storageProduct.getProduct().getId()).ifPresent(foodProduct -> {
+            beneficiaryRepository.updateSolde(beneficiary.getId(), beneficiary.getSolde() - foodProduct.getPrice() * quantity);
+        });
 
         return id;
     }
