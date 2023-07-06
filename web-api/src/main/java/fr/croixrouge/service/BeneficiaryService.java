@@ -51,8 +51,8 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
                 beneficiary.isValidated(),
                 beneficiary.getBirthDate(),
                 beneficiary.getSocialWorkerNumber(),
-                beneficiary.getFamilyMembers()
-
+                beneficiary.getFamilyMembers(),
+                beneficiary.getSolde()
         );
 
 
