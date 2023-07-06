@@ -14,14 +14,12 @@ public class BeneficiaryResponse {
     public String lastName;
     public LocalDate birthDate;
     public String phoneNumber;
-
     public boolean isValidated;
-
     public Long localUnitId;
-
+    public Long solde;
     public List<FamilyMemberResponse> familyMembers;
 
-    public BeneficiaryResponse(Long id, String username, String firstName, String lastName, LocalDate birthDate, String phoneNumber, boolean isValidated, ID localUnitId, List<FamilyMemberResponse> familyMembers) {
+    public BeneficiaryResponse(Long id, String username, String firstName, String lastName, LocalDate birthDate, String phoneNumber, boolean isValidated, ID localUnitId, List<FamilyMemberResponse> familyMembers, Long solde) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -31,6 +29,7 @@ public class BeneficiaryResponse {
         this.isValidated = isValidated;
         this.localUnitId = localUnitId.value();
         this.familyMembers = familyMembers;
+        this.solde = solde;
     }
 
     public String getUsername() {
@@ -55,5 +54,17 @@ public class BeneficiaryResponse {
 
     public Long getLocalUnitId() {
         return localUnitId;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public Long getSolde() {
+        return solde;
+    }
+
+    public List<FamilyMemberResponse> getFamilyMembers() {
+        return familyMembers;
     }
 }

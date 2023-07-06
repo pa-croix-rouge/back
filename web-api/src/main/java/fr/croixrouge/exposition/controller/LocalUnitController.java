@@ -44,7 +44,7 @@ public class LocalUnitController extends CRUDController<ID, LocalUnit, LocalUnit
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.badRequest().build();
         }

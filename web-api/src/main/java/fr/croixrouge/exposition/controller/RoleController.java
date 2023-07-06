@@ -1,28 +1,35 @@
 package fr.croixrouge.exposition.controller;
 
 import fr.croixrouge.domain.model.ID;
+import fr.croixrouge.domain.model.Operations;
+import fr.croixrouge.domain.model.Resources;
 import fr.croixrouge.domain.model.Role;
-import fr.croixrouge.domain.model.User;
 import fr.croixrouge.exposition.dto.core.RoleAuthResponse;
 import fr.croixrouge.exposition.dto.core.RoleCreationRequest;
 import fr.croixrouge.exposition.dto.core.RoleResponse;
-import fr.croixrouge.exposition.dto.core.ShortVolunteerResponse;
+import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.LocalUnitService;
 import fr.croixrouge.service.RoleService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/role")
 public class RoleController extends CRUDController<ID, Role, RoleService, RoleResponse, RoleCreationRequest> {
 
+    private final AuthenticationService authenticationService;
+
     private final LocalUnitService localUnitService;
 
-    public RoleController(RoleService roleService, LocalUnitService localUnitService) {
+    public RoleController(RoleService roleService, AuthenticationService authenticationService, LocalUnitService localUnitService) {
         super(roleService);
+        this.authenticationService = authenticationService;
         this.localUnitService = localUnitService;
     }
 
@@ -82,4 +89,9 @@ public class RoleController extends CRUDController<ID, Role, RoleService, RoleRe
         return ResponseEntity.ok(service.getUserRole( userId).stream().map(RoleResponse::fromRole).toList());
     }
 
+    @GetMapping("user/auths")
+    public ResponseEntity<Map<Resources, Set<Operations>>> getUserRoleByToken(HttpServletRequest request) {
+        ID userId = authenticationService.getUserIdFromJwtToken(request);
+        return ResponseEntity.ok(service.getUserAuthorizations(userId));
+    }
 }

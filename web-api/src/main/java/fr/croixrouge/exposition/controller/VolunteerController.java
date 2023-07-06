@@ -48,7 +48,7 @@ public class VolunteerController extends ErrorHandler {
 
     @GetMapping
     public ResponseEntity<List<VolunteerResponse>> findAll(HttpServletRequest request) {
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
         var test = service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId());
         return ResponseEntity.ok(service.findAllByLocalUnitId(volunteer.getUser().getLocalUnit().getId()).stream().map(this::toDTO).sorted(Comparator.comparing(v -> v.username)).collect(Collectors.toList()));
@@ -56,7 +56,7 @@ public class VolunteerController extends ErrorHandler {
 
     @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<VolunteerResponse> get(HttpServletRequest request) {
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         Volunteer volunteer = service.findByUsername(username);
         return ResponseEntity.ok(this.toDTO(volunteer));
     }
@@ -84,7 +84,7 @@ public class VolunteerController extends ErrorHandler {
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = volunteer.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
@@ -102,7 +102,7 @@ public class VolunteerController extends ErrorHandler {
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = volunteer.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
@@ -120,7 +120,7 @@ public class VolunteerController extends ErrorHandler {
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = volunteer.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)
                 && !volunteer.getUser().getUsername().equals(username)) {

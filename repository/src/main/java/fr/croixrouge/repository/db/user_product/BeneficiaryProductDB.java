@@ -33,7 +33,6 @@ public class BeneficiaryProductDB {
     @Column(name = "number", nullable = false)
     private Integer number;
 
-
     public BeneficiaryProductDB() {
     }
 

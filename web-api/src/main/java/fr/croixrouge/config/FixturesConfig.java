@@ -7,33 +7,8 @@ import fr.croixrouge.model.Event;
 import fr.croixrouge.model.EventSession;
 import fr.croixrouge.model.EventTimeWindow;
 import fr.croixrouge.repository.EventRepository;
-import fr.croixrouge.repository.db.beneficiary.BeneficiaryDBRepository;
-import fr.croixrouge.repository.db.beneficiary.FamilyMemberDBRepository;
-import fr.croixrouge.repository.db.beneficiary.InDBBeneficiaryRepository;
-import fr.croixrouge.repository.db.event.EventDBRepository;
-import fr.croixrouge.repository.db.event.EventSessionDBRepository;
-import fr.croixrouge.repository.db.event.EventTimeWindowDBRepository;
-import fr.croixrouge.repository.db.event.InDBEventRepository;
-import fr.croixrouge.repository.db.localunit.InDBLocalUnitRepository;
-import fr.croixrouge.repository.db.localunit.LocalUnitDBRepository;
-import fr.croixrouge.repository.db.product.*;
-import fr.croixrouge.repository.db.product_limit.InDBProductLimitRepository;
-import fr.croixrouge.repository.db.product_limit.ProductLimitDBRepository;
-import fr.croixrouge.repository.db.role.InDBRoleRepository;
-import fr.croixrouge.repository.db.role.RoleDBRepository;
-import fr.croixrouge.repository.db.role.RoleResourceDBRepository;
-import fr.croixrouge.repository.db.storage.InDBStorageRepository;
-import fr.croixrouge.repository.db.storage.StorageDBRepository;
-import fr.croixrouge.repository.db.storage_product.InDBStorageProductRepository;
-import fr.croixrouge.repository.db.storage_product.StorageProductDBRepository;
-import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
-import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository;
-import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
-import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
-import fr.croixrouge.repository.db.volunteer.VolunteerDBRepository;
 import fr.croixrouge.service.BeneficiaryService;
-import fr.croixrouge.service.RoleService;
 import fr.croixrouge.service.VolunteerService;
 import fr.croixrouge.storage.model.BeneficiaryProduct;
 import fr.croixrouge.storage.model.Storage;
@@ -42,10 +17,7 @@ import fr.croixrouge.storage.model.product.*;
 import fr.croixrouge.storage.model.quantifier.*;
 import fr.croixrouge.storage.repository.*;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.*;
 import java.util.*;
@@ -81,10 +53,12 @@ public class FixturesConfig {
                           BeneficiaryProductRepository storageUserProductRepository,
                           UserDBRepository userDBRepository) {
 
+        var random = new Random();
+
         localUnit = new LocalUnit(new ID(1L),
                 "Unité Local du Val d'Orge",
                 address,
-                "bernard.lhuillier@croix-rouge.fr",
+                "bernard.lhuillier@crx.fr",
                 address.getPostalCode() + "-181");
 
 
@@ -116,18 +90,18 @@ public class FixturesConfig {
                 localUnit,
                 List.of());
 
-        managerValOrge = new User(null, "bernard.lhuillier@croix-rouge.fr", "Password.123", localUnit, List.of(managerRoleValOrge));
+        managerValOrge = new User(null, "bernard.lhuillier@crx.fr", "Password.123", localUnit, List.of(managerRoleValOrge));
 
-        volunteerUserValOrge1 = new User(null, "valerie.leroux@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge2 = new User(null, "jerome.piat@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge3 = new User(null, "elodie.lechervy@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge4 = new User(null, "hugo.jean@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge5 = new User(null, "sebastien.joubert@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge6 = new User(null, "thomas.georget@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge7 = new User(null, "gael.germain@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge8 = new User(null, "charles.lefeuvre@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge9 = new User(null, "emilie.lassalas@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
-        volunteerUserValOrge10 = new User(null, "anne.ozanne@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge1 = new User(null, "valerie.leroux@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge2 = new User(null, "jerome.piat@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge3 = new User(null, "elodie.lechervy@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge4 = new User(null, "hugo.jean@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge5 = new User(null, "sebastien.joubert@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge6 = new User(null, "thomas.georget@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge7 = new User(null, "gael.germain@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge8 = new User(null, "charles.lefeuvre@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge9 = new User(null, "emilie.lassalas@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
+        volunteerUserValOrge10 = new User(null, "anne.ozanne@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge));
 
         volunteerManagerValOrge = new Volunteer(null, managerValOrge, "Bernard", "L’HUILLIER", "+33 6 52 87 37 55", true);
         volunteerValOrge1 = new Volunteer(null, volunteerUserValOrge1, "Valerie", "LEROUX", "+33 6 78 45 23 10", true);
@@ -141,101 +115,101 @@ public class FixturesConfig {
         volunteerValOrge9 = new Volunteer(null, volunteerUserValOrge9, "Emilie", "LASSALAS", "+33 6 51 67 93 27", true);
         volunteerValOrge10 = new Volunteer(null, volunteerUserValOrge10, "Anne", "OZANNE", "+33 7 36 80 72 55", true);
 
-        beneficiaryUserValOrge1 = new User(null, "dubois.elise92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge2 = new User(null, "m.martin-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge3 = new User(null, "lea.lambert91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge1 = new User(null, "dubois.elise92@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge2 = new User(null, "m.martin-explorer@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge3 = new User(null, "lea.lambert91@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge4 = new User(null, "jerome.girard.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge5 = new User(null, "camille.roux@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge6 = new User(null, "alexandre.bernard@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge7 = new User(null, "margot.dupont@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge5 = new User(null, "camille.roux@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge6 = new User(null, "alexandre.bernard@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge7 = new User(null, "margot.dupont@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge8 = new User(null, "antoine.lefebvre@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge9 = new User(null, "juliette.moreau@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge10 = new User(null, "theo.thomas@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge11 = new User(null, "fernando.gomez92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge12 = new User(null, "ana.martinez-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge13 = new User(null, "jose.sanchez91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge9 = new User(null, "juliette.moreau@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge10 = new User(null, "theo.thomas@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge11 = new User(null, "fernando.gomez92@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge12 = new User(null, "ana.martinez-explorer@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge13 = new User(null, "jose.sanchez91@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge14 = new User(null, "maria.hernandez.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge15 = new User(null, "juan.rodriguez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge16 = new User(null, "carmen.gonzalez@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge17 = new User(null, "manuel.fernandez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge15 = new User(null, "juan.rodriguez@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge16 = new User(null, "carmen.gonzalez@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge17 = new User(null, "manuel.fernandez@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge18 = new User(null, "isabel.lopez@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge19 = new User(null, "francisco.torres@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge20 = new User(null, "rosa.garcia@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge21 = new User(null, "ali.hassan92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge22 = new User(null, "amina.mahmoud-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge23 = new User(null, "omar.farouk91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge19 = new User(null, "francisco.torres@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge20 = new User(null, "rosa.garcia@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge21 = new User(null, "ali.hassan92@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge22 = new User(null, "amina.mahmoud-explorer@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge23 = new User(null, "omar.farouk91@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge24 = new User(null, "sarah.abdelrahman@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge25 = new User(null, "yusuf.alamoudi@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge26 = new User(null, "huda.fawzy@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge27 = new User(null, "kareem.elshamy@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge25 = new User(null, "yusuf.alamoudi@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge26 = new User(null, "huda.fawzy@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge27 = new User(null, "kareem.elshamy@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge28 = new User(null, "asmaa.abdelfattah@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge29 = new User(null, "mostafa.kamal@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge30 = new User(null, "samar.ahmed@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge31 = new User(null, "khaled.sayed@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge32 = new User(null, "heba.elmohandes@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge33 = new User(null, "mohammed.ali@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge34 = new User(null, "fatma.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge35 = new User(null, "tamer.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge36 = new User(null, "jan.kowalski92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge37 = new User(null, "anna.nowak-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge38 = new User(null, "piotr.wisniewski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge29 = new User(null, "mostafa.kamal@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge30 = new User(null, "samar.ahmed@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge31 = new User(null, "khaled.sayed@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge32 = new User(null, "heba.elmohandes@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge33 = new User(null, "mohammed.ali@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge34 = new User(null, "fatma.hosny@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge35 = new User(null, "tamer.hosny@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge36 = new User(null, "jan.kowalski92@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge37 = new User(null, "anna.nowak-explorer@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge38 = new User(null, "piotr.wisniewski@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge39 = new User(null, "ewa.dabrowska@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge40 = new User(null, "tomasz.zielinski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge41 = new User(null, "amara.ndiaye@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge42 = new User(null, "nneka.osei@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge43 = new User(null, "kwame.mensah@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge40 = new User(null, "tomasz.zielinski@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge41 = new User(null, "amara.ndiaye@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge42 = new User(null, "nneka.osei@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge43 = new User(null, "kwame.mensah@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
         beneficiaryUserValOrge44 = new User(null, "aminata.diallo@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge45 = new User(null, "tendai.mutasa@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge46 = new User(null, "zola.ndlovu@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
-        beneficiaryUserValOrge47 = new User(null, "sibusiso.khumalo@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge45 = new User(null, "tendai.mutasa@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge46 = new User(null, "zola.ndlovu@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
+        beneficiaryUserValOrge47 = new User(null, "sibusiso.khumalo@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge));
 
-        beneficiary1 = new Beneficiary(null, beneficiaryUserValOrge1, "Eloise", "DEBOIS", "+33 6 72 51 39 84", true, LocalDate.of(2000, 6, 1), "2 00 06 01 2A 122 019", List.of());
-        beneficiary2 = new Beneficiary(null, beneficiaryUserValOrge2, "Mathieu", "MARTIN", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 3), "1 92 03 03 75 113 557", List.of());
-        beneficiary3 = new Beneficiary(null, beneficiaryUserValOrge3, "Léa", "LAMBERT", "+33 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "2 88 07 19 91 190 349", List.of());
-        beneficiary4 = new Beneficiary(null, beneficiaryUserValOrge4, "Jerome", "GIRARD", "+33 7 63 18 47 92", true, LocalDate.of(1983, 11, 7), "1 83 11 07 91 125 789", List.of());
-        beneficiary5 = new Beneficiary(null, beneficiaryUserValOrge5, "Camille", "ROUX", "+33 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "2 90 05 28 93 102 901", List.of());
-        beneficiary6 = new Beneficiary(null, beneficiaryUserValOrge6, "Alexandre", "BERNARD", "+33 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "1 87 01 15 92 105 302", List.of());
-        beneficiary7 = new Beneficiary(null, beneficiaryUserValOrge7, "Margaux", "DUPONT", "+33 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "2 94 08 09 75 120 270", List.of());
-        beneficiary8 = new Beneficiary(null, beneficiaryUserValOrge8, "Antoine", "LEFEBVRE", "+33 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "1 91 06 25 91 157 633", List.of());
-        beneficiary9 = new Beneficiary(null, beneficiaryUserValOrge9, "Juliette", "MOREAU", "+33 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "2 89 12 17 91 143 751", List.of());
-        beneficiary10 = new Beneficiary(null, beneficiaryUserValOrge10, "Théo", "THOMAS", "+33 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "1 93 02 06 91 109 669", List.of());
-        beneficiary11 = new Beneficiary(null, beneficiaryUserValOrge11, "Fernando", "GOMEZ", "+34 6 72 51 39 84", true, LocalDate.of(1980, 6, 1), "1 80 06 01 99 999 019", List.of());
-        beneficiary12 = new Beneficiary(null, beneficiaryUserValOrge12, "Ana", "MARTINEZ", "+34 6 28 93 75 46", true, LocalDate.of(1985, 3, 3), "2 85 03 03 99 999 557", List.of());
-        beneficiary13 = new Beneficiary(null, beneficiaryUserValOrge13, "José", "SANCHEZ", "+34 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "1 88 07 19 99 999 349", List.of());
-        beneficiary14 = new Beneficiary(null, beneficiaryUserValOrge14, "María", "HERNANDEZ", "+34 7 63 18 47 92", true, LocalDate.of(1978, 11, 7), "2 78 11 07 99 999 789", List.of());
-        beneficiary15 = new Beneficiary(null, beneficiaryUserValOrge15, "Juan", "RODRIGUEZ", "+34 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "1 90 05 28 99 999 901", List.of());
-        beneficiary16 = new Beneficiary(null, beneficiaryUserValOrge16, "Carmen", "GONZALEZ", "+34 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "2 87 01 15 99 999 302", List.of());
-        beneficiary17 = new Beneficiary(null, beneficiaryUserValOrge17, "Manuel", "FERNANDEZ", "+34 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "1 94 08 09 99 999 270", List.of());
-        beneficiary18 = new Beneficiary(null, beneficiaryUserValOrge18, "Isabel", "LOPEZ", "+34 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "2 91 06 25 99 999 633", List.of());
-        beneficiary19 = new Beneficiary(null, beneficiaryUserValOrge19, "Francisco", "TORRES", "+34 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "1 89 12 17 99 999 751", List.of());
-        beneficiary20 = new Beneficiary(null, beneficiaryUserValOrge20, "Rosa", "GARCIA", "+34 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "2 93 02 06 99 999 669", List.of());
-        beneficiary21 = new Beneficiary(null, beneficiaryUserValOrge21, "Ali", "HASSAN", "+212 6 72 51 39 84", true, LocalDate.of(1980, 6, 1), "1 80 06 01 99 999 019", List.of());
-        beneficiary22 = new Beneficiary(null, beneficiaryUserValOrge22, "Amina", "MAHMOUD", "+20 6 28 93 75 46", true, LocalDate.of(1985, 3, 3), "2 85 03 03 99 999 557", List.of());
-        beneficiary23 = new Beneficiary(null, beneficiaryUserValOrge23, "Omar", "FAROUK", "+971 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "1 88 07 19 99 999 349", List.of());
-        beneficiary24 = new Beneficiary(null, beneficiaryUserValOrge24, "Sarah", "ABDELRAHMAN", "+962 7 63 18 47 92", true, LocalDate.of(1978, 11, 7), "2 78 11 07 99 999 789", List.of());
-        beneficiary25 = new Beneficiary(null, beneficiaryUserValOrge25, "Yusuf", "ALAMOUDI", "+966 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "1 90 05 28 99 999 901", List.of());
-        beneficiary26 = new Beneficiary(null, beneficiaryUserValOrge26, "Huda", "FAWZY", "+20 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "2 87 01 15 99 999 302", List.of());
-        beneficiary27 = new Beneficiary(null, beneficiaryUserValOrge27, "Kareem", "ELSHAMY", "+213 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "1 94 08 09 99 999 270", List.of());
-        beneficiary28 = new Beneficiary(null, beneficiaryUserValOrge28, "Asmaa", "ABDELFATTAH", "+20 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "2 91 06 25 99 999 633", List.of());
-        beneficiary29 = new Beneficiary(null, beneficiaryUserValOrge29, "Mostafa", "KAMAL", "+20 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "1 89 12 17 99 999 751", List.of());
-        beneficiary30 = new Beneficiary(null, beneficiaryUserValOrge30, "Samar", "AHMED", "+20 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "2 93 02 06 99 999 669", List.of());
-        beneficiary31 = new Beneficiary(null, beneficiaryUserValOrge31, "Khaled", "SAYED", "+20 7 92 57 13 48", true, LocalDate.of(1980, 4, 25), "1 80 04 25 99 999 019", List.of());
-        beneficiary32 = new Beneficiary(null, beneficiaryUserValOrge32, "Heba", "ELMOHANDES", "+20 6 28 93 75 46", true, LocalDate.of(1975, 7, 17), "2 75 07 17 99 999 557", List.of());
-        beneficiary33 = new Beneficiary(null, beneficiaryUserValOrge33, "Mohammed", "ALI", "+20 7 57 84 21 36", true, LocalDate.of(1980, 1, 1), "1 80 01 01 99 999 349", List.of());
-        beneficiary34 = new Beneficiary(null, beneficiaryUserValOrge34, "Fatma", "HOSNY", "+20 7 63 18 47 92", true, LocalDate.of(1978, 5, 15), "2 78 05 15 99 999 789", List.of());
-        beneficiary35 = new Beneficiary(null, beneficiaryUserValOrge35, "Tamer", "HOSNY", "+20 6 41 75 69 23", true, LocalDate.of(1985, 6, 10), "1 85 06 10 99 999 901", List.of());
-        beneficiary36 = new Beneficiary(null, beneficiaryUserValOrge36, "Jan", "KOWALSKI", "+48 672 513 984", true, LocalDate.of(1982, 1, 13), "1 82 01 13 2A 122 019", List.of());
-        beneficiary37 = new Beneficiary(null, beneficiaryUserValOrge37, "Anna", "NOWAK", "+48 628 937 546", true, LocalDate.of(1987, 7, 5), "2 87 07 05 75 113 557", List.of());
-        beneficiary38 = new Beneficiary(null, beneficiaryUserValOrge38, "Piotr", "WISNIEWSKI", "+48 757 842 136", true, LocalDate.of(1978, 9, 19), "1 78 09 19 91 190 349", List.of());
-        beneficiary39 = new Beneficiary(null, beneficiaryUserValOrge39, "Ewa", "DĄBROWSKA", "+48 763 184 792", true, LocalDate.of(1980, 3, 7), "2 80 03 07 91 125 789", List.of());
-        beneficiary40 = new Beneficiary(null, beneficiaryUserValOrge40, "Tomasz", "ZIELINSKI", "+48 417 569 233", true, LocalDate.of(1985, 5, 28), "1 85 05 28 93 102 901", List.of());
-        beneficiary41 = new Beneficiary(null, beneficiaryUserValOrge41, "Amara", "Ndiaye", "+221 672 513 984", true, LocalDate.of(1982, 2, 13), "1 82 02 13 2A 122 019", List.of());
-        beneficiary42 = new Beneficiary(null, beneficiaryUserValOrge42, "Nneka", "Osei", "+233 628 937 546", true, LocalDate.of(1987, 7, 5), "2 87 07 05 75 113 557", List.of());
-        beneficiary43 = new Beneficiary(null, beneficiaryUserValOrge43, "Kwame", "Mensah", "+233 757 842 136", true, LocalDate.of(1978, 10, 19), "1 78 10 19 91 190 349", List.of());
-        beneficiary44 = new Beneficiary(null, beneficiaryUserValOrge44, "Aminata", "Diallo", "+221 763 184 792", true, LocalDate.of(1980, 6, 7), "2 80 06 07 91 125 789", List.of());
-        beneficiary45 = new Beneficiary(null, beneficiaryUserValOrge45, "Tendai", "Mutasa", "+263 417 569 233", true, LocalDate.of(1985, 8, 28), "1 85 08 28 93 102 901", List.of());
-        beneficiary46 = new Beneficiary(null, beneficiaryUserValOrge46, "Zola", "Ndlovu", "+263 753 628 841", true, LocalDate.of(1994, 5, 25), "2 94 05 25 91 157 633", List.of());
-        beneficiary47 = new Beneficiary(null, beneficiaryUserValOrge47, "Sibusiso", "Khumalo", "+263 437 845 219", true, LocalDate.of(1989, 12, 15), "1 89 12 15 91 143 751", List.of());
+        beneficiary1 = new Beneficiary(null, beneficiaryUserValOrge1, "Eloise", "DEBOIS", "+33 6 72 51 39 84", true, LocalDate.of(2000, 6, 1), "2 00 06 01 2A 122 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary2 = new Beneficiary(null, beneficiaryUserValOrge2, "Mathieu", "MARTIN", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 3), "1 92 03 03 75 113 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary3 = new Beneficiary(null, beneficiaryUserValOrge3, "Léa", "LAMBERT", "+33 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "2 88 07 19 91 190 349", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary4 = new Beneficiary(null, beneficiaryUserValOrge4, "Jerome", "GIRARD", "+33 7 63 18 47 92", true, LocalDate.of(1983, 11, 7), "1 83 11 07 91 125 789", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary5 = new Beneficiary(null, beneficiaryUserValOrge5, "Camille", "ROUX", "+33 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "2 90 05 28 93 102 901", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary6 = new Beneficiary(null, beneficiaryUserValOrge6, "Alexandre", "BERNARD", "+33 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "1 87 01 15 92 105 302", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary7 = new Beneficiary(null, beneficiaryUserValOrge7, "Margaux", "DUPONT", "+33 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "2 94 08 09 75 120 270", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary8 = new Beneficiary(null, beneficiaryUserValOrge8, "Antoine", "LEFEBVRE", "+33 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "1 91 06 25 91 157 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary9 = new Beneficiary(null, beneficiaryUserValOrge9, "Juliette", "MOREAU", "+33 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "2 89 12 17 91 143 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary10 = new Beneficiary(null, beneficiaryUserValOrge10, "Théo", "THOMAS", "+33 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "1 93 02 06 91 109 669", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary11 = new Beneficiary(null, beneficiaryUserValOrge11, "Fernando", "GOMEZ", "+34 6 72 51 39 84", true, LocalDate.of(1980, 6, 1), "1 80 06 01 99 999 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary12 = new Beneficiary(null, beneficiaryUserValOrge12, "Ana", "MARTINEZ", "+34 6 28 93 75 46", true, LocalDate.of(1985, 3, 3), "2 85 03 03 99 999 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary13 = new Beneficiary(null, beneficiaryUserValOrge13, "José", "SANCHEZ", "+34 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "1 88 07 19 99 999 349", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary14 = new Beneficiary(null, beneficiaryUserValOrge14, "María", "HERNANDEZ", "+34 7 63 18 47 92", true, LocalDate.of(1978, 11, 7), "2 78 11 07 99 999 789", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary15 = new Beneficiary(null, beneficiaryUserValOrge15, "Juan", "RODRIGUEZ", "+34 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "1 90 05 28 99 999 901", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary16 = new Beneficiary(null, beneficiaryUserValOrge16, "Carmen", "GONZALEZ", "+34 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "2 87 01 15 99 999 302", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary17 = new Beneficiary(null, beneficiaryUserValOrge17, "Manuel", "FERNANDEZ", "+34 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "1 94 08 09 99 999 270", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary18 = new Beneficiary(null, beneficiaryUserValOrge18, "Isabel", "LOPEZ", "+34 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "2 91 06 25 99 999 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary19 = new Beneficiary(null, beneficiaryUserValOrge19, "Francisco", "TORRES", "+34 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "1 89 12 17 99 999 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary20 = new Beneficiary(null, beneficiaryUserValOrge20, "Rosa", "GARCIA", "+34 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "2 93 02 06 99 999 669", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary21 = new Beneficiary(null, beneficiaryUserValOrge21, "Ali", "HASSAN", "+212 6 72 51 39 84", true, LocalDate.of(1980, 6, 1), "1 80 06 01 99 999 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary22 = new Beneficiary(null, beneficiaryUserValOrge22, "Amina", "MAHMOUD", "+20 6 28 93 75 46", true, LocalDate.of(1985, 3, 3), "2 85 03 03 99 999 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary23 = new Beneficiary(null, beneficiaryUserValOrge23, "Omar", "FAROUK", "+971 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "1 88 07 19 99 999 349", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary24 = new Beneficiary(null, beneficiaryUserValOrge24, "Sarah", "ABDELRAHMAN", "+962 7 63 18 47 92", true, LocalDate.of(1978, 11, 7), "2 78 11 07 99 999 789", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary25 = new Beneficiary(null, beneficiaryUserValOrge25, "Yusuf", "ALAMOUDI", "+966 6 41 75 69 23", true, LocalDate.of(1990, 5, 28), "1 90 05 28 99 999 901", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary26 = new Beneficiary(null, beneficiaryUserValOrge26, "Huda", "FAWZY", "+20 7 89 36 54 17", true, LocalDate.of(1987, 1, 15), "2 87 01 15 99 999 302", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary27 = new Beneficiary(null, beneficiaryUserValOrge27, "Kareem", "ELSHAMY", "+213 6 73 95 28 41", true, LocalDate.of(1994, 8, 9), "1 94 08 09 99 999 270", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary28 = new Beneficiary(null, beneficiaryUserValOrge28, "Asmaa", "ABDELFATTAH", "+20 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "2 91 06 25 99 999 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary29 = new Beneficiary(null, beneficiaryUserValOrge29, "Mostafa", "KAMAL", "+20 7 37 84 52 19", true, LocalDate.of(1989, 12, 17), "1 89 12 17 99 999 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary30 = new Beneficiary(null, beneficiaryUserValOrge30, "Samar", "AHMED", "+20 7 92 57 13 48", true, LocalDate.of(1993, 2, 6), "2 93 02 06 99 999 669", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary31 = new Beneficiary(null, beneficiaryUserValOrge31, "Khaled", "SAYED", "+20 7 92 57 13 48", true, LocalDate.of(1980, 4, 25), "1 80 04 25 99 999 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary32 = new Beneficiary(null, beneficiaryUserValOrge32, "Heba", "ELMOHANDES", "+20 6 28 93 75 46", true, LocalDate.of(1975, 7, 17), "2 75 07 17 99 999 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary33 = new Beneficiary(null, beneficiaryUserValOrge33, "Mohammed", "ALI", "+20 7 57 84 21 36", true, LocalDate.of(1980, 1, 1), "1 80 01 01 99 999 349", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary34 = new Beneficiary(null, beneficiaryUserValOrge34, "Fatma", "HOSNY", "+20 7 63 18 47 92", true, LocalDate.of(1978, 5, 15), "2 78 05 15 99 999 789", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary35 = new Beneficiary(null, beneficiaryUserValOrge35, "Tamer", "HOSNY", "+20 6 41 75 69 23", true, LocalDate.of(1985, 6, 10), "1 85 06 10 99 999 901", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary36 = new Beneficiary(null, beneficiaryUserValOrge36, "Jan", "KOWALSKI", "+48 672 513 984", true, LocalDate.of(1982, 1, 13), "1 82 01 13 2A 122 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary37 = new Beneficiary(null, beneficiaryUserValOrge37, "Anna", "NOWAK", "+48 628 937 546", true, LocalDate.of(1987, 7, 5), "2 87 07 05 75 113 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary38 = new Beneficiary(null, beneficiaryUserValOrge38, "Piotr", "WISNIEWSKI", "+48 757 842 136", true, LocalDate.of(1978, 9, 19), "1 78 09 19 91 190 349", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary39 = new Beneficiary(null, beneficiaryUserValOrge39, "Ewa", "DĄBROWSKA", "+48 763 184 792", true, LocalDate.of(1980, 3, 7), "2 80 03 07 91 125 789", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary40 = new Beneficiary(null, beneficiaryUserValOrge40, "Tomasz", "ZIELINSKI", "+48 417 569 233", true, LocalDate.of(1985, 5, 28), "1 85 05 28 93 102 901", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary41 = new Beneficiary(null, beneficiaryUserValOrge41, "Amara", "Ndiaye", "+221 672 513 984", true, LocalDate.of(1982, 2, 13), "1 82 02 13 2A 122 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary42 = new Beneficiary(null, beneficiaryUserValOrge42, "Nneka", "Osei", "+233 628 937 546", true, LocalDate.of(1987, 7, 5), "2 87 07 05 75 113 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary43 = new Beneficiary(null, beneficiaryUserValOrge43, "Kwame", "Mensah", "+233 757 842 136", true, LocalDate.of(1978, 10, 19), "1 78 10 19 91 190 349", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary44 = new Beneficiary(null, beneficiaryUserValOrge44, "Aminata", "Diallo", "+221 763 184 792", true, LocalDate.of(1980, 6, 7), "2 80 06 07 91 125 789", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary45 = new Beneficiary(null, beneficiaryUserValOrge45, "Tendai", "Mutasa", "+263 417 569 233", true, LocalDate.of(1985, 8, 28), "1 85 08 28 93 102 901", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary46 = new Beneficiary(null, beneficiaryUserValOrge46, "Zola", "Ndlovu", "+263 753 628 841", true, LocalDate.of(1994, 5, 25), "2 94 05 25 91 157 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiary47 = new Beneficiary(null, beneficiaryUserValOrge47, "Sibusiso", "Khumalo", "+263 437 845 219", true, LocalDate.of(1989, 12, 15), "1 89 12 15 91 143 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
 
         var productLimit = new ProductLimit(null, "Farine", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
         var productLimit1 = new ProductLimit(null, "Sucre", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
@@ -329,7 +303,7 @@ public class FixturesConfig {
     }
 
     public void eventFixtureRepository(EventRepository eventRepository) {
-        List<User> userBeneficiariesInDB = List.of(beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47);
+        List<Beneficiary> userBeneficiariesInDB = List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47);
         ZonedDateTime eventLimit = ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 0, 0), ZoneId.of("Europe/Paris"));
 
         ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 1, 10, 0), ZoneId.of("Europe/Paris"));
@@ -380,6 +354,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryClothProductDates.containsKey(beneficiary)) {
+                        beneficiaryClothProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryClothProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), eventStartDate3.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -404,6 +386,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryFoodProductDates.containsKey(beneficiary)) {
+                        beneficiaryFoodProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryFoodProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList4.add(new EventTimeWindow(null, eventStartDate4.plusMinutes(i * 30), eventStartDate4.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -428,6 +418,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryFoodProductDates.containsKey(beneficiary)) {
+                        beneficiaryFoodProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryFoodProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList5.add(new EventTimeWindow(null, eventStartDate5.plusMinutes(i * 30), eventStartDate5.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -452,6 +450,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryFoodProductDates.containsKey(beneficiary)) {
+                        beneficiaryFoodProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryFoodProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList6.add(new EventTimeWindow(null, eventStartDate6.plusMinutes(i * 30), eventStartDate6.plusMinutes((i + 1) * 30), 5, participants));
             }
