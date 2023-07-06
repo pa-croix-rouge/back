@@ -224,7 +224,7 @@ public class VolunteerControllerTest {
         System.out.println("Created volunteer id: " + createdVolunteerId);
         VolunteerResponse volunteerResponse = new VolunteerResponse(
                 createdVolunteerId,
-                "newvolunteer@croix-rouge.fr",
+                "newvolunteer@crx.fr",
                 "John",
                 "Doe",
                 "+33 6 00 11 00 11",
