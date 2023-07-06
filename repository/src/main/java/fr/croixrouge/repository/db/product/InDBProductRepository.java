@@ -66,4 +66,10 @@ public class InDBProductRepository implements ProductRepository {
                 .toList();
     }
 
+    @Override
+    public List<Product> findAllWithProductLimit(ID productLimitId) {
+        return productDBRepository.findByProductLimitDB_Id(productLimitId.value()).stream()
+                .map(this::toProduct)
+                .toList();
+    }
 }

@@ -18,4 +18,9 @@ public class InMemoryProductRepository extends InMemoryCRUDRepository<ID, Produc
     public InMemoryProductRepository() {
         super(new ArrayList<>(), new TimeStampIDGenerator());
     }
+
+    @Override
+    public List<Product> findAllWithProductLimit(ID productLimitId) {
+        return null;
+    }
 }

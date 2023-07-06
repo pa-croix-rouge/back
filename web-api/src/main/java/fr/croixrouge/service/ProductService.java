@@ -12,4 +12,16 @@ public class ProductService extends CRUDService<ID, Product, ProductRepository> 
         super(repository);
     }
 
+    public void removeAllProductLimit(ID productLimitId) {
+        repository.findAllWithProductLimit(productLimitId)
+                .forEach(product -> {
+                    repository.save(new Product(
+                            product.getId(),
+                            product.getName(),
+                            product.getQuantity(),
+                            null
+                    ));
+                });
+    }
+
 }
