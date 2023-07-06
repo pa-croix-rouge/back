@@ -30,6 +30,12 @@ public class UserDB {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "email_validated", nullable = false)
+    private boolean emailValidated;
+
+    @Column(name = "token_to_validate_email", unique = true)
+    private String tokenToValidateEmail;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "local_unit_db_localunit_id", nullable = false)
     private LocalUnitDB localUnitDB;
@@ -38,7 +44,7 @@ public class UserDB {
         return roleDBs;
     }
 
-    public UserDB(ID id, String username, String password, LocalUnitDB localUnitDB, Set<RoleDB> roleDBs) {
+    public UserDB(ID id, String username, String password, LocalUnitDB localUnitDB, Set<RoleDB> roleDBs, boolean emailValidated, String tokenToValidateEmail) {
         if (id != null) {
             this.userID = id.value();
         } else {
@@ -48,6 +54,8 @@ public class UserDB {
         this.password = password;
         this.localUnitDB = localUnitDB;
         this.roleDBs = roleDBs;
+        this.emailValidated = emailValidated;
+        this.tokenToValidateEmail = tokenToValidateEmail;
     }
 
     public UserDB() {
@@ -76,6 +84,14 @@ public class UserDB {
 
     public Long getUserID() {
         return userID;
+    }
+
+    public boolean getEmailValidated() {
+        return emailValidated;
+    }
+
+    public String getTokenToValidateEmail() {
+        return tokenToValidateEmail;
     }
 
     @Override

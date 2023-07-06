@@ -9,13 +9,17 @@ public class User extends Entity<ID> {
     protected final String password;
     protected final LocalUnit localUnit;
     protected final List<Role> roles;
+    protected final boolean emailValidated;
+    protected final String tokenToValidateEmail;
 
-    public User(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles) {
+    public User(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles, boolean emailValidated, String tokenToValidateEmail) {
         super(userId);
         this.username = username;
         this.password = password;
         this.localUnit = localUnit;
         this.roles = roles;
+        this.emailValidated = emailValidated;
+        this.tokenToValidateEmail = tokenToValidateEmail;
     }
 
     public String getUsername() {
@@ -34,8 +38,16 @@ public class User extends Entity<ID> {
         return roles;
     }
 
+    public boolean isEmailValidated() {
+        return emailValidated;
+    }
+
+    public String getTokenToValidateEmail() {
+        return tokenToValidateEmail;
+    }
+
     public User removeRole(Role role) {
-        return new User(id, username, password, localUnit, roles.stream().filter(r -> !r.equals(role)).toList());
+        return new User(id, username, password, localUnit, roles.stream().filter(r -> !r.equals(role)).toList(), emailValidated, tokenToValidateEmail);
     }
 
     public User addRole(Role role) {
@@ -44,7 +56,7 @@ public class User extends Entity<ID> {
         }
         var newRoles = new ArrayList<>(roles);
         newRoles.add(role);
-        return new User(id, username, password, localUnit, newRoles);
+        return new User(id, username, password, localUnit, newRoles, emailValidated, tokenToValidateEmail);
     }
 
     @Override
@@ -59,6 +71,6 @@ public class User extends Entity<ID> {
     }
 
     public User setPassword(String encode) {
-        return new User(id, username, encode, localUnit, roles);
+        return new User(id, username, encode, localUnit, roles, emailValidated, tokenToValidateEmail);
     }
 }

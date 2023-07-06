@@ -8,8 +8,9 @@ public class VolunteerResponse {
     public String phoneNumber;
     public boolean isValidated;
     public Long localUnitId;
+    public boolean emailValidated;
 
-    public VolunteerResponse(Long id, String username, String firstName, String lastName, String phoneNumber, boolean isValidated, Long localUnitId) {
+    public VolunteerResponse(Long id, String username, String firstName, String lastName, String phoneNumber, boolean isValidated, Long localUnitId, boolean emailValidated) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -17,6 +18,7 @@ public class VolunteerResponse {
         this.phoneNumber = phoneNumber;
         this.isValidated = isValidated;
         this.localUnitId = localUnitId;
+        this.emailValidated = emailValidated;
     }
 
     public Long getId() {

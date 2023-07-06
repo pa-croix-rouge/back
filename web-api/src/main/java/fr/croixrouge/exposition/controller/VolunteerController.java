@@ -37,7 +37,16 @@ public class VolunteerController extends ErrorHandler {
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
-        return new VolunteerResponse(model.getId().value(), model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getUser().getLocalUnit().getId().value());
+        return new VolunteerResponse(
+                model.getId().value(),
+                model.getUser().getUsername(),
+                model.getFirstName(),
+                model.getLastName(),
+                model.getPhoneNumber(),
+                model.isValidated(),
+                model.getUser().getLocalUnit().getId().value(),
+                model.getUser().isEmailValidated()
+        );
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
@@ -67,7 +76,7 @@ public class VolunteerController extends ErrorHandler {
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of());
+        User user = new User(null, model.getUsername(), model.getPassword(), localUnit, List.of(), false, null);
         Volunteer volunteer = new Volunteer(null, user, model.getFirstName(), model.getLastName(), model.getPhoneNumber(), false);
 
         ID volunteerId = service.save(volunteer);
