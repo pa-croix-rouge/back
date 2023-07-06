@@ -1,6 +1,9 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.config.JwtTokenConfig;
+import fr.croixrouge.domain.model.Beneficiary;
+import fr.croixrouge.domain.model.Entity;
+import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.UserRepository;

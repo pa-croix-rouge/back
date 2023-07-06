@@ -34,7 +34,7 @@ class BeneficiaryProductServiceTest {
 
     private final BeneficiaryProductService beneficiaryProductService = new BeneficiaryProductService(beneficiaryProductRepository, storageProductService);
 
-    private final User user = new User(new ID(1L), "TEST", "TEST", null, List.of());
+    private final User user = new User(new ID(1L), "TEST", "TEST", null, List.of(), true, null);
 
     private final Beneficiary beneficiary = new Beneficiary(new ID(1L), user, "TEST", "TEST", "number", true, LocalDate.now(), "", List.of());
 

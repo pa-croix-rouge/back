@@ -34,6 +34,7 @@ public class BeneficiaryResponse {
         this.isValidated = isValidated;
         this.localUnitId = localUnitId.value();
         this.familyMembers = familyMembers;
+        this.emailValidated = emailValidated;
     }
 
     public String getUsername() {

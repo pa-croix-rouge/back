@@ -72,14 +72,14 @@ public class MockRepositoryConfig {
                 List.of());
 
 
-        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of());
+        defaultUser = new User(new ID(1L), "defaultUser", passwordEncoder.encode("defaultPassword"), localUnit, List.of(), true, null);
 
-        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole));
+        managerUser = new User(new ID(2L), "LUManager", passwordEncoder.encode("LUPassword"), localUnit, List.of(managerRole), true, null);
 
         volunteer1 = new Volunteer(new ID(1L), managerUser, "volunteerFirstName", "volunteerLastName", "+33 6 00 00 00 00", true);
 
         this.southernLocalUnit = new LocalUnit(new ID("2"), "Unite Local du Sud", address2, "SLUManager", address2.getPostalCode() + "-000");
-        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole));
+        this.southernManagerUser = new User(new ID("3"), "SLUManager", passwordEncoder.encode("SLUPassword"), southernLocalUnit, List.of(managerRole), true, null);
     }
 
     @Bean

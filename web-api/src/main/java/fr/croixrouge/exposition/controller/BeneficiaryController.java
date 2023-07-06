@@ -108,7 +108,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
     //update
     @PutMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Void> update(@RequestBody BeneficiaryCreationRequest creationRequest, HttpServletRequest request) {
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         Beneficiary beneficiary = service.findByUsername(username);
         service.updateBeneficiary(beneficiary.getId(), creationRequest);
         return ResponseEntity.ok().build();
