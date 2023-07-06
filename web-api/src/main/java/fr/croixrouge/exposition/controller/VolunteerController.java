@@ -37,7 +37,16 @@ public class VolunteerController extends ErrorHandler {
     }
 
     public VolunteerResponse toDTO(Volunteer model) {
-        return new VolunteerResponse(model.getId().value(), model.getUser().getUsername(), model.getFirstName(), model.getLastName(), model.getPhoneNumber(), model.isValidated(), model.getUser().getLocalUnit().getId().value());
+        return new VolunteerResponse(
+                model.getId().value(),
+                model.getUser().getUsername(),
+                model.getFirstName(),
+                model.getLastName(),
+                model.getPhoneNumber(),
+                model.isValidated(),
+                model.getUser().getLocalUnit().getId().value(),
+                model.getUser().isEmailValidated()
+        );
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

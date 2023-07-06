@@ -21,7 +21,10 @@ public class BeneficiaryResponse {
 
     public List<FamilyMemberResponse> familyMembers;
 
-    public BeneficiaryResponse(Long id, String username, String firstName, String lastName, LocalDate birthDate, String phoneNumber, boolean isValidated, ID localUnitId, List<FamilyMemberResponse> familyMembers) {
+    public boolean emailValidated;
+
+
+    public BeneficiaryResponse(Long id, String username, String firstName, String lastName, LocalDate birthDate, String phoneNumber, boolean isValidated, ID localUnitId, List<FamilyMemberResponse> familyMembers, boolean emailValidated) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -55,5 +58,9 @@ public class BeneficiaryResponse {
 
     public Long getLocalUnitId() {
         return localUnitId;
+    }
+
+    public boolean isEmailValidated() {
+        return emailValidated;
     }
 }
