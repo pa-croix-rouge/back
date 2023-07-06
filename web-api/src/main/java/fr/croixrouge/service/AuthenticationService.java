@@ -1,6 +1,7 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.config.JwtTokenConfig;
+import fr.croixrouge.domain.model.Beneficiary;
 import fr.croixrouge.domain.model.Volunteer;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.domain.model.ID;
@@ -8,6 +9,7 @@ import fr.croixrouge.domain.repository.UserRepository;
 import fr.croixrouge.domain.repository.VolunteerRepository;
 import fr.croixrouge.exposition.dto.core.LoginResponse;
 import fr.croixrouge.exposition.error.EmailNotConfirmError;
+import fr.croixrouge.exposition.error.UserNotValidatedByUL;
 import fr.croixrouge.model.UserSecurity;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -65,7 +67,7 @@ public class AuthenticationService {
                 .orElseThrow();
 
         if (!user.isEmailValidated()) {
-            throw new EmailNotConfirmError("Email for " + user.getUsername() + " is not validated.");
+            throw new EmailNotConfirmError("l'email " + user.getUsername() + " n'est pas confirmer.");
         }
 
         Optional<Volunteer> volunnteer = volunteerRepository.findByUsername(user.getUsername());
@@ -73,8 +75,8 @@ public class AuthenticationService {
             throw new UsernameNotFoundException("User " + user.getUsername() + " is not a volunteer.");
         }
 
-        if (volunnteer.get().isValidated()) {
-            throw new EmailNotConfirmError("User " + user.getUsername() + " is not validated.");
+        if (!volunnteer.get().isValidated()) {
+            throw new UserNotValidatedByUL("l'utilsateur " + user.getUsername() + " dois etre validé par l'unité local .");
         }
 
         var jwtToken = jwtTokenConfig.generateToken(user);
@@ -96,11 +98,18 @@ public class AuthenticationService {
                 .orElseThrow();
 
         if (!user.isEmailValidated()) {
-            throw new EmailNotConfirmError("User " + user.getUsername() + " is not validated.");
+            throw new EmailNotConfirmError("l'email \" + user.getUsername() + \" n'est pas confirmer.");
         }
-        if (beneficiaryRepository.findByUsername(user.getUsername()).isEmpty()) {
+        Optional<Beneficiary> benef = beneficiaryRepository.findByUsername(user.getUsername());
+
+        if (benef.isEmpty()) {
             throw new UsernameNotFoundException("User " + user.getUsername() + " is not a beneficiary.");
         }
+
+        if (!benef.get().isValidated()) {
+            throw new UserNotValidatedByUL("l'utilsateur " + user.getUsername() + " dois etre validé par l'unité local .");
+        }
+
         var jwtToken = jwtTokenConfig.generateToken(user);
 
         revokeAllUserTokens(user);

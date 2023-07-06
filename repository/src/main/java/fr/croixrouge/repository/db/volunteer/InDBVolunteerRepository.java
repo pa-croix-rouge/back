@@ -82,11 +82,6 @@ public class InDBVolunteerRepository implements VolunteerRepository {
 
     @Override
     public List<Volunteer> findAllByLocalUnitId(ID id) {
-        var test = userDBRepository.findByLocalUnitDB_LocalUnitID( id.value());
-        var test3 = volunteerDBRepository.findByUserDB_UserID(id.value());
-        var test2 = test.stream()
-                .map(user -> volunteerDBRepository.findByUserDB_UserID(user.getUserID()).map(this::toVolunteer)).toList();
-
         return userDBRepository.findByLocalUnitDB_LocalUnitID( id.value())
                 .stream()
                 .map(user -> volunteerDBRepository.findByUserDB_UserID(user.getUserID()).map(this::toVolunteer) )
