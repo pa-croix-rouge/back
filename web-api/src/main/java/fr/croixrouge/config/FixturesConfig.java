@@ -36,11 +36,15 @@ public class FixturesConfig {
 
     private final LocalUnit localUnitESGI;
     private final Product cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15, food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15;
+    private final Product cloth1ESGI, cloth2ESGI, cloth3ESGI, cloth4ESGI, cloth5ESGI, cloth6ESGI, cloth7ESGI, cloth8ESGI, cloth9ESGI, cloth10ESGI, cloth11ESGI, cloth12ESGI, cloth13ESGI, cloth14ESGI, cloth15ESGI, food1ESGI, food2ESGI, food3ESGI, food4ESGI, food5ESGI, food6ESGI, food7ESGI, food8ESGI, food9ESGI, food10ESGI, food11ESGI, food12ESGI, food13ESGI, food14ESGI, food15ESGI;
     private final List<ProductLimit> productLimits;
     private final Storage storageValOrge, storageESGI;
 
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
+
+    private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDatesESGI = new HashMap<>();
+    private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDatesESGI = new HashMap<>();
     private final UserDBRepository userDBRepository;
 
     public FixturesConfig(RoleConfig roleConfig,
@@ -329,6 +333,37 @@ public class FixturesConfig {
         food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
         food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
 
+        cloth1ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth2ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth3ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth4ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth5ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth6ESGI = new Product(null, "T-shirts blancs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth7ESGI = new Product(null, "Pantalons noirs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth8ESGI = new Product(null, "Robes rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth9ESGI = new Product(null, "Pulls gris", new Quantifier(2, NumberedUnit.NUMBER), productLimit11);
+        cloth10ESGI = new Product(null, "Jupes bleues", new Quantifier(1, NumberedUnit.NUMBER), productLimit11);
+        cloth11ESGI = new Product(null, "Chaussures noires", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth12ESGI = new Product(null, "Chaussures blanches", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        cloth13ESGI = new Product(null, "Chaussettes noires", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth14ESGI = new Product(null, "Chaussettes blanches", new Quantifier(5, NumberedUnit.NUMBER), productLimit10);
+        cloth15ESGI = new Product(null, "Baskets rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit12);
+        food1ESGI = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9);
+        food2ESGI = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit7);
+        food3ESGI = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), productLimit9);
+        food4ESGI = new Product(null, "Oranges", new WeightQuantifier(750, WeightUnit.GRAM), productLimit9);
+        food5ESGI = new Product(null, "Tomates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9);
+        food6ESGI = new Product(null, "Carottes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit8);
+        food7ESGI = new Product(null, "Pommes de terre", new WeightQuantifier(2, WeightUnit.KILOGRAM), productLimit7);
+        food8ESGI = new Product(null, "Fraises", new WeightQuantifier(250, WeightUnit.GRAM), productLimit9);
+        food9ESGI = new Product(null, "Blancs de poulet", new WeightQuantifier(500, WeightUnit.GRAM), productLimit13);
+        food10ESGI = new Product(null, "Filets de saumon", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
+        food11ESGI = new Product(null, "Épinards", new WeightQuantifier(200, WeightUnit.GRAM), productLimit8);
+        food12ESGI = new Product(null, "Yaourt", new WeightQuantifier(500, WeightUnit.GRAM), productLimit14);
+        food13ESGI = new Product(null, "Pain", new WeightQuantifier(800, WeightUnit.GRAM), productLimit7);
+        food14ESGI = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
+        food15ESGI = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
+
         storageValOrge = new Storage(null, "Entrepot de l'unité local", localUnit, address);
         storageESGI = new Storage(null, "Placard", localUnit, address);
 
@@ -579,6 +614,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participantsESGI.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryFoodProductDatesESGI.containsKey(beneficiary)) {
+                        beneficiaryFoodProductDatesESGI.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryFoodProductDatesESGI.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowListESGI.add(new EventTimeWindow(null, eventStartDateESGI.plusMinutes(i * 15), eventStartDateESGI.plusMinutes((i + 1) * 15), 4, participantsESGI));
             }
@@ -610,6 +653,21 @@ public class FixturesConfig {
         repository.save(new ClothProduct(new ID(13L), cloth13, ClothSize.CHILD, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(14L), cloth14, ClothSize.XL, ClothGender.NOT_SPECIFIED));
         repository.save(new ClothProduct(new ID(15L), cloth15, ClothSize.UNKNOWN, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(16L), cloth1ESGI, ClothSize.S, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(17L), cloth2ESGI, ClothSize.M, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(18L), cloth3ESGI, ClothSize.L, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(19L), cloth4ESGI, ClothSize.XL, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(20L), cloth5ESGI, ClothSize.XXL, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(21L), cloth6ESGI, ClothSize.S, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(22L), cloth7ESGI, ClothSize.M, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(23L), cloth8ESGI, ClothSize.L, ClothGender.FEMALE));
+        repository.save(new ClothProduct(new ID(24L), cloth9ESGI, ClothSize.CHILD, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(25L), cloth10ESGI, ClothSize.XXL, ClothGender.FEMALE));
+        repository.save(new ClothProduct(new ID(26L), cloth11ESGI, ClothSize.UNKNOWN, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(27L), cloth12ESGI, ClothSize.UNKNOWN, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(28L), cloth13ESGI, ClothSize.CHILD, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(29L), cloth14ESGI, ClothSize.XL, ClothGender.NOT_SPECIFIED));
+        repository.save(new ClothProduct(new ID(30L), cloth15ESGI, ClothSize.UNKNOWN, ClothGender.NOT_SPECIFIED));
     }
 
     public void foodProductFixtureRepository(FoodProductRepository repository) {
@@ -720,6 +778,112 @@ public class FixturesConfig {
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 91));
+
+        repository.save(new FoodProduct(null,
+                food1ESGI,
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                42));
+
+        repository.save(new FoodProduct(null,
+                food2ESGI,
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                27));
+
+        repository.save(new FoodProduct(null,
+                food3ESGI,
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                37));
+
+        repository.save(new FoodProduct(null,
+                food4ESGI,
+                FoodConservation.FROZEN,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(2).getYear(), date.plusDays(2).getMonthValue(), date.plusDays(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(1).getYear(), date.plusDays(1).getMonthValue(), date.plusDays(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                59));
+
+        repository.save(new FoodProduct(null,
+                food5ESGI,
+                FoodConservation.REFRIGERATED,
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(1).getYear(), date.plusWeeks(1).getMonthValue(), date.plusWeeks(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                41));
+
+        repository.save(new FoodProduct(null,
+                food6ESGI,
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(4).getYear(), date.plusDays(4).getMonthValue(), date.plusDays(4).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(3).getYear(), date.plusDays(3).getMonthValue(), date.plusDays(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                56));
+
+        repository.save(new FoodProduct(null,
+                food7ESGI,
+                FoodConservation.FROZEN,
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(1).getYear(), date.plusWeeks(1).getMonthValue(), date.plusWeeks(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                80));
+
+        repository.save(new FoodProduct(null,
+                food8ESGI,
+                FoodConservation.REFRIGERATED,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(3).getYear(), date.plusDays(3).getMonthValue(), date.plusDays(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(2).getYear(), date.plusDays(2).getMonthValue(), date.plusDays(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                71));
+
+        repository.save(new FoodProduct(null,
+                food9ESGI,
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                63));
+
+
+        repository.save(new FoodProduct(null,
+                food10ESGI,
+                FoodConservation.FROZEN,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(2).getYear(), date.plusDays(2).getMonthValue(), date.plusDays(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(1).getYear(), date.plusDays(1).getMonthValue(), date.plusDays(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                127));
+
+        repository.save(new FoodProduct(null,
+                food11ESGI,
+                FoodConservation.REFRIGERATED,
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(1).getYear(), date.plusWeeks(1).getMonthValue(), date.plusWeeks(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                11));
+
+        repository.save(new FoodProduct(null,
+                food12ESGI,
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(4).getYear(), date.plusDays(4).getMonthValue(), date.plusDays(4).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(3).getYear(), date.plusDays(3).getMonthValue(), date.plusDays(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                35));
+
+        repository.save(new FoodProduct(null,
+                food13ESGI,
+                FoodConservation.FROZEN,
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(1).getYear(), date.plusWeeks(1).getMonthValue(), date.plusWeeks(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                25));
+
+        repository.save(new FoodProduct(null,
+                food14ESGI,
+                FoodConservation.REFRIGERATED,
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(3).getYear(), date.plusDays(3).getMonthValue(), date.plusDays(3).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusDays(2).getYear(), date.plusDays(2).getMonthValue(), date.plusDays(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                134));
+
+        repository.save(new FoodProduct(null,
+                food15ESGI,
+                FoodConservation.ROOM_TEMPERATURE,
+                ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                ZonedDateTime.of(LocalDateTime.of(date.plusWeeks(2).getYear(), date.plusWeeks(2).getMonthValue(), date.plusWeeks(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
+                91));
     }
 
     public void storageFixtureRepository(StorageRepository storageRepository) {
@@ -734,10 +898,14 @@ public class FixturesConfig {
         var foodProductList = List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15);
         var clothProductList = List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15);
 
-        for(var storage : List.of(storageValOrge, storageESGI)) {
-            fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates, storage);
-            fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates, storage);
-        }
+        fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates, storageValOrge);
+        fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates, storageValOrge);
+
+        var foodProductListESGI = List.of(food1ESGI, food2ESGI, food3ESGI, food4ESGI, food5ESGI, food6ESGI, food7ESGI, food8ESGI, food9ESGI, food10ESGI, food11ESGI, food12ESGI, food13ESGI, food14ESGI, food15ESGI);
+        var clothProductListESGI = List.of(cloth1ESGI, cloth2ESGI, cloth3ESGI, cloth4ESGI, cloth5ESGI, cloth6ESGI, cloth7ESGI, cloth8ESGI, cloth9ESGI, cloth10ESGI, cloth11ESGI, cloth12ESGI, cloth13ESGI, cloth14ESGI, cloth15ESGI);
+
+        fillBeneficiaryProductWithRandom(repo, random, foodProductListESGI, beneficiaryFoodProductDatesESGI, storageESGI);
+        fillBeneficiaryProductWithRandom(repo, random, clothProductListESGI, beneficiaryClothProductDatesESGI, storageESGI);
     }
 
     private void fillBeneficiaryProductWithRandom(BeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates, Storage storage) {
@@ -763,11 +931,13 @@ public class FixturesConfig {
     public void storageProductFixtureRepository(StorageProductRepository storageProductRepository) {
         var random = new Random();
 
-        for(var storage : List.of(storageValOrge, storageESGI)) {
-            for(var product : List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15,
-                    food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15) ) {
-                storageProductRepository.save(new StorageProduct(null, storage, product, random.nextInt(5, 50)));
-            }
+        for(var product : List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15,
+                food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15) ) {
+            storageProductRepository.save(new StorageProduct(null, storageValOrge, product, random.nextInt(5, 50)));
+        }
+        for(var product : List.of(cloth1ESGI, cloth2ESGI, cloth3ESGI, cloth4ESGI, cloth5ESGI, cloth6ESGI, cloth7ESGI, cloth8ESGI, cloth9ESGI, cloth10ESGI, cloth11ESGI, cloth12ESGI, cloth13ESGI, cloth14ESGI, cloth15ESGI,
+                food1ESGI, food2ESGI, food3ESGI, food4ESGI, food5ESGI, food6ESGI, food7ESGI, food8ESGI, food9ESGI, food10ESGI, food11ESGI, food12ESGI, food13ESGI, food14ESGI, food15ESGI) ) {
+            storageProductRepository.save(new StorageProduct(null, storageESGI, product, random.nextInt(5, 50)));
         }
     }
 }
