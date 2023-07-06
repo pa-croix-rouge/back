@@ -2,11 +2,14 @@ package fr.croixrouge.repository.db.product;
 
 import fr.croixrouge.storage.model.product.FoodConservation;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Table(name = "food-product")
 @Entity
+@SQLDelete(sql = "UPDATE product SET deleted = CURRENT_TIME WHERE id=?")
 public class FoodProductDB {
 
     @Id
@@ -29,6 +32,17 @@ public class FoodProductDB {
 
     @Column(name = "optimal_consumption_date")
     private ZonedDateTime optimalConsumptionDate;
+
+    @Column(name = "deleted")
+    private LocalDateTime deletionDate;
+
+    public LocalDateTime getDeletionDate() {
+        return deletionDate;
+    }
+
+    public void setDeletionDate(LocalDateTime deletionDate) {
+        this.deletionDate = deletionDate;
+    }
 
     public FoodProductDB() {
     }

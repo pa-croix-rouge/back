@@ -2,9 +2,14 @@ package fr.croixrouge.repository.db.product;
 
 import fr.croixrouge.repository.db.product_limit.ProductLimitDB;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @Table(name = "product")
 @Entity
+@SQLDelete(sql = "UPDATE product SET deleted = CURRENT_TIME WHERE id=?")
 public class ProductDB {
 
     @Id
@@ -24,6 +29,17 @@ public class ProductDB {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_limit_db_id")
     private ProductLimitDB productLimitDB;
+
+    @Column(name = "deleted")
+    private LocalDateTime deletionDate;
+
+    public LocalDateTime getDeletionDate() {
+        return deletionDate;
+    }
+
+    public void setDeletionDate(LocalDateTime deletionDate) {
+        this.deletionDate = deletionDate;
+    }
 
     public ProductDB() {
     }

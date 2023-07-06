@@ -28,6 +28,7 @@ import fr.croixrouge.repository.db.storage_product.InDBStorageProductRepository;
 import fr.croixrouge.repository.db.storage_product.StorageProductDBRepository;
 import fr.croixrouge.repository.db.user.InDBUserRepository;
 import fr.croixrouge.repository.db.user.UserDBRepository;
+import fr.croixrouge.repository.db.user_product.BeneficiaryProductDB;
 import fr.croixrouge.repository.db.user_product.InDBBeneficiaryProductRepository;
 import fr.croixrouge.repository.db.user_product.UserProductDBRepository;
 import fr.croixrouge.repository.db.volunteer.InDBVolunteerRepository;
@@ -329,7 +330,7 @@ public class FixturesConfig {
     }
 
     public void eventFixtureRepository(EventRepository eventRepository) {
-        List<User> userBeneficiariesInDB = List.of(beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47);
+        List<Beneficiary> userBeneficiariesInDB = List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47);
         ZonedDateTime eventLimit = ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 0, 0), ZoneId.of("Europe/Paris"));
 
         ZonedDateTime eventStart1 = ZonedDateTime.of(LocalDateTime.of(2023, 4, 1, 10, 0), ZoneId.of("Europe/Paris"));
@@ -380,6 +381,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryClothProductDates.containsKey(beneficiary)) {
+                        beneficiaryClothProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryClothProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList3.add(new EventTimeWindow(null, eventStartDate3.plusMinutes(i * 30), eventStartDate3.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -404,6 +413,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryFoodProductDates.containsKey(beneficiary)) {
+                        beneficiaryFoodProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryFoodProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList4.add(new EventTimeWindow(null, eventStartDate4.plusMinutes(i * 30), eventStartDate4.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -428,6 +445,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryFoodProductDates.containsKey(beneficiary)) {
+                        beneficiaryFoodProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryFoodProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList5.add(new EventTimeWindow(null, eventStartDate5.plusMinutes(i * 30), eventStartDate5.plusMinutes((i + 1) * 30), 6, participants));
             }
@@ -452,6 +477,14 @@ public class FixturesConfig {
                         randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
                     }
                     participants.add(randomBeneficiaryId);
+
+                    ID finalRandomBeneficiaryId = randomBeneficiaryId;
+                    var beneficiary = userBeneficiariesInDB.stream().filter(b -> b.getId().equals(finalRandomBeneficiaryId)).findFirst().orElseThrow();
+                    if (beneficiaryFoodProductDates.containsKey(beneficiary)) {
+                        beneficiaryFoodProductDates.get(beneficiary).add(eventStartDate3.plusMinutes(i * 30).toLocalDateTime());
+                    } else {
+                        beneficiaryFoodProductDates.put(beneficiary, new ArrayList<>(List.of(eventStartDate3.plusMinutes(i * 30).toLocalDateTime())));
+                    }
                 }
                 eventTimeWindowList6.add(new EventTimeWindow(null, eventStartDate6.plusMinutes(i * 30), eventStartDate6.plusMinutes((i + 1) * 30), 5, participants));
             }
