@@ -148,11 +148,11 @@ public class FixturesConfig {
 
         managerESGI = new User(null, "pierre.dumont@esgi.fr", "Password.123", localUnit, List.of(managerRoleESGI), true, null);
 
-        volunteerUserESGI1 = new User(null, "lucie.martin@esgi.fr", "Password.123", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI2 = new User(null, "benjamin.durand@esgi.fr", "Password.123", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI3 = new User(null, "claire.lemoine@esgi.fr", "Password.123", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI4 = new User(null, "alexis.dupont@esgi.fr", "Password.123", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI5 = new User(null, "sophie.girard@esgi.fr", "Password.123", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI1 = new User(null, "lucie.martin@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI2 = new User(null, "benjamin.durand@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI3 = new User(null, "claire.lemoine@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI4 = new User(null, "alexis.dupont@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI5 = new User(null, "sophie.girard@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
 
         volunteerManagerESGI = new Volunteer(null, managerESGI, "Pierre", "DUMONT", "+33 6 40 50 60 70", true);
         volunteerESGI1 = new Volunteer(null, volunteerUserESGI1, "Lucie", "MARTIN", "+33 6 80 90 10 20", true);
@@ -257,16 +257,16 @@ public class FixturesConfig {
         beneficiary46 = new Beneficiary(null, beneficiaryUserValOrge46, "Zola", "Ndlovu", "+263 753 628 841", true, LocalDate.of(1994, 5, 25), "2 94 05 25 91 157 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
         beneficiary47 = new Beneficiary(null, beneficiaryUserValOrge47, "Sibusiso", "Khumalo", "+263 437 845 219", true, LocalDate.of(1989, 12, 15), "1 89 12 15 91 143 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
 
-        beneficiaryUserESGI1 = new User(null, "pierre.paul@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI2 = new User(null, "jean.dupont@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI3 = new User(null, "marie.durand@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI4 = new User(null, "louis.bernard@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI5 = new User(null, "claire.lefebvre@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI6 = new User(null, "alain.moreau@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI7 = new User(null, "sophie.martin@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI8 = new User(null, "bernard.leroy@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI9 = new User(null, "chantal.dumont@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI10 = new User(null, "francois.rousseau@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI1 = new User(null, "pierre.paul@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI2 = new User(null, "jean.dupont@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI3 = new User(null, "marie.durand@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI4 = new User(null, "louis.bernard@orange.fr", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI5 = new User(null, "claire.lefebvre@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI6 = new User(null, "alain.moreau@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI7 = new User(null, "sophie.martin@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI8 = new User(null, "bernard.leroy@orange.fr", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI9 = new User(null, "chantal.dumont@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI10 = new User(null, "francois.rousseau@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
 
         beneficiaryESGI1 = new Beneficiary(null, beneficiaryUserESGI1, "Pierre", "PAUL", "+33 6 72 51 39 84", true, LocalDate.of(1990, 5, 5), "1 90 05 05 2A 122 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
         beneficiaryESGI2 = new Beneficiary(null, beneficiaryUserESGI2, "Jean", "DUPONT", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 6), "1 92 03 06 75 113 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
