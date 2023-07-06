@@ -80,9 +80,9 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
         var newBeneficiary = new Beneficiary(id,
                 newUser,
-                beneficiaryCreationRequest.getFirstName() == null ? beneficiary.getFirstName() : beneficiaryCreationRequest.getFirstName(),
-                beneficiaryCreationRequest.getLastName() == null ? beneficiary.getLastName() : beneficiaryCreationRequest.getLastName(),
-                beneficiaryCreationRequest.getPhoneNumber() == null ? beneficiary.getPhoneNumber() : beneficiaryCreationRequest.getPhoneNumber(),
+                beneficiaryCreationRequest.getFirstName() == null || beneficiaryCreationRequest.getFirstName().isEmpty() ? beneficiary.getFirstName() : beneficiaryCreationRequest.getFirstName(),
+                beneficiaryCreationRequest.getLastName() == null || beneficiaryCreationRequest.getLastName().isEmpty()? beneficiary.getLastName() : beneficiaryCreationRequest.getLastName(),
+                beneficiaryCreationRequest.getPhoneNumber() == null || beneficiaryCreationRequest.getPhoneNumber().isEmpty() ? beneficiary.getPhoneNumber() : beneficiaryCreationRequest.getPhoneNumber(),
                 beneficiary.isValidated(),
                 beneficiaryCreationRequest.getBirthDate() == null ? beneficiary.getBirthDate() : beneficiaryCreationRequest.getBirthDate(),
                 beneficiaryCreationRequest.getSocialWorkerNumber() == null ? beneficiary.getSocialWorkerNumber() : beneficiaryCreationRequest.getSocialWorkerNumber(),
