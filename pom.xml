@@ -15,7 +15,6 @@
         <module>stock</module>
         <module>repository</module>
         <module>croix-rouge-repository</module>
-        <module>email-service</module>
     </modules>
 
     <properties>

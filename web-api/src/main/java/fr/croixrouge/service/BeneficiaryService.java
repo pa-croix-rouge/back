@@ -16,10 +16,13 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
     private final PasswordEncoder passwordEncoder;
 
-    public BeneficiaryService(BeneficiaryRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
+    private final MailService mailService;
+
+    public BeneficiaryService(BeneficiaryRepository repository, RoleService roleService, PasswordEncoder passwordEncoder, MailService mailService) {
         super(repository);
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     @Override
@@ -48,7 +51,13 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
         );
 
+        try {
+            mailService.sendEmailFromTemplate(newVolunteer.getUser().getUsername(), "test");
+        } catch (jakarta.mail.MessagingException e) {
+            throw new RuntimeException(e);
+        }
         return super.save(newBeneficiary);
+
     }
 
     public Beneficiary findByUserId(ID id) {
