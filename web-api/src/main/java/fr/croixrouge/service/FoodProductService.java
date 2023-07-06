@@ -23,7 +23,10 @@ public class FoodProductService extends CRUDService<ID, FoodProduct, FoodProduct
     }
 
     public List<FoodProduct> findAllByLocalUnitId(ID localUnitId) {
-        return storageProductService.findAllByLocalUnitId(localUnitId).stream().map(storageProduct -> this.repository.findByProductId(storageProduct.getId())).flatMap(java.util.Optional::stream).toList();
+        return storageProductService.findAllByLocalUnitId(localUnitId).stream()
+                .map(storageProduct -> this.repository.findByProductId(storageProduct.getId()))
+                .flatMap(java.util.Optional::stream)
+                .toList();
     }
 
     public List<FoodProduct> findAllSoonExpiredByLocalUnitId(ID localUnitId) {

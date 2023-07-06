@@ -23,4 +23,9 @@ public class InMemoryProductRepository extends InMemoryCRUDRepository<ID, Produc
     public List<Product> findAllWithProductLimit(ID productLimitId) {
         return null;
     }
+
+    @Override
+    public boolean isDeleted(ID id) {
+        return false;
+    }
 }

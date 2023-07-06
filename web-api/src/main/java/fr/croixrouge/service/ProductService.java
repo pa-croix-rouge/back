@@ -5,6 +5,8 @@ import fr.croixrouge.storage.model.product.Product;
 import fr.croixrouge.storage.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class ProductService extends CRUDService<ID, Product, ProductRepository> {
 
@@ -24,4 +26,12 @@ public class ProductService extends CRUDService<ID, Product, ProductRepository> 
                 });
     }
 
+    @Override
+    public Product findById(ID id) {
+        var product = super.findById(id);
+        if (repository.isDeleted(product.getId())) {
+            throw new NoSuchElementException();
+        }
+        return product;
+    }
 }

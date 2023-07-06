@@ -72,4 +72,9 @@ public class InDBProductRepository implements ProductRepository {
                 .map(this::toProduct)
                 .toList();
     }
+
+    @Override
+    public boolean isDeleted(ID id) {
+        return productDBRepository.existsByIdAndDeletionDateNotNull(id.value());
+    }
 }

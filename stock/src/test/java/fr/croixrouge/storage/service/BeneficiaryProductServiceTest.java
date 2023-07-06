@@ -36,7 +36,7 @@ class BeneficiaryProductServiceTest {
 
     private final User user = new User(new ID(1L), "TEST", "TEST", null, List.of());
 
-    private final Beneficiary beneficiary = new Beneficiary(new ID(1L), user, "TEST", "TEST", "number", true, LocalDate.now(), "", List.of(), 0.0);
+    private final Beneficiary beneficiary = new Beneficiary(new ID(1L), user, "TEST", "TEST", "number", true, LocalDate.now(), "", List.of(), 0L);
 
     private final ProductLimit limit1KgFor7Days = new ProductLimit(new ID(1L), "", Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM));
     private final Product productWeight1KgNoLimit = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
