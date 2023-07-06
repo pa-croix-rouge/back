@@ -32,4 +32,9 @@ public class InMemoryUserRepository extends InMemoryCRUDRepository<ID, User> imp
     public List<User> findAllByRole(Role role) {
         return null;
     }
+
+    @Override
+    public Optional<User> findByToken(String token) {
+        return Optional.empty();
+    }
 }

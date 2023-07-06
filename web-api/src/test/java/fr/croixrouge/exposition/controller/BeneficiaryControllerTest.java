@@ -62,6 +62,7 @@ public class BeneficiaryControllerTest {
                 true,
                 ID.of(1L),
                 List.of(),
+                true,
                 0L
         );
 

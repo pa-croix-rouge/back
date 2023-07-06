@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 public class UserService extends CRUDService<ID, User, UserRepository> {
 
-
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -22,6 +21,10 @@ public class UserService extends CRUDService<ID, User, UserRepository> {
 
     public User findByUsername(String username) {
         return repository.findByUsername(username).orElse(null);
+    }
+
+    public User findByToken(String token) {
+        return repository.findByToken(token).orElse(null);
     }
 
 

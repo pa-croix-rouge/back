@@ -43,7 +43,6 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok().build();
     }
 
-    //todo : only admin can update beneficiary
     @PostMapping("/validate/{id}")
     public ResponseEntity<BeneficiaryResponse> validateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
         Beneficiary beneficiary = service.findById(id);
@@ -61,7 +60,6 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok().build();
     }
 
-    //todo : only admin can update beneficiary
     @PostMapping("/invalidate/{id}")
     public ResponseEntity<BeneficiaryResponse> invalidateBeneficiary(@PathVariable ID id, HttpServletRequest request) {
         Beneficiary beneficiary = service.findById(id);
@@ -85,7 +83,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, creationRequest.getUsername(), creationRequest.getPassword(), localUnit, List.of());
+        User user = new User(null, creationRequest.getUsername(), creationRequest.getPassword(), localUnit, List.of(), false, null);
         Beneficiary beneficiary = new Beneficiary(null,
                 user,
                 creationRequest.getFirstName(),
@@ -106,6 +104,15 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         return ResponseEntity.ok(beneficiaryId);
     }
 
+    //update
+    @PutMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Void> update(@RequestBody BeneficiaryCreationRequest creationRequest, HttpServletRequest request) {
+        String username = authenticationService.getUsernameFromJwtToken(request);
+        Beneficiary beneficiary = service.findByUsername(username);
+        service.updateBeneficiary(beneficiary.getId(), creationRequest);
+        return ResponseEntity.ok().build();
+    }
+
     @Override
     public BeneficiaryResponse toDTO(Beneficiary model) {
         return new BeneficiaryResponse(
@@ -120,6 +127,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 model.getFamilyMembers().stream()
                         .map(FamilyMemberResponse::new)
                         .toList(),
+                model.getUser().isEmailValidated(),
                 model.getSolde()
         );
     }
