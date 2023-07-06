@@ -13,4 +13,6 @@ public interface UserRepository extends CRUDRepository<ID, User> {
 
     List<User> findAllByRole(Role role);
 
+    Optional<User> findByToken(String token);
+
 }

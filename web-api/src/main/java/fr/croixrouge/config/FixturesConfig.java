@@ -116,17 +116,17 @@ public class FixturesConfig {
                 localUnit,
                 List.of());
 
-        managerValOrge = new User(null, "bernard.lhuillier@croix-rouge.fr", "Password.123", localUnit, List.of(managerRoleValOrge), true, "");
+        managerValOrge = new User(null, "bernard.lhuillier@croix-rouge.fr", "Password.123", localUnit, List.of(managerRoleValOrge), true, null);
 
-        volunteerUserValOrge1 = new User(null, "valerie.leroux@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge2 = new User(null, "jerome.piat@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge3 = new User(null, "elodie.lechervy@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge4 = new User(null, "hugo.jean@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge5 = new User(null, "sebastien.joubert@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge6 = new User(null, "thomas.georget@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge7 = new User(null, "gael.germain@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge8 = new User(null, "charles.lefeuvre@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
-        volunteerUserValOrge9 = new User(null, "emilie.lassalas@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, "");
+        volunteerUserValOrge1 = new User(null, "valerie.leroux@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge2 = new User(null, "jerome.piat@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge3 = new User(null, "elodie.lechervy@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge4 = new User(null, "hugo.jean@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge5 = new User(null, "sebastien.joubert@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge6 = new User(null, "thomas.georget@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge7 = new User(null, "gael.germain@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge8 = new User(null, "charles.lefeuvre@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
+        volunteerUserValOrge9 = new User(null, "emilie.lassalas@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
         volunteerUserValOrge10 = new User(null, "anne.ozanne@croix-rouge.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), false, "d0f8c8a0-9f9a-4e9a-9b1a-2b7a3d1c0a0a");
 
         volunteerManagerValOrge = new Volunteer(null, managerValOrge, "Bernard", "L’HUILLIER", "+33 6 52 87 37 55", true);
@@ -141,50 +141,50 @@ public class FixturesConfig {
         volunteerValOrge9 = new Volunteer(null, volunteerUserValOrge9, "Emilie", "LASSALAS", "+33 6 51 67 93 27", true);
         volunteerValOrge10 = new Volunteer(null, volunteerUserValOrge10, "Anne", "OZANNE", "+33 7 36 80 72 55", true);
 
-        beneficiaryUserValOrge1 = new User(null, "dubois.elise92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge2 = new User(null, "m.martin-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge3 = new User(null, "lea.lambert91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge4 = new User(null, "jerome.girard.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge5 = new User(null, "camille.roux@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge6 = new User(null, "alexandre.bernard@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge7 = new User(null, "margot.dupont@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge8 = new User(null, "antoine.lefebvre@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge9 = new User(null, "juliette.moreau@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge10 = new User(null, "theo.thomas@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge11 = new User(null, "fernando.gomez92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge12 = new User(null, "ana.martinez-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge13 = new User(null, "jose.sanchez91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge14 = new User(null, "maria.hernandez.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge15 = new User(null, "juan.rodriguez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge16 = new User(null, "carmen.gonzalez@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge17 = new User(null, "manuel.fernandez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge18 = new User(null, "isabel.lopez@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge19 = new User(null, "francisco.torres@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge20 = new User(null, "rosa.garcia@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge21 = new User(null, "ali.hassan92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge22 = new User(null, "amina.mahmoud-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge23 = new User(null, "omar.farouk91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge24 = new User(null, "sarah.abdelrahman@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge25 = new User(null, "yusuf.alamoudi@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge26 = new User(null, "huda.fawzy@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge27 = new User(null, "kareem.elshamy@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge28 = new User(null, "asmaa.abdelfattah@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge29 = new User(null, "mostafa.kamal@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge30 = new User(null, "samar.ahmed@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge31 = new User(null, "khaled.sayed@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge32 = new User(null, "heba.elmohandes@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge33 = new User(null, "mohammed.ali@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge34 = new User(null, "fatma.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge35 = new User(null, "tamer.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge36 = new User(null, "jan.kowalski92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge37 = new User(null, "anna.nowak-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge38 = new User(null, "piotr.wisniewski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge39 = new User(null, "ewa.dabrowska@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge40 = new User(null, "tomasz.zielinski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge41 = new User(null, "amara.ndiaye@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge42 = new User(null, "nneka.osei@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge43 = new User(null, "kwame.mensah@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
-        beneficiaryUserValOrge44 = new User(null, "aminata.diallo@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, "");
+        beneficiaryUserValOrge1 = new User(null, "dubois.elise92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge2 = new User(null, "m.martin-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge3 = new User(null, "lea.lambert91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge4 = new User(null, "jerome.girard.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge5 = new User(null, "camille.roux@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge6 = new User(null, "alexandre.bernard@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge7 = new User(null, "margot.dupont@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge8 = new User(null, "antoine.lefebvre@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge9 = new User(null, "juliette.moreau@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge10 = new User(null, "theo.thomas@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge11 = new User(null, "fernando.gomez92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge12 = new User(null, "ana.martinez-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge13 = new User(null, "jose.sanchez91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge14 = new User(null, "maria.hernandez.aventure@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge15 = new User(null, "juan.rodriguez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge16 = new User(null, "carmen.gonzalez@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge17 = new User(null, "manuel.fernandez@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge18 = new User(null, "isabel.lopez@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge19 = new User(null, "francisco.torres@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge20 = new User(null, "rosa.garcia@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge21 = new User(null, "ali.hassan92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge22 = new User(null, "amina.mahmoud-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge23 = new User(null, "omar.farouk91@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge24 = new User(null, "sarah.abdelrahman@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge25 = new User(null, "yusuf.alamoudi@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge26 = new User(null, "huda.fawzy@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge27 = new User(null, "kareem.elshamy@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge28 = new User(null, "asmaa.abdelfattah@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge29 = new User(null, "mostafa.kamal@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge30 = new User(null, "samar.ahmed@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge31 = new User(null, "khaled.sayed@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge32 = new User(null, "heba.elmohandes@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge33 = new User(null, "mohammed.ali@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge34 = new User(null, "fatma.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge35 = new User(null, "tamer.hosny@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge36 = new User(null, "jan.kowalski92@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge37 = new User(null, "anna.nowak-explorer@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge38 = new User(null, "piotr.wisniewski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge39 = new User(null, "ewa.dabrowska@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge40 = new User(null, "tomasz.zielinski@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge41 = new User(null, "amara.ndiaye@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge42 = new User(null, "nneka.osei@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge43 = new User(null, "kwame.mensah@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
+        beneficiaryUserValOrge44 = new User(null, "aminata.diallo@orange.fr", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
         beneficiaryUserValOrge45 = new User(null, "tendai.mutasa@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), false, "a83e4cc4-1bc0-11ee-be56-0242ac120002");
         beneficiaryUserValOrge46 = new User(null, "zola.ndlovu@outlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), false, "b1fc63d6-1bc0-11ee-be56-0242ac120002");
         beneficiaryUserValOrge47 = new User(null, "sibusiso.khumalo@gmail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), false, "bb550dca-1bc0-11ee-be56-0242ac120002");
@@ -314,7 +314,7 @@ public class FixturesConfig {
 
     public void volunteerFixtureRepository(VolunteerService volunteerService) {
         for (Volunteer volunteer : List.of(volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10)) {
-            var id = volunteerService.save(volunteer);
+            var id = volunteerService.saveWithoutEmailSend(volunteer);
             volunteer.setId(id);
             volunteer.getUser().setId(id);
         }
@@ -322,7 +322,7 @@ public class FixturesConfig {
 
     public void beneficiaryFixtureRepository(BeneficiaryService beneficiaryService) {
         for (Beneficiary beneficiary : List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47)) {
-            var id = beneficiaryService.save(beneficiary);
+            var id = beneficiaryService.saveWithoutEmailSend(beneficiary);
             beneficiary.setId(id);
             beneficiary.getUser().setId(id);
         }

@@ -63,6 +63,31 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
         return super.save(newVolunteer);
     }
 
+    public ID saveWithoutEmailSend(Volunteer volunteer) {
+        if (volunteer.getId() != null) {
+            return super.save(volunteer);
+        }
+
+        var volunteerRole = roleService.getCommonRole(Role.COMMON_VOLUNTEER_ROLE_NAME);
+        var newVolunteer = new Volunteer(
+                null,
+                new User(null,
+                        volunteer.getUser().getUsername(),
+                        passwordEncoder.encode(volunteer.getUser().getPassword()),
+                        volunteer.getUser().getLocalUnit(),
+                        Stream.concat(Stream.of(volunteerRole), volunteer.getUser().getRoles().stream()).toList(),
+                        volunteer.getUser().isEmailValidated(),
+                        null
+                ),
+                volunteer.getFirstName(),
+                volunteer.getLastName(),
+                volunteer.getPhoneNumber(),
+                volunteer.isValidated()
+        );
+
+        return super.save(newVolunteer);
+    }
+
     public Volunteer findByUserId(ID id) {
         return this.repository.findByUserId(id).orElseThrow();
     }

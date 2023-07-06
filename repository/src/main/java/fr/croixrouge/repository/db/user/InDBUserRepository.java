@@ -82,4 +82,9 @@ public class InDBUserRepository implements UserRepository {
     public List<User> findAllByRole(Role role) {
         return userDBRepository.findByRoleDBs_RoleID(role.getId().value()).stream().map(this::toUser).toList();
     }
+
+    @Override
+    public Optional<User> findByToken(String token) {
+        return userDBRepository.findByToken(token).map(this::toUser);
+    }
 }

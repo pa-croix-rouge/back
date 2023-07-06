@@ -1,8 +1,10 @@
 package fr.croixrouge.exposition.controller;
 
 
+import fr.croixrouge.exposition.dto.ErrorDTO;
 import fr.croixrouge.exposition.dto.core.LoginRequest;
 import fr.croixrouge.exposition.dto.core.LoginResponse;
+import fr.croixrouge.exposition.error.EmailNotConfirmError;
 import fr.croixrouge.exposition.error.ErrorHandler;
 import fr.croixrouge.service.AuthenticationService;
 import fr.croixrouge.service.VolunteerService;
@@ -22,21 +24,25 @@ public class LoginController extends ErrorHandler {
     }
 
     @PostMapping(value = "/volunteer", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<LoginResponse> volunteerLogin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> volunteerLogin(@RequestBody LoginRequest loginRequest) {
         System.out.println("volunteerLogin");
         try { // TODO Controller Exception handling
             return ResponseEntity.ok(service.authenticateVolunteer(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EmailNotConfirmError e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorDTO(e.getMessage()));
         }
     }
 
     @PostMapping(value = "/beneficiary", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<LoginResponse> beneficiaryLogin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> beneficiaryLogin(@RequestBody LoginRequest loginRequest) {
         try { // TODO Controller Exception handling
             return ResponseEntity.ok(service.authenticateBeneficiary(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EmailNotConfirmError e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorDTO(e.getMessage()));
         }
     }
 

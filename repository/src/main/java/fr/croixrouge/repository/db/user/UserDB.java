@@ -33,7 +33,7 @@ public class UserDB {
     @Column(name = "email_validated", nullable = false)
     private boolean emailValidated;
 
-    @Column(name = "token_to_validate_email", nullable = false)
+    @Column(name = "token_to_validate_email", unique = true)
     private String tokenToValidateEmail;
 
     @ManyToOne(optional = false)

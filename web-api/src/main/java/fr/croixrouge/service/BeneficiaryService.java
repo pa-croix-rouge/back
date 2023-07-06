@@ -65,6 +65,35 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
     }
 
+    public ID saveWithoutEmailSend(Beneficiary beneficiary) {
+        if (beneficiary.getId() != null) {
+            return super.save(beneficiary);
+        }
+
+        var benefRole = roleService.getCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME);
+        var newBeneficiary = new Beneficiary(
+                null,
+                new User(null,
+                        beneficiary.getUser().getUsername(),
+                        passwordEncoder.encode(beneficiary.getUser().getPassword()),
+                        beneficiary.getUser().getLocalUnit(),
+                        Stream.concat(Stream.of(benefRole), beneficiary.getUser().getRoles().stream()).toList(),
+                        beneficiary.getUser().isEmailValidated(),
+                        null
+                ),
+                beneficiary.getFirstName(),
+                beneficiary.getLastName(),
+                beneficiary.getPhoneNumber(),
+                beneficiary.isValidated(),
+                beneficiary.getBirthDate(),
+                beneficiary.getSocialWorkerNumber(),
+                beneficiary.getFamilyMembers()
+
+        );
+
+        return super.save(newBeneficiary);
+    }
+
     public Beneficiary findByUserId(ID id) {
         return this.repository.findByUserId(id).orElseThrow();
     }

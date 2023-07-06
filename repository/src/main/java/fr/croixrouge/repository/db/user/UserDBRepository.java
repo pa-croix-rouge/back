@@ -17,5 +17,7 @@ public interface UserDBRepository extends CrudRepository<UserDB, Long> {
     @Query("select u from UserDB u inner join u.roleDBs roleDBs where roleDBs.roleID = ?1")
     List<UserDB> findByRoleDBs_RoleID(Long roleID);
 
+    @Query("select u from UserDB u where u.tokenToValidateEmail = :token")
+    Optional<UserDB> findByToken(@Param("token") String token);
 
 }
