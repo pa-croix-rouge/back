@@ -37,7 +37,7 @@ public class FixturesConfig {
     private final LocalUnit localUnitESGI;
     private final Product cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15, food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15;
     private final List<ProductLimit> productLimits;
-    private final Storage storage;
+    private final Storage storageValOrge, storageESGI;
 
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
@@ -329,7 +329,8 @@ public class FixturesConfig {
         food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
         food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
 
-        storage = new Storage(null, "Entrepot de l'unité local", localUnit, address);
+        storageValOrge = new Storage(null, "Entrepot de l'unité local", localUnit, address);
+        storageESGI = new Storage(null, "Placard", localUnit, address);
 
         localUnitFixtureRepository(localUnitRepository);
         roleFixtureRepository(roleRepository);
@@ -733,12 +734,13 @@ public class FixturesConfig {
         var foodProductList = List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15);
         var clothProductList = List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15);
 
-        fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates);
-
-        fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates);
+        for(var storage : List.of(storageValOrge, storageESGI)) {
+            fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates, storage);
+            fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates, storage);
+        }
     }
 
-    private void fillBeneficiaryProductWithRandom(BeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
+    private void fillBeneficiaryProductWithRandom(BeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates, Storage storage) {
         for (var entry : beneficiaryFoodProductDates.entrySet()) {
             for (var date : entry.getValue()) {
                 if (date.isAfter(LocalDateTime.now()))
@@ -759,35 +761,13 @@ public class FixturesConfig {
     }
 
     public void storageProductFixtureRepository(StorageProductRepository storageProductRepository) {
-        storageProductRepository.save(new StorageProduct(null, storage, cloth1, 5));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth2, 8));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth3, 15));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth4, 12));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth5, 20));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth6, 7));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth7, 10));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth8, 6));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth9, 9));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth10, 18));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth11, 3));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth12, 5));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth13, 12));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth14, 15));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth15, 9));
-        storageProductRepository.save(new StorageProduct(null, storage, food1, 8));
-        storageProductRepository.save(new StorageProduct(null, storage, food2, 6));
-        storageProductRepository.save(new StorageProduct(null, storage, food3, 4));
-        storageProductRepository.save(new StorageProduct(null, storage, food4, 10));
-        storageProductRepository.save(new StorageProduct(null, storage, food5, 15));
-        storageProductRepository.save(new StorageProduct(null, storage, food6, 7));
-        storageProductRepository.save(new StorageProduct(null, storage, food7, 12));
-        storageProductRepository.save(new StorageProduct(null, storage, food8, 9));
-        storageProductRepository.save(new StorageProduct(null, storage, food9, 11));
-        storageProductRepository.save(new StorageProduct(null, storage, food10, 14));
-        storageProductRepository.save(new StorageProduct(null, storage, food11, 8));
-        storageProductRepository.save(new StorageProduct(null, storage, food12, 6));
-        storageProductRepository.save(new StorageProduct(null, storage, food13, 3));
-        storageProductRepository.save(new StorageProduct(null, storage, food14, 5));
-        storageProductRepository.save(new StorageProduct(null, storage, food15, 10));
+        var random = new Random();
+
+        for(var storage : List.of(storageValOrge, storageESGI)) {
+            for(var product : List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15,
+                    food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15) ) {
+                storageProductRepository.save(new StorageProduct(null, storage, product, random.nextInt(5, 50)));
+            }
+        }
     }
 }
