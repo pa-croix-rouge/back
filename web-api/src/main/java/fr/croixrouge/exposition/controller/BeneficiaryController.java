@@ -32,7 +32,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
 
     @GetMapping(value = "/token", produces = "application/json")
     public ResponseEntity<BeneficiaryResponse> get(HttpServletRequest request) {
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         Beneficiary beneficiary = service.findByUsername(username);
         return ResponseEntity.ok(this.toDTO(beneficiary));
     }
@@ -50,7 +50,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (beneficiary == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = beneficiary.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();
@@ -68,7 +68,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (beneficiary == null) {
             return ResponseEntity.notFound().build();
         }
-        String username = authenticationService.getUserIdFromJwtToken(request);
+        String username = authenticationService.getUsernameFromJwtToken(request);
         LocalUnit localUnit = beneficiary.getUser().getLocalUnit();
         if (!localUnit.getManagerUsername().equals(username)) {
             return ResponseEntity.status(403).build();

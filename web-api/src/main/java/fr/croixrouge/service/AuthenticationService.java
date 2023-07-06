@@ -1,6 +1,7 @@
 package fr.croixrouge.service;
 
 import fr.croixrouge.config.JwtTokenConfig;
+import fr.croixrouge.domain.model.Entity;
 import fr.croixrouge.domain.repository.BeneficiaryRepository;
 import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.domain.repository.UserRepository;
@@ -114,7 +115,7 @@ public class AuthenticationService {
 //        tokenRepository.saveAll(validUserTokens);
     }
 
-    public String getUserIdFromJwtToken(HttpServletRequest request) {
+    public String getUsernameFromJwtToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(jwtTokenConfig.getTokenHeader());
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
@@ -126,8 +127,17 @@ public class AuthenticationService {
         return this.jwtTokenConfig.extractUsername(token);
     }
 
+    public ID getUserIdFromJwtToken(HttpServletRequest request) {
+        String username = this.getUsernameFromJwtToken(request);
+        if (username == null) {
+            return null;
+        }
+
+        return this.userRepository.findByUsername(username).map(Entity::getId).orElse(null);
+    }
+
     public ID getUserLocalUnitIdFromJwtToken(HttpServletRequest request) {
-        String username = this.getUserIdFromJwtToken(request);
+        String username = this.getUsernameFromJwtToken(request);
         if (username == null) {
             return null;
         }
