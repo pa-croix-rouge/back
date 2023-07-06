@@ -62,7 +62,8 @@ public class BeneficiaryControllerTest {
                 true,
                 ID.of(1L),
                 List.of(),
-                true
+                true,
+                0L
         );
 
         mockMvc.perform(get("/beneficiaries")

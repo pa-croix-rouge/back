@@ -35,4 +35,9 @@ public class InMemoryBeneficiaryRepository extends InMemoryCRUDRepository<ID, Be
     public List<Beneficiary> findAllByLocalUnitId(ID id) {
         return this.objects.stream().filter(o -> o.getUser().getLocalUnit().getId().equals(id)).toList();
     }
+
+    @Override
+    public void updateSolde(ID id, Double solde) {
+
+    }
 }

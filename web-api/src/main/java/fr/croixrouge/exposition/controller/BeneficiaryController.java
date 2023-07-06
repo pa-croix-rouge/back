@@ -84,8 +84,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
             return ResponseEntity.notFound().build();
         }
         User user = new User(null, creationRequest.getUsername(), creationRequest.getPassword(), localUnit, List.of(), false, null);
-        Beneficiary beneficiary = new Beneficiary(
-                null,
+        Beneficiary beneficiary = new Beneficiary(null,
                 user,
                 creationRequest.getFirstName(),
                 creationRequest.getLastName(),
@@ -95,8 +94,8 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 creationRequest.getSocialWorkerNumber(),
                 creationRequest.getFamilyMembers().stream()
                         .map(FamilyMemberCreationRequest::toModel)
-                        .toList()
-        );
+                        .toList(),
+                creationRequest.solde);
 
         ID beneficiaryId = service.save(beneficiary);
         if (beneficiaryId == null) {
@@ -125,8 +124,11 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 model.getPhoneNumber(),
                 model.isValidated(),
                 model.getUser().getLocalUnit().getId(),
-                model.getFamilyMembers().stream().map(FamilyMemberResponse::new).toList(),
-                model.getUser().isEmailValidated()
+                model.getFamilyMembers().stream()
+                        .map(FamilyMemberResponse::new)
+                        .toList(),
+                model.getUser().isEmailValidated(),
+                model.getSolde()
         );
     }
 

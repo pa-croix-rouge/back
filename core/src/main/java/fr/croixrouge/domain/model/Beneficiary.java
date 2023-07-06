@@ -14,7 +14,9 @@ public class Beneficiary extends Entity<ID> {
     private final String socialWorkerNumber;
     private final List<FamilyMember> familyMembers;
 
-    public Beneficiary(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, LocalDate birthDate, String socialWorkerNumber, List<FamilyMember> familyMembers) {
+    private final Long solde;
+
+    public Beneficiary(ID id, User user, String firstName, String lastName, String phoneNumber, boolean isValidated, LocalDate birthDate, String socialWorkerNumber, List<FamilyMember> familyMembers, Long solde) {
         super(id);
         this.user = user;
         this.firstName = firstName;
@@ -24,6 +26,7 @@ public class Beneficiary extends Entity<ID> {
         this.birthDate = birthDate;
         this.socialWorkerNumber = socialWorkerNumber;
         this.familyMembers = familyMembers;
+        this.solde = solde;
     }
 
     public User getUser() {
@@ -56,5 +59,9 @@ public class Beneficiary extends Entity<ID> {
 
     public List<FamilyMember> getFamilyMembers() {
         return familyMembers;
+    }
+
+    public Long getSolde() {
+        return solde;
     }
 }

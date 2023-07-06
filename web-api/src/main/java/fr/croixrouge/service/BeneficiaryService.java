@@ -87,9 +87,8 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
                 beneficiary.isValidated(),
                 beneficiary.getBirthDate(),
                 beneficiary.getSocialWorkerNumber(),
-                beneficiary.getFamilyMembers()
-
-        );
+                beneficiary.getFamilyMembers(),
+                beneficiary.getSolde());
 
         return super.save(newBeneficiary);
     }
@@ -137,8 +136,8 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
                                 familyMember.firstName,
                                 familyMember.lastName,
                                 familyMember.birthDate))
-                        .toList()
-        );
+                        .toList(),
+                beneficiaryCreationRequest.solde == null ? beneficiary.getSolde() : beneficiaryCreationRequest.solde);
 
         save(newBeneficiary);
     }

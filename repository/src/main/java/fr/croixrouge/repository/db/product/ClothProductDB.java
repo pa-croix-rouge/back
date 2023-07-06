@@ -3,9 +3,15 @@ package fr.croixrouge.repository.db.product;
 import fr.croixrouge.storage.model.product.ClothGender;
 import fr.croixrouge.storage.model.product.ClothSize;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @Table(name = "cloth-product")
 @Entity
+@SQLDelete(sql = "UPDATE product SET deleted = CURRENT_TIME WHERE id=?")
+@Where(clause = "deleted IS NULL")
 public class ClothProductDB {
 
     @Id
@@ -23,6 +29,17 @@ public class ClothProductDB {
     @Enumerated
     @Column(name = "gender")
     private ClothGender gender;
+
+    @Column(name = "deleted")
+    private LocalDateTime deletionDate;
+
+    public LocalDateTime getDeletionDate() {
+        return deletionDate;
+    }
+
+    public void setDeletionDate(LocalDateTime deletionDate) {
+        this.deletionDate = deletionDate;
+    }
 
     public ClothProductDB() {
     }
