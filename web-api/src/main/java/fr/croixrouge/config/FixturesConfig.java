@@ -108,21 +108,21 @@ public class FixturesConfig {
                 "ESGI gestionnaire",
                 "Role pour les gestionnaires de l'ESGI",
                 roleResources,
-                localUnit,
+                localUnitESGI,
                 List.of());
 
         defaultRoleESGI = new Role(null,
                 "ESGI volontaires",
                 "Role par défaut pour les volontaires de l'ESGI",
                 defaultRoleResources,
-                localUnit,
+                localUnitESGI,
                 List.of());
 
         beneficiaryRoleESGI = new Role(null,
                 "ESGI bénéficiaires",
                 "Role par défaut pour les bénéficiaires de l'ESGI",
                 defaultRoleResources,
-                localUnit,
+                localUnitESGI,
                 List.of());
 
         managerValOrge = new User(null, "bernard.lhuillier@crx.fr", "Password.123", localUnit, List.of(managerRoleValOrge), true, null);
@@ -150,13 +150,13 @@ public class FixturesConfig {
         volunteerValOrge9 = new Volunteer(null, volunteerUserValOrge9, "Emilie", "LASSALAS", "+33 6 51 67 93 27", true);
         volunteerValOrge10 = new Volunteer(null, volunteerUserValOrge10, "Anne", "OZANNE", "+33 7 36 80 72 55", true);
 
-        managerESGI = new User(null, "pierre.dumont@esgi.fr", "Password.123", localUnit, List.of(managerRoleESGI), true, null);
+        managerESGI = new User(null, "pierre.dumont@esgi.fr", "Password.123", localUnitESGI, List.of(managerRoleESGI), true, null);
 
-        volunteerUserESGI1 = new User(null, "lucie.martin@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI2 = new User(null, "benjamin.durand@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI3 = new User(null, "claire.lemoine@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI4 = new User(null, "alexis.dupont@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
-        volunteerUserESGI5 = new User(null, "sophie.girard@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI1 = new User(null, "lucie.martin@esgi.fr", "ESGI.2023", localUnitESGI, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI2 = new User(null, "benjamin.durand@esgi.fr", "ESGI.2023", localUnitESGI, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI3 = new User(null, "claire.lemoine@esgi.fr", "ESGI.2023", localUnitESGI, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI4 = new User(null, "alexis.dupont@esgi.fr", "ESGI.2023", localUnitESGI, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI5 = new User(null, "sophie.girard@esgi.fr", "ESGI.2023", localUnitESGI, List.of(defaultRoleESGI), true, null);
 
         volunteerManagerESGI = new Volunteer(null, managerESGI, "Pierre", "DUMONT", "+33 6 40 50 60 70", true);
         volunteerESGI1 = new Volunteer(null, volunteerUserESGI1, "Lucie", "MARTIN", "+33 6 80 90 10 20", true);
@@ -261,16 +261,16 @@ public class FixturesConfig {
         beneficiary46 = new Beneficiary(null, beneficiaryUserValOrge46, "Zola", "Ndlovu", "+263 753 628 841", true, LocalDate.of(1994, 5, 25), "2 94 05 25 91 157 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
         beneficiary47 = new Beneficiary(null, beneficiaryUserValOrge47, "Sibusiso", "Khumalo", "+263 437 845 219", true, LocalDate.of(1989, 12, 15), "1 89 12 15 91 143 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
 
-        beneficiaryUserESGI1 = new User(null, "pierre.paul@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI2 = new User(null, "jean.dupont@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI3 = new User(null, "marie.durand@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI4 = new User(null, "louis.bernard@orange.fr", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI5 = new User(null, "claire.lefebvre@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI6 = new User(null, "alain.moreau@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI7 = new User(null, "sophie.martin@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI8 = new User(null, "bernard.leroy@orange.fr", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI9 = new User(null, "chantal.dumont@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
-        beneficiaryUserESGI10 = new User(null, "francois.rousseau@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI1 = new User(null, "pierre.paul@gail.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI2 = new User(null, "jean.dupont@inlook.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI3 = new User(null, "marie.durand@gail.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI4 = new User(null, "louis.bernard@orange.fr", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI5 = new User(null, "claire.lefebvre@gail.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI6 = new User(null, "alain.moreau@inlook.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI7 = new User(null, "sophie.martin@gail.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI8 = new User(null, "bernard.leroy@orange.fr", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI9 = new User(null, "chantal.dumont@gail.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI10 = new User(null, "francois.rousseau@inlook.com", "ESGI.2023", localUnitESGI, List.of(beneficiaryRoleESGI), true, null);
 
         beneficiaryESGI1 = new Beneficiary(null, beneficiaryUserESGI1, "Pierre", "PAUL", "+33 6 72 51 39 84", true, LocalDate.of(1990, 5, 5), "1 90 05 05 2A 122 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
         beneficiaryESGI2 = new Beneficiary(null, beneficiaryUserESGI2, "Jean", "DUPONT", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 6), "1 92 03 06 75 113 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
@@ -300,7 +300,24 @@ public class FixturesConfig {
         var productLimit11 = new ProductLimit(null, "vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER), localUnit.getId());
         var productLimit12 = new ProductLimit(null, "sur vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER), localUnit.getId());
 
-        productLimits = List.of(productLimit, productLimit1, productLimit2, productLimit3, productLimit4, productLimit5, productLimit6, productLimit7, productLimit8, productLimit9, productLimit10, productLimit11, productLimit12, productLimit13, productLimit14);
+        var productLimitESGI = new ProductLimit(null, "Farine", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM), localUnitESGI.getId());
+        var productLimitESGI1 = new ProductLimit(null, "Sucre", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM), localUnitESGI.getId());
+        var productLimitESGI2 = new ProductLimit(null, "Couche", Duration.ofDays(15), new Quantifier(1, NumberedUnit.NUMBER), localUnitESGI.getId());
+        var productLimitESGI3 = new ProductLimit(null, "Lessive", Duration.ofDays(30), new Quantifier(1, VolumeUnit.LITER), localUnitESGI.getId());
+        var productLimitESGI14 = new ProductLimit(null, "laitier", Duration.ofDays(30), new Quantifier(1, VolumeUnit.LITER), localUnitESGI.getId());
+        var productLimitESGI4 = new ProductLimit(null, "Brosse a dents", Duration.ofDays(60), new Quantifier(1, NumberedUnit.NUMBER), localUnitESGI.getId());
+        var productLimitESGI5 = new ProductLimit(null, "dentifrice", Duration.ofDays(30), new Quantifier(1, NumberedUnit.NUMBER), localUnitESGI.getId());
+        var productLimitESGI6 = new ProductLimit(null, "shampooing / gel douche", Duration.ofDays(15), new Quantifier(1, VolumeUnit.LITER), localUnitESGI.getId());
+        var productLimitESGI7 = new ProductLimit(null, "féculents", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM), localUnitESGI.getId());
+        var productLimitESGI8 = new ProductLimit(null, "légumes", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM), localUnitESGI.getId());
+        var productLimitESGI13 = new ProductLimit(null, "viandes", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM), localUnitESGI.getId());
+        var productLimitESGI9 = new ProductLimit(null, "fruits", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM), localUnitESGI.getId());
+        var productLimitESGI10 = new ProductLimit(null, "sous vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER), localUnitESGI.getId());
+        var productLimitESGI11 = new ProductLimit(null, "vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER), localUnitESGI.getId());
+        var productLimitESGI12 = new ProductLimit(null, "sur vêtements", Duration.ofDays(30), new Quantifier(5, NumberedUnit.NUMBER), localUnitESGI.getId());
+
+        productLimits = List.of(productLimit, productLimit1, productLimit2, productLimit3, productLimit4, productLimit5, productLimit6, productLimit7, productLimit8, productLimit9, productLimit10, productLimit11, productLimit12, productLimit13, productLimit14,
+                productLimitESGI, productLimitESGI1, productLimitESGI2, productLimitESGI3, productLimitESGI4, productLimitESGI5, productLimitESGI6, productLimitESGI7, productLimitESGI8, productLimitESGI9, productLimitESGI10, productLimitESGI11, productLimitESGI12, productLimitESGI13, productLimitESGI14);
 
         cloth1 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnit.getId());
         cloth2 = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnit.getId());
@@ -333,39 +350,39 @@ public class FixturesConfig {
         food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13, localUnit.getId());
         food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8, localUnit.getId());
 
-        cloth1ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth2ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth3ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth4ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth5ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth6ESGI = new Product(null, "T-shirts blancs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth7ESGI = new Product(null, "Pantalons noirs", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth8ESGI = new Product(null, "Robes rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth9ESGI = new Product(null, "Pulls gris", new Quantifier(2, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth10ESGI = new Product(null, "Jupes bleues", new Quantifier(1, NumberedUnit.NUMBER), productLimit11, localUnitESGI.getId());
-        cloth11ESGI = new Product(null, "Chaussures noires", new Quantifier(1, NumberedUnit.NUMBER), productLimit12, localUnitESGI.getId());
-        cloth12ESGI = new Product(null, "Chaussures blanches", new Quantifier(1, NumberedUnit.NUMBER), productLimit12, localUnitESGI.getId());
-        cloth13ESGI = new Product(null, "Chaussettes noires", new Quantifier(5, NumberedUnit.NUMBER), productLimit10, localUnitESGI.getId());
-        cloth14ESGI = new Product(null, "Chaussettes blanches", new Quantifier(5, NumberedUnit.NUMBER), productLimit10, localUnitESGI.getId());
-        cloth15ESGI = new Product(null, "Baskets rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimit12, localUnitESGI.getId());
-        food1ESGI = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9, localUnitESGI.getId());
-        food2ESGI = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit7, localUnitESGI.getId());
-        food3ESGI = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), productLimit9, localUnitESGI.getId());
-        food4ESGI = new Product(null, "Oranges", new WeightQuantifier(750, WeightUnit.GRAM), productLimit9, localUnitESGI.getId());
-        food5ESGI = new Product(null, "Tomates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit9, localUnitESGI.getId());
-        food6ESGI = new Product(null, "Carottes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit8, localUnitESGI.getId());
-        food7ESGI = new Product(null, "Pommes de terre", new WeightQuantifier(2, WeightUnit.KILOGRAM), productLimit7, localUnitESGI.getId());
-        food8ESGI = new Product(null, "Fraises", new WeightQuantifier(250, WeightUnit.GRAM), productLimit9, localUnitESGI.getId());
-        food9ESGI = new Product(null, "Blancs de poulet", new WeightQuantifier(500, WeightUnit.GRAM), productLimit13, localUnitESGI.getId());
-        food10ESGI = new Product(null, "Filets de saumon", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13, localUnitESGI.getId());
-        food11ESGI = new Product(null, "Épinards", new WeightQuantifier(200, WeightUnit.GRAM), productLimit8, localUnitESGI.getId());
-        food12ESGI = new Product(null, "Yaourt", new WeightQuantifier(500, WeightUnit.GRAM), productLimit14, localUnitESGI.getId());
-        food13ESGI = new Product(null, "Pain", new WeightQuantifier(800, WeightUnit.GRAM), productLimit7, localUnitESGI.getId());
-        food14ESGI = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13, localUnitESGI.getId());
-        food15ESGI = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8, localUnitESGI.getId());
+        cloth1ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth2ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth3ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth4ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth5ESGI = new Product(null, "Chemises blanches", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth6ESGI = new Product(null, "T-shirts blancs", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth7ESGI = new Product(null, "Pantalons noirs", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth8ESGI = new Product(null, "Robes rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth9ESGI = new Product(null, "Pulls gris", new Quantifier(2, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth10ESGI = new Product(null, "Jupes bleues", new Quantifier(1, NumberedUnit.NUMBER), productLimitESGI11, localUnitESGI.getId());
+        cloth11ESGI = new Product(null, "Chaussures noires", new Quantifier(1, NumberedUnit.NUMBER), productLimitESGI12, localUnitESGI.getId());
+        cloth12ESGI = new Product(null, "Chaussures blanches", new Quantifier(1, NumberedUnit.NUMBER), productLimitESGI12, localUnitESGI.getId());
+        cloth13ESGI = new Product(null, "Chaussettes noires", new Quantifier(5, NumberedUnit.NUMBER), productLimitESGI10, localUnitESGI.getId());
+        cloth14ESGI = new Product(null, "Chaussettes blanches", new Quantifier(5, NumberedUnit.NUMBER), productLimitESGI10, localUnitESGI.getId());
+        cloth15ESGI = new Product(null, "Baskets rouges", new Quantifier(1, NumberedUnit.NUMBER), productLimitESGI12, localUnitESGI.getId());
+        food1ESGI = new Product(null, "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimitESGI9, localUnitESGI.getId());
+        food2ESGI = new Product(null, "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimitESGI7, localUnitESGI.getId());
+        food3ESGI = new Product(null, "Bananes", new WeightQuantifier(500, WeightUnit.GRAM), productLimitESGI9, localUnitESGI.getId());
+        food4ESGI = new Product(null, "Oranges", new WeightQuantifier(750, WeightUnit.GRAM), productLimitESGI9, localUnitESGI.getId());
+        food5ESGI = new Product(null, "Tomates", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimitESGI9, localUnitESGI.getId());
+        food6ESGI = new Product(null, "Carottes", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimitESGI8, localUnitESGI.getId());
+        food7ESGI = new Product(null, "Pommes de terre", new WeightQuantifier(2, WeightUnit.KILOGRAM), productLimitESGI7, localUnitESGI.getId());
+        food8ESGI = new Product(null, "Fraises", new WeightQuantifier(250, WeightUnit.GRAM), productLimitESGI9, localUnitESGI.getId());
+        food9ESGI = new Product(null, "Blancs de poulet", new WeightQuantifier(500, WeightUnit.GRAM), productLimitESGI13, localUnitESGI.getId());
+        food10ESGI = new Product(null, "Filets de saumon", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimitESGI13, localUnitESGI.getId());
+        food11ESGI = new Product(null, "Épinards", new WeightQuantifier(200, WeightUnit.GRAM), productLimitESGI8, localUnitESGI.getId());
+        food12ESGI = new Product(null, "Yaourt", new WeightQuantifier(500, WeightUnit.GRAM), productLimitESGI14, localUnitESGI.getId());
+        food13ESGI = new Product(null, "Pain", new WeightQuantifier(800, WeightUnit.GRAM), productLimitESGI7, localUnitESGI.getId());
+        food14ESGI = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimitESGI13, localUnitESGI.getId());
+        food15ESGI = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimitESGI8, localUnitESGI.getId());
 
         storageValOrge = new Storage(null, "Entrepot de l'unité local", localUnit, address);
-        storageESGI = new Storage(null, "Placard", localUnit, address);
+        storageESGI = new Storage(null, "Placard", localUnitESGI, addressESGI);
 
         localUnitFixtureRepository(localUnitRepository);
         roleFixtureRepository(roleRepository);
