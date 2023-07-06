@@ -25,15 +25,19 @@ import java.util.*;
 @Configuration
 @Profile("fixtures-prod")
 public class FixturesConfig {
-    private final Role managerRoleValOrge, defaultRoleValOrge, beneficiaryRoleValOrge;
-    private final User managerValOrge, volunteerUserValOrge1, volunteerUserValOrge2, volunteerUserValOrge3, volunteerUserValOrge4, volunteerUserValOrge5, volunteerUserValOrge6, volunteerUserValOrge7, volunteerUserValOrge8, volunteerUserValOrge9, volunteerUserValOrge10, beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47;
-    private final Volunteer volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10;
-    private final Beneficiary beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47;
+    private final Role managerRoleValOrge, defaultRoleValOrge, beneficiaryRoleValOrge, managerRoleESGI, defaultRoleESGI, beneficiaryRoleESGI;
+    private final User managerValOrge, volunteerUserValOrge1, volunteerUserValOrge2, volunteerUserValOrge3, volunteerUserValOrge4, volunteerUserValOrge5, volunteerUserValOrge6, volunteerUserValOrge7, volunteerUserValOrge8, volunteerUserValOrge9, volunteerUserValOrge10, beneficiaryUserValOrge1, beneficiaryUserValOrge2, beneficiaryUserValOrge3, beneficiaryUserValOrge4, beneficiaryUserValOrge5, beneficiaryUserValOrge6, beneficiaryUserValOrge7, beneficiaryUserValOrge8, beneficiaryUserValOrge9, beneficiaryUserValOrge10, beneficiaryUserValOrge11, beneficiaryUserValOrge12, beneficiaryUserValOrge13, beneficiaryUserValOrge14, beneficiaryUserValOrge15, beneficiaryUserValOrge16, beneficiaryUserValOrge17, beneficiaryUserValOrge18, beneficiaryUserValOrge19, beneficiaryUserValOrge20, beneficiaryUserValOrge21, beneficiaryUserValOrge22, beneficiaryUserValOrge23, beneficiaryUserValOrge24, beneficiaryUserValOrge25, beneficiaryUserValOrge26, beneficiaryUserValOrge27, beneficiaryUserValOrge28, beneficiaryUserValOrge29, beneficiaryUserValOrge30, beneficiaryUserValOrge31, beneficiaryUserValOrge32, beneficiaryUserValOrge33, beneficiaryUserValOrge34, beneficiaryUserValOrge35, beneficiaryUserValOrge36, beneficiaryUserValOrge37, beneficiaryUserValOrge38, beneficiaryUserValOrge39, beneficiaryUserValOrge40, beneficiaryUserValOrge41, beneficiaryUserValOrge42, beneficiaryUserValOrge43, beneficiaryUserValOrge44, beneficiaryUserValOrge45, beneficiaryUserValOrge46, beneficiaryUserValOrge47, managerESGI, volunteerUserESGI1, volunteerUserESGI2, volunteerUserESGI3, volunteerUserESGI4, volunteerUserESGI5, beneficiaryUserESGI1, beneficiaryUserESGI2, beneficiaryUserESGI3, beneficiaryUserESGI4, beneficiaryUserESGI5, beneficiaryUserESGI6, beneficiaryUserESGI7, beneficiaryUserESGI8, beneficiaryUserESGI9, beneficiaryUserESGI10;
+    private final Volunteer volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10, volunteerManagerESGI, volunteerESGI1, volunteerESGI2, volunteerESGI3, volunteerESGI4, volunteerESGI5;
+    private final Beneficiary beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47, beneficiaryESGI1, beneficiaryESGI2, beneficiaryESGI3, beneficiaryESGI4, beneficiaryESGI5, beneficiaryESGI6, beneficiaryESGI7, beneficiaryESGI8, beneficiaryESGI9, beneficiaryESGI10;
     private final Address address = new Address(Department.getDepartmentFromPostalCode("91"), "91240", "St Michel sur Orge", "76 rue des Liers");
+
+    private final Address addressESGI = new Address(Department.getDepartmentFromPostalCode("75"), "75012", "Paris", "242 rue du faubourg Saint Antoine");
     private final LocalUnit localUnit;
+
+    private final LocalUnit localUnitESGI;
     private final Product cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15, food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15;
     private final List<ProductLimit> productLimits;
-    private final Storage storage;
+    private final Storage storageValOrge, storageESGI;
 
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates = new HashMap<>();
     private Map<Beneficiary, List<LocalDateTime>> beneficiaryClothProductDates = new HashMap<>();
@@ -60,6 +64,12 @@ public class FixturesConfig {
                 address,
                 "bernard.lhuillier@crx.fr",
                 address.getPostalCode() + "-181");
+
+        localUnitESGI = new LocalUnit(new ID(2L),
+                "Unité Local de l'ESGI",
+                addressESGI,
+                "pierre.dumont@esgi.fr",
+                addressESGI.getPostalCode() + "-666");
 
 
         HashMap<Resources, Set<Operations>> roleResources = new HashMap<>();
@@ -90,6 +100,27 @@ public class FixturesConfig {
                 localUnit,
                 List.of());
 
+        managerRoleESGI = new Role(null,
+                "ESGI gestionnaire",
+                "Role pour les gestionnaires de l'ESGI",
+                roleResources,
+                localUnit,
+                List.of());
+
+        defaultRoleESGI = new Role(null,
+                "ESGI volontaires",
+                "Role par défaut pour les volontaires de l'ESGI",
+                defaultRoleResources,
+                localUnit,
+                List.of());
+
+        beneficiaryRoleESGI = new Role(null,
+                "ESGI bénéficiaires",
+                "Role par défaut pour les bénéficiaires de l'ESGI",
+                defaultRoleResources,
+                localUnit,
+                List.of());
+
         managerValOrge = new User(null, "bernard.lhuillier@crx.fr", "Password.123", localUnit, List.of(managerRoleValOrge), true, null);
 
         volunteerUserValOrge1 = new User(null, "valerie.leroux@crx.fr", "Password.123", localUnit, List.of(defaultRoleValOrge), true, null);
@@ -114,6 +145,21 @@ public class FixturesConfig {
         volunteerValOrge8 = new Volunteer(null, volunteerUserValOrge8, "Charles", "LEFEUVRE", "+33 7 45 32 79 68", true);
         volunteerValOrge9 = new Volunteer(null, volunteerUserValOrge9, "Emilie", "LASSALAS", "+33 6 51 67 93 27", true);
         volunteerValOrge10 = new Volunteer(null, volunteerUserValOrge10, "Anne", "OZANNE", "+33 7 36 80 72 55", true);
+
+        managerESGI = new User(null, "pierre.dumont@esgi.fr", "Password.123", localUnit, List.of(managerRoleESGI), true, null);
+
+        volunteerUserESGI1 = new User(null, "lucie.martin@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI2 = new User(null, "benjamin.durand@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI3 = new User(null, "claire.lemoine@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI4 = new User(null, "alexis.dupont@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+        volunteerUserESGI5 = new User(null, "sophie.girard@esgi.fr", "ESGI.2023", localUnit, List.of(defaultRoleESGI), true, null);
+
+        volunteerManagerESGI = new Volunteer(null, managerESGI, "Pierre", "DUMONT", "+33 6 40 50 60 70", true);
+        volunteerESGI1 = new Volunteer(null, volunteerUserESGI1, "Lucie", "MARTIN", "+33 6 80 90 10 20", true);
+        volunteerESGI2 = new Volunteer(null, volunteerUserESGI2, "Benjamin", "DURAND", "+33 6 70 80 90 10", true);
+        volunteerESGI3 = new Volunteer(null, volunteerUserESGI3, "Claire", "LEMOINE", "+33 6 60 70 80 90", true);
+        volunteerESGI4 = new Volunteer(null, volunteerUserESGI4, "Alexis", "DUPONT", "+33 6 50 60 70 80", true);
+        volunteerESGI5 = new Volunteer(null, volunteerUserESGI5, "Sophie", "GIRARD", "+33 6 40 50 60 70", true);
 
         beneficiaryUserValOrge1 = new User(null, "dubois.elise92@gail.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
         beneficiaryUserValOrge2 = new User(null, "m.martin-explorer@inlook.com", "Password.123", localUnit, List.of(beneficiaryRoleValOrge), true, null);
@@ -211,6 +257,29 @@ public class FixturesConfig {
         beneficiary46 = new Beneficiary(null, beneficiaryUserValOrge46, "Zola", "Ndlovu", "+263 753 628 841", true, LocalDate.of(1994, 5, 25), "2 94 05 25 91 157 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
         beneficiary47 = new Beneficiary(null, beneficiaryUserValOrge47, "Sibusiso", "Khumalo", "+263 437 845 219", true, LocalDate.of(1989, 12, 15), "1 89 12 15 91 143 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
 
+        beneficiaryUserESGI1 = new User(null, "pierre.paul@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI2 = new User(null, "jean.dupont@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI3 = new User(null, "marie.durand@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI4 = new User(null, "louis.bernard@orange.fr", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI5 = new User(null, "claire.lefebvre@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI6 = new User(null, "alain.moreau@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI7 = new User(null, "sophie.martin@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI8 = new User(null, "bernard.leroy@orange.fr", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI9 = new User(null, "chantal.dumont@gail.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+        beneficiaryUserESGI10 = new User(null, "francois.rousseau@inlook.com", "ESGI.2023", localUnit, List.of(beneficiaryRoleESGI), true, null);
+
+        beneficiaryESGI1 = new Beneficiary(null, beneficiaryUserESGI1, "Pierre", "PAUL", "+33 6 72 51 39 84", true, LocalDate.of(1990, 5, 5), "1 90 05 05 2A 122 019", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI2 = new Beneficiary(null, beneficiaryUserESGI2, "Jean", "DUPONT", "+33 6 28 93 75 46", true, LocalDate.of(1992, 3, 6), "1 92 03 06 75 113 557", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI3 = new Beneficiary(null, beneficiaryUserESGI3, "Marie", "DURAND", "+33 7 57 84 21 36", true, LocalDate.of(1988, 7, 19), "2 88 07 19 91 190 349", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI4 = new Beneficiary(null, beneficiaryUserESGI4, "Louis", "BERNARD", "+33 7 63 18 47 92", true, LocalDate.of(1983, 11, 9), "1 83 11 09 91 125 789", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI5 = new Beneficiary(null, beneficiaryUserESGI5, "Claire", "LEFEBVRE", "+33 6 41 75 69 23", true, LocalDate.of(1990, 5, 27), "2 90 05 27 93 102 901", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI6 = new Beneficiary(null, beneficiaryUserESGI6, "Alain", "MOREAU", "+33 7 89 36 54 17", true, LocalDate.of(1987, 1, 18), "1 87 01 18 92 105 302", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI7 = new Beneficiary(null, beneficiaryUserESGI7, "Sophie", "MARTIN", "+33 6 73 95 28 41", true, LocalDate.of(1994, 8, 10), "2 94 08 10 75 120 270", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI8 = new Beneficiary(null, beneficiaryUserESGI8, "Bernard", "LEROY", "+33 6 48 21 67 93", true, LocalDate.of(1991, 6, 25), "1 91 06 25 91 157 633", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI9 = new Beneficiary(null, beneficiaryUserESGI9, "Chantal", "DUMONT", "+33 7 37 84 52 19", true, LocalDate.of(1989, 12, 18), "2 89 12 18 91 143 751", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+        beneficiaryESGI10 = new Beneficiary(null, beneficiaryUserESGI10, "Francois", "ROUSSEAU", "+33 7 92 57 13 48", true, LocalDate.of(1993, 2, 8), "1 93 02 08 91 109 669", List.of(), (long) (random.nextDouble() * 1000 + 2000));
+
+
         var productLimit = new ProductLimit(null, "Farine", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
         var productLimit1 = new ProductLimit(null, "Sucre", Duration.ofDays(15), new Quantifier(1, WeightUnit.KILOGRAM));
         var productLimit2 = new ProductLimit(null, "Couche", Duration.ofDays(15), new Quantifier(1, NumberedUnit.NUMBER));
@@ -260,7 +329,8 @@ public class FixturesConfig {
         food14 = new Product(null, "Viande hachée", new WeightQuantifier(1, WeightUnit.KILOGRAM), productLimit13);
         food15 = new Product(null, "Oignons", new WeightQuantifier(750, WeightUnit.GRAM), productLimit8);
 
-        storage = new Storage(null, "Entrepot de l'unité local", localUnit, address);
+        storageValOrge = new Storage(null, "Entrepot de l'unité local", localUnit, address);
+        storageESGI = new Storage(null, "Placard", localUnit, address);
 
         localUnitFixtureRepository(localUnitRepository);
         roleFixtureRepository(roleRepository);
@@ -278,16 +348,20 @@ public class FixturesConfig {
 
     public void localUnitFixtureRepository(LocalUnitRepository localUnitRepository) {
         localUnitRepository.save(localUnit);
+        localUnitRepository.save(localUnitESGI);
     }
 
     public void roleFixtureRepository(RoleRepository inDBRoleRepository) {
         inDBRoleRepository.save(managerRoleValOrge);
         inDBRoleRepository.save(defaultRoleValOrge);
         inDBRoleRepository.save(beneficiaryRoleValOrge);
+        inDBRoleRepository.save(managerRoleESGI);
+        inDBRoleRepository.save(defaultRoleESGI);
+        inDBRoleRepository.save(beneficiaryRoleESGI);
     }
 
     public void volunteerFixtureRepository(VolunteerService volunteerService) {
-        for (Volunteer volunteer : List.of(volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10)) {
+        for (Volunteer volunteer : List.of(volunteerManagerValOrge, volunteerValOrge1, volunteerValOrge2, volunteerValOrge3, volunteerValOrge4, volunteerValOrge5, volunteerValOrge6, volunteerValOrge7, volunteerValOrge8, volunteerValOrge9, volunteerValOrge10, volunteerManagerESGI, volunteerESGI1, volunteerESGI2, volunteerESGI3, volunteerESGI4, volunteerESGI5)) {
             var id = volunteerService.saveWithoutEmailSend(volunteer);
             volunteer.setId(id);
             volunteer.getUser().setId(id);
@@ -295,7 +369,7 @@ public class FixturesConfig {
     }
 
     public void beneficiaryFixtureRepository(BeneficiaryService beneficiaryService) {
-        for (Beneficiary beneficiary : List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47)) {
+        for (Beneficiary beneficiary : List.of(beneficiary1, beneficiary2, beneficiary3, beneficiary4, beneficiary5, beneficiary6, beneficiary7, beneficiary8, beneficiary9, beneficiary10, beneficiary11, beneficiary12, beneficiary13, beneficiary14, beneficiary15, beneficiary16, beneficiary17, beneficiary18, beneficiary19, beneficiary20, beneficiary21, beneficiary22, beneficiary23, beneficiary24, beneficiary25, beneficiary26, beneficiary27, beneficiary28, beneficiary29, beneficiary30, beneficiary31, beneficiary32, beneficiary33, beneficiary34, beneficiary35, beneficiary36, beneficiary37, beneficiary38, beneficiary39, beneficiary40, beneficiary41, beneficiary42, beneficiary43, beneficiary44, beneficiary45, beneficiary46, beneficiary47, beneficiaryESGI1, beneficiaryESGI2, beneficiaryESGI3, beneficiaryESGI4, beneficiaryESGI5, beneficiaryESGI6, beneficiaryESGI7, beneficiaryESGI8, beneficiaryESGI9, beneficiaryESGI10)) {
             var id = beneficiaryService.saveWithoutEmailSend(beneficiary);
             beneficiary.setId(id);
             beneficiary.getUser().setId(id);
@@ -487,6 +561,31 @@ public class FixturesConfig {
                                 10,
                                 participants)))),
                 1));
+
+
+        ZonedDateTime eventStartDateESGI = ZonedDateTime.of(LocalDateTime.of(2023, 5, 15, 16, 0), ZoneId.of("Europe/Paris"));
+        List<EventSession> eventSessionsESGI = new ArrayList<>();
+        for (; eventStartDateESGI.isBefore(ZonedDateTime.of(LocalDateTime.of(2023, 9, 1, 0, 0), ZoneId.of("Europe/Paris"))); eventStartDateESGI = eventStartDateESGI.plusDays(1)) {
+            List<EventTimeWindow> eventTimeWindowListESGI = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                List<ID> participantsESGI = new ArrayList<>();
+                int numberOfParticipants = 0;
+                if (eventStartDateESGI.isBefore(eventLimit)) {
+                    numberOfParticipants = new Random().nextInt(4);
+                }
+                for (int j = 0; j < numberOfParticipants; j++) {
+                    ID randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    while (participants.contains(randomBeneficiaryId) || eventTimeWindowListESGI.stream().map(EventTimeWindow::getParticipants).flatMap(Collection::stream).toList().contains(randomBeneficiaryId)) {
+                        randomBeneficiaryId = userBeneficiariesInDB.get(new Random().nextInt(userBeneficiariesInDB.size())).getId();
+                    }
+                    participantsESGI.add(randomBeneficiaryId);
+                }
+                eventTimeWindowListESGI.add(new EventTimeWindow(null, eventStartDateESGI.plusMinutes(i * 15), eventStartDateESGI.plusMinutes((i + 1) * 15), 4, participantsESGI));
+            }
+            eventSessionsESGI.add(new EventSession(null, eventTimeWindowListESGI));
+        }
+        Event eventESGI = new Event(null, "Gouter", "Gouter pour les volontaires de l'ESGI", volunteerESGI1, localUnitESGI, eventSessionsESGI, eventSessionsESGI.size());
+        eventRepository.save(eventESGI);
     }
 
     public void productLimitFixtureRepository(ProductLimitRepository repo) {
@@ -624,8 +723,9 @@ public class FixturesConfig {
     }
 
     public void storageFixtureRepository(StorageRepository storageRepository) {
-        storageRepository.save(storage);
-        storageRepository.save(new Storage(null, "secondStorage", localUnit, address));
+        storageRepository.save(storageValOrge);
+        storageRepository.save(storageESGI);
+        storageRepository.save(new Storage(null, "Box de l'unité locale", localUnit, address));
     }
 
     public void storageUserProductFixtureRepository(BeneficiaryProductRepository repo) {
@@ -634,12 +734,13 @@ public class FixturesConfig {
         var foodProductList = List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15);
         var clothProductList = List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15);
 
-        fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates);
-
-        fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates);
+        for(var storage : List.of(storageValOrge, storageESGI)) {
+            fillBeneficiaryProductWithRandom(repo, random, foodProductList, beneficiaryFoodProductDates, storage);
+            fillBeneficiaryProductWithRandom(repo, random, clothProductList, beneficiaryClothProductDates, storage);
+        }
     }
 
-    private void fillBeneficiaryProductWithRandom(BeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates) {
+    private void fillBeneficiaryProductWithRandom(BeneficiaryProductRepository repo, Random random, List<Product> foodProductList, Map<Beneficiary, List<LocalDateTime>> beneficiaryFoodProductDates, Storage storage) {
         for (var entry : beneficiaryFoodProductDates.entrySet()) {
             for (var date : entry.getValue()) {
                 if (date.isAfter(LocalDateTime.now()))
@@ -660,35 +761,13 @@ public class FixturesConfig {
     }
 
     public void storageProductFixtureRepository(StorageProductRepository storageProductRepository) {
-        storageProductRepository.save(new StorageProduct(null, storage, cloth1, 5));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth2, 8));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth3, 15));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth4, 12));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth5, 20));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth6, 7));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth7, 10));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth8, 6));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth9, 9));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth10, 18));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth11, 3));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth12, 5));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth13, 12));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth14, 15));
-        storageProductRepository.save(new StorageProduct(null, storage, cloth15, 9));
-        storageProductRepository.save(new StorageProduct(null, storage, food1, 8));
-        storageProductRepository.save(new StorageProduct(null, storage, food2, 6));
-        storageProductRepository.save(new StorageProduct(null, storage, food3, 4));
-        storageProductRepository.save(new StorageProduct(null, storage, food4, 10));
-        storageProductRepository.save(new StorageProduct(null, storage, food5, 15));
-        storageProductRepository.save(new StorageProduct(null, storage, food6, 7));
-        storageProductRepository.save(new StorageProduct(null, storage, food7, 12));
-        storageProductRepository.save(new StorageProduct(null, storage, food8, 9));
-        storageProductRepository.save(new StorageProduct(null, storage, food9, 11));
-        storageProductRepository.save(new StorageProduct(null, storage, food10, 14));
-        storageProductRepository.save(new StorageProduct(null, storage, food11, 8));
-        storageProductRepository.save(new StorageProduct(null, storage, food12, 6));
-        storageProductRepository.save(new StorageProduct(null, storage, food13, 3));
-        storageProductRepository.save(new StorageProduct(null, storage, food14, 5));
-        storageProductRepository.save(new StorageProduct(null, storage, food15, 10));
+        var random = new Random();
+
+        for(var storage : List.of(storageValOrge, storageESGI)) {
+            for(var product : List.of(cloth1, cloth2, cloth3, cloth4, cloth5, cloth6, cloth7, cloth8, cloth9, cloth10, cloth11, cloth12, cloth13, cloth14, cloth15,
+                    food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12, food13, food14, food15) ) {
+                storageProductRepository.save(new StorageProduct(null, storage, product, random.nextInt(5, 50)));
+            }
+        }
     }
 }
