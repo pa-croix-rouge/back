@@ -32,14 +32,18 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
             return super.save(beneficiary);
         }
 
-        var volunteerRole = roleService.getCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME);
+        var uuid = mailService.generateToken();
+
+        var benefRole = roleService.getCommonRole(Role.COMMON_BENEFICIARY_ROLE_NAME);
         var newBeneficiary = new Beneficiary(
                 null,
                 new User(null,
                         beneficiary.getUser().getUsername(),
                         passwordEncoder.encode(beneficiary.getUser().getPassword()),
                         beneficiary.getUser().getLocalUnit(),
-                        Stream.concat(Stream.of(volunteerRole), beneficiary.getUser().getRoles().stream()).toList()
+                        Stream.concat(Stream.of(benefRole), beneficiary.getUser().getRoles().stream()).toList(),
+                        beneficiary.getUser().isEmailValidated(),
+                        uuid
                 ),
                 beneficiary.getFirstName(),
                 beneficiary.getLastName(),
@@ -51,8 +55,9 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
 
         );
 
+
         try {
-            mailService.sendEmailFromTemplate(newVolunteer.getUser().getUsername(), "test");
+            mailService.sendEmailFromTemplate(newBeneficiary.getUser().getUsername(), uuid);
         } catch (jakarta.mail.MessagingException e) {
             throw new RuntimeException(e);
         }
@@ -84,7 +89,9 @@ public class BeneficiaryService extends CRUDService<ID, Beneficiary, Beneficiary
                 beneficiaryCreationRequest.getUsername() == null ? beneficiary.getUser().getUsername() : beneficiaryCreationRequest.getUsername(),
                 beneficiaryCreationRequest.getPassword() == null ? beneficiary.getUser().getPassword() : beneficiaryCreationRequest.getPassword(),
                 beneficiary.getUser().getLocalUnit(),
-                beneficiary.getUser().getRoles()
+                beneficiary.getUser().getRoles(),
+                beneficiary.getUser().isEmailValidated(),
+                beneficiary.getUser().getTokenToValidateEmail()
         );
 
         var newBeneficiary = new Beneficiary(id,

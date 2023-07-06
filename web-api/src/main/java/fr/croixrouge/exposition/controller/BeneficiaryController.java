@@ -83,7 +83,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
         if (localUnit == null) {
             return ResponseEntity.notFound().build();
         }
-        User user = new User(null, creationRequest.getUsername(), creationRequest.getPassword(), localUnit, List.of());
+        User user = new User(null, creationRequest.getUsername(), creationRequest.getPassword(), localUnit, List.of(), false, null);
         Beneficiary beneficiary = new Beneficiary(
                 null,
                 user,
@@ -125,7 +125,8 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 model.getPhoneNumber(),
                 model.isValidated(),
                 model.getUser().getLocalUnit().getId(),
-                model.getFamilyMembers().stream().map(FamilyMemberResponse::new).toList()
+                model.getFamilyMembers().stream().map(FamilyMemberResponse::new).toList(),
+                model.getUser().isEmailValidated()
         );
     }
 

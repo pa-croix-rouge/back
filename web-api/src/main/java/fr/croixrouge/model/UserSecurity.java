@@ -11,8 +11,8 @@ public class UserSecurity extends User implements UserDetails {
 
     public Map<Resources, Set<Operations>> allAuthorizations;
 
-    public UserSecurity(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles, boolean emailValidated) {
-        super(userId, username, password, localUnit, roles, emailValidated);
+    public UserSecurity(ID userId, String username, String password, LocalUnit localUnit, List<Role> roles, boolean emailValidated, String tokenToValidateEmail) {
+        super(userId, username, password, localUnit, roles, emailValidated, tokenToValidateEmail);
 
         allAuthorizations = new HashMap<>();
         for (var role : roles) {
@@ -34,7 +34,7 @@ public class UserSecurity extends User implements UserDetails {
     }
 
     public UserSecurity(User user) {
-        this(user.getId(), user.getUsername(), user.getPassword(), user.getLocalUnit(), user.getRoles(), user.isEmailValidated());
+        this(user.getId(), user.getUsername(), user.getPassword(), user.getLocalUnit(), user.getRoles(), user.isEmailValidated(), user.getTokenToValidateEmail());
     }
 
     @Override

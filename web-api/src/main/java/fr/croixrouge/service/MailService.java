@@ -3,9 +3,12 @@ package fr.croixrouge.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.hibernate.id.uuid.UuidGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class MailService {
@@ -18,8 +21,13 @@ public class MailService {
 
     final private JavaMailSender mailSender;
 
+
     MailService(JavaMailSender javaMailSender) {
         this.mailSender = javaMailSender;
+    }
+
+    public String generateToken() {
+        return UUID.randomUUID().toString();
     }
 
     public void sendEmailFromTemplate(String email, String token) throws MessagingException {
@@ -189,7 +197,7 @@ public class MailService {
                 </html>
                 """;
 
-        htmlTemplate = htmlTemplate.replace("${link}", "https://pa-crx.fr/create-account/confirm?token=" + token);
+        htmlTemplate = htmlTemplate.replace("${link}", apiUrl + "/create-account/confirm?token=" + token);
 
         message.setContent(htmlTemplate, "text/html; charset=utf-8");
 

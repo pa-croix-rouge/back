@@ -10,7 +10,7 @@ public class VolunteerResponse {
     public Long localUnitId;
     public boolean emailValidated;
 
-    public VolunteerResponse(Long id, String username, String firstName, String lastName, String phoneNumber, boolean isValidated, Long localUnitId, boolean emailValidated)
+    public VolunteerResponse(Long id, String username, String firstName, String lastName, String phoneNumber, boolean isValidated, Long localUnitId, boolean emailValidated) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;

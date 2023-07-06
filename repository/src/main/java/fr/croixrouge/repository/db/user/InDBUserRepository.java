@@ -32,7 +32,9 @@ public class InDBUserRepository implements UserRepository {
                 userDB.getUsername(),
                 userDB.getPassword(),
                 localUnitDBRepository.toLocalUnit(userDB.getLocalUnitDB()),
-                userDB.getRoleDBs().stream().map(roleDBRepository::toRole).toList()
+                userDB.getRoleDBs().stream().map(roleDBRepository::toRole).toList(),
+                userDB.getEmailValidated(),
+                userDB.getTokenToValidateEmail()
         );
     }
 
@@ -42,7 +44,9 @@ public class InDBUserRepository implements UserRepository {
                 user.getUsername(),
                 user.getPassword(),
                 localUnitDBRepository.toLocalUnitDB(user.getLocalUnit()),
-                user.getRoles().stream().map(roleDBRepository::toRoleDB).collect(Collectors.toSet())
+                user.getRoles().stream().map(roleDBRepository::toRoleDB).collect(Collectors.toSet()),
+                user.isEmailValidated(),
+                user.getTokenToValidateEmail()
         );
 
     }

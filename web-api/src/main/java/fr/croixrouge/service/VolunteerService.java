@@ -19,10 +19,13 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
 
     private final PasswordEncoder passwordEncoder;
 
-    public VolunteerService(VolunteerRepository repository, RoleService roleService, PasswordEncoder passwordEncoder) {
+    private final MailService mailService;
+
+    public VolunteerService(VolunteerRepository repository, RoleService roleService, PasswordEncoder passwordEncoder, MailService mailService) {
         super(repository);
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     @Override
@@ -32,6 +35,8 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
             return super.save(volunteer);
         }
 
+        var uuid = mailService.generateToken();
+
         var volunteerRole = roleService.getCommonRole(Role.COMMON_VOLUNTEER_ROLE_NAME);
         var newVolunteer = new Volunteer(
                 null,
@@ -39,13 +44,21 @@ public class VolunteerService extends CRUDService<ID, Volunteer, VolunteerReposi
                         volunteer.getUser().getUsername(),
                         passwordEncoder.encode(volunteer.getUser().getPassword()),
                         volunteer.getUser().getLocalUnit(),
-                        Stream.concat(Stream.of(volunteerRole), volunteer.getUser().getRoles().stream()).toList()
+                        Stream.concat(Stream.of(volunteerRole), volunteer.getUser().getRoles().stream()).toList(),
+                        volunteer.getUser().isEmailValidated(),
+                        uuid
                 ),
                 volunteer.getFirstName(),
                 volunteer.getLastName(),
                 volunteer.getPhoneNumber(),
                 volunteer.isValidated()
         );
+
+        try {
+            mailService.sendEmailFromTemplate(newVolunteer.getUser().getUsername(), uuid);
+        } catch (jakarta.mail.MessagingException e) {
+            throw new RuntimeException(e);
+        }
 
         return super.save(newVolunteer);
     }
