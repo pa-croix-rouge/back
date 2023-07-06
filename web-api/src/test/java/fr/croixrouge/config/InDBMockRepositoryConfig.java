@@ -298,8 +298,8 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
-        return new InDBProductLimitRepository(productLimitDBRepository);
+    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository, LocalUnitDBRepository inDBLocalUnitRepository) {
+        return new InDBProductLimitRepository(productLimitDBRepository, inDBLocalUnitRepository);
     }
 
     @Bean

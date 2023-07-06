@@ -70,8 +70,8 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBProductLimitRepository productLimitRepository(ProductLimitDBRepository productLimitDBRepository) {
-        return new InDBProductLimitRepository(productLimitDBRepository);
+    public InDBProductLimitRepository productLimitRepository(ProductLimitDBRepository productLimitDBRepository, LocalUnitDBRepository inDBLocalUnitRepository) {
+        return new InDBProductLimitRepository(productLimitDBRepository, inDBLocalUnitRepository);
     }
 
     @Bean

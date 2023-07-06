@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.dto.product;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.CreationDTO;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.ProductLimit;
@@ -37,6 +38,10 @@ public class CreateProductLimitDTO extends CreationDTO<ProductLimit> {
 
     @Override
     public ProductLimit toModel() {
-        return new ProductLimit(null, name, Duration.ofDays(duration), quantity.toQuantifier());
+        return new ProductLimit(null, name, Duration.ofDays(duration), quantity.toQuantifier(), null);
+    }
+
+    public ProductLimit toModel(ID localUnitId) {
+        return new ProductLimit(null, name, Duration.ofDays(duration), quantity.toQuantifier(), localUnitId);
     }
 }

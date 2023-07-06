@@ -18,21 +18,48 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/product-limit")
-public class ProductLimitController extends CRUDController<ID, ProductLimit, ProductLimitService, ProductLimitDTO, CreateProductLimitDTO> {
+public class ProductLimitController {
 
     private final AuthenticationService authenticationService;
+    private final ProductLimitService service;
 
     public ProductLimitController(ProductLimitService service, AuthenticationService authenticationService) {
-        super(service);
         this.authenticationService = authenticationService;
+        this.service = service;
     }
 
-    @Override
+
     public ProductLimitDTO toDTO(ProductLimit model) {
         return new ProductLimitDTO(model.getId().value(),
                 model.getName(),
                 QuantifierDTO.fromQuantifier(model.getQuantity()),
                 model.getDuration().toDays());
+    }
+
+    @PostMapping()
+    public ResponseEntity<ID> create(@RequestBody CreateProductLimitDTO createProductDTO, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        return ResponseEntity.ok(service.save(createProductDTO.toModel(localUnitId)));
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ProductLimitDTO>> getAll(HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        return ResponseEntity.ok(service.findAll(localUnitId).stream().map(this::toDTO).toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductLimitDTO> getByID(@PathVariable ID id, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        var clothProduct = service.findById(localUnitId, id);
+        return ResponseEntity.ok(toDTO(clothProduct));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteByID(@PathVariable ID id, HttpServletRequest request) {
+        ID localUnitId = authenticationService.getUserLocalUnitIdFromJwtToken(request);
+        service.delete(service.findById(localUnitId, id));
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("{id}")
