@@ -206,7 +206,7 @@ public class VolunteerControllerTest {
     @DisplayName("Test that the volunteer endpoint register a new volunteer when given the correct parameters")
     public void volunteerCreateSuccessTest() throws Exception {
         VolunteerCreationRequest volunteerCreationRequest = new VolunteerCreationRequest(
-                "newvolunteer@croix-rouge.fr",
+                "newvolunteer@crx.fr",
                 "secretPassword",
                 "John",
                 "Doe",
