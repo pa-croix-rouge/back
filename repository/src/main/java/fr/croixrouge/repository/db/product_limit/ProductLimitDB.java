@@ -19,7 +19,7 @@ public class ProductLimitDB {
     @Column(name = "duration", nullable = true)
     private Duration duration;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "quantity", nullable = true)
