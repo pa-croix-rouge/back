@@ -150,7 +150,7 @@ public class FixturesConfig {
         volunteerValOrge9 = new Volunteer(null, volunteerUserValOrge9, "Emilie", "LASSALAS", "+33 6 51 67 93 27", true);
         volunteerValOrge10 = new Volunteer(null, volunteerUserValOrge10, "Anne", "OZANNE", "+33 7 36 80 72 55", true);
 
-        managerESGI = new User(null, "pierre.dumont@esgi.fr", "Password.123", localUnitESGI, List.of(managerRoleESGI), true, null);
+        managerESGI = new User(null, "pierre.dumont@esgi.fr", "ESGI.2023", localUnitESGI, List.of(managerRoleESGI), true, null);
 
         volunteerUserESGI1 = new User(null, "lucie.martin@esgi.fr", "ESGI.2023", localUnitESGI, List.of(defaultRoleESGI), true, null);
         volunteerUserESGI2 = new User(null, "benjamin.durand@esgi.fr", "ESGI.2023", localUnitESGI, List.of(defaultRoleESGI), true, null);
