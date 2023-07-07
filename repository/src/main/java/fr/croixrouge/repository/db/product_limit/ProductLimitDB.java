@@ -1,6 +1,7 @@
 package fr.croixrouge.repository.db.product_limit;
 
 
+import fr.croixrouge.repository.db.localunit.LocalUnitDB;
 import jakarta.persistence.*;
 
 import java.time.Duration;
@@ -26,15 +27,21 @@ public class ProductLimitDB {
     @Column(name = "unit", nullable = true)
     private String unit;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "local_unit_db_localunit_id", nullable = false)
+    private LocalUnitDB localUnitDB;
+
+
     public ProductLimitDB() {
     }
 
-    public ProductLimitDB(Long id, String name, Duration duration, Double quantity, String unit) {
+    public ProductLimitDB(Long id, String name, Duration duration, Double quantity, String unit, LocalUnitDB localUnitDB) {
         this.id = id;
         this.duration = duration;
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
+        this.localUnitDB = localUnitDB;
     }
 
     public String getUnit() {
@@ -75,5 +82,9 @@ public class ProductLimitDB {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalUnitDB getLocalUnitDB() {
+        return localUnitDB;
     }
 }

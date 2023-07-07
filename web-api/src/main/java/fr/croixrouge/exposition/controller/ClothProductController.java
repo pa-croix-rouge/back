@@ -69,7 +69,7 @@ public class ClothProductController extends ErrorHandler {
             productLimit = productLimitService.findById(new ID(createClothProductDTO.getLimitID()));
         }
 
-        Product product = createClothProductDTO.toModel(productLimit).getProduct();
+        Product product = createClothProductDTO.toModel(productLimit, localUnitId).getProduct();
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
@@ -104,7 +104,7 @@ public class ClothProductController extends ErrorHandler {
         if (createClothProductDTO.getLimitID() != null) {
             productLimit = productLimitService.findById(new ID(createClothProductDTO.getLimitID()));
         }
-        Product product = new Product(clothProduct.getProduct().getId(), createClothProductDTO.toModel().getProduct().getName(), createClothProductDTO.toModel().getProduct().getQuantity(), productLimit);
+        Product product = new Product(clothProduct.getProduct().getId(), createClothProductDTO.toModel().getProduct().getName(), createClothProductDTO.toModel().getProduct().getQuantity(), productLimit, localUnitId);
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();

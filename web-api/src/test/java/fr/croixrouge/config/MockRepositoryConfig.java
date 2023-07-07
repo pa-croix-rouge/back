@@ -227,8 +227,8 @@ public class MockRepositoryConfig {
     public ProductRepository productTestRepository() {
         List<Product> products = new ArrayList<>();
 
-        products.add(new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null));
-        products.add(new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null));
+        products.add(new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null, localUnit.getId()));
+        products.add(new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null, localUnit.getId()));
 
         return new InMemoryProductRepository(products);
     }
@@ -241,12 +241,12 @@ public class MockRepositoryConfig {
         final LocalDate date = LocalDate.now();
 
         products.add(new FoodProduct(new ID("1"),
-                new Product(new ID(3L), "FoodProduct 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null),
+                new Product(new ID(3L), "FoodProduct 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null, localUnit.getId()),
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(2).getYear(), date.plusMonths(2).getMonthValue(), date.plusMonths(2).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.plusMonths(1).getYear(), date.plusMonths(1).getMonthValue(), date.plusMonths(1).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 1));
-        products.add(new FoodProduct(new ID("2"), new Product(new ID(4L), "FoodProduct 2", new WeightQuantifier(1, WeightUnit.KILOGRAM), null),
+        products.add(new FoodProduct(new ID("2"), new Product(new ID(4L), "FoodProduct 2", new WeightQuantifier(1, WeightUnit.KILOGRAM), null, localUnit.getId()),
                 FoodConservation.ROOM_TEMPERATURE,
                 ZonedDateTime.of(LocalDateTime.of(date.plusDays(5).getYear(), date.plusDays(5).getMonthValue(), date.plusDays(5).getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),
                 ZonedDateTime.of(LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0), ZoneId.of("Europe/Paris")),

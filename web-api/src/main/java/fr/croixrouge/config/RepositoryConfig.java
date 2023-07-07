@@ -64,14 +64,14 @@ public class RepositoryConfig {
 
     @Bean
     @Primary
-    public InDBProductRepository productRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
-        return new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
+    public InDBProductRepository productRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository, LocalUnitDBRepository inDBLocalUnitRepository) {
+        return new InDBProductRepository(productDBRepository, inDBProductLimitRepository, inDBLocalUnitRepository);
     }
 
     @Bean
     @Primary
-    public InDBProductLimitRepository productLimitRepository(ProductLimitDBRepository productLimitDBRepository) {
-        return new InDBProductLimitRepository(productLimitDBRepository);
+    public InDBProductLimitRepository productLimitRepository(ProductLimitDBRepository productLimitDBRepository, LocalUnitDBRepository inDBLocalUnitRepository) {
+        return new InDBProductLimitRepository(productLimitDBRepository, inDBLocalUnitRepository);
     }
 
     @Bean

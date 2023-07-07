@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductLimitService extends CRUDService<ID, ProductLimit, ProductLimitRepository> {
@@ -28,6 +29,15 @@ public class ProductLimitService extends CRUDService<ID, ProductLimit, ProductLi
         this.productService = productService;
     }
 
+    public ProductLimit findById(ID localUnitId, ID id) {
+        return repository.findByIdAndLocalUnitId(id, localUnitId)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    public List<ProductLimit> findAll(ID localUnitId) {
+        return repository.findAllByLocalUnitId(localUnitId);
+    }
+
     public void update(ID id, CreateProductLimitDTO createProductLimitDTO) {
 
         var productLimit = findById(id);
@@ -35,8 +45,8 @@ public class ProductLimitService extends CRUDService<ID, ProductLimit, ProductLi
         var newProductLimit = new ProductLimit(id,
                 createProductLimitDTO.getName() == null ? productLimit.getName() : createProductLimitDTO.getName(),
                 createProductLimitDTO.getDuration() == null ? productLimit.getDuration() : Duration.ofDays(createProductLimitDTO.getDuration()),
-                createProductLimitDTO.getQuantity() == null ? productLimit.getQuantity() : createProductLimitDTO.getQuantity().toQuantifier()
-        );
+                createProductLimitDTO.getQuantity() == null ? productLimit.getQuantity() : createProductLimitDTO.getQuantity().toQuantifier(),
+                productLimit.getLocalUnitId());
 
         save(newProductLimit);
     }

@@ -11,15 +11,18 @@ public class Product extends Entity<ID> {
 
     protected final ProductLimit limit;
 
-    public Product(ID id, String name, Quantifier quantity, ProductLimit limit) {
+    protected final ID localUnitId;
+
+    public Product(ID id, String name, Quantifier quantity, ProductLimit limit, ID localUnitId) {
         super(id);
         this.name = name;
         this.quantity = quantity;
         this.limit = limit;
+        this.localUnitId = localUnitId;
     }
 
     public Product(Product product) {
-        this(product.id, product.name, product.quantity, product.limit);
+        this(product.id, product.name, product.quantity, product.limit, product.getLocalUnitId());
     }
 
     public ID getId() {
@@ -36,5 +39,9 @@ public class Product extends Entity<ID> {
 
     public String getName() {
         return name;
+    }
+
+    public ID getLocalUnitId() {
+        return localUnitId;
     }
 }

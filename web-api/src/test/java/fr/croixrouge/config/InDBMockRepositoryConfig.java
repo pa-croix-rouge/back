@@ -130,15 +130,15 @@ public class InDBMockRepositoryConfig {
 
         volunteerUser = new User(null, "volunteerUser", passwordEncoder.encode("volunteerPassword"), localUnit, List.of(defaultRole), true, null);
 
-        product1 = new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        product2 = new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null);
-        cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth2 = new Product(new ID(4L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth3 = new Product(new ID(5L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth4 = new Product(new ID(6L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
-        cloth5 = new Product(new ID(7L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null);
-        food1 = new Product(new ID(8L), "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
-        food2 = new Product(new ID(9L), "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
+        product1 = new Product(new ID(1L), "Product 1", new WeightQuantifier(1, WeightUnit.KILOGRAM), null, localUnit.getId());
+        product2 = new Product(new ID(2L), "Product 2", new VolumeQuantifier(1, VolumeUnit.LITER), null, localUnit.getId());
+        cloth1 = new Product(new ID(3L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null, localUnit.getId());
+        cloth2 = new Product(new ID(4L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null, localUnit.getId());
+        cloth3 = new Product(new ID(5L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null, localUnit.getId());
+        cloth4 = new Product(new ID(6L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null, localUnit.getId());
+        cloth5 = new Product(new ID(7L), "Chemises blanches", new Quantifier(20, NumberedUnit.NUMBER), null, localUnit.getId());
+        food1 = new Product(new ID(8L), "Pommes", new WeightQuantifier(1, WeightUnit.KILOGRAM), null, localUnit.getId());
+        food2 = new Product(new ID(9L), "Pates", new WeightQuantifier(1, WeightUnit.KILOGRAM), null, localUnit.getId());
     }
 
     @Bean
@@ -298,14 +298,14 @@ public class InDBMockRepositoryConfig {
 
     @Bean
     @Primary
-    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository) {
-        return new InDBProductLimitRepository(productLimitDBRepository);
+    public InDBProductLimitRepository productLimitTestRepository(ProductLimitDBRepository productLimitDBRepository, LocalUnitDBRepository inDBLocalUnitRepository) {
+        return new InDBProductLimitRepository(productLimitDBRepository, inDBLocalUnitRepository);
     }
 
     @Bean
     @Primary
-    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository) {
-        var storageRepository = new InDBProductRepository(productDBRepository, inDBProductLimitRepository);
+    public InDBProductRepository productTestRepository(ProductDBRepository productDBRepository, InDBProductLimitRepository inDBProductLimitRepository, LocalUnitDBRepository inDBLocalUnitRepository) {
+        var storageRepository = new InDBProductRepository(productDBRepository, inDBProductLimitRepository, inDBLocalUnitRepository);
 
 //        storageRepository.save(product1);
 //        storageRepository.save(product2);

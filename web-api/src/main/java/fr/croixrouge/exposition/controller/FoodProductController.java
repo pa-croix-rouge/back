@@ -72,7 +72,7 @@ public class FoodProductController extends ErrorHandler {
         if (model.getLimitID() != null) {
             productLimit = productLimitService.findById(new ID(model.getLimitID()));
         }
-        Product product = model.toModel(productLimit).getProduct();
+        Product product = model.toModel(productLimit, localUnitId).getProduct();
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();
@@ -106,7 +106,7 @@ public class FoodProductController extends ErrorHandler {
         if (model.getLimitID() != null) {
             productLimit = productLimitService.findById(new ID(model.getLimitID()));
         }
-        Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), productLimit);
+        Product product = new Product(foodProduct.getProduct().getId(), model.toModel().getProduct().getName(), model.toModel().getProduct().getQuantity(), productLimit, localUnitId);
         ID productId = productService.save(product);
         if (productId == null) {
             return ResponseEntity.badRequest().build();

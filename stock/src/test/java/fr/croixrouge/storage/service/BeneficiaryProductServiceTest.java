@@ -38,13 +38,13 @@ class BeneficiaryProductServiceTest {
 
     private final Beneficiary beneficiary = new Beneficiary(new ID(1L), user, "TEST", "TEST", "number", true, LocalDate.now(), "", List.of(), 0L);
 
-    private final ProductLimit limit1KgFor7Days = new ProductLimit(new ID(1L), "", Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM));
-    private final Product productWeight1KgNoLimit = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT);
+    private final ProductLimit limit1KgFor7Days = new ProductLimit(new ID(1L), "", Duration.ofDays(7), new WeightQuantifier(1, WeightUnit.KILOGRAM), null);
+    private final Product productWeight1KgNoLimit = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), ProductLimit.NO_LIMIT, null);
 
     private final StorageProduct storageProductWeight1KgNoLimit = new StorageProduct(new ID(1L), storage, productWeight1KgNoLimit, 1);
-    private final Product productWeight1KgLimit1KgFor7Days = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), limit1KgFor7Days);
+    private final Product productWeight1KgLimit1KgFor7Days = new Product(new ID(1L), "pr", new WeightQuantifier(1, WeightUnit.KILOGRAM), limit1KgFor7Days, null);
     private final StorageProduct storageProductWeight1KgLimit1KgFor7Days = new StorageProduct(new ID(1L), storage, productWeight1KgLimit1KgFor7Days, 1);
-    private final Product productWeight500gLimit1KgFor7Days = new Product(new ID(2L), "pr", new WeightQuantifier(500, WeightUnit.GRAM), limit1KgFor7Days);
+    private final Product productWeight500gLimit1KgFor7Days = new Product(new ID(2L), "pr", new WeightQuantifier(500, WeightUnit.GRAM), limit1KgFor7Days, null);
 
     private final StorageProduct storageProductWeight500gLimit1KgFor7Days = new StorageProduct(new ID(2L), storage, productWeight500gLimit1KgFor7Days, 1);
 

@@ -1,5 +1,6 @@
 package fr.croixrouge.exposition.dto.product;
 
+import fr.croixrouge.domain.model.ID;
 import fr.croixrouge.exposition.dto.CreationDTO;
 import fr.croixrouge.exposition.dto.QuantifierDTO;
 import fr.croixrouge.storage.model.product.*;
@@ -27,14 +28,14 @@ public class CreateClothProductDTO extends CreationDTO<ClothProduct> {
     @Override
     public ClothProduct toModel() {
         return new ClothProduct(null,
-                new Product(null, name, quantity.toQuantifier(), null),
+                new Product(null, name, quantity.toQuantifier(), null, null),
                 ClothSize.fromLabel(size),
                 ClothGender.fromLabel(gender));
     }
 
-    public ClothProduct toModel(ProductLimit limit) {
+    public ClothProduct toModel(ProductLimit limit, ID localUnitId) {
         return new ClothProduct(null,
-                new Product(null, name, quantity.toQuantifier(), limit),
+                new Product(null, name, quantity.toQuantifier(), limit, localUnitId),
                 ClothSize.fromLabel(size),
                 ClothGender.fromLabel(gender));
     }
