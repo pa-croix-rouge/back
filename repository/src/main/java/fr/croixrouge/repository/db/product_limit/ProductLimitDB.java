@@ -6,7 +6,8 @@ import jakarta.persistence.*;
 
 import java.time.Duration;
 
-@Table(name = "product-limit")
+@Table(name = "product-limit",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "local_unit_db_localunit_id"})})
 @Entity
 public class ProductLimitDB {
 
