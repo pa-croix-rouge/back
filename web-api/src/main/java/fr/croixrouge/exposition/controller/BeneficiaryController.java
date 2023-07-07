@@ -95,7 +95,7 @@ public class BeneficiaryController extends CRUDController<ID, Beneficiary, Benef
                 creationRequest.getFamilyMembers().stream()
                         .map(FamilyMemberCreationRequest::toModel)
                         .toList(),
-                creationRequest.solde);
+                creationRequest.solde == null ? 0 : creationRequest.solde);
 
         ID beneficiaryId = service.save(beneficiary);
         if (beneficiaryId == null) {
